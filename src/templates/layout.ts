@@ -60,7 +60,7 @@ export const layout = `<!DOCTYPE html>
 </head>
 <body>
   <nav>
-    <a href="/ui">Neuro Explorer</a>
+    <a href="/">Neuro Explorer</a>
     <a href="/ui/neuron"{% if active == "neuron" %} class="active"{% endif %}>Neuron</a>
     <a href="/ui/vision"{% if active == "vision" %} class="active"{% endif %}>Vision</a>
     <a href="/ui/ask"{% if active == "ask" %} class="active"{% endif %}>Ask</a>
