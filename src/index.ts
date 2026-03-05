@@ -29,9 +29,7 @@ export default {
 				return handleAsk(request, env);
 			case path === '/plasticity':
 				return handlePlasticity(request);
-			case path.startsWith('/ui'):
-				return handleUI(request);
-			default:
+			case path === '/routes':
 				return new Response(
 					JSON.stringify(
 						{
@@ -44,6 +42,8 @@ export default {
 					),
 					{ headers: { 'Content-Type': 'application/json' } }
 				);
+			default:
+				return handleUI(request);
 		}
 	},
 } satisfies ExportedHandler<Env>;
