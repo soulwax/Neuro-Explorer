@@ -2,6 +2,7 @@ import { handleNeuron } from './routes/neuron';
 import { handleVision } from './routes/vision';
 import { handleAsk } from './routes/ask';
 import { handlePlasticity } from './routes/plasticity';
+import { handleUI } from './ui';
 
 export interface Env {
 	AI: Ai;
@@ -19,15 +20,17 @@ export default {
 		const url = new URL(request.url);
 		const path = url.pathname;
 
-		switch (path) {
-			case '/neuron':
+		switch (true) {
+			case path === '/neuron':
 				return handleNeuron(request);
-			case '/vision':
+			case path === '/vision':
 				return handleVision(request, env);
-			case '/ask':
+			case path === '/ask':
 				return handleAsk(request, env);
-			case '/plasticity':
+			case path === '/plasticity':
 				return handlePlasticity(request);
+			case path.startsWith('/ui'):
+				return handleUI(request);
 			default:
 				return new Response(
 					JSON.stringify(

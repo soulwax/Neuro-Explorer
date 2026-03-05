@@ -46,7 +46,7 @@ const DEFAULTS: LIFParams = {
 	restingPotential: -70,
 	threshold: -55,
 	resetPotential: -75,
-	inputCurrent: 1.5,
+	inputCurrent: 2.0,
 	duration: 100,
 	refractoryPeriod: 2,
 	dt: 0.1,
