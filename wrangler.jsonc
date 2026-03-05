@@ -12,7 +12,7 @@
 	},
 	"compatibility_flags": [
 		"nodejs_compat"
-	]
+	],
 	/**
 	 * Smart Placement
 	 * https://developers.cloudflare.com/workers/configuration/smart-placement/#smart-placement
@@ -41,4 +41,10 @@
 	 * https://developers.cloudflare.com/workers/wrangler/configuration/#service-bindings
 	 */
 	// "services": [  {   "binding": "MY_SERVICE",   "service": "my-service"  } ]
+	/**
+	 * AI Bindings
+	 */
+	"ai": {
+		"binding": "AI"
+	}
 }
