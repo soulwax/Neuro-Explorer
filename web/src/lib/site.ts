@@ -12,6 +12,7 @@ export const navItems = [
   { href: "/neuron", label: "Neuron" },
   { href: "/retina", label: "Retina" },
   { href: "/plasticity", label: "Plasticity" },
+  { href: "/dopamine", label: "Dopamine" },
 ] as const;
 
 export const moduleCards: ModuleCard[] = [
@@ -48,6 +49,14 @@ export const moduleCards: ModuleCard[] = [
     href: "/plasticity",
   },
   {
+    slug: "dopamine",
+    title: "Dopamine Prediction Error Lab",
+    description:
+      "Migrated to App Router as a deterministic reinforcement-learning module. Watch prediction errors shift from reward delivery to the predictive cue as learning unfolds.",
+    status: "migrated",
+    href: "/dopamine",
+  },
+  {
     slug: "vision",
     title: "Visual Cortex",
     description:
@@ -59,13 +68,6 @@ export const moduleCards: ModuleCard[] = [
     title: "12-Lead ECG Explorer",
     description:
       "Still on the legacy runtime. It will benefit from typed components because the current UI is a large inline SVG/JS template.",
-    status: "legacy",
-  },
-  {
-    slug: "dopamine",
-    title: "Dopamine Prediction Error Lab",
-    description:
-      "Still on the legacy runtime. Its learning curves and snapshot traces map cleanly to componentized chart sections.",
     status: "legacy",
   },
   {

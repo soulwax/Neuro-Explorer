@@ -22,7 +22,7 @@ In parallel, there is now a typed React/App Router frontend in `web/` that exist
 Current migration status:
 
 - `web/` is a separate Next.js App Router frontend track.
-- `Brain Atlas`, `Neuron`, `Retina`, and `Plasticity` are now migrated pages there.
+- `Brain Atlas`, `Neuron`, `Retina`, `Plasticity`, and `Dopamine` are now migrated pages there.
 - Stable-first rule: deterministic modules move first, while AI stays behind the existing Cloudflare Worker boundary until the frontend pattern is settled.
 - The neuroscience engines and current deployable app remain untouched in the root runtime.
 

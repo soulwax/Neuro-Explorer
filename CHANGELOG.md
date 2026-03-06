@@ -1,5 +1,17 @@
 # Changelog
 
+## [0.13.0] - 2026-03-06
+
+### Added
+
+- Added a migrated `Dopamine Prediction Error Lab` page to the `web/` App Router frontend track.
+- Added a typed temporal-difference learning library in the new frontend so dopamine-like reward-prediction error dynamics run locally with typed chart rendering.
+
+### Changed
+
+- Updated App Router navigation and module metadata to include the migrated dopamine module.
+- Updated migration docs to reflect five stable-first migrated deterministic pages before any Worker-backed AI integration.
+
 ## [0.12.0] - 2026-03-06
 
 ### Added

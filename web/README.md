@@ -20,6 +20,7 @@ This `web/` app is the replacement track:
 - `Neuron Simulation`
 - `Retinal Receptive Field Lab`
 - `Synaptic Plasticity`
+- `Dopamine Prediction Error Lab`
 
 ## Commands
 
