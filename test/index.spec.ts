@@ -93,4 +93,28 @@ describe('Neuro Explorer worker', () => {
 		expect(data.sizeTuning.some((point) => point.value > 0)).toBe(true);
 		expect(data.sizeTuning.some((point) => point.value < 0)).toBe(true);
 	});
+
+	it('returns 3D activation data for the ECG explorer (unit style)', async () => {
+		const request = new IncomingRequest('http://example.com/ecg?heartRate=84&qrsAmp=1.3&precordialRotation=12');
+		const ctx = createExecutionContext();
+		const response = await worker.fetch(request, env, ctx);
+		await waitOnExecutionContext(ctx);
+
+		expect(response.status).toBe(200);
+		const data = (await response.json()) as {
+			leads: Record<string, Array<{ mv: number }>>;
+			activation: {
+				beatMs: number;
+				frames: Array<{ phase: string; dominantLead: string; vector: { magnitude: number } }>;
+				leadAxes: Array<{ name: string }>;
+			};
+		};
+		expect(data.leads.V2.length).toBeGreaterThan(100);
+		expect(data.activation.beatMs).toBeGreaterThan(500);
+		expect(data.activation.frames.length).toBeGreaterThan(60);
+		expect(data.activation.leadAxes.length).toBe(12);
+		expect(data.activation.frames.some((frame) => frame.phase === 'QRS')).toBe(true);
+		expect(data.activation.frames.some((frame) => frame.dominantLead.startsWith('V'))).toBe(true);
+		expect(data.activation.frames.some((frame) => frame.vector.magnitude > 0.2)).toBe(true);
+	});
 });

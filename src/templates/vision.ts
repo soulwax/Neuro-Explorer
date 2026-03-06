@@ -18,7 +18,7 @@ export const vision = `
   <div class="form-group">
     <label for="image-url">Image URL</label>
     <input type="url" id="image-url" placeholder="https://example.com/photo.jpg"
-           value="https://upload.wikimedia.org/wikipedia/commons/thumb/4/4d/Cat_November_2010-1a.jpg/481px-Cat_November_2010-1a.jpg">
+           value="https://darkfloor.org/_next/static/media/emily-the-strange.0685c7a0.png?dpl=dpl_HEfDjBvBhPRQdigyuUyVLxy6d9G8">
   </div>
   <button onclick="classify()" id="classify-btn">Classify</button>
   <span class="spinner" id="spinner"></span>

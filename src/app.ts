@@ -16,7 +16,7 @@ const ROUTES: Record<string, string> = {
 	'/ask': 'Socratic neuroscience tutor. Params: q=<question>, topic=<action-potential|synapse|plasticity|visual-system|neural-coding|memory>',
 	'/plasticity': 'Spike-Timing Dependent Plasticity (STDP) simulation. Params: deltaT, pairCount, aPlus, aMinus, tauPlus, tauMinus, initialWeight',
 	'/ecg':
-		'12-lead ECG simulator with tweakable heart rate, axis, intervals, amplitudes, ST shift, noise, and rhythm variability.',
+		'12-lead ECG simulator with tweakable heart rate, axis, intervals, amplitudes, ST shift, noise, rhythm variability, and 3D activation-vector data.',
 	'/grid-cell':
 		'Entorhinal grid-cell simulator with spatial firing fields, navigation path, and rate-map controls. Params: arenaSize, durationSec, speed, spacing, orientation, phaseX, phaseY, sharpness, maxRate, thetaMod, turnNoise',
 	'/dopamine':

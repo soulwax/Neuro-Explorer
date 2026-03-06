@@ -87,6 +87,32 @@ export async function handleVision(request: Request, ai: AiClient): Promise<Resp
 		);
 	}
 
+	// Validate URL scheme — only allow http/https
+	let parsedUrl: URL;
+	try {
+		parsedUrl = new URL(imageUrl);
+	} catch {
+		return new Response(
+			JSON.stringify({
+				error: 'Invalid URL',
+				details: { url: imageUrl },
+				suggestion: 'The provided URL is not valid. Please provide a well-formed URL.',
+			}),
+			{ status: 400, headers: { 'Content-Type': 'application/json' } },
+		);
+	}
+
+	if (parsedUrl.protocol !== 'http:' && parsedUrl.protocol !== 'https:') {
+		return new Response(
+			JSON.stringify({
+				error: 'Unsupported URL scheme',
+				details: { scheme: parsedUrl.protocol, url: imageUrl },
+				suggestion: `Only http:// and https:// URLs are supported. "${parsedUrl.protocol}" URLs cannot be fetched by the server.`,
+			}),
+			{ status: 400, headers: { 'Content-Type': 'application/json' } },
+		);
+	}
+
 	// Fetch image with timeout using AbortController
 	const controller = new AbortController();
 	const timeoutId = setTimeout(() => controller.abort(), 10000); // 10 second timeout

@@ -74,7 +74,7 @@ export const homeData = {
 			path: '/ui/ecg',
 			name: '12-Lead ECG Explorer',
 			description:
-				'Generate a full 12-lead ECG and tweak heart rate, axis, conduction intervals, ST shift, noise, and rhythm variability to build intuition for waveform morphology.',
+				'Generate a full 12-lead ECG, inspect a 3D cardiac activation rendering, and tweak heart rate, axis, conduction intervals, ST shift, noise, and rhythm variability to build intuition for waveform morphology.',
 			tags: ['cardiac electrophysiology', '12-lead', 'interactive'],
 		},
 		{

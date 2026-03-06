@@ -1,5 +1,18 @@
 # Changelog
 
+## [0.8.0] - 2026-03-06
+
+### Added
+
+- Added a 3D cardiac activation view to the `12-Lead ECG Explorer`, driven by the same dipole model that generates the waveform traces.
+- Added an animated lead-constellation panel showing how the instantaneous cardiac vector aligns with all 12 lead viewpoints across a representative beat.
+- Extended `GET /ecg` with activation frames and lead-axis metadata for anatomical/vector visualization.
+
+### Changed
+
+- Updated the ECG module copy to reflect the new 3D anatomy/vector interpretation layer.
+- Expanded test coverage to validate the new ECG activation payload.
+
 ## [0.7.1] - 2026-03-06
 
 ### Changed
