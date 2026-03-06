@@ -22,6 +22,7 @@ describe('Neuro Explorer worker', () => {
 		};
 		expect(data.name).toBe('Neuro Explorer');
 		expect(data.routes['/ask']).toContain('Socratic neuroscience tutor');
+		expect(data.routes['/brain-atlas']).toContain('Interactive brain atlas');
 		expect(data.routes['/ecg']).toContain('12-lead ECG simulator');
 		expect(data.routes['/grid-cell']).toContain('Entorhinal grid-cell simulator');
 		expect(data.routes['/dopamine']).toContain('reward-prediction error simulator');
@@ -116,5 +117,27 @@ describe('Neuro Explorer worker', () => {
 		expect(data.activation.frames.some((frame) => frame.phase === 'QRS')).toBe(true);
 		expect(data.activation.frames.some((frame) => frame.dominantLead.startsWith('V'))).toBe(true);
 		expect(data.activation.frames.some((frame) => frame.vector.magnitude > 0.2)).toBe(true);
+	});
+
+	it('returns brain-atlas regions with interlinked circuits (unit style)', async () => {
+		const request = new IncomingRequest('http://example.com/brain-atlas');
+		const ctx = createExecutionContext();
+		const response = await worker.fetch(request, env, ctx);
+		await waitOnExecutionContext(ctx);
+
+		expect(response.status).toBe(200);
+		const data = (await response.json()) as {
+			chapters: Array<{ id: string }>;
+			regions: Array<{
+				id: string;
+				chapter1: { functions: string[] };
+				chapter2: { interlinks: Array<{ target: string }> };
+			}>;
+		};
+		expect(data.chapters.map((chapter) => chapter.id)).toEqual(['functions', 'interlinks']);
+		expect(data.regions.length).toBeGreaterThan(8);
+		const thalamus = data.regions.find((region) => region.id === 'thalamus');
+		expect(thalamus?.chapter1.functions.length).toBeGreaterThan(2);
+		expect(thalamus?.chapter2.interlinks.some((link) => link.target === 'prefrontal')).toBe(true);
 	});
 });

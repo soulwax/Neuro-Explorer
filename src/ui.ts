@@ -8,6 +8,7 @@ import { plasticity, plasticityParams } from './templates/plasticity.js';
 import { ecg, ecgLeads, ecgParams } from './templates/ecg.js';
 import { gridCell, gridCellParams } from './templates/grid-cell.js';
 import { dopamine, dopamineParams } from './templates/dopamine.js';
+import { brainAtlas } from './templates/brain-atlas.js';
 import { retina, retinaParams, retinaStimulusTypes } from './templates/retina.js';
 
 const engine = new Liquid({ cache: true });
@@ -29,6 +30,8 @@ export function handleUI(_request: Request, path: string): Response {
 			return render('neuron', 'Neuron Simulation', neuron, { params: neuronParams });
 		case '/ui/vision':
 			return render('vision', 'Visual Cortex', vision, { stages: visionStages });
+		case '/ui/brain-atlas':
+			return render('brain-atlas', 'Brain Atlas', brainAtlas);
 		case '/ui/ask':
 			return render('ask', 'Neuro Tutor', ask, askData);
 		case '/ui/plasticity':

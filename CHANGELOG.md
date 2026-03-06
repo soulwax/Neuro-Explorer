@@ -1,5 +1,27 @@
 # Changelog
 
+## [0.9.1] - 2026-03-06
+
+### Changed
+
+- Refreshed the shared site styling with brighter contrast, softer glass-like surfaces, cleaner spacing, and a more restrained accent palette.
+- Updated cards, forms, buttons, explanation panels, and sidebar navigation to feel lighter and more polished while remaining minimal.
+- Added subtle gradient atmosphere and depth cues without changing the existing page structure or route layout.
+
+## [0.9.0] - 2026-03-06
+
+### Added
+
+- New `Brain Atlas` module with API route `GET /brain-atlas` for exploring major brain regions in Chapter 1 and their recurrent circuit interlinks in Chapter 2.
+- New interactive UI page at `/ui/brain-atlas` with a stylized brain map, chapter switching, region picker, and circuit detail panels.
+- Structured neuroanatomy data covering cortical, limbic, subcortical, and hindbrain hubs, including functional roles, signature tasks, clinical links, and inter-region loop descriptions.
+
+### Changed
+
+- Sidebar navigation and home-page module catalog now include the Brain Atlas.
+- Home-page framing now reflects nine major learning modules.
+- Test coverage now validates the Brain Atlas route and chapter structure.
+
 ## [0.8.0] - 2026-03-06
 
 ### Added

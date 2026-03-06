@@ -17,10 +17,11 @@ export const home = `
 </div>
 
 <div class="explanation" style="margin-top:2rem">
-  <h3>Why these eight?</h3>
+  <h3>Why these nine?</h3>
   <p>Each module maps an AI or computational technique to the biological system that inspired it.
   The neuron simulation shows how real cells integrate and fire.
   The vision module shows how a deep CNN mirrors your visual cortex.
+  The brain atlas shows that localization and integration are two sides of the same nervous system.
   The retina lab shows how center-surround antagonism extracts contrast before cortex even sees the signal.
   The grid-cell module shows how the entorhinal cortex builds a metric for space itself.
   The dopamine module shows how learning re-times reward prediction errors.
@@ -42,6 +43,13 @@ export const homeData = {
 			name: 'Visual Cortex',
 			description: 'Classify images with ResNet-50 and see how each network layer maps to a region of your ventral visual stream, from V1 to prefrontal cortex.',
 			tags: ['ResNet-50', 'image classification', 'Workers AI'],
+		},
+		{
+			path: '/ui/brain-atlas',
+			name: 'Brain Atlas',
+			description:
+				'Explore major brain regions in Chapter 1, then switch to Chapter 2 to see how cortical, limbic, subcortical, and hindbrain structures interlink in recurrent circuits.',
+			tags: ['neuroanatomy', 'circuits', 'interactive'],
 		},
 		{
 			path: '/ui/retina',

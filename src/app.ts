@@ -1,4 +1,5 @@
 import { handleAsk } from './routes/ask.js';
+import { handleBrainAtlas } from './routes/brain-atlas.js';
 import { handleDopamine } from './routes/dopamine.js';
 import { handleECG } from './routes/ecg.js';
 import { handleGridCell } from './routes/grid-cell.js';
@@ -13,6 +14,7 @@ const ROUTES: Record<string, string> = {
 	'/neuron':
 		'Leaky Integrate-and-Fire neuron simulation. Params: tau, threshold, inputCurrent, duration, restingPotential, resetPotential, refractoryPeriod, dt',
 	'/vision': 'Image classification via ResNet-50, mapped to the ventral visual stream (V1 -> V2 -> V4 -> IT -> PFC). Param: url=<image_url>',
+	'/brain-atlas': 'Interactive brain atlas with Chapter 1 on regional functions and Chapter 2 on interlinked circuits.',
 	'/ask': 'Socratic neuroscience tutor. Params: q=<question>, topic=<action-potential|synapse|plasticity|visual-system|neural-coding|memory>',
 	'/plasticity': 'Spike-Timing Dependent Plasticity (STDP) simulation. Params: deltaT, pairCount, aPlus, aMinus, tauPlus, tauMinus, initialWeight',
 	'/ecg':
@@ -49,6 +51,8 @@ export async function handleRequest(request: Request, env: AppEnv): Promise<Resp
 			return handleNeuron(request);
 		case '/vision':
 			return handleVision(request, env.ai);
+		case '/brain-atlas':
+			return handleBrainAtlas();
 		case '/ask':
 			return handleAsk(request, env.ai);
 		case '/plasticity':
