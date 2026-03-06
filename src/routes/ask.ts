@@ -1,3 +1,5 @@
+import type { AiClient } from '../ai/client';
+
 /**
  * Neuroscience Socratic Tutor
  *
@@ -76,7 +78,12 @@ const TOPIC_CONTEXT: Record<string, string> = {
 
 const AVAILABLE_TOPICS = Object.keys(TOPIC_CONTEXT);
 
-export async function handleAsk(request: Request, env: { AI: any }): Promise<Response> {
+interface AskResponse {
+	response?: string;
+	[key: string]: unknown;
+}
+
+export async function handleAsk(request: Request, ai: AiClient): Promise<Response> {
 	const url = new URL(request.url);
 	const topic = url.searchParams.get('topic');
 	let question = url.searchParams.get('q');
@@ -118,18 +125,27 @@ export async function handleAsk(request: Request, env: { AI: any }): Promise<Res
 		{ role: 'user', content: question },
 	];
 
-	const response = await env.AI.run('@cf/meta/llama-3.1-8b-instruct' as any, { messages });
+	try {
+		const response = (await ai.run('@cf/meta/llama-3.1-8b-instruct', { messages })) as AskResponse | string;
+		const answer = typeof response === 'string' ? response : response.response ?? JSON.stringify(response);
 
-	return new Response(
-		JSON.stringify(
-			{
-				topic: topic ?? 'general',
-				question,
-				answer: response.response ?? response,
-			},
-			null,
-			2
-		),
-		{ headers: { 'Content-Type': 'application/json' } }
-	);
+		return new Response(
+			JSON.stringify(
+				{
+					topic: topic ?? 'general',
+					question,
+					answer,
+				},
+				null,
+				2
+			),
+			{ headers: { 'Content-Type': 'application/json' } }
+		);
+	} catch (error) {
+		const message = error instanceof Error ? error.message : 'Unknown AI error';
+		return new Response(JSON.stringify({ error: message }), {
+			status: 500,
+			headers: { 'Content-Type': 'application/json' },
+		});
+	}
 }

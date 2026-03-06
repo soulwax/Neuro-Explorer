@@ -1,3 +1,5 @@
+import type { AiClient } from '../ai/client';
+
 /**
  * Vision Route — Image Classification with Visual Cortex Analogy
  *
@@ -63,7 +65,7 @@ const SKIP_CONNECTION_EXPLANATION = {
 		'The brain has extensive feedback and skip connections too. V1 receives feedback from V2, V4, and even IT cortex. These top-down connections carry predictions and attention signals, not just bottom-up features. This is central to predictive coding theory: the brain constantly predicts its own inputs and only propagates prediction errors upward.',
 };
 
-export async function handleVision(request: Request, env: { AI: any }): Promise<Response> {
+export async function handleVision(request: Request, ai: AiClient): Promise<Response> {
 	const url = new URL(request.url);
 	const imageUrl = url.searchParams.get('url');
 
@@ -96,7 +98,7 @@ export async function handleVision(request: Request, env: { AI: any }): Promise<
 
 		const imageBytes = new Uint8Array(await imageResponse.arrayBuffer());
 
-		const results = await env.AI.run('@cf/microsoft/resnet-50' as any, {
+		const results = await ai.run('@cf/microsoft/resnet-50', {
 			image: [...imageBytes],
 		});
 

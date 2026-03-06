@@ -6,20 +6,18 @@ import { vision, visionStages } from './templates/vision';
 import { ask, askData } from './templates/ask';
 import { plasticity, plasticityParams } from './templates/plasticity';
 
-const engine = new Liquid();
+const engine = new Liquid({ cache: true });
 
-function render(active: string, title: string, bodyTemplate: string, data: Record<string, unknown> = {}): Response {
+function render(active: string, title: string, bodyTemplate: string, data: Record<string, unknown> = {}, status = 200): Response {
 	const body = engine.parseAndRenderSync(bodyTemplate, data);
 	const html = engine.parseAndRenderSync(layout, { title, active, body });
 	return new Response(html, {
+		status,
 		headers: { 'Content-Type': 'text/html;charset=UTF-8' },
 	});
 }
 
-export function handleUI(request: Request): Response {
-	const url = new URL(request.url);
-	const path = url.pathname.replace(/\/+$/, '') || '/';
-
+export function handleUI(_request: Request, path: string): Response {
 	switch (path) {
 		case '/':
 			return render('home', 'Home', home, homeData);
@@ -32,6 +30,12 @@ export function handleUI(request: Request): Response {
 		case '/ui/plasticity':
 			return render('plasticity', 'Synaptic Plasticity', plasticity, { params: plasticityParams });
 		default:
-			return render('home', 'Not Found', '<h1>404</h1><p class="subtitle">Page not found</p><p><a href="/" style="color:var(--primary)">Back to home</a></p>', {});
+			return render(
+				'home',
+				'Not Found',
+				'<h1>404</h1><p class="subtitle">Page not found</p><p><a href="/" style="color:var(--primary)">Back to home</a></p>',
+				{},
+				404
+			);
 	}
 }

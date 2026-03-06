@@ -1,10 +1,14 @@
 {
 	"name": "neuro-explorer",
-	"version": "0.2.0",
+	"version": "0.3.0",
 	"private": true,
 	"scripts": {
+		"build": "npm run typecheck",
+		"typecheck": "tsc --noEmit",
 		"deploy": "wrangler deploy",
+		"deploy:vercel": "npx vercel --prod",
 		"dev": "wrangler dev",
+		"dev:vercel": "npx vercel dev",
 		"start": "wrangler dev",
 		"test": "vitest",
 		"cf-typegen": "wrangler types"
@@ -17,6 +21,7 @@
 		"wrangler": "^4.71.0"
 	},
 	"dependencies": {
-		"liquidjs": "^10.24.0"
+		"liquidjs": "^10.24.0",
+		"markdownlint": "^0.40.0"
 	}
 }
