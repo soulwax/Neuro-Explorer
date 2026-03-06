@@ -19,6 +19,7 @@ This `web/` app is the replacement track:
 - `Brain Atlas`
 - `Neuron Simulation`
 - `Retinal Receptive Field Lab`
+- `Synaptic Plasticity`
 
 ## Commands
 

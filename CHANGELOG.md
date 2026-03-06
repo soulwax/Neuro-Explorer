@@ -1,5 +1,17 @@
 # Changelog
 
+## [0.12.0] - 2026-03-06
+
+### Added
+
+- Added a migrated `Synaptic Plasticity` page to the `web/` App Router frontend track.
+- Added a typed STDP simulation library in the new frontend so synaptic plasticity runs locally with a typed state model and chart rendering.
+
+### Changed
+
+- Updated App Router navigation and module metadata to include the migrated plasticity module.
+- Updated migration docs to reflect four stable-first migrated deterministic pages before any Worker-backed AI integration.
+
 ## [0.11.0] - 2026-03-06
 
 ### Added

@@ -11,6 +11,7 @@ export const navItems = [
   { href: "/brain-atlas", label: "Brain Atlas" },
   { href: "/neuron", label: "Neuron" },
   { href: "/retina", label: "Retina" },
+  { href: "/plasticity", label: "Plasticity" },
 ] as const;
 
 export const moduleCards: ModuleCard[] = [
@@ -39,6 +40,14 @@ export const moduleCards: ModuleCard[] = [
     href: "/retina",
   },
   {
+    slug: "plasticity",
+    title: "Synaptic Plasticity",
+    description:
+      "Migrated to App Router as a local learning module. Explore causal versus non-causal spike timing with a typed STDP curve and weight-evolution view.",
+    status: "migrated",
+    href: "/plasticity",
+  },
+  {
     slug: "vision",
     title: "Visual Cortex",
     description:
@@ -57,6 +66,13 @@ export const moduleCards: ModuleCard[] = [
     title: "Dopamine Prediction Error Lab",
     description:
       "Still on the legacy runtime. Its learning curves and snapshot traces map cleanly to componentized chart sections.",
+    status: "legacy",
+  },
+  {
+    slug: "grid-cell",
+    title: "Grid Cell Navigator",
+    description:
+      "Still on the legacy runtime. It is deterministic and portable, but the arena-path and heatmap rendering make it a larger stable-first migration slice.",
     status: "legacy",
   },
 ];
