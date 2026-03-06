@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.3.1] - 2026-03-06
+
+### Fixed
+
+- Vercel deployment failure caused by missing output directory by adding an explicit `outputDirectory` in `vercel.json` and creating `public/index.html`.
+
 ## [0.3.0] - 2026-03-06
 
 ### Added
