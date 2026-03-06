@@ -5,6 +5,7 @@ import { neuron, neuronParams } from './templates/neuron.js';
 import { vision, visionStages } from './templates/vision.js';
 import { ask, askData } from './templates/ask.js';
 import { plasticity, plasticityParams } from './templates/plasticity.js';
+import { ecg, ecgLeads, ecgParams } from './templates/ecg.js';
 
 const engine = new Liquid({ cache: true });
 
@@ -29,6 +30,8 @@ export function handleUI(_request: Request, path: string): Response {
 			return render('ask', 'Neuro Tutor', ask, askData);
 		case '/ui/plasticity':
 			return render('plasticity', 'Synaptic Plasticity', plasticity, { params: plasticityParams });
+		case '/ui/ecg':
+			return render('ecg', '12-Lead ECG Explorer', ecg, { params: ecgParams, leads: ecgLeads });
 		default:
 			return render(
 				'home',

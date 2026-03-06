@@ -1,5 +1,20 @@
 # Changelog
 
+## [0.4.0] - 2026-03-06
+
+### Added
+
+- New `12-Lead ECG Explorer` module with full API route `GET /ecg` for synthetic 12-lead signal generation.
+- New interactive UI page at `/ui/ecg` with tweakable rhythm and morphology parameters:
+  heart rate, electrical axis, PR/QRS/QT intervals, P/QRS/T amplitudes, ST shift, rhythm variability, baseline wander, noise, precordial rotation, gain, and duration.
+- Multi-panel SVG visualization of all 12 clinical leads (`I`, `II`, `III`, `aVR`, `aVL`, `aVF`, `V1`-`V6`) with computed rhythm summary and QTc estimate.
+
+### Changed
+
+- Updated global app navigation to a persistent left sidebar layout across all pages.
+- Home page module catalog now includes the ECG explorer.
+- `/routes` metadata and tests updated to include the new ECG endpoint.
+
 ## [0.3.4] - 2026-03-06
 
 ### Fixed

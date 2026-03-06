@@ -12,12 +12,15 @@ export const layout = `<!DOCTYPE html>
       --primary:#4fc3f7;--secondary:#7c4dff;--success:#00e676;--danger:#ff5252;
       --mono:'Cascadia Code','Fira Code','Consolas',monospace;
     }
-    body{background:var(--bg);color:var(--text);font-family:'Segoe UI',system-ui,sans-serif;line-height:1.6}
-    nav{display:flex;gap:1.5rem;padding:1rem 2rem;background:var(--surface);border-bottom:1px solid var(--border);flex-wrap:wrap}
-    nav a{color:var(--dim);text-decoration:none;font-size:.9rem;transition:color .2s}
-    nav a:first-child{color:var(--primary);font-weight:700;margin-right:auto}
-    nav a:hover,nav a.active{color:var(--primary)}
-    main{max-width:960px;margin:2rem auto;padding:0 1.5rem}
+    body{background:var(--bg);color:var(--text);font-family:'Segoe UI',system-ui,sans-serif;line-height:1.6;display:grid;grid-template-columns:250px 1fr;min-height:100vh}
+    .sidebar{background:var(--surface);border-right:1px solid var(--border);padding:1.15rem .95rem}
+    .brand{display:block;color:var(--primary);text-decoration:none;font-weight:700;letter-spacing:.02em;margin-bottom:.25rem}
+    .sidebar-sub{color:var(--dim);font-size:.78rem;margin-bottom:1rem}
+    .side-nav{display:flex;flex-direction:column;gap:.35rem}
+    .side-nav a{color:var(--dim);text-decoration:none;font-size:.88rem;padding:.45rem .55rem;border:1px solid transparent;border-radius:6px;transition:all .2s}
+    .side-nav a:hover,.side-nav a.active{color:var(--primary);border-color:var(--border);background:rgba(79,195,247,.08)}
+    main{padding:1.75rem 2rem}
+    .content{max-width:980px}
     h1{color:var(--primary);margin-bottom:.25rem;font-size:1.8rem}
     h2{font-size:1.15rem;margin-bottom:.5rem}
     h3{color:var(--secondary);margin-bottom:.4rem;font-size:1rem}
@@ -55,19 +58,31 @@ export const layout = `<!DOCTYPE html>
     .flex-bar{display:flex;gap:.75rem;align-items:end;flex-wrap:wrap}
     .flex-bar .form-group{flex:1;min-width:200px}
     .hidden{display:none}
-    @media(max-width:600px){.form-grid{grid-template-columns:1fr}main{padding:0 1rem}}
+    @media(max-width:900px){
+      body{grid-template-columns:1fr}
+      .sidebar{border-right:none;border-bottom:1px solid var(--border)}
+      .side-nav{flex-direction:row;flex-wrap:wrap}
+      .side-nav a{padding:.4rem .5rem}
+      main{padding:1.2rem}
+    }
+    @media(max-width:600px){.form-grid{grid-template-columns:1fr}}
   </style>
 </head>
 <body>
-  <nav>
-    <a href="/">Neuro Explorer</a>
-    <a href="/ui/neuron"{% if active == "neuron" %} class="active"{% endif %}>Neuron</a>
-    <a href="/ui/vision"{% if active == "vision" %} class="active"{% endif %}>Vision</a>
-    <a href="/ui/ask"{% if active == "ask" %} class="active"{% endif %}>Ask</a>
-    <a href="/ui/plasticity"{% if active == "plasticity" %} class="active"{% endif %}>Plasticity</a>
-  </nav>
+  <aside class="sidebar">
+    <a class="brand" href="/">Neuro Explorer</a>
+    <p class="sidebar-sub">Neuroscience + AI playground</p>
+    <nav class="side-nav">
+      <a href="/"{% if active == "home" %} class="active"{% endif %}>Home</a>
+      <a href="/ui/neuron"{% if active == "neuron" %} class="active"{% endif %}>Neuron</a>
+      <a href="/ui/vision"{% if active == "vision" %} class="active"{% endif %}>Vision</a>
+      <a href="/ui/ask"{% if active == "ask" %} class="active"{% endif %}>Ask</a>
+      <a href="/ui/plasticity"{% if active == "plasticity" %} class="active"{% endif %}>Plasticity</a>
+      <a href="/ui/ecg"{% if active == "ecg" %} class="active"{% endif %}>12-Lead ECG</a>
+    </nav>
+  </aside>
   <main>
-    {{ body }}
+    <div class="content">{{ body }}</div>
   </main>
 </body>
 </html>`;

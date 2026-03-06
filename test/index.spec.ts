@@ -22,6 +22,7 @@ describe('Neuro Explorer worker', () => {
 		};
 		expect(data.name).toBe('Neuro Explorer');
 		expect(data.routes['/ask']).toContain('Socratic neuroscience tutor');
+		expect(data.routes['/ecg']).toContain('12-lead ECG simulator');
 	});
 
 	it('serves the HTML UI shell at root (integration style)', async () => {

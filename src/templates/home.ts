@@ -17,12 +17,13 @@ export const home = `
 </div>
 
 <div class="explanation" style="margin-top:2rem">
-  <h3>Why these four?</h3>
+  <h3>Why these five?</h3>
   <p>Each module maps an AI or computational technique to the biological system that inspired it.
   The neuron simulation shows how real cells integrate and fire.
   The vision module shows how a deep CNN mirrors your visual cortex.
   The tutor lets you interrogate these concepts with an LLM.
-  The plasticity module shows how synapses learn &mdash; the biological ancestor of backpropagation.</p>
+  The plasticity module shows how synapses learn &mdash; the biological ancestor of backpropagation.
+  The ECG explorer shows how cardiac electrophysiology projects into 12 clinical leads.</p>
 </div>`;
 
 export const homeData = {
@@ -50,6 +51,13 @@ export const homeData = {
 			name: 'Synaptic Plasticity',
 			description: 'Simulate spike-timing dependent plasticity (STDP). See how millisecond-precise timing between neurons determines whether synapses strengthen or weaken.',
 			tags: ['STDP', 'Hebbian learning', 'interactive'],
+		},
+		{
+			path: '/ui/ecg',
+			name: '12-Lead ECG Explorer',
+			description:
+				'Generate a full 12-lead ECG and tweak heart rate, axis, conduction intervals, ST shift, noise, and rhythm variability to build intuition for waveform morphology.',
+			tags: ['cardiac electrophysiology', '12-lead', 'interactive'],
 		},
 	],
 };
