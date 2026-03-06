@@ -81,8 +81,14 @@ async function classify() {
     stages.forEach(function(s) { s.classList.add('active'); });
 
     if (data.error) {
-      document.getElementById('classifications').innerHTML =
-        '<div class="result" style="color:var(--danger)">' + data.error + '</div>';
+      var errorHtml = '<div class="result" style="color:var(--danger)"><strong>Error:</strong> ' + data.error + '</div>';
+      if (data.suggestion) {
+        errorHtml += '<div style="margin-top:.5rem;padding:.75rem;background:rgba(255,100,100,0.1);border-radius:4px;font-size:.85rem;color:var(--text)">💡 ' + data.suggestion + '</div>';
+      }
+      if (data.details) {
+        errorHtml += '<details style="margin-top:.5rem;font-size:.75rem;color:var(--dim)"><summary>Technical details</summary><pre>' + JSON.stringify(data.details, null, 2) + '</pre></details>';
+      }
+      document.getElementById('classifications').innerHTML = errorHtml;
     } else {
       var cls = data.classifications || [];
       var html = '<div style="margin:.75rem 0">';
@@ -112,10 +118,26 @@ async function classify() {
 </script>`;
 
 export const visionStages = [
-	{ cortical: 'V1', resnet: 'Conv1', biology: 'Oriented edges, contrast. Hubel & Wiesel (1962) showed V1 neurons fire for specific edge orientations.' },
+	{
+		cortical: 'V1',
+		resnet: 'Conv1',
+		biology: 'Oriented edges, contrast. Hubel & Wiesel (1962) showed V1 neurons fire for specific edge orientations.',
+	},
 	{ cortical: 'V2', resnet: 'Block 1', biology: 'Corners, texture boundaries, illusory contours. V2 neurons detect border ownership.' },
-	{ cortical: 'V4', resnet: 'Block 2', biology: 'Color constancy, curvature. Damage to V4 causes achromatopsia (loss of color perception).' },
-	{ cortical: 'Post. IT', resnet: 'Block 3', biology: 'Object parts, face components. Posterior IT encodes complex features like eyes, mouths, limbs.' },
+	{
+		cortical: 'V4',
+		resnet: 'Block 2',
+		biology: 'Color constancy, curvature. Damage to V4 causes achromatopsia (loss of color perception).',
+	},
+	{
+		cortical: 'Post. IT',
+		resnet: 'Block 3',
+		biology: 'Object parts, face components. Posterior IT encodes complex features like eyes, mouths, limbs.',
+	},
 	{ cortical: 'Ant. IT', resnet: 'Block 4', biology: 'Whole objects, view-invariant. The fusiform face area (FFA) is here.' },
-	{ cortical: 'PFC', resnet: 'FC Layer', biology: 'Category decision. Prefrontal cortex maps object representations to task-relevant labels.' },
+	{
+		cortical: 'PFC',
+		resnet: 'FC Layer',
+		biology: 'Category decision. Prefrontal cortex maps object representations to task-relevant labels.',
+	},
 ];

@@ -172,9 +172,25 @@ export async function handleVision(request: Request, ai: AiClient): Promise<Resp
 			{ headers: { 'Content-Type': 'application/json' } },
 		);
 	} catch (err: any) {
-		return new Response(JSON.stringify({ error: err.message }), {
-			status: 500,
-			headers: { 'Content-Type': 'application/json' },
-		});
+		// Check if the error is due to abort (timeout)
+		const isAbortError = err.name === 'AbortError' || err.message === 'The operation was aborted.';
+
+		return new Response(
+			JSON.stringify({
+				error: isAbortError ? 'Request timed out' : 'Request failed',
+				details: {
+					message: err.message,
+					isAbort: isAbortError,
+					url: imageUrl,
+				},
+				suggestion: isAbortError
+					? 'The request timed out. The image server might be slow or unreachable. Try a different image URL.'
+					: 'An error occurred while processing the image. Please check the URL and try again.',
+			}),
+			{
+				status: isAbortError ? 408 : 500,
+				headers: { 'Content-Type': 'application/json' },
+			},
+		);
 	}
 }
