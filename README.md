@@ -1,84 +1,101 @@
 # Neuro Explorer
 
-Interactive neuroscience demos with AI-assisted endpoints and a server-rendered Liquid UI.
+Interactive neuroscience labs and AI-assisted study tools built as a single Next.js application.
 
-## Purpose
+## Architecture
 
-This project is built to share programming skills with students in neurology while creating tools that are genuinely useful to them.
-The goal is not just to teach code in the abstract, but to turn code into concrete, valuable learning instruments for neuroscience, physiology, and clinical intuition.
+- App Router pages live in `src/app/*`.
+- Shared neuroscience engines live in `src/core/*`.
+- Server-side route logic lives in `src/server/*`.
+- Browser clients talk to internal Next.js route handlers at `/api/*`.
+- `Vision` and `Ask` call Cloudflare Workers AI from the server side through standard REST credentials, so the same app runs on Vercel and Cloudflare Workers.
 
-## Runtime targets
+The old Liquid template UI and the parallel `web/` app are no longer part of the active runtime.
 
-- Cloudflare Workers (`src/index.ts`)
-- Vercel Functions (`api/index.ts`)
+## Modules
 
-Both targets share the same route logic in [`src/app.ts`](src/app.ts).
+- Brain Atlas
+- Neuron Simulation
+- Retinal Receptive Field Lab
+- Grid Cell Navigator
+- 12-Lead ECG Explorer
+- Synaptic Plasticity
+- Dopamine Prediction Error Lab
+- Visual Cortex
+- Neuro Tutor
 
-## Frontend migration track
+## Local Development
 
-The current production UI still lives in `src/templates/*` and is rendered through `liquidjs`.
-In parallel, there is now a typed React/App Router frontend in `web/` that exists to replace the current string-template UI incrementally instead of rewriting the entire stack at once.
-
-Current migration status:
-
-- `web/` is a separate Next.js App Router frontend track.
-- `Brain Atlas`, `Neuron`, `Retina`, `Plasticity`, `Dopamine`, `Vision`, and `Ask` are now migrated pages there.
-- AI-backed pages now migrate through the same frontend track, but Cloudflare Workers remains the execution boundary for `vision` and `ask`.
-- `web/` now has a Cloudflare OpenNext/Wrangler deployment target while still remaining a standard Next.js app for Vercel.
-- The neuroscience engines and current deployable app remain untouched in the root runtime.
-
-## Local development
+Install dependencies, set environment variables, and run the Next.js app from the repository root.
 
 ```bash
 npm install
 npm run dev
 ```
 
-For the App Router migration track:
+For AI-backed routes, set one of these credential pairs:
 
 ```bash
-cd web
-npm install
-npm run dev
+CLOUDFLARE_ACCOUNT_ID=...
+CLOUDFLARE_API_TOKEN=...
 ```
 
-Set `NEURO_API_BASE_URL` in `web/.env` so the App Router `/api/*` proxy can reach
-the shared backend runtime in local dev, Cloudflare deploys, or Vercel deploys.
-
-## Cloudflare deploy
+or
 
 ```bash
-npm run deploy
+CF_ACCOUNT_ID=...
+CF_API_TOKEN=...
 ```
 
-## Vercel deploy
+See [.env.example](.env.example) for the expected shape.
 
-There are now two valid Vercel deployment shapes:
-
-1. Legacy backend runtime from the repository root.
-   Set `CLOUDFLARE_ACCOUNT_ID` (or `CF_ACCOUNT_ID`) and `CLOUDFLARE_API_TOKEN` (or `CF_API_TOKEN`).
-   The root [`vercel.json`](vercel.json) rewrites public routes to [`api/index.ts`](api/index.ts), which restores the original pathname for the shared backend app.
-2. Migrated Next.js frontend from `web/`.
-   Set the Vercel project root directory to `web/`.
-   Set `NEURO_API_BASE_URL` to the shared backend origin you want the App Router `/api/*` proxy to call.
-   That backend can be the root Vercel deployment above or the Cloudflare Worker deployment.
-
-## Type checks and tests
+## Verification
 
 ```bash
 npm run typecheck
 npm test
+npm run build
 ```
 
-Additional helper commands for the migration track:
+## Deploy
+
+### Vercel
+
+Deploy the repository root as a normal Next.js project. The internal `/api/*` handlers ship with the app, so there is no separate backend deployment.
+
+Required environment variables for `Vision` and `Ask`:
+
+- `CLOUDFLARE_ACCOUNT_ID` or `CF_ACCOUNT_ID`
+- `CLOUDFLARE_API_TOKEN` or `CF_API_TOKEN`
+
+Optional helper:
 
 ```bash
-npm run typecheck:web
-npm run build:web
-npm run preview:web
-npm run deploy:web
+npm run deploy:vercel
 ```
 
-## Template engine note
+### Cloudflare Workers
 
-The UI uses `liquidjs` with in-memory template strings in `src/templates/*`. No filesystem-based Liquid loaders are used, which keeps rendering behavior consistent across Workers and Vercel.
+This project uses OpenNext for the Workers target. The built Worker entrypoint is `.open-next/worker.js`, referenced by [wrangler.jsonc](wrangler.jsonc).
+
+Useful commands:
+
+```bash
+npm run cf-typegen
+npm run preview:cf
+npm run deploy
+```
+
+If you change Wrangler bindings, regenerate the Cloudflare types before shipping:
+
+```bash
+npm run cf-typegen
+```
+
+## Repository Layout
+
+- [src/app](src/app) contains pages and route handlers.
+- [src/components](src/components) contains UI components.
+- [src/core](src/core) contains shared simulation and content logic.
+- [src/server](src/server) contains server-side adapters and AI integration.
+- [src/env.js](src/env.js) defines environment validation.

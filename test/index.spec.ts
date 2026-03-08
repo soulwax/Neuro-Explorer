@@ -1,19 +1,22 @@
-import { env, createExecutionContext, waitOnExecutionContext, SELF } from 'cloudflare:test';
-import { describe, it, expect } from 'vitest';
-import worker from '../src/index';
+import { describe, expect, it } from 'vitest';
+import { handleApiRequest } from '../src/server/app';
+import type { AiClient } from '../src/server/ai/client';
 
-// For now, you'll need to do something like this to get a correctly-typed
-// `Request` to pass to `worker.fetch()`.
-const IncomingRequest = Request<unknown, IncomingRequestCfProperties>;
+const inertAiClient: AiClient = {
+	async run() {
+		throw new Error('AI execution not expected in this test.');
+	},
+};
 
-describe('Neuro Explorer worker', () => {
-	it('returns API route metadata (unit style)', async () => {
-		const request = new IncomingRequest('http://example.com/routes');
-		// Create an empty context to pass to `worker.fetch()`.
-		const ctx = createExecutionContext();
-		const response = await worker.fetch(request, env, ctx);
-		// Wait for all `Promise`s passed to `ctx.waitUntil()` to settle before running test assertions
-		await waitOnExecutionContext(ctx);
+function request(path: string, init?: RequestInit) {
+	return new Request(`https://example.com${path}`, init);
+}
+
+describe('Neuro Explorer API', () => {
+	it('returns API route metadata', async () => {
+		const response = await handleApiRequest(request('/api/routes'), {
+			ai: inertAiClient,
+		});
 
 		expect(response.status).toBe(200);
 		const data = (await response.json()) as {
@@ -29,11 +32,9 @@ describe('Neuro Explorer worker', () => {
 		expect(data.routes['/retina']).toContain('Retinal receptive field simulator');
 	});
 
-	it('serves bootstrap data through the canonical /api/vision alias (integration style)', async () => {
-		const response = await SELF.fetch('https://example.com/api/vision', {
-			headers: {
-				Origin: 'https://web.example',
-			},
+	it('serves bootstrap data through /api/vision', async () => {
+		const response = await handleApiRequest(request('/api/vision'), {
+			ai: inertAiClient,
 		});
 
 		expect(response.status).toBe(200);
@@ -49,11 +50,9 @@ describe('Neuro Explorer worker', () => {
 		expect(data.sample_image_url).toContain('wikimedia.org');
 	});
 
-	it('serves bootstrap data through the canonical /api/ask alias (integration style)', async () => {
-		const response = await SELF.fetch('https://example.com/api/ask', {
-			headers: {
-				Origin: 'https://web.example',
-			},
+	it('serves bootstrap data through /api/ask', async () => {
+		const response = await handleApiRequest(request('/api/ask'), {
+			ai: inertAiClient,
 		});
 
 		expect(response.status).toBe(200);
@@ -68,40 +67,39 @@ describe('Neuro Explorer worker', () => {
 		expect(data.example_prompts.some((example) => example.topic === 'memory')).toBe(true);
 	});
 
-	it('answers CORS preflight for Worker-backed ask and vision routes (integration style)', async () => {
-		const askResponse = await SELF.fetch('https://example.com/api/ask', {
-			method: 'OPTIONS',
-			headers: {
-				Origin: 'https://web.example',
-				'Access-Control-Request-Method': 'POST',
-			},
-		});
+	it('answers CORS preflight for ask and vision routes', async () => {
+		const askResponse = await handleApiRequest(
+			request('/api/ask', {
+				method: 'OPTIONS',
+				headers: {
+					Origin: 'https://web.example',
+					'Access-Control-Request-Method': 'POST',
+				},
+			}),
+			{ ai: inertAiClient }
+		);
 		expect(askResponse.status).toBe(204);
 		expect(askResponse.headers.get('Access-Control-Allow-Methods')).toContain('POST');
 
-		const visionResponse = await SELF.fetch('https://example.com/api/vision', {
-			method: 'OPTIONS',
-			headers: {
-				Origin: 'https://web.example',
-				'Access-Control-Request-Method': 'GET',
-			},
-		});
+		const visionResponse = await handleApiRequest(
+			request('/api/vision', {
+				method: 'OPTIONS',
+				headers: {
+					Origin: 'https://web.example',
+					'Access-Control-Request-Method': 'GET',
+				},
+			}),
+			{ ai: inertAiClient }
+		);
 		expect(visionResponse.status).toBe(204);
 		expect(visionResponse.headers.get('Access-Control-Allow-Origin')).toBe('*');
 	});
 
-	it('serves the HTML UI shell at root (integration style)', async () => {
-		const response = await SELF.fetch('https://example.com/');
-		expect(response.status).toBe(200);
-		expect(response.headers.get('Content-Type')).toContain('text/html');
-		expect(await response.text()).toContain('Neuro Explorer');
-	});
-
-	it('returns a deterministic grid-cell map (unit style)', async () => {
-		const request = new IncomingRequest('http://example.com/grid-cell?durationSec=20&arenaSize=100');
-		const ctx = createExecutionContext();
-		const response = await worker.fetch(request, env, ctx);
-		await waitOnExecutionContext(ctx);
+	it('returns a deterministic grid-cell map', async () => {
+		const response = await handleApiRequest(
+			request('/api/grid-cell?durationSec=20&arenaSize=100'),
+			{ ai: inertAiClient }
+		);
 
 		expect(response.status).toBe(200);
 		const data = (await response.json()) as {
@@ -116,11 +114,11 @@ describe('Neuro Explorer worker', () => {
 		expect(data.summary.coveragePct).toBeGreaterThan(5);
 	});
 
-	it('shows cueward shift and omission dip in dopamine learning (unit style)', async () => {
-		const request = new IncomingRequest('http://example.com/dopamine?trialCount=24&omissionTrial=20');
-		const ctx = createExecutionContext();
-		const response = await worker.fetch(request, env, ctx);
-		await waitOnExecutionContext(ctx);
+	it('shows cueward shift and omission dip in dopamine learning', async () => {
+		const response = await handleApiRequest(
+			request('/api/dopamine?trialCount=24&omissionTrial=20'),
+			{ ai: inertAiClient }
+		);
 
 		expect(response.status).toBe(200);
 		const data = (await response.json()) as {
@@ -129,17 +127,15 @@ describe('Neuro Explorer worker', () => {
 			summary: { omissionDip: number };
 		};
 		expect(data.snapshots.length).toBeGreaterThanOrEqual(3);
-		expect(data.learningCurve[data.learningCurve.length - 1].cueError).toBeGreaterThan(0);
+		expect(data.learningCurve[data.learningCurve.length - 1]!.cueError).toBeGreaterThan(0);
 		expect(data.summary.omissionDip).toBeLessThan(0);
 	});
 
-	it('returns center-surround retinal tuning data (unit style)', async () => {
-		const request = new IncomingRequest(
-			'http://example.com/retina?stimulusType=spot&stimulusRadius=3.5&surroundStrength=0.7'
+	it('returns center-surround retinal tuning data', async () => {
+		const response = await handleApiRequest(
+			request('/api/retina?stimulusType=spot&stimulusRadius=3.5&surroundStrength=0.7'),
+			{ ai: inertAiClient }
 		);
-		const ctx = createExecutionContext();
-		const response = await worker.fetch(request, env, ctx);
-		await waitOnExecutionContext(ctx);
 
 		expect(response.status).toBe(200);
 		const data = (await response.json()) as {
@@ -156,11 +152,11 @@ describe('Neuro Explorer worker', () => {
 		expect(data.sizeTuning.some((point) => point.value < 0)).toBe(true);
 	});
 
-	it('returns 3D activation data for the ECG explorer (unit style)', async () => {
-		const request = new IncomingRequest('http://example.com/ecg?heartRate=84&qrsAmp=1.3&precordialRotation=12');
-		const ctx = createExecutionContext();
-		const response = await worker.fetch(request, env, ctx);
-		await waitOnExecutionContext(ctx);
+	it('returns 3D activation data for the ECG explorer', async () => {
+		const response = await handleApiRequest(
+			request('/api/ecg?heartRate=84&qrsAmp=1.3&precordialRotation=12'),
+			{ ai: inertAiClient }
+		);
 
 		expect(response.status).toBe(200);
 		const data = (await response.json()) as {
@@ -171,7 +167,7 @@ describe('Neuro Explorer worker', () => {
 				leadAxes: Array<{ name: string }>;
 			};
 		};
-		expect(data.leads.V2.length).toBeGreaterThan(100);
+		expect(data.leads.V2!.length).toBeGreaterThan(100);
 		expect(data.activation.beatMs).toBeGreaterThan(500);
 		expect(data.activation.frames.length).toBeGreaterThan(60);
 		expect(data.activation.leadAxes.length).toBe(12);
@@ -180,11 +176,10 @@ describe('Neuro Explorer worker', () => {
 		expect(data.activation.frames.some((frame) => frame.vector.magnitude > 0.2)).toBe(true);
 	});
 
-	it('returns brain-atlas regions with interlinked circuits (unit style)', async () => {
-		const request = new IncomingRequest('http://example.com/brain-atlas');
-		const ctx = createExecutionContext();
-		const response = await worker.fetch(request, env, ctx);
-		await waitOnExecutionContext(ctx);
+	it('returns brain-atlas regions with interlinked circuits', async () => {
+		const response = await handleApiRequest(request('/api/brain-atlas'), {
+			ai: inertAiClient,
+		});
 
 		expect(response.status).toBe(200);
 		const data = (await response.json()) as {
@@ -200,5 +195,19 @@ describe('Neuro Explorer worker', () => {
 		const thalamus = data.regions.find((region) => region.id === 'thalamus');
 		expect(thalamus?.chapter1.functions.length).toBeGreaterThan(2);
 		expect(thalamus?.chapter2.interlinks.some((link) => link.target === 'prefrontal')).toBe(true);
+	});
+
+	it('returns 404 for unknown API routes', async () => {
+		const response = await handleApiRequest(request('/api/does-not-exist'), {
+			ai: inertAiClient,
+		});
+
+		expect(response.status).toBe(404);
+		const data = (await response.json()) as {
+			error: string;
+			details: { path: string };
+		};
+		expect(data.error).toBe('Not found');
+		expect(data.details.path).toBe('/does-not-exist');
 	});
 });

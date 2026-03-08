@@ -1,5 +1,22 @@
 # Changelog
 
+## [0.16.0] - 2026-03-08
+
+### Added
+
+- Added root App Router pages for `Grid Cell Navigator` and `12-Lead ECG Explorer`, completing the full module set inside the primary Next.js application.
+- Added root server adapters under `src/server/*` so the internal `/api/*` contract now handles deterministic labs and Cloudflare AI-backed routes from the same app boundary.
+
+### Changed
+
+- Promoted the Next.js application to the repository root and updated local development, verification, and deployment flows around a single app for Vercel and Cloudflare Workers.
+- Updated the active UI, navigation, and metadata so the product now presents itself as a finished Next.js application rather than a migration track.
+- Updated tests, type checking, and Wrangler/OpenNext configuration to validate the new root-level runtime layout.
+
+### Removed
+
+- Removed the Liquid template UI, legacy Worker/Vercel entrypoints, and the parallel `web/` application from the active codebase.
+
 ## [0.15.0] - 2026-03-07
 
 ### Added
