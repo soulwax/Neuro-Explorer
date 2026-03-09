@@ -18,13 +18,13 @@ export function AppShell({ children }: Readonly<{ children: React.ReactNode }>) 
 
 	return (
 		<div className="min-h-screen bg-[radial-gradient(circle_at_top_left,rgba(103,211,255,0.14),transparent_25%),radial-gradient(circle_at_top_right,rgba(255,213,138,0.12),transparent_20%),linear-gradient(180deg,#0c1729_0%,#08111d_58%,#07101a_100%)] text-slate-100">
-			<div className="mx-auto grid min-h-screen max-w-[1480px] grid-cols-1 lg:grid-cols-[272px_minmax(0,1fr)]">
+			<div className="mx-auto grid min-h-screen max-w-370 grid-cols-1 lg:grid-cols-[272px_minmax(0,1fr)]">
 				<aside className="border-b border-white/10 bg-slate-950/35 px-5 py-6 backdrop-blur lg:border-b-0 lg:border-r">
 					<Link href="/" className="block text-lg font-semibold tracking-[0.14em] text-white">
 						Neuro Explorer
 					</Link>
-					<p className="mt-2 max-w-[14rem] text-sm leading-6 text-slate-400">
-						Typed App Router interface for neuroscience simulations, anatomy, and Cloudflare-backed AI study tools.
+					<p className="mt-2 max-w-56 text-sm leading-6 text-slate-400">
+						Neuroscience teaching and exploration platform for the University of Amsterdam and its clinical partners. No use of LLMs.
 					</p>
 					<div className="mt-4 inline-flex rounded-full border border-cyan-300/20 bg-cyan-300/10 px-3 py-1 text-xs font-medium uppercase tracking-[0.18em] text-cyan-100">
 						{moduleCount} modules
