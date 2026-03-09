@@ -129,20 +129,21 @@ export const curriculumModules: CurriculumModule[] = [
   {
     slug: "vision",
     title: "Visual Cortex",
-    trainingStage: "Post-clinical visual localization",
+    trainingStage: "Consult-level cortical vision reasoning",
     learningGoals: [
       "Understand hierarchical visual processing",
-      "Map perception to ventral stream stages",
+      "Map perception to ventral, dorsal, and attention-network failures",
     ],
     advancedObjectives: [
-      "Use visual syndromes such as agnosia, achromatopsia, and field cuts as localization tools.",
-      "Connect recurrent cortical processing to category stability, attention, predictive coding, and what additional data should settle a visual localization consult.",
+      "Use visual syndromes such as agnosia, achromatopsia, field cuts, optic ataxia, simultanagnosia, and neglect as localization tools.",
+      "Connect recurrent cortical processing to category stability, attention, predictive coding, and the single next datum that should settle a visual localization consult.",
     ],
-    prerequisites: ["Retinal organization"],
-    linkedModules: ["retina", "brain-atlas", "ask"],
+    prerequisites: ["Retinal organization", "Visual field logic"],
+    linkedModules: ["retina", "visual-field", "brain-atlas", "ask"],
     commonMisconceptions: [
       "Vision is computed in one cortical area.",
       "Classification and localization are the same process.",
+      "All high-order visual complaints belong to ventral stream rather than dorsal or attention networks.",
     ],
   },
   {

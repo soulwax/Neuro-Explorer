@@ -29,3 +29,8 @@ export interface RetinaClinicalCase extends InstructionCase {
   expectedPresetId: string;
   startingPresetId: string;
 }
+
+export interface VisionLocalizationCase extends InstructionCase {
+  expectedPresetId: string;
+  startingPresetId: string;
+}

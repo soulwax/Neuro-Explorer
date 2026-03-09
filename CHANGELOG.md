@@ -1,5 +1,18 @@
 # Changelog
 
+## [0.24.0] - 2026-03-09
+
+### Added
+
+- Added a new consult-level `Vision` teaching layer with syndrome presets spanning posterior field-entry cortex, ventral recognition, dorsal visuospatial action, and right-parietal attention failure.
+- Added case-based cortical vision localization for posterior hemianopia, prosopagnosia, achromatopsia, optic ataxia, and neglect-style attentional syndromes.
+- Added typed `Vision` test coverage for syndrome presets, track assignments, and case wiring.
+
+### Changed
+
+- Rebuilt `Vision` so the Cloudflare AI classifier now sits inside a stronger clinical reasoning surface with compare mode, revealable cases, and pathway handoff to `retina`, `visual-field`, `brain-atlas`, and `ask`.
+- Updated curriculum, site copy, and API route metadata so `Vision` now advertises dorsal-stream and attention-network reasoning instead of only ventral-stream labeling.
+
 ## [0.23.0] - 2026-03-09
 
 ### Added

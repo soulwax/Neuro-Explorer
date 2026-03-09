@@ -73,8 +73,8 @@ export const moduleCards: ModuleCard[] = [
     slug: "vision",
     title: "Visual Cortex",
     description:
-      "Classify images through the internal Next.js API while working through consult-level field cuts, agnosias, and ventral-stream localization traps.",
-    badge: "Cloudflare AI",
+      "Classify images through the internal API while working through consult-level field-entry, ventral, dorsal, and attention-network localization traps.",
+    badge: "Cortical Vision",
     href: "/vision",
   },
   {

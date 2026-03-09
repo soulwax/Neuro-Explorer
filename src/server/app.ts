@@ -13,7 +13,7 @@ const ROUTES: Record<string, string> = {
 	'/neuron':
 		'Leaky Integrate-and-Fire neuron simulation. Params: tau, threshold, inputCurrent, duration, restingPotential, resetPotential, refractoryPeriod, dt',
 	'/vision':
-		'Image classification via ResNet-50, mapped to the ventral visual stream (V1 -> V2 -> V4 -> IT -> PFC) and used alongside consult-level visual localization teaching. Param: url=<image_url>',
+		'Image classification via ResNet-50, mapped to cortical visual processing and used alongside consult-level field-entry, ventral-stream, dorsal-stream, and attention-network teaching. Param: url=<image_url>',
 	'/brain-atlas': 'Interactive brain atlas with Chapter 1 on regional functions and Chapter 2 on interlinked circuits.',
 	'/ask':
 		'Post-clinical neuroscience and clinical neurology tutor. Params: q=<question>, topic=<optional_topic>, level=<post-clinical|oral-boards|consult-rounds>',
