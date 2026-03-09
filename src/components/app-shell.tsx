@@ -47,6 +47,17 @@ export function AppShell({ children }: Readonly<{ children: React.ReactNode }>) 
 						))}
 					</nav>
 
+					<div className="mt-4 flex flex-wrap gap-2 lg:flex-col">
+						<a
+							href="https://legal.bluesix.dev"
+							target="_blank"
+							rel="noreferrer"
+							className="rounded-full border border-white/10 bg-white/5 px-4 py-2 text-sm text-slate-300 transition hover:border-cyan-300/30 hover:bg-white/10 hover:text-white"
+						>
+							Legal
+						</a>
+					</div>
+
 					<div className="mt-8 rounded-3xl border border-cyan-300/15 bg-cyan-300/8 p-4 text-sm text-slate-300">
 						<p className="font-medium text-cyan-100">How it is built</p>
 						<p className="mt-2 leading-6 text-slate-300/85">
