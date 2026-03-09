@@ -23,16 +23,16 @@ export default function HomePage() {
         </p>
         <div className="mt-6 flex flex-wrap gap-3">
           <Link
-            href="/brain-atlas"
+            href="/visual-field"
             className="rounded-full bg-cyan-300 px-5 py-3 text-sm font-semibold text-slate-950 shadow-[0_12px_28px_rgba(103,211,255,0.24)] transition hover:-translate-y-0.5"
           >
-            Open Brain Atlas
+            Open Visual Field Localizer
           </Link>
           <Link
-            href="/vision"
+            href="/brain-atlas"
             className="rounded-full border border-white/10 bg-white/6 px-5 py-3 text-sm font-semibold text-slate-100 transition hover:bg-white/10"
           >
-            Open Vision
+            Open Brain Atlas
           </Link>
           <Link
             href="/ask"

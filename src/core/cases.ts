@@ -19,3 +19,8 @@ export interface BrainAtlasLocalizationCase extends InstructionCase {
   expectedRegionId: string;
   startingRegionId: string;
 }
+
+export interface VisualFieldLocalizationCase extends InstructionCase {
+  expectedPresetId: string;
+  startingPresetId: string;
+}

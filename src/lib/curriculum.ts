@@ -68,6 +68,25 @@ export const curriculumModules: CurriculumModule[] = [
     ],
   },
   {
+    slug: "visual-field",
+    title: "Visual Field Localizer",
+    trainingStage: "Consult-level visual localization",
+    learningGoals: [
+      "Distinguish monocular, chiasmal, retrochiasmal, and attentional visual syndromes",
+      "Use field geometry to rank lesion location before naming disease",
+    ],
+    advancedObjectives: [
+      "Separate true field loss from neglect and extinction using bedside logic rather than labels.",
+      "Use congruity, quadrant pattern, and macular sparing to rank retrochiasmal lesions by posterior depth.",
+    ],
+    prerequisites: ["Basic visual pathway knowledge", "Retinal organization"],
+    linkedModules: ["retina", "vision", "brain-atlas", "ask"],
+    commonMisconceptions: [
+      "Any left-sided miss is a hemianopia.",
+      "Visual localization ends once you say retrochiasmal.",
+    ],
+  },
+  {
     slug: "plasticity",
     title: "Synaptic Plasticity",
     trainingStage: "Mechanistic learning theory",

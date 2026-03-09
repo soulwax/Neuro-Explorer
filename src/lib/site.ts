@@ -11,6 +11,7 @@ export const navItems = [
   { href: "/brain-atlas", label: "Brain Atlas" },
   { href: "/neuron", label: "Neuron" },
   { href: "/retina", label: "Retina" },
+  { href: "/visual-field", label: "Visual Field" },
   { href: "/grid-cell", label: "Grid Cell" },
   { href: "/ecg", label: "ECG" },
   { href: "/plasticity", label: "Plasticity" },
@@ -43,6 +44,14 @@ export const moduleCards: ModuleCard[] = [
       "Explore linked receptive-field heatmaps, size tuning, and position scans in one typed interface.",
     badge: "Perception",
     href: "/retina",
+  },
+  {
+    slug: "visual-field",
+    title: "Visual Field Localizer",
+    description:
+      "Work through monocular, chiasmal, retrochiasmal, and neglect-like patterns with compare mode and consult-level cases.",
+    badge: "Localization",
+    href: "/visual-field",
   },
   {
     slug: "plasticity",

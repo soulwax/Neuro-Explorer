@@ -1,5 +1,18 @@
 # Changelog
 
+## [0.22.0] - 2026-03-09
+
+### Added
+
+- Added a new `Visual Field Localizer` module with lesion presets for optic nerve, chiasm, optic tract, radiations, occipital cortex, and parietal neglect.
+- Added compare mode and consult-style case mode to the new visual-field module, including decisive next-data prompts and cross-module handoff into `retina`, `vision`, `brain-atlas`, and `ask`.
+- Added a dedicated visual-field core test surface to validate preset and case wiring.
+
+### Changed
+
+- Integrated `Visual Field Localizer` into the main app navigation, curriculum metadata, and home surface as the first flagship localization module from the roadmap.
+- Reframed the home entry point so the new visual-field module is the primary launch path instead of a hidden follow-on page.
+
 ## [0.21.0] - 2026-03-09
 
 ### Added
