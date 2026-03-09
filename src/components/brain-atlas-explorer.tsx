@@ -99,8 +99,8 @@ export function BrainAtlasExplorer() {
 
       <CaseShell
         eyebrow="Case Mode"
-        title="Practice conference-level localization before the reveal"
-        summary="Treat each vignette like a localization conference: define the syndrome, reject weaker alternatives, and then compare your working localization against the strongest network-level target."
+        title="Practice consult-level localization before the reveal"
+        summary="Treat each vignette like senior consult rounds: formulate the syndrome, rank the localization hierarchy, name the most decisive next data, and then compare your working localization against the strongest network-level target."
         actions={
           <>
             {brainAtlasCases.map((item) => (
@@ -138,7 +138,7 @@ export function BrainAtlasExplorer() {
               </div>
               <div className="rounded-[20px] border border-white/10 bg-slate-950/45 p-4">
                 <p className="text-xs uppercase tracking-[0.18em] text-slate-400">
-                  Post-medical objectives
+                  Post-clinical objectives
                 </p>
                 <ul className="mt-3 space-y-2 text-sm leading-7 text-slate-300">
                   {brainAtlasCurriculum.advancedObjectives.map((objective) => (
@@ -154,11 +154,13 @@ export function BrainAtlasExplorer() {
             oneLiner={activeCase.oneLiner}
             chiefComplaint={activeCase.chiefComplaint}
             history={activeCase.history}
+            syndromeFrame={activeCase.syndromeFrame}
             examFindings={activeCase.examFindings}
             prompt={activeCase.prompt}
             hints={activeCase.hints}
             localizationCues={activeCase.localizationCues}
             differentialTraps={activeCase.differentialTraps}
+            nextDataRequests={activeCase.nextDataRequests}
           />
 
           <div className="flex flex-wrap items-center gap-3">
@@ -192,6 +194,7 @@ export function BrainAtlasExplorer() {
                 targetLabel={targetRegion.name}
                 explanation={targetRegion.chapter1.clinicalLink}
                 teachingPoints={activeCase.teachingPoints}
+                nextDataRequests={activeCase.nextDataRequests}
                 linkedModules={followUpTitles}
               />
 

@@ -3,21 +3,25 @@ export function CaseQuestionPanel({
   oneLiner,
   chiefComplaint,
   history,
+  syndromeFrame,
   examFindings,
   prompt,
   hints,
   localizationCues,
   differentialTraps,
+  nextDataRequests,
 }: Readonly<{
   title: string;
   oneLiner: string;
   chiefComplaint: string;
   history: string;
+  syndromeFrame: string;
   examFindings: string[];
   prompt: string;
   hints: string[];
   localizationCues: string[];
   differentialTraps: string[];
+  nextDataRequests: string[];
 }>) {
   return (
     <div className="rounded-[24px] border border-white/10 bg-slate-950/35 p-5">
@@ -42,6 +46,15 @@ export function CaseQuestionPanel({
           </p>
           <p className="mt-2 text-sm leading-7 text-slate-300">{history}</p>
         </div>
+      </div>
+
+      <div className="mt-4 rounded-[20px] border border-white/10 bg-slate-950/45 p-4">
+        <p className="text-xs uppercase tracking-[0.18em] text-slate-400">
+          Syndrome frame
+        </p>
+        <p className="mt-2 text-sm leading-7 text-slate-300">
+          {syndromeFrame}
+        </p>
       </div>
 
       <div className="mt-4 rounded-[20px] border border-white/10 bg-slate-950/45 p-4">
@@ -93,6 +106,17 @@ export function CaseQuestionPanel({
             ))}
           </ul>
         </div>
+      </div>
+
+      <div className="mt-4 rounded-[20px] border border-white/10 bg-slate-950/45 p-4">
+        <p className="text-xs uppercase tracking-[0.18em] text-cyan-100">
+          Next data to request
+        </p>
+        <ul className="mt-3 space-y-2 text-sm leading-7 text-slate-300">
+          {nextDataRequests.map((item) => (
+            <li key={item}>• {item}</li>
+          ))}
+        </ul>
       </div>
     </div>
   );

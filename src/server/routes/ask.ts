@@ -3,11 +3,11 @@ import {
 	askAvailableLevels,
 	askAvailableTopics,
 	buildAskSystemPrompt,
+	normalizeAskLevel,
 	askExamplePrompts,
 	askTopicContext,
 	askLevelOptions,
 	askTopicOptions,
-	type AskLevelId,
 } from '../../core/ask';
 import { corsPreflightResponse, jsonResponse } from '../http';
 
@@ -48,9 +48,7 @@ export async function handleAsk(request: Request, ai: AiClient): Promise<Respons
 		}
 	}
 
-	const selectedLevel = askLevelOptions.some((option) => option.id === level)
-		? (level as AskLevelId)
-		: 'post-medical';
+	const selectedLevel = normalizeAskLevel(level);
 
 	if (!question) {
 		return jsonResponse({

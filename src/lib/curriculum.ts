@@ -13,7 +13,7 @@ export const curriculumModules: CurriculumModule[] = [
   {
     slug: "brain-atlas",
     title: "Brain Atlas",
-    trainingStage: "Post-medical localization",
+    trainingStage: "Post-clinical localization",
     learningGoals: [
       "Localize neurological syndromes to major brain systems",
       "Understand why loops matter more than isolated structures",
@@ -127,7 +127,7 @@ export const curriculumModules: CurriculumModule[] = [
   {
     slug: "ask",
     title: "Neuro Tutor",
-    trainingStage: "Resident-style oral reasoning",
+    trainingStage: "Consult-service oral reasoning",
     learningGoals: [
       "Practice verbal reasoning and explanation",
       "Strengthen mechanism-based clinical thinking",

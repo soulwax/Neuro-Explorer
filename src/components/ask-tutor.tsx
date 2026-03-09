@@ -30,7 +30,7 @@ function isAskSuccessResponse(payload: unknown): payload is AskSuccessResponse {
 }
 
 export function AskTutor() {
-  const [level, setLevel] = useState("post-medical");
+  const [level, setLevel] = useState("post-clinical");
   const [topic, setTopic] = useState("");
   const [question, setQuestion] = useState("");
   const [result, setResult] = useState<AskSuccessResponse | null>(null);
@@ -128,13 +128,12 @@ export function AskTutor() {
               Neuro Tutor
             </p>
             <h1 className="mt-2 text-3xl font-semibold tracking-tight text-white sm:text-4xl">
-              Post-medical neurology tutoring inside the primary Next.js app
+              Post-clinical neurology tutoring inside the primary Next.js app
             </h1>
             <p className="mt-4 max-w-3xl text-sm leading-7 text-slate-300">
-              The tutor now defaults to resident-level reasoning: syndrome
-              formulation, lesion localization, differential rejection, and
-              mechanism-based teaching through the internal Cloudflare-backed
-              route.
+              The tutor now defaults to consult-level teaching: syndrome
+              grammar, localization hierarchy, competing alternatives, and the
+              single next data point that should sharpen the case.
             </p>
           </div>
           <div className="rounded-3xl border border-cyan-300/15 bg-cyan-300/8 px-4 py-3 text-xs uppercase tracking-[0.18em] text-cyan-100">
@@ -216,7 +215,7 @@ export function AskTutor() {
             <button
               type="button"
               onClick={() => {
-                setLevel("post-medical");
+                setLevel("post-clinical");
                 setTopic("");
                 setQuestion("");
                 setError(null);
@@ -234,14 +233,14 @@ export function AskTutor() {
           <p className="text-xs uppercase tracking-[0.24em] text-slate-400">
             Reasoning standard
           </p>
-          <h2 className="mt-1 text-xl font-semibold text-white">
-            What the tutor now tries to do
-          </h2>
+            <h2 className="mt-1 text-xl font-semibold text-white">
+              What the tutor now tries to do
+            </h2>
           <ul className="mt-4 space-y-3 text-sm leading-7 text-slate-300">
-            <li>Force syndromic formulation before naming a lesion or disease.</li>
-            <li>Separate localization, mechanism, and etiology instead of collapsing them.</li>
-            <li>Explain why the nearest competing localization is weaker.</li>
-            <li>Close with a board-style or conference-style follow-up question.</li>
+            <li>Force syndrome formulation before naming a lesion or disease.</li>
+            <li>Rank localization layers instead of jumping to one label too early.</li>
+            <li>Explain what additional data would most efficiently change the differential.</li>
+            <li>Teach like consult rounds or oral boards, not like a flashcard deck.</li>
           </ul>
         </div>
       </section>

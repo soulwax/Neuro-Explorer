@@ -10,6 +10,8 @@ export const brainAtlasCases: BrainAtlasLocalizationCase[] = [
       "Family reports severe disorganization and poor judgment after a head injury.",
     history:
       "The patient forgets goals halfway through tasks, perseverates on the wrong rule, and becomes impulsive when asked to switch plans.",
+    syndromeFrame:
+      "A frontal executive syndrome with impaired set maintenance, inhibitory control, and behavioral regulation, but without a primary aphasic, pyramidal, or cerebellar pattern.",
     examFindings: [
       "Poor set shifting on executive testing",
       "Marked distractibility with intact primary strength and sensation",
@@ -29,6 +31,10 @@ export const brainAtlasCases: BrainAtlasLocalizationCase[] = [
       "Do not mislabel slowed or chaotic behavior as primary motor weakness.",
       "Poor recall during distracted testing can be secondary to executive failure rather than pure hippocampal amnesia.",
     ],
+    nextDataRequests: [
+      "Formal set-shifting or Stroop-style testing to show impaired top-down control.",
+      "A careful language screen to exclude aphasia masquerading as disorganization.",
+    ],
     teachingPoints: [
       "Executive dysfunction points more strongly to prefrontal systems than to primary motor or sensory cortex.",
       "Dysexecutive syndromes often reflect disrupted top-down control over action selection, memory, and attention.",
@@ -46,6 +52,8 @@ export const brainAtlasCases: BrainAtlasLocalizationCase[] = [
       "The patient asks where they are every few minutes despite repeated explanations.",
     history:
       "Remote memories are relatively intact, language is fluent, and attention is adequate during conversation, but new experiences are not being stored.",
+    syndromeFrame:
+      "A dense episodic encoding syndrome with preserved language and conversation, pointing toward medial temporal memory circuitry rather than a broad attentional or aphasic disorder.",
     examFindings: [
       "Severe anterograde memory deficit",
       "Preserved basic language and motor function",
@@ -65,6 +73,10 @@ export const brainAtlasCases: BrainAtlasLocalizationCase[] = [
       "Frontal retrieval failure usually produces poor strategy and cue dependence rather than profound inability to encode new episodes.",
       "Global confusion or delirium would degrade attention and broad cognition, not just new episodic storage.",
     ],
+    nextDataRequests: [
+      "Delayed recall with cueing to separate encoding failure from retrieval failure.",
+      "MRI review for medial temporal vulnerability after hypoxic injury.",
+    ],
     teachingPoints: [
       "Anterograde amnesia is classically associated with hippocampal injury.",
       "The hippocampus links what happened, where it happened, and when it happened into episodic traces.",
@@ -81,6 +93,8 @@ export const brainAtlasCases: BrainAtlasLocalizationCase[] = [
     chiefComplaint: "Movement feels effortful and slow despite preserved comprehension.",
     history:
       "The patient can generate movement when strongly cued, but self-initiated movement is reduced and gait initiation is hesitant.",
+    syndromeFrame:
+      "A hypokinetic movement syndrome centered on impaired action selection and movement scaling, not a corticospinal weakness pattern.",
     examFindings: [
       "Bradykinesia with reduced spontaneous gesture",
       "Difficulty initiating voluntary movement",
@@ -100,6 +114,10 @@ export const brainAtlasCases: BrainAtlasLocalizationCase[] = [
       "Do not confuse bradykinesia with cerebellar incoordination or pyramidal weakness.",
       "Aphasia or neglect would suggest hemispheric cortical syndromes, not a classic basal ganglia loop pattern.",
     ],
+    nextDataRequests: [
+      "Look for decrement, reduced amplitude, and asymmetry on repetitive motor tasks.",
+      "Compare gait initiation and spontaneous movement with externally cued movement.",
+    ],
     teachingPoints: [
       "Basal ganglia dysfunction often impairs initiation and scaling of movement rather than raw corticospinal output.",
       "Movement disorders are usually loop disorders, not isolated one-way pathway failures.",
@@ -116,6 +134,8 @@ export const brainAtlasCases: BrainAtlasLocalizationCase[] = [
     chiefComplaint: "The hand wobbles and overshoots during goal-directed movement.",
     history:
       "There is no major weakness, but timing and coordination collapse during fast or precise actions.",
+    syndromeFrame:
+      "A cerebellar coordination syndrome with impaired error correction, dysmetria, and timing failure rather than a primary force-generation problem.",
     examFindings: [
       "Dysmetria on finger-nose testing",
       "Poor rapid alternating movements",
@@ -135,6 +155,10 @@ export const brainAtlasCases: BrainAtlasLocalizationCase[] = [
       "Sensory ataxia should worsen strongly when proprioceptive feedback is removed, whereas cerebellar dysmetria persists during visually guided tasks.",
       "Pure pyramidal weakness does not explain decomposition and overshoot.",
     ],
+    nextDataRequests: [
+      "Compare performance with eyes open and closed to separate sensory from cerebellar ataxia.",
+      "Check for speech and ocular motor cerebellar signs that support a broader coordination syndrome.",
+    ],
     teachingPoints: [
       "Cerebellar lesions often impair timing, coordination, and error correction rather than movement initiation.",
       "Ataxia is often a prediction problem: intended movement and actual movement stop matching.",
@@ -152,6 +176,8 @@ export const brainAtlasCases: BrainAtlasLocalizationCase[] = [
       "The patient recognizes voices immediately yet fails to identify close relatives when only shown their faces.",
     history:
       "Basic acuity is intact, object copying is adequate, and conversation is fluent, but visual identity judgments for faces are profoundly impaired.",
+    syndromeFrame:
+      "A high-order ventral-stream recognition syndrome with preserved visual intake but impaired mapping of complex visual forms onto identity.",
     examFindings: [
       "Intact primary visual function",
       "Failure to recognize familiar faces from photographs",
@@ -171,6 +197,10 @@ export const brainAtlasCases: BrainAtlasLocalizationCase[] = [
       "Optic neuropathy would degrade acuity, contrast, or color rather than selectively impair face identity.",
       "Primary visual cortex lesions give field defects or cortical blindness, not isolated face-recognition failure.",
     ],
+    nextDataRequests: [
+      "Test recognition across faces, objects, and words to define the category-selective pattern.",
+      "Review ventral temporal imaging rather than stopping at basic acuity and field testing.",
+    ],
     teachingPoints: [
       "Temporal ventral-stream dysfunction can dissociate perception from semantic identity despite intact low-level vision.",
       "Category-selective recognition syndromes are powerful reminders that localization often depends on what is spared as much as on what is lost.",
@@ -188,6 +218,8 @@ export const brainAtlasCases: BrainAtlasLocalizationCase[] = [
       "The patient is awake only briefly, struggles to sustain attention, and cannot reliably describe somatic stimuli.",
     history:
       "Motor output is present, language is limited by fluctuating arousal rather than aphasia, and the family reports abrupt onset after a vascular event.",
+    syndromeFrame:
+      "A thalamic hub syndrome combining unstable arousal with unreliable sensory integration, which is harder to explain by a single cortical map lesion.",
     examFindings: [
       "Fluctuating alertness",
       "Patchy contralateral sensory abnormalities with poor reliability",
@@ -207,6 +239,10 @@ export const brainAtlasCases: BrainAtlasLocalizationCase[] = [
       "Primary somatosensory cortex lesions should not by themselves cause striking fluctuations in wakefulness.",
       "Diffuse metabolic encephalopathy would usually produce a more global and symmetric cognitive collapse.",
     ],
+    nextDataRequests: [
+      "Deep imaging review for paramedian or relay-nucleus involvement.",
+      "Repeated bedside attention testing to show state fluctuation rather than a fixed cortical deficit.",
+    ],
     teachingPoints: [
       "The thalamus is not just a relay; it helps stabilize cortical state, attention, and multimodal information flow.",
       "Deep lesions can produce mixed arousal and sensory syndromes that are easy to misclassify as broad cortical failure.",
@@ -214,5 +250,47 @@ export const brainAtlasCases: BrainAtlasLocalizationCase[] = [
     followUpModules: ["brain-atlas", "vision", "ask"],
     expectedRegionId: "thalamus",
     startingRegionId: "somatosensory",
+  },
+  {
+    id: "crossed-brainstem-pattern",
+    title: "Crossed findings after a posterior circulation event",
+    oneLiner:
+      "A patient develops hoarseness, ipsilateral facial sensory change, contralateral body pain-temperature loss, and severe gait instability.",
+    chiefComplaint:
+      "Swallowing feels unsafe, the voice is hoarse, and the patient is veering to one side after abrupt symptom onset.",
+    history:
+      "The deficits appeared suddenly, facial symptoms and body symptoms are split across sides, and there is associated vertigo with nausea.",
+    syndromeFrame:
+      "A crossed posterior circulation syndrome with cranial nerve-level and long-tract findings in one package, strongly favoring brainstem localization over a hemispheric cortical lesion.",
+    examFindings: [
+      "Ipsilateral facial sensory disturbance",
+      "Contralateral body pain and temperature loss",
+      "Hoarseness, dysphagia, and ipsilateral ataxia",
+    ],
+    prompt:
+      "Which major region is the strongest localization target, and why do the crossed findings outweigh a cortical or thalamic explanation?",
+    hints: [
+      "When cranial nerve-type deficits and contralateral tract findings travel together, think compact anatomy.",
+      "Crossed signs are classic localization anchors.",
+    ],
+    localizationCues: [
+      "Ipsilateral facial and bulbar deficits sit beside contralateral long-tract sensory loss.",
+      "The pattern compresses cranial nerve territory and ascending pathways into one lesion zone.",
+    ],
+    differentialTraps: [
+      "Hemispheric cortical lesions do not usually generate this cranial nerve plus contralateral body split.",
+      "A cerebellar lesion can produce ataxia and vertigo but not the full crossed sensory and bulbar pattern.",
+    ],
+    nextDataRequests: [
+      "Focused cranial nerve and bulbar exam to confirm the crossed pattern at the bedside.",
+      "Posterior circulation imaging that includes the lateral medullary or pontine region, depending on the exact cranial findings.",
+    ],
+    teachingPoints: [
+      "Crossed findings remain one of the highest-yield clues for brainstem localization.",
+      "Brainstem syndromes are compact because cranial nerve nuclei, long tracts, autonomic centers, and cerebellar connections lie tightly together.",
+    ],
+    followUpModules: ["brain-atlas", "vision", "ask"],
+    expectedRegionId: "brainstem",
+    startingRegionId: "thalamus",
   },
 ];

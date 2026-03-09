@@ -1,5 +1,19 @@
 # Changelog
 
+## [0.20.0] - 2026-03-09
+
+### Added
+
+- Added canonical consult-tier tutor modes: `post-clinical`, `oral-boards`, and `consult-rounds`.
+- Added new advanced tutor domains for neurovascular localization and epileptology.
+- Added richer Brain Atlas teaching scaffolding with syndrome framing, decisive next-data prompts, and a crossed brainstem localization case.
+
+### Changed
+
+- Elevated the tutor from resident-style framing to post-clinical consult teaching, with stronger emphasis on localization hierarchy, competing alternatives, and the next datum that should re-rank the case.
+- Preserved backward compatibility for older tutor links by normalizing legacy level names onto the new consult-tier vocabulary.
+- Reworked Brain Atlas case mode so learners must think in syndrome grammar and confirmatory data, not just structure labels.
+
 ## [0.19.0] - 2026-03-09
 
 ### Added

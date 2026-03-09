@@ -72,7 +72,7 @@ export const moduleCards: ModuleCard[] = [
     slug: "ask",
     title: "Neuro Tutor",
     description:
-      "Interrogate lesion localization, movement disorders, neuro-ophthalmology, and mechanism with a post-medical AI tutor.",
+      "Interrogate lesion localization, neurovascular syndromes, epileptology, and mechanism with a consult-level AI tutor.",
     badge: "Cloudflare AI",
     href: "/ask",
   },

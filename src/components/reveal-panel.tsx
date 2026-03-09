@@ -4,6 +4,7 @@ export function RevealPanel({
   targetLabel,
   explanation,
   teachingPoints,
+  nextDataRequests,
   linkedModules,
 }: Readonly<{
   correct: boolean;
@@ -11,6 +12,7 @@ export function RevealPanel({
   targetLabel: string;
   explanation: string;
   teachingPoints: string[];
+  nextDataRequests: string[];
   linkedModules: string[];
 }>) {
   return (
@@ -45,6 +47,17 @@ export function RevealPanel({
           </li>
         ))}
       </ul>
+
+      <div className="mt-4 rounded-[20px] border border-white/10 bg-slate-950/35 px-4 py-3">
+        <p className="text-xs uppercase tracking-[0.18em] text-cyan-100">
+          Highest-yield next data
+        </p>
+        <ul className="mt-3 space-y-2 text-sm leading-7 text-slate-200">
+          {nextDataRequests.map((item) => (
+            <li key={item}>• {item}</li>
+          ))}
+        </ul>
+      </div>
 
       <div className="mt-4 flex flex-wrap gap-2">
         {linkedModules.map((moduleTitle) => (

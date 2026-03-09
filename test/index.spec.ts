@@ -64,10 +64,31 @@ describe('Neuro Explorer API', () => {
 			example_prompts: Array<{ topic: string; level: string }>;
 		};
 		expect(data.usage).toContain('/api/ask');
-		expect(data.topic_options.some((topic) => topic.id === 'lesion-localization')).toBe(true);
-		expect(data.level_options.some((level) => level.id === 'case-conference')).toBe(true);
-		expect(data.example_prompts.some((example) => example.topic === 'memory')).toBe(true);
-		expect(data.example_prompts.some((example) => example.level === 'board-review')).toBe(true);
+		expect(data.topic_options.some((topic) => topic.id === 'neurovascular-localization')).toBe(true);
+		expect(data.level_options.some((level) => level.id === 'consult-rounds')).toBe(true);
+		expect(data.example_prompts.some((example) => example.topic === 'epileptology')).toBe(true);
+		expect(data.example_prompts.some((example) => example.level === 'oral-boards')).toBe(true);
+	});
+
+	it('normalizes legacy ask level aliases to the new consult-level vocabulary', async () => {
+		const response = await handleApiRequest(
+			request('/api/ask?q=localize%20this&level=case-conference'),
+			{
+				ai: {
+					async run() {
+						return { response: 'ok' };
+					},
+				},
+			}
+		);
+
+		expect(response.status).toBe(200);
+		const data = (await response.json()) as {
+			level: string;
+			answer: string;
+		};
+		expect(data.level).toBe('consult-rounds');
+		expect(data.answer).toBe('ok');
 	});
 
 	it('answers CORS preflight for ask and vision routes', async () => {

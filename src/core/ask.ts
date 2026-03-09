@@ -1,7 +1,7 @@
 export type AskLevelId =
-  | "post-medical"
-  | "board-review"
-  | "case-conference";
+  | "post-clinical"
+  | "oral-boards"
+  | "consult-rounds";
 
 export interface AskTopicOption {
   id: string;
@@ -23,46 +23,118 @@ export interface AskExamplePrompt {
   levelLabel: string;
 }
 
-const askBaseSystemPrompt = `You are a neuroscience and clinical neurology tutor for post-medical learners: senior medical students, residents, and early fellows.
+const askBaseSystemPrompt = `You are a neuroscience and clinical neurology tutor for post-clinical learners: residents, fellows, and supervising clinicians using the tool for teaching.
 
 Core stance:
-- Prioritize lesion localization, circuit logic, and mechanism before memorized labels
-- Explain why competing localizations or diagnoses are weaker, not just why one answer is right
-- Use a Socratic style when possible: ask the learner to commit to a localization, mechanism, or differential discriminator before fully revealing the answer
+- Prioritize syndrome formulation, anatomical localization, and mechanism before naming disease labels
+- Explain why the strongest competing localization or diagnosis is weaker, not just why one answer is right
+- Use a Socratic style when useful: force a commitment to a syndrome, tract, loop, or discriminator before fully revealing the answer
 - Move from bedside phenotype to anatomy, then to physiology, then to molecular or systems detail when relevant
-- Connect every explanation to what the learner would expect on examination, imaging, electrophysiology, or formal testing
+- Connect every explanation to what the learner would expect on examination, imaging, electrophysiology, pathology, or formal testing
 - When discussing disease, separate syndrome localization from lesion etiology and from definitive diagnosis
+- Explicitly note what additional data would most efficiently sharpen or overturn the current localization
 - Cite canonical experiments, landmark cases, or major researchers when relevant
-- Keep teaching answers compact but dense; default to about 250-450 words unless the learner asks for more depth
-- Do not give patient-specific treatment instructions or act as a substitute for supervision; stay in educational mode
+- Keep answers dense and teachable; default to about 300-500 words unless the learner asks for more depth
+- Stay in educational mode, not patient-specific treatment mode
 
 Preferred answer structure:
-1. Clinical formulation or core mechanism
-2. Best localization or physiological explanation
-3. Key discriminators against close alternatives
-4. One high-yield pitfall or misconception
-5. One board-style or conference-style follow-up question`;
+1. Syndrome formulation
+2. Best localization hierarchy
+3. Key mechanism or circuit logic
+4. Strongest competing localization and why it is weaker
+5. Highest-yield next data point
+6. One teaching pearl or pitfall`;
 
 const askLevelGuidance: Record<AskLevelId, string> = {
-  "post-medical": `Current mode: Post-medical.
-- Teach at the level expected after core medical training
-- Assume the learner can follow syndromic localization, pathway reasoning, and mechanistic detail
-- Include bedside signs, lesion logic, and one clinically useful discriminator`,
-  "board-review": `Current mode: Board review.
-- Be high-yield and compressed
-- Emphasize discriminating features, lesion localization, classic associations, and exam-style traps
-- Use short, punchy teaching points with minimal narrative`,
-  "case-conference": `Current mode: Case conference.
-- Reason like a senior resident presenting a case
-- Explicitly formulate syndrome, localization, likely neuroanatomy, major competing differentials, and what additional data would refine the case
-- Favor localization language such as cortical versus subcortical, brainstem versus hemispheric, dorsal column versus cerebellar, pre- versus post-ganglionic, and direct versus indirect pathway dysfunction`,
+  "post-clinical": `Current mode: Post-clinical.
+- Teach at the level expected after bedside clinical exposure
+- Assume the learner can follow syndromic localization, tract logic, and mechanism
+- Include concrete discriminators from exam, imaging, or physiology`,
+  "oral-boards": `Current mode: Oral boards.
+- Be compressed, high-yield, and discriminator-heavy
+- Emphasize localization logic, classic pivots, and the single fact that moves the case
+- Sound like a strong oral-board answer, not a broad essay`,
+  "consult-rounds": `Current mode: Consult rounds.
+- Reason like a senior fellow or attending teaching on rounds
+- Explicitly formulate the syndrome, localization hierarchy, main alternatives, and what additional data would re-rank them
+- Favor practical localization language such as cortical versus subcortical, brainstem versus hemispheric, spinal versus peripheral, pre- versus post-ganglionic, loop versus output failure, and primary versus secondary network dysfunction`,
+};
+
+const askLegacyLevelAliases: Record<string, AskLevelId> = {
+  "post-medical": "post-clinical",
+  "board-review": "oral-boards",
+  "case-conference": "consult-rounds",
 };
 
 export function buildAskSystemPrompt(level: AskLevelId): string {
   return `${askBaseSystemPrompt}\n\n${askLevelGuidance[level]}`;
 }
 
+export function normalizeAskLevel(level: string | null | undefined): AskLevelId {
+  if (!level) {
+    return "post-clinical";
+  }
+
+  if (askLevelOptions.some((option) => option.id === level)) {
+    return level as AskLevelId;
+  }
+
+  return askLegacyLevelAliases[level] ?? "post-clinical";
+}
+
 export const askTopicContext: Record<string, string> = {
+  "lesion-localization": `The learner wants lesion localization teaching. Key concepts:
+- Build syndrome first, then localize, then discuss vascular territory or etiology
+- Separate cortex, subcortex, brainstem, cerebellum, spinal cord, root, plexus, nerve, neuromuscular junction, and muscle patterns
+- Use crossed findings, cortical signs, neglect, aphasia, gaze deviation, field cuts, sensory level logic, and movement phenomenology
+- Distinguish single-lesion explanations from multifocal, toxic-metabolic, and network-level mimics
+- Tie exam findings to tract and loop anatomy instead of memorized lists`,
+
+  "neurovascular-localization": `The learner wants neurovascular localization teaching. Key concepts:
+- Syndrome first, then vascular territory, then likely mechanism
+- Separate cortical MCA syndromes, lacunar syndromes, posterior circulation syndromes, watershed patterns, and deep perforator lesions
+- Gaze deviation, aphasia, neglect, field cuts, crossed findings, and ataxia as vascular clues
+- When a stroke pattern does not fit one vascular tree, consider mimics or multifocal disease
+- Explain why vascular territory is downstream from anatomy, not a substitute for it`,
+
+  epileptology: `The learner wants epileptology teaching. Key concepts:
+- Seizure semiology as localization data: awareness, automatisms, versive movement, aphasia, and postictal state
+- Distinguish focal cortical onset, network spread, and generalized patterns
+- Use EEG, imaging, and semiology together rather than in isolation
+- Separate provoked seizure, epilepsy syndrome, and mimic
+- Treat seizure description as anatomy plus timing, not just an event label`,
+
+  "neuro-ophthalmology": `The learner wants neuro-ophthalmology teaching. Key concepts:
+- Monocular versus binocular visual loss and field-defect logic
+- Optic nerve, chiasm, tract, radiations, and occipital cortex localization
+- Pupillary light reflex, relative afferent pupillary defect, and near-light dissociation
+- Eye movement syndromes including INO, gaze palsies, and cranial neuropathies
+- Retinal versus optic neuropathic versus retrochiasmal patterns
+- Use field defects and ocular motor findings as anatomy maps`,
+
+  "movement-disorders": `The learner wants movement-disorders teaching. Key concepts:
+- Bradykinesia, rigidity, tremor, dystonia, chorea, myoclonus, tics, and ataxia as phenomenology first
+- Direct and indirect basal ganglia pathways, movement vigor, and action selection
+- Cerebellar error correction versus basal ganglia gating failure
+- Levodopa-responsive versus atypical parkinsonian patterns
+- Hyperkinetic disorders as network-disinhibition problems, not just excess movement
+- Clinicopathological reasoning from phenomenology to circuit`,
+
+  "autonomic-neurocardiology": `The learner wants advanced autonomic and neurocardiac teaching. Key concepts:
+- Central autonomic network: insula, amygdala, hypothalamus, medulla, vagal nuclei
+- Baroreflexes, vagal braking, sympathetic surge, and respiratory sinus coupling
+- How acute CNS injury can alter ECGs through catecholaminergic stress and repolarization changes
+- Pre- versus post-ganglionic autonomic failure and bedside pattern recognition
+- Distinguish primary cardiac rhythm disease from neurally mediated modulation
+- Tie ECG changes back to brain-heart circuitry`,
+
+  "cognitive-neurology": `The learner wants advanced cognitive-neurology teaching. Key concepts:
+- Aphasia, apraxia, neglect, agnosia, dysexecutive syndrome, and amnesia as separable cognitive phenotypes
+- Dominant versus non-dominant hemispheric patterns
+- Frontal-subcortical loops versus cortical association syndromes
+- Behavioral neurology reasoning from bedside tasks to network anatomy
+- Why fluent speech does not equal preserved comprehension, and why recall failure does not always mean hippocampal damage`,
+
   "action-potential": `The learner wants advanced teaching on neuronal excitability. Key concepts:
 - Voltage-gated sodium channel activation and inactivation gates
 - Potassium conductances, repolarization, afterhyperpolarization, and firing adaptation
@@ -110,44 +182,6 @@ export const askTopicContext: Record<string, string> = {
 - Working memory as distributed frontoparietal control rather than a single storage box
 - Sleep spindles, sharp-wave ripples, and replay
 - H.M., Tonegawa engram work, and lesion-plus-network reasoning`,
-
-  "lesion-localization": `The learner wants lesion localization teaching. Key concepts:
-- Build syndrome first, then localize, then discuss vascular territory or etiology
-- Separate cortex, subcortex, brainstem, cerebellum, spinal cord, root, plexus, nerve, neuromuscular junction, and muscle patterns
-- Use crossed findings, cortical signs, neglect, aphasia, gaze deviation, field cuts, and sensory level logic
-- Distinguish single-lesion explanations from multifocal or metabolic mimics
-- Tie exam findings to tract and loop anatomy instead of memorized lists`,
-
-  "movement-disorders": `The learner wants movement-disorders teaching. Key concepts:
-- Bradykinesia, rigidity, tremor, dystonia, chorea, myoclonus, tics, and ataxia as phenomenology first
-- Direct and indirect basal ganglia pathways, movement vigor, and action selection
-- Cerebellar error correction versus basal ganglia gating failure
-- Levodopa-responsive versus atypical parkinsonian patterns
-- Hyperkinetic disorders as network-disinhibition problems, not just excess movement
-- Clinicopathological reasoning from phenomenology to circuit`,
-
-  "neuro-ophthalmology": `The learner wants neuro-ophthalmology teaching. Key concepts:
-- Monocular versus binocular visual loss and field-defect logic
-- Optic nerve, chiasm, tract, radiations, and occipital cortex localization
-- Pupillary light reflex, relative afferent pupillary defect, and near-light dissociation
-- Eye movement syndromes including INO, gaze palsies, and cranial neuropathies
-- Retinal versus optic neuropathic versus retrochiasmal patterns
-- Use field defects and ocular motor findings as anatomy maps`,
-
-  "autonomic-neurocardiology": `The learner wants advanced autonomic and neurocardiac teaching. Key concepts:
-- Central autonomic network: insula, amygdala, hypothalamus, medulla, vagal nuclei
-- Baroreflexes, vagal braking, sympathetic surge, and respiratory sinus coupling
-- How acute CNS injury can alter ECGs through catecholaminergic stress and repolarization changes
-- Pre- versus post-ganglionic autonomic failure and bedside pattern recognition
-- Distinguish primary cardiac rhythm disease from neurally mediated modulation
-- Tie ECG changes back to brain-heart circuitry`,
-
-  "cognitive-neurology": `The learner wants advanced cognitive-neurology teaching. Key concepts:
-- Aphasia, apraxia, neglect, agnosia, executive failure, and memory syndromes as separable cognitive phenotypes
-- Dominant versus non-dominant hemispheric patterns
-- Frontal-subcortical loops versus cortical association syndromes
-- Behavioral neurology reasoning from bedside tasks to network anatomy
-- Why fluent speech does not equal preserved comprehension, and why recall failure does not always mean hippocampal damage`,
 };
 
 export const askTopicOptions: AskTopicOption[] = [
@@ -158,10 +192,22 @@ export const askTopicOptions: AskTopicOption[] = [
       "Syndromic formulation, tract logic, cortical signs, and how to reject weaker competing localizations.",
   },
   {
+    id: "neurovascular-localization",
+    label: "Neurovascular",
+    description:
+      "Stroke-pattern reasoning from syndrome to vascular territory, with lacunar, hemispheric, and posterior circulation contrasts.",
+  },
+  {
+    id: "epileptology",
+    label: "Epileptology",
+    description:
+      "Semiology, spread, EEG correlation, and seizure localization as network anatomy.",
+  },
+  {
     id: "neuro-ophthalmology",
     label: "Neuro-ophthalmology",
     description:
-      "Visual fields, pupillary findings, ocular motility, and pathway-level localization from retina to cortex.",
+      "Visual fields, pupils, ocular motility, and pathway-level localization from retina to cortex.",
   },
   {
     id: "movement-disorders",
@@ -221,65 +267,65 @@ export const askTopicOptions: AskTopicOption[] = [
 
 export const askLevelOptions: AskLevelOption[] = [
   {
-    id: "post-medical",
-    label: "Post-medical",
+    id: "post-clinical",
+    label: "Post-clinical",
     description:
-      "Default depth for residents and advanced students: mechanism, localization, and clinical discriminators.",
+      "Default depth after core bedside training: localization hierarchy, mechanism, and discriminating data.",
   },
   {
-    id: "board-review",
-    label: "Board review",
+    id: "oral-boards",
+    label: "Oral boards",
     description:
-      "High-yield framing that compresses the topic into distinguishing features and classic traps.",
+      "Compressed, exam-style answers that emphasize pivots, traps, and crisp localization logic.",
   },
   {
-    id: "case-conference",
-    label: "Case conference",
+    id: "consult-rounds",
+    label: "Consult rounds",
     description:
-      "Senior-resident style reasoning with syndrome formulation, localization, major alternatives, and next data needs.",
+      "Senior consult-service reasoning with hierarchy of localization, alternatives, and the next data that would settle the case.",
   },
 ];
 
 export const askExamplePrompts: AskExamplePrompt[] = [
   {
-    topic: "lesion-localization",
-    topicLabel: "Lesion Localization",
-    level: "case-conference",
-    levelLabel: "Case conference",
+    topic: "neurovascular-localization",
+    topicLabel: "Neurovascular",
+    level: "consult-rounds",
+    levelLabel: "Consult rounds",
     question:
-      "A patient has right face and arm weakness, expressive aphasia, and gaze preference to the left. Walk me from syndrome to localization and likely vascular territory.",
+      "A patient has left gaze deviation, global aphasia, right face-arm weakness, and a right homonymous hemianopia. Build the syndrome, localize it, and explain why a lacunar process is much weaker.",
+  },
+  {
+    topic: "epileptology",
+    topicLabel: "Epileptology",
+    level: "oral-boards",
+    levelLabel: "Oral boards",
+    question:
+      "How does impaired awareness with oral automatisms, postictal confusion, and an epigastric rising sensation localize differently from a generalized seizure mimic?",
   },
   {
     topic: "neuro-ophthalmology",
     topicLabel: "Neuro-ophthalmology",
-    level: "board-review",
-    levelLabel: "Board review",
+    level: "oral-boards",
+    levelLabel: "Oral boards",
     question:
       "How do you separate optic neuritis, chiasmal compression, and a retrochiasmal lesion using the visual field and pupil exam?",
   },
   {
     topic: "movement-disorders",
     topicLabel: "Movement Disorders",
-    level: "post-medical",
-    levelLabel: "Post-medical",
+    level: "post-clinical",
+    levelLabel: "Post-clinical",
     question:
       "Why does bradykinesia localize better to basal ganglia loop dysfunction than to corticospinal weakness, and how is that different from cerebellar ataxia?",
   },
   {
     topic: "autonomic-neurocardiology",
     topicLabel: "Autonomic Neurocardiology",
-    level: "post-medical",
-    levelLabel: "Post-medical",
+    level: "consult-rounds",
+    levelLabel: "Consult rounds",
     question:
-      "How can acute sympathetic surge after subarachnoid hemorrhage distort ECG interpretation without primary ischemic heart disease?",
-  },
-  {
-    topic: "memory",
-    topicLabel: "Memory Systems",
-    level: "case-conference",
-    levelLabel: "Case conference",
-    question:
-      "A patient recalls remote autobiographical details but cannot retain new episodes after a hypoxic event. Compare hippocampal indexing failure with frontal retrieval failure.",
+      "How can acute sympathetic surge after subarachnoid hemorrhage distort ECG interpretation without primary ischemic heart disease, and what findings would keep you from overcalling ACS?",
   },
 ];
 
