@@ -1,4 +1,9 @@
-import { createRestAiClient, type AiClient } from "./client";
+import {
+  createBindingAiClient,
+  createRestAiClient,
+  type AiBindingLike,
+  type AiClient,
+} from "./client";
 
 const MISSING_AI_CONFIG_MESSAGE =
   "Cloudflare AI is not configured. Set CLOUDFLARE_ACCOUNT_ID (or CF_ACCOUNT_ID) and CLOUDFLARE_API_TOKEN (or CF_API_TOKEN).";
@@ -23,4 +28,24 @@ export function createAiClientFromEnv(env: {
   }
 
   return createRestAiClient({ accountId, apiToken });
+}
+
+export function createAiClientFromRuntime(options: {
+  processEnv: {
+    CLOUDFLARE_ACCOUNT_ID?: string;
+    CF_ACCOUNT_ID?: string;
+    CLOUDFLARE_API_TOKEN?: string;
+    CF_API_TOKEN?: string;
+  };
+  cloudflareEnv?: {
+    AI?: AiBindingLike | undefined;
+  };
+}): AiClient {
+  const binding = options.cloudflareEnv?.AI;
+
+  if (binding) {
+    return createBindingAiClient(binding);
+  }
+
+  return createAiClientFromEnv(options.processEnv);
 }

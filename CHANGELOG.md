@@ -1,5 +1,16 @@
 # Changelog
 
+## [0.18.1] - 2026-03-09
+
+### Fixed
+
+- Restored Cloudflare Workers AI execution for `Vision` and `Ask` by reintroducing the Wrangler `AI` binding and teaching the App Router backend to prefer the native Worker binding when present.
+- Preserved the existing Vercel and local fallback path by keeping Cloudflare REST credentials as the non-Workers AI transport.
+
+### Changed
+
+- Updated local development and deployment docs to clarify that Cloudflare Workers uses the native `AI` binding, while Vercel and plain local Next.js dev use Cloudflare REST credentials.
+
 ## [0.18.0] - 2026-03-09
 
 ### Added

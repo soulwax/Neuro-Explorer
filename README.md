@@ -8,7 +8,8 @@ Interactive neuroscience labs and AI-assisted study tools built as a single Next
 - Shared neuroscience engines live in `src/core/*`.
 - Server-side route logic lives in `src/server/*`.
 - Browser clients talk to internal Next.js route handlers at `/api/*`.
-- `Vision` and `Ask` call Cloudflare Workers AI from the server side through standard REST credentials, so the same app runs on Vercel and Cloudflare Workers.
+- `Vision` and `Ask` call Cloudflare Workers AI from the server side.
+  Cloudflare Workers uses the native `AI` binding, while Vercel and plain local Next.js dev use Cloudflare REST credentials.
 
 The old Liquid template UI and the parallel `web/` app are no longer part of the active runtime.
 
@@ -33,7 +34,7 @@ npm install
 npm run dev
 ```
 
-For AI-backed routes, set one of these credential pairs:
+For AI-backed routes in local Next.js dev or Vercel, set one of these credential pairs:
 
 ```bash
 CLOUDFLARE_ACCOUNT_ID=...
@@ -78,6 +79,8 @@ npm run deploy:vercel
 
 This project uses OpenNext for the Workers target. The built Worker entrypoint is `.open-next/worker.js`, referenced by [wrangler.jsonc](wrangler.jsonc).
 
+`Vision` and `Ask` use the Wrangler `AI` binding in Cloudflare deploys, so no REST credential environment variables are required there unless you explicitly want the fallback path.
+
 Useful commands:
 
 ```bash
@@ -99,3 +102,7 @@ npm run cf-typegen
 - [src/core](src/core) contains shared simulation and content logic.
 - [src/server](src/server) contains server-side adapters and AI integration.
 - [src/env.js](src/env.js) defines environment validation.
+
+## Product Direction
+
+The next instructional roadmap lives in [docs/neurology-roadmap.md](docs/neurology-roadmap.md). It prioritizes case-based reasoning, compare mode, lesion presets, and the next five neurology modules to build.
