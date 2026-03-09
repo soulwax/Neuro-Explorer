@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.18.2] - 2026-03-09
+
+### Fixed
+
+- Switched the App Router `/api/*` handler to OpenNext's async Cloudflare context lookup so Workers AI bindings resolve reliably in Next.js server execution.
+- Enabled Wrangler's remote `AI` binding for local and preview Cloudflare runs, avoiding false fallback into the REST-credential error path when the Worker binding is available.
+
 ## [0.18.1] - 2026-03-09
 
 ### Fixed

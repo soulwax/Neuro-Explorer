@@ -13,7 +13,9 @@ async function route(request: Request): Promise<Response> {
     | undefined;
 
   try {
-    cloudflareEnv = getCloudflareContext().env as typeof cloudflareEnv;
+    cloudflareEnv = (
+      await getCloudflareContext({ async: true })
+    ).env as typeof cloudflareEnv;
   } catch {
     cloudflareEnv = undefined;
   }
