@@ -1,0 +1,24 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif,
+    "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+}
+
+:root {
+  color-scheme: dark;
+}
+
+html {
+  background: #08111d;
+}
+
+body {
+  min-height: 100vh;
+  font-feature-settings: "liga" 1, "kern" 1;
+}
+
+::selection {
+  background: rgba(103, 211, 255, 0.32);
+  color: #f8fbff;
+}
