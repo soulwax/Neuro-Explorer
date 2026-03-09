@@ -6,6 +6,8 @@ export function CaseQuestionPanel({
   examFindings,
   prompt,
   hints,
+  localizationCues,
+  differentialTraps,
 }: Readonly<{
   title: string;
   oneLiner: string;
@@ -14,6 +16,8 @@ export function CaseQuestionPanel({
   examFindings: string[];
   prompt: string;
   hints: string[];
+  localizationCues: string[];
+  differentialTraps: string[];
 }>) {
   return (
     <div className="rounded-[24px] border border-white/10 bg-slate-950/35 p-5">
@@ -65,6 +69,29 @@ export function CaseQuestionPanel({
               {hint}
             </span>
           ))}
+        </div>
+      </div>
+
+      <div className="mt-4 grid gap-4 lg:grid-cols-2">
+        <div className="rounded-[20px] border border-white/10 bg-slate-950/45 p-4">
+          <p className="text-xs uppercase tracking-[0.18em] text-amber-200/90">
+            Localization cues
+          </p>
+          <ul className="mt-3 space-y-2 text-sm leading-7 text-slate-300">
+            {localizationCues.map((cue) => (
+              <li key={cue}>• {cue}</li>
+            ))}
+          </ul>
+        </div>
+        <div className="rounded-[20px] border border-white/10 bg-slate-950/45 p-4">
+          <p className="text-xs uppercase tracking-[0.18em] text-rose-200/90">
+            Differential traps
+          </p>
+          <ul className="mt-3 space-y-2 text-sm leading-7 text-slate-300">
+            {differentialTraps.map((trap) => (
+              <li key={trap}>• {trap}</li>
+            ))}
+          </ul>
         </div>
       </div>
     </div>

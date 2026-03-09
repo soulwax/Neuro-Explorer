@@ -1,5 +1,19 @@
 # Changelog
 
+## [0.19.0] - 2026-03-09
+
+### Added
+
+- Added explicit tutor depth modes for `Neuro Tutor`: `post-medical`, `board-review`, and `case-conference`.
+- Added advanced tutor domains including lesion localization, neuro-ophthalmology, movement disorders, autonomic neurocardiology, and cognitive neurology.
+- Added richer Brain Atlas case metadata with localization cues and differential traps, plus new temporal and thalamic localization cases.
+
+### Changed
+
+- Repositioned the tutor from undergraduate framing to postgraduate neurology reasoning, with stronger emphasis on syndromic formulation, competing localizations, and conference-style follow-up questions.
+- Expanded curriculum metadata across modules so each lab now carries an explicit post-medical training target and advanced objectives.
+- Updated Brain Atlas case mode and home-page copy to present the atlas as a conference-level localization surface rather than a basic anatomy browser.
+
 ## [0.18.2] - 2026-03-09
 
 ### Fixed

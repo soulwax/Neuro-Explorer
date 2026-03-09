@@ -9,12 +9,14 @@ import {
 } from "~/lib/api";
 import {
   askExamplePrompts,
+  askLevelOptions,
   askTopicOptions,
   type AskExamplePrompt,
 } from "~/lib/ask";
 
 interface AskSuccessResponse {
   topic: string;
+  level: string;
   question: string;
   answer: string;
 }
@@ -28,22 +30,29 @@ function isAskSuccessResponse(payload: unknown): payload is AskSuccessResponse {
 }
 
 export function AskTutor() {
+  const [level, setLevel] = useState("post-medical");
   const [topic, setTopic] = useState("");
   const [question, setQuestion] = useState("");
   const [result, setResult] = useState<AskSuccessResponse | null>(null);
   const [error, setError] = useState<ApiErrorInfo | null>(null);
   const [isLoading, setIsLoading] = useState(false);
 
+  const selectedLevel =
+    askLevelOptions.find((option) => option.id === level) ?? askLevelOptions[0]!;
   const selectedTopic =
     askTopicOptions.find((option) => option.id === topic) ?? null;
 
-  async function askQuestion(nextQuestion = question, nextTopic = topic) {
+  async function askQuestion(
+    nextQuestion = question,
+    nextTopic = topic,
+    nextLevel = level,
+  ) {
     const trimmedQuestion = nextQuestion.trim();
     if (!trimmedQuestion) {
       setError({
         message: "Question required",
         suggestion:
-          "Ask about a mechanism, a patient, or an AI-to-biology analogy.",
+          "Ask for lesion localization, a mechanistic differential, or a case-conference style walkthrough.",
       });
       setResult(null);
       return;
@@ -61,6 +70,7 @@ export function AskTutor() {
         body: JSON.stringify({
           question: trimmedQuestion,
           topic: nextTopic || undefined,
+          level: nextLevel || undefined,
         }),
       });
       const payload = (await response.json()) as unknown;
@@ -103,9 +113,10 @@ export function AskTutor() {
   }
 
   function runExample(example: AskExamplePrompt) {
+    setLevel(example.level);
     setTopic(example.topic);
     setQuestion(example.question);
-    void askQuestion(example.question, example.topic);
+    void askQuestion(example.question, example.topic, example.level);
   }
 
   return (
@@ -117,11 +128,13 @@ export function AskTutor() {
               Neuro Tutor
             </p>
             <h1 className="mt-2 text-3xl font-semibold tracking-tight text-white sm:text-4xl">
-              Socratic tutoring inside the primary Next.js app
+              Post-medical neurology tutoring inside the primary Next.js app
             </h1>
             <p className="mt-4 max-w-3xl text-sm leading-7 text-slate-300">
-              The conversation flow now lives directly in App Router while the
-              server route handles Cloudflare-backed tutor inference.
+              The tutor now defaults to resident-level reasoning: syndrome
+              formulation, lesion localization, differential rejection, and
+              mechanism-based teaching through the internal Cloudflare-backed
+              route.
             </p>
           </div>
           <div className="rounded-3xl border border-cyan-300/15 bg-cyan-300/8 px-4 py-3 text-xs uppercase tracking-[0.18em] text-cyan-100">
@@ -132,7 +145,24 @@ export function AskTutor() {
 
       <section className="grid gap-6 xl:grid-cols-[minmax(0,1.05fr)_340px]">
         <div className="rounded-[28px] border border-white/10 bg-white/6 p-5 backdrop-blur">
-          <div className="grid gap-4 md:grid-cols-2">
+          <div className="grid gap-4 md:grid-cols-3">
+            <label className="block">
+              <span className="mb-2 block text-xs uppercase tracking-[0.18em] text-slate-400">
+                Depth mode
+              </span>
+              <select
+                value={level}
+                onChange={(event) => setLevel(event.target.value)}
+                className="w-full rounded-2xl border border-white/10 bg-slate-950/40 px-4 py-3 text-sm text-slate-100 outline-none transition focus:border-cyan-300/40 focus:bg-slate-950/60"
+              >
+                {askLevelOptions.map((option) => (
+                  <option key={option.id} value={option.id}>
+                    {option.label}
+                  </option>
+                ))}
+              </select>
+            </label>
+
             <label className="block">
               <span className="mb-2 block text-xs uppercase tracking-[0.18em] text-slate-400">
                 Topic focus
@@ -153,11 +183,10 @@ export function AskTutor() {
 
             <div className="rounded-[24px] border border-white/10 bg-slate-950/35 p-4">
               <p className="text-xs uppercase tracking-[0.18em] text-slate-400">
-                Why focus helps
+                Teaching frame
               </p>
               <p className="mt-3 text-sm leading-6 text-slate-300">
-                {selectedTopic?.description ??
-                  "Leave the topic open for broad questions, or choose a specific domain to ground the tutor's answer."}
+                {selectedTopic?.description ?? selectedLevel.description}
               </p>
             </div>
           </div>
@@ -170,7 +199,7 @@ export function AskTutor() {
               value={question}
               onChange={(event) => setQuestion(event.target.value)}
               rows={5}
-              placeholder="Why can a neuron be strongly stimulated and still fail to fire again during the absolute refractory period?"
+              placeholder="A patient has vertical diplopia, ptosis, and a blown pupil. Walk me from syndrome to localization, key alternatives, and the most important bedside discriminators."
               className="w-full rounded-[24px] border border-white/10 bg-slate-950/40 px-4 py-3 text-sm leading-7 text-slate-100 outline-none transition focus:border-cyan-300/40 focus:bg-slate-950/60"
             />
           </label>
@@ -187,6 +216,7 @@ export function AskTutor() {
             <button
               type="button"
               onClick={() => {
+                setLevel("post-medical");
                 setTopic("");
                 setQuestion("");
                 setError(null);
@@ -202,15 +232,16 @@ export function AskTutor() {
 
         <div className="rounded-[28px] border border-white/10 bg-white/6 p-5 backdrop-blur">
           <p className="text-xs uppercase tracking-[0.24em] text-slate-400">
-            Socratic stance
+            Reasoning standard
           </p>
           <h2 className="mt-1 text-xl font-semibold text-white">
-            What the tutor tries to do
+            What the tutor now tries to do
           </h2>
           <ul className="mt-4 space-y-3 text-sm leading-7 text-slate-300">
-            <li>Ask guiding questions before dumping answers.</li>
-            <li>Connect abstractions to experiments, patients, and behavior.</li>
-            <li>Draw explicit parallels between neuroscience and AI when useful.</li>
+            <li>Force syndromic formulation before naming a lesion or disease.</li>
+            <li>Separate localization, mechanism, and etiology instead of collapsing them.</li>
+            <li>Explain why the nearest competing localization is weaker.</li>
+            <li>Close with a board-style or conference-style follow-up question.</li>
           </ul>
         </div>
       </section>
@@ -232,6 +263,12 @@ export function AskTutor() {
                 </p>
                 <p className="mt-2 text-sm font-medium text-white">
                   {result.topic}
+                </p>
+                <p className="mt-4 text-xs uppercase tracking-[0.18em] text-slate-400">
+                  Depth mode
+                </p>
+                <p className="mt-2 text-sm font-medium text-white">
+                  {result.level}
                 </p>
                 <p className="mt-4 text-xs uppercase tracking-[0.18em] text-slate-400">
                   Question
@@ -270,7 +307,7 @@ export function AskTutor() {
             Suggested prompts
           </p>
           <h2 className="mt-1 text-xl font-semibold text-white">
-            Start with these
+            Start with these advanced prompts
           </h2>
           <div className="mt-4 space-y-3">
             {askExamplePrompts.map((example) => (
@@ -281,7 +318,7 @@ export function AskTutor() {
                 className="block w-full rounded-[24px] border border-white/10 bg-slate-950/35 p-4 text-left transition hover:border-cyan-300/30 hover:bg-slate-950/55"
               >
                 <p className="text-xs uppercase tracking-[0.18em] text-cyan-100">
-                  {example.topicLabel}
+                  {example.topicLabel} · {example.levelLabel}
                 </p>
                 <p className="mt-2 text-sm leading-7 text-slate-200">
                   {example.question}

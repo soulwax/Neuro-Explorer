@@ -7,6 +7,8 @@ export interface InstructionCase {
   examFindings: string[];
   prompt: string;
   hints: string[];
+  localizationCues: string[];
+  differentialTraps: string[];
   teachingPoints: string[];
   followUpModules: string[];
 }

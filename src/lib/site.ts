@@ -24,7 +24,7 @@ export const moduleCards: ModuleCard[] = [
     slug: "brain-atlas",
     title: "Brain Atlas",
     description:
-      "Explore major regions, trace interlinked circuits, and practice case-based localization in one atlas.",
+      "Explore major regions, trace interlinked circuits, and work through conference-style localization cases with explicit differential traps.",
     badge: "Anatomy",
     href: "/brain-atlas",
   },
@@ -72,7 +72,7 @@ export const moduleCards: ModuleCard[] = [
     slug: "ask",
     title: "Neuro Tutor",
     description:
-      "Ask a Socratic neuroscience tutor through the internal AI route without leaving the main app shell.",
+      "Interrogate lesion localization, movement disorders, neuro-ophthalmology, and mechanism with a post-medical AI tutor.",
     badge: "Cloudflare AI",
     href: "/ask",
   },

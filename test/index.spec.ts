@@ -24,7 +24,7 @@ describe('Neuro Explorer API', () => {
 			routes: Record<string, string>;
 		};
 		expect(data.name).toBe('Neuro Explorer');
-		expect(data.routes['/ask']).toContain('Socratic neuroscience tutor');
+		expect(data.routes['/ask']).toContain('clinical neurology tutor');
 		expect(data.routes['/brain-atlas']).toContain('Interactive brain atlas');
 		expect(data.routes['/ecg']).toContain('12-lead neurocardiac ECG lab');
 		expect(data.routes['/grid-cell']).toContain('Entorhinal grid-cell simulator');
@@ -60,11 +60,14 @@ describe('Neuro Explorer API', () => {
 		const data = (await response.json()) as {
 			usage: string;
 			topic_options: Array<{ id: string }>;
-			example_prompts: Array<{ topic: string }>;
+			level_options: Array<{ id: string }>;
+			example_prompts: Array<{ topic: string; level: string }>;
 		};
 		expect(data.usage).toContain('/api/ask');
-		expect(data.topic_options.some((topic) => topic.id === 'visual-system')).toBe(true);
+		expect(data.topic_options.some((topic) => topic.id === 'lesion-localization')).toBe(true);
+		expect(data.level_options.some((level) => level.id === 'case-conference')).toBe(true);
 		expect(data.example_prompts.some((example) => example.topic === 'memory')).toBe(true);
+		expect(data.example_prompts.some((example) => example.level === 'board-review')).toBe(true);
 	});
 
 	it('answers CORS preflight for ask and vision routes', async () => {
