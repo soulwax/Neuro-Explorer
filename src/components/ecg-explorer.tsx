@@ -1336,6 +1336,698 @@ function AutonomicMap({ result }: Readonly<{ result: ECGResult }>) {
   );
 }
 
+function hemodynamicRiskClass(
+  risk: ECGResult["neurocardiac"]["hemodynamicRisk"],
+) {
+  switch (risk) {
+    case "high":
+      return "bg-rose-300/18 text-rose-100";
+    case "moderate":
+      return "bg-amber-300/18 text-amber-100";
+    default:
+      return "bg-emerald-300/18 text-emerald-100";
+  }
+}
+
+function SummaryTile({
+  eyebrow,
+  value,
+  detail,
+  valueClassName = "text-white",
+}: Readonly<{
+  eyebrow: string;
+  value: string;
+  detail: string;
+  valueClassName?: string;
+}>) {
+  return (
+    <div className="rounded-[24px] border border-white/10 bg-slate-950/35 p-4">
+      <p className="text-[11px] uppercase tracking-[0.22em] text-slate-400">
+        {eyebrow}
+      </p>
+      <p className={`mt-2 text-xl font-semibold ${valueClassName}`}>{value}</p>
+      <p className="mt-3 text-sm leading-6 text-slate-300">{detail}</p>
+    </div>
+  );
+}
+
+function DiagnosticOverview({
+  result,
+  presetLabel,
+  activeConsultFrame,
+  selectedLead,
+  activeFrame,
+}: Readonly<{
+  result: ECGResult;
+  presetLabel: string;
+  activeConsultFrame: (typeof ecgConsultFrames)[number];
+  selectedLead: ECGLeadName;
+  activeFrame: ECGResult["activation"]["frames"][number] | null;
+}>) {
+  const focusLeadMetrics = summarizeLead(result.leads[selectedLead] ?? []);
+  const nextPriority =
+    result.neurocardiac.monitoringPriorities[0] ??
+    "Trend the ECG against neurological change.";
+  const leadSummary = `${describeLeadView(selectedLead)}. Voltage span ${focusLeadMetrics.span.toFixed(2)} mV.`;
+  const vectorSummary = activeFrame
+    ? `${activeFrame.phase} is currently strongest in ${activeFrame.dominantLead} with magnitude ${activeFrame.vector.magnitude.toFixed(3)}.`
+    : "Generate a tracing to see the active dipole phase and dominant lead.";
+
+  return (
+    <section className="grid gap-6 xl:grid-cols-[minmax(0,1.15fr)_380px]">
+      <div className="rounded-[28px] border border-white/10 bg-white/6 p-5 backdrop-blur">
+        <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
+          <div>
+            <p className="text-xs uppercase tracking-[0.24em] text-slate-400">
+              Reading summary
+            </p>
+            <h2 className="mt-1 text-xl font-semibold text-white">
+              Start with the strip before you dive into cases
+            </h2>
+            <p className="mt-3 max-w-3xl text-sm leading-7 text-slate-300">
+              Screen the current physiology, confirm the intervals, lock onto
+              one lead, then decide which neurocardiac frame best explains the
+              paper.
+            </p>
+          </div>
+          <span
+            className={`rounded-full px-3 py-2 text-xs font-semibold uppercase tracking-[0.18em] ${hemodynamicRiskClass(result.neurocardiac.hemodynamicRisk)}`}
+          >
+            {result.neurocardiac.hemodynamicRisk} hemodynamic risk
+          </span>
+        </div>
+
+        <div className="mt-5 grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+          <SummaryTile
+            eyebrow="Current state"
+            value={presetLabel}
+            detail={result.neurocardiac.autonomicState}
+            valueClassName="text-cyan-100"
+          />
+          <SummaryTile
+            eyebrow="Rate and rhythm"
+            value={`${result.params.heartRate.toFixed(0)} bpm`}
+            detail={result.summary.dominantRhythm}
+          />
+          <SummaryTile
+            eyebrow="Intervals"
+            value={`PR ${result.beat.intervals.prMs.toFixed(0)} / QRS ${result.beat.intervals.qrsMs.toFixed(0)}`}
+            detail={`QTc ${result.summary.qtcBazettMs.toFixed(0)} ms. ${result.summary.electricalAxis}.`}
+          />
+          <SummaryTile
+            eyebrow={`Focus lead ${selectedLead}`}
+            value={selectedLead}
+            detail={leadSummary}
+            valueClassName="text-amber-100"
+          />
+          <SummaryTile
+            eyebrow="Active vector"
+            value={activeFrame?.dominantLead ?? "Awaiting replay"}
+            detail={vectorSummary}
+          />
+          <SummaryTile
+            eyebrow="First priority"
+            value={nextPriority}
+            detail={result.neurocardiac.neurocriticalContext}
+            valueClassName="text-emerald-100"
+          />
+        </div>
+
+        <div className="mt-5 flex flex-wrap gap-2">
+          {[
+            `1. Rate ${result.params.heartRate.toFixed(0)} bpm`,
+            `2. QRS ${result.beat.intervals.qrsMs.toFixed(0)} ms`,
+            `3. Focus ${selectedLead}`,
+            `4. Frame ${activeConsultFrame.title}`,
+          ].map((step) => (
+            <span
+              key={step}
+              className="rounded-full border border-white/10 bg-white/5 px-3 py-2 text-xs font-medium uppercase tracking-[0.16em] text-slate-200"
+            >
+              {step}
+            </span>
+          ))}
+        </div>
+      </div>
+
+      <div className="rounded-[28px] border border-white/10 bg-[linear-gradient(180deg,rgba(103,211,255,0.12),rgba(15,23,42,0.36))] p-5 backdrop-blur">
+        <p className="text-xs uppercase tracking-[0.24em] text-cyan-100">
+          Consult anchor
+        </p>
+        <h2 className="mt-1 text-xl font-semibold text-white">
+          {activeConsultFrame.title}
+        </h2>
+        <p className="mt-4 text-sm leading-7 text-slate-300">
+          {activeConsultFrame.syndromeFrame}
+        </p>
+        <div className="mt-4 rounded-[22px] border border-white/10 bg-slate-950/35 p-4">
+          <p className="text-xs uppercase tracking-[0.18em] text-slate-400">
+            Best mechanism
+          </p>
+          <p className="mt-2 text-sm leading-7 text-slate-200">
+            {activeConsultFrame.strongestMechanism}
+          </p>
+        </div>
+        <div className="mt-4 rounded-[22px] border border-white/10 bg-slate-950/35 p-4">
+          <p className="text-xs uppercase tracking-[0.18em] text-slate-400">
+            Highest-yield next data
+          </p>
+          <ul className="mt-3 space-y-2 text-sm leading-7 text-slate-300">
+            {activeConsultFrame.nextData.slice(0, 3).map((item) => (
+              <li key={item}>• {item}</li>
+            ))}
+          </ul>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function PhaseTimeline({
+  result,
+  activeFrame,
+}: Readonly<{
+  result: ECGResult;
+  activeFrame: ECGResult["activation"]["frames"][number] | null;
+}>) {
+  const beatMs = Math.max(result.activation.beatMs, result.beat.intervals.rrMs, 1);
+  const { landmarks } = result.beat;
+  const plotWidth = 760;
+  const xPad = 12;
+  const innerWidth = plotWidth - xPad * 2;
+  const segments = [
+    {
+      key: "p",
+      label: "P",
+      start: landmarks.pOnset,
+      end: landmarks.pOffset,
+      fill: "rgba(103, 211, 255, 0.22)",
+      stroke: "#67d3ff",
+    },
+    {
+      key: "pr",
+      label: "PR",
+      start: landmarks.pOffset,
+      end: landmarks.qrsOnset,
+      fill: "rgba(148, 163, 184, 0.18)",
+      stroke: "#94a3b8",
+    },
+    {
+      key: "qrs",
+      label: "QRS",
+      start: landmarks.qrsOnset,
+      end: landmarks.qrsOffset,
+      fill: "rgba(255, 209, 102, 0.2)",
+      stroke: "#ffd166",
+    },
+    {
+      key: "st",
+      label: "ST",
+      start: landmarks.qrsOffset,
+      end: landmarks.tOnset,
+      fill: "rgba(255, 122, 69, 0.18)",
+      stroke: "#ff7a45",
+    },
+    {
+      key: "t",
+      label: "T",
+      start: landmarks.tOnset,
+      end: landmarks.tOffset,
+      fill: "rgba(255, 159, 67, 0.2)",
+      stroke: "#ff9f43",
+    },
+  ];
+
+  return (
+    <svg
+      viewBox={`0 0 ${plotWidth} 96`}
+      className="mt-5 w-full rounded-[22px] border border-white/10 bg-slate-950/45"
+    >
+      <rect
+        x={xPad}
+        y="24"
+        width={innerWidth}
+        height="40"
+        rx="20"
+        fill="rgba(15,23,42,0.72)"
+        stroke="rgba(148,163,184,0.18)"
+      />
+      {segments.map((segment) => {
+        const x = xPad + (segment.start / beatMs) * innerWidth;
+        const width = Math.max(
+          20,
+          ((segment.end - segment.start) / beatMs) * innerWidth,
+        );
+        const labelX = x + width / 2;
+        const compact = width < 48;
+
+        return (
+          <g key={segment.key}>
+            <rect
+              x={x}
+              y="30"
+              width={width}
+              height="28"
+              rx="14"
+              fill={segment.fill}
+              stroke={segment.stroke}
+            />
+            <text
+              x={labelX}
+              y={compact ? "20" : "48"}
+              textAnchor="middle"
+              fill={segment.stroke}
+              fontSize="11"
+              fontWeight="700"
+            >
+              {segment.label}
+            </text>
+          </g>
+        );
+      })}
+      {activeFrame ? (
+        <>
+          {(() => {
+            const markerX = xPad + (activeFrame.t / beatMs) * innerWidth;
+            return (
+              <>
+                <line
+                  x1={markerX}
+                  y1="18"
+                  x2={markerX}
+                  y2="70"
+                  stroke="#f8fafc"
+                  strokeWidth="2"
+                  strokeDasharray="4 4"
+                />
+                <circle cx={markerX} cy="24" r="5" fill="#f8fafc" />
+                <text
+                  x={markerX}
+                  y="86"
+                  textAnchor="middle"
+                  fill="#cbd5e1"
+                  fontSize="11"
+                  fontWeight="600"
+                >
+                  {activeFrame.t.toFixed(0)} ms
+                </text>
+              </>
+            );
+          })()}
+        </>
+      ) : null}
+    </svg>
+  );
+}
+
+function ActivationGallery({
+  result,
+  display,
+  activationFrames,
+  leadAxes,
+  activeFrame,
+  frameIndex,
+  selectedLead,
+  isActivationPlaying,
+  onTogglePlaying,
+  onScrubFrame,
+}: Readonly<{
+  result: ECGResult;
+  display: DisplayOptions;
+  activationFrames: ECGResult["activation"]["frames"];
+  leadAxes: ECGResult["activation"]["leadAxes"];
+  activeFrame: ECGResult["activation"]["frames"][number] | null;
+  frameIndex: number;
+  selectedLead: ECGLeadName;
+  isActivationPlaying: boolean;
+  onTogglePlaying: () => void;
+  onScrubFrame: (nextFrameIndex: number) => void;
+}>) {
+  const selectedLeadAligned = activeFrame?.dominantLead === selectedLead;
+
+  return (
+    <section className="space-y-6">
+      <div className="grid gap-6 xl:grid-cols-2">
+        <div className="rounded-[28px] border border-white/10 bg-white/6 p-5 backdrop-blur">
+          <p className="text-xs uppercase tracking-[0.24em] text-slate-400">
+            3D cardiac activation
+          </p>
+          <h2 className="mt-1 text-xl font-semibold text-white">
+            Dipole replay through the beat
+          </h2>
+          <svg
+            viewBox={`0 0 ${ACTIVATION_W} ${ACTIVATION_H}`}
+            className="mt-5 w-full rounded-[24px] border border-white/6 bg-slate-950/45"
+          >
+            <rect
+              x="12"
+              y="12"
+              width="336"
+              height="256"
+              rx="16"
+              fill="#0d1424"
+              stroke="#1e2d4a"
+            />
+            {activationFrames.length ? (
+              <>
+                {display.vectorTrail ? (
+                  <path
+                    d={activationFrames
+                      .map((frame, index) => {
+                        const point = project3D(frame.vector, 182, 146, 42);
+                        return `${index === 0 ? "M" : "L"}${point.x.toFixed(2)} ${point.y.toFixed(2)}`;
+                      })
+                      .join(" ")}
+                    fill="none"
+                    stroke="rgba(79,195,247,0.26)"
+                    strokeWidth="1.2"
+                  />
+                ) : null}
+                <path
+                  d="M180 76 C138 34 88 58 88 116 C88 154 118 178 145 200 C162 214 172 228 180 246 C188 228 198 214 215 200 C242 178 272 154 272 116 C272 58 222 34 180 76Z"
+                  fill="#141f35"
+                  stroke="#233557"
+                  strokeWidth="1.2"
+                />
+                <path
+                  d="M198 82 C228 58 258 70 266 104 C272 132 252 162 221 184 C205 195 194 206 186 219 C198 190 204 162 206 130 C207 111 205 96 198 82Z"
+                  fill="rgba(255,255,255,0.03)"
+                />
+                {activeFrame
+                  ? heartChambers.map((chamber) => {
+                      const projected = project3D(chamber, 182, 146, 84);
+                      const intensity = activeFrame.regions[chamber.key];
+
+                      return (
+                        <g key={chamber.key}>
+                          <ellipse
+                            cx={projected.x}
+                            cy={projected.y}
+                            rx={chamber.rx}
+                            ry={chamber.ry}
+                            fill={activationFill(intensity, chamber.color)}
+                            stroke="rgba(200,214,229,0.18)"
+                            strokeWidth="1"
+                          />
+                          <text
+                            x={projected.x}
+                            y={projected.y + 4}
+                            textAnchor="middle"
+                            fill="#c8d6e5"
+                            fontSize="10"
+                          >
+                            {chamber.label}
+                          </text>
+                        </g>
+                      );
+                    })
+                  : null}
+                {activeFrame ? (
+                  <>
+                    {(() => {
+                      const origin = project3D(
+                        { x: 0, y: 0, z: 0 },
+                        182,
+                        146,
+                        46.2,
+                      );
+                      const tip = project3D(activeFrame.vector, 182, 146, 46.2);
+
+                      return (
+                        <>
+                          <line
+                            x1={origin.x}
+                            y1={origin.y}
+                            x2={tip.x}
+                            y2={tip.y}
+                            stroke="#ffd166"
+                            strokeWidth="3"
+                            strokeLinecap="round"
+                          />
+                          <circle cx={tip.x} cy={tip.y} r="4.5" fill="#ffd166" />
+                        </>
+                      );
+                    })()}
+                    <text x="28" y="28" fill="#6b7f99" fontSize="11">
+                      Phase: {activeFrame.phase}
+                    </text>
+                    <text x="28" y="44" fill="#6b7f99" fontSize="11">
+                      Dominant lead: {activeFrame.dominantLead}
+                    </text>
+                    <text x="28" y="60" fill="#6b7f99" fontSize="11">
+                      Vector magnitude: {activeFrame.vector.magnitude.toFixed(3)}
+                    </text>
+                  </>
+                ) : (
+                  <text
+                    x="180"
+                    y="140"
+                    textAnchor="middle"
+                    fill="#6b7f99"
+                    fontSize="12"
+                  >
+                    Generate ECG to animate a beat
+                  </text>
+                )}
+              </>
+            ) : (
+              <text
+                x="180"
+                y="140"
+                textAnchor="middle"
+                fill="#6b7f99"
+                fontSize="12"
+              >
+                Generate ECG to animate a beat
+              </text>
+            )}
+          </svg>
+        </div>
+
+        <div className="rounded-[28px] border border-white/10 bg-white/6 p-5 backdrop-blur">
+          <p className="text-xs uppercase tracking-[0.24em] text-slate-400">
+            Lead constellation
+          </p>
+          <h2 className="mt-1 text-xl font-semibold text-white">
+            Which lead sees the strongest vector
+          </h2>
+          <svg
+            viewBox={`0 0 ${ACTIVATION_W} ${ACTIVATION_H}`}
+            className="mt-5 w-full rounded-[24px] border border-white/6 bg-slate-950/45"
+          >
+            <rect
+              x="12"
+              y="12"
+              width="336"
+              height="256"
+              rx="16"
+              fill="#0d1424"
+              stroke="#1e2d4a"
+            />
+            {activationFrames.length ? (
+              <>
+                {display.vectorTrail ? (
+                  <path
+                    d={activationFrames
+                      .map((frame, index) => {
+                        const point = project3D(frame.vector, 182, 146, 36.12);
+                        return `${index === 0 ? "M" : "L"}${point.x.toFixed(2)} ${point.y.toFixed(2)}`;
+                      })
+                      .join(" ")}
+                    fill="none"
+                    stroke="rgba(0,230,118,0.34)"
+                    strokeWidth="1.4"
+                  />
+                ) : null}
+                {leadAxes.map((axis) => {
+                  const point = project3D(axis, 182, 146, 86);
+                  const stroke = axis.group === "limb" ? "#4fc3f7" : "#ff8a65";
+                  const isSelected = axis.name === selectedLead;
+                  const isDominant = activeFrame?.dominantLead === axis.name;
+
+                  return (
+                    <g key={axis.name}>
+                      <line
+                        x1="182"
+                        y1="146"
+                        x2={point.x}
+                        y2={point.y}
+                        stroke={stroke}
+                        strokeWidth={isSelected ? "2.2" : isDominant ? "1.8" : "1.2"}
+                        opacity={isSelected ? "1" : isDominant ? "0.95" : "0.5"}
+                      />
+                      {isSelected ? (
+                        <circle
+                          cx={point.x}
+                          cy={point.y}
+                          r="7"
+                          fill="none"
+                          stroke="#f8fafc"
+                          strokeWidth="1.3"
+                        />
+                      ) : null}
+                      <circle
+                        cx={point.x}
+                        cy={point.y}
+                        r={isDominant ? "5" : "4"}
+                        fill={isDominant ? "#ffd166" : stroke}
+                      />
+                      <text
+                        x={point.x + 7}
+                        y={point.y - 5}
+                        fill={
+                          isSelected
+                            ? "#f8fafc"
+                            : isDominant
+                              ? "#ffd166"
+                              : "#c8d6e5"
+                        }
+                        fontSize="10"
+                        fontWeight={isSelected || isDominant ? "700" : "500"}
+                      >
+                        {axis.name}
+                      </text>
+                    </g>
+                  );
+                })}
+                {activeFrame ? (
+                  <>
+                    {(() => {
+                      const tip = project3D(activeFrame.vector, 182, 146, 47.3);
+
+                      return (
+                        <>
+                          <circle cx="182" cy="146" r="5" fill="#c8d6e5" />
+                          <line
+                            x1="182"
+                            y1="146"
+                            x2={tip.x}
+                            y2={tip.y}
+                            stroke="#ffd166"
+                            strokeWidth="3"
+                            strokeLinecap="round"
+                          />
+                          <circle cx={tip.x} cy={tip.y} r="5" fill="#ffd166" />
+                        </>
+                      );
+                    })()}
+                    <text x="24" y="28" fill="#6b7f99" fontSize="11">
+                      Limb leads: cyan
+                    </text>
+                    <text x="24" y="44" fill="#6b7f99" fontSize="11">
+                      Chest leads: orange
+                    </text>
+                    <text x="24" y="60" fill="#6b7f99" fontSize="11">
+                      Projection on {activeFrame.dominantLead}:{" "}
+                      {activeFrame.dominantProjection.toFixed(3)}
+                    </text>
+                  </>
+                ) : null}
+              </>
+            ) : (
+              <text
+                x="180"
+                y="140"
+                textAnchor="middle"
+                fill="#6b7f99"
+                fontSize="12"
+              >
+                Generate ECG to inspect the vector field
+              </text>
+            )}
+          </svg>
+          <div className="mt-4 rounded-[22px] border border-white/10 bg-slate-950/35 p-4">
+            <p className="text-xs uppercase tracking-[0.18em] text-slate-400">
+              Focus lead alignment
+            </p>
+            <p className="mt-2 text-base font-semibold text-white">
+              {selectedLeadAligned
+                ? `Lead ${selectedLead} is currently aligned with the dominant vector.`
+                : `Lead ${selectedLead} is not the dominant view in this phase.`}
+            </p>
+            <p className="mt-3 text-sm leading-6 text-slate-300">
+              Use the spotlight lead for interval reading, then compare it with
+              the constellation to see whether the current dipole is actually
+              pointing into that territory.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div className="rounded-[28px] border border-white/10 bg-white/6 p-5 backdrop-blur">
+        <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+          <div>
+            <p className="text-xs uppercase tracking-[0.24em] text-slate-400">
+              Representative beat phase
+            </p>
+            <h2 className="mt-1 text-xl font-semibold text-white">
+              Scrub through activation timing
+            </h2>
+          </div>
+          <div className="flex flex-wrap items-center gap-3">
+            <button
+              type="button"
+              onClick={onTogglePlaying}
+              className="rounded-full border border-cyan-300/30 bg-cyan-300/10 px-4 py-2 text-sm font-medium text-cyan-100 transition hover:bg-cyan-300/18"
+            >
+              {isActivationPlaying ? "Pause replay" : "Auto replay"}
+            </button>
+            <p className="text-sm text-slate-300">
+              {activeFrame
+                ? `t=${activeFrame.t.toFixed(1)} ms | ${activeFrame.phase} | strongest view ${activeFrame.dominantLead}`
+                : "Generate ECG to animate a representative beat."}
+            </p>
+          </div>
+        </div>
+        <input
+          type="range"
+          min={0}
+          max={Math.max(activationFrames.length - 1, 0)}
+          step={1}
+          value={frameIndex}
+          onChange={(event) => onScrubFrame(Number(event.target.value))}
+          className="mt-5 w-full accent-cyan-300"
+        />
+        <PhaseTimeline result={result} activeFrame={activeFrame} />
+        <div className="mt-5 grid gap-3 md:grid-cols-4">
+          <div className="rounded-[22px] border border-white/10 bg-slate-950/35 p-4">
+            <p className="text-xs uppercase tracking-[0.18em] text-slate-400">
+              Beat phase
+            </p>
+            <p className="mt-2 text-2xl font-semibold text-white">
+              {activeFrame?.phase ?? "Awaiting"}
+            </p>
+          </div>
+          <div className="rounded-[22px] border border-white/10 bg-slate-950/35 p-4">
+            <p className="text-xs uppercase tracking-[0.18em] text-slate-400">
+              Dominant lead
+            </p>
+            <p className="mt-2 text-2xl font-semibold text-white">
+              {activeFrame?.dominantLead ?? "--"}
+            </p>
+          </div>
+          <div className="rounded-[22px] border border-white/10 bg-slate-950/35 p-4">
+            <p className="text-xs uppercase tracking-[0.18em] text-slate-400">
+              Vector magnitude
+            </p>
+            <p className="mt-2 text-2xl font-semibold text-white">
+              {activeFrame?.vector.magnitude.toFixed(3) ?? "--"}
+            </p>
+          </div>
+          <div className="rounded-[22px] border border-white/10 bg-slate-950/35 p-4">
+            <p className="text-xs uppercase tracking-[0.18em] text-slate-400">
+              Lead projection
+            </p>
+            <p className="mt-2 text-2xl font-semibold text-white">
+              {activeFrame?.dominantProjection.toFixed(3) ?? "--"}
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
 export function ECGExplorer() {
   const ecgCurriculum = getCurriculumModule("ecg");
   const [params, setParams] = useState<ECGParams>(defaultEcgParams);
@@ -1343,6 +2035,7 @@ export function ECGExplorer() {
   const [error, setError] = useState<ApiErrorInfo | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [frameIndex, setFrameIndex] = useState(0);
+  const [isActivationPlaying, setIsActivationPlaying] = useState(true);
   const [selectedPresetId, setSelectedPresetId] =
     useState<string>(DEFAULT_PRESET_ID);
   const [selectedConsultFrameId, setSelectedConsultFrameId] =
@@ -1384,6 +2077,7 @@ export function ECGExplorer() {
 
       setResult(payload);
       setFrameIndex(0);
+      setIsActivationPlaying(true);
     } catch (requestError) {
       const message =
         requestError instanceof Error
@@ -1406,7 +2100,7 @@ export function ECGExplorer() {
   }, []);
 
   useEffect(() => {
-    if (!result?.activation.frames.length) {
+    if (!result?.activation.frames.length || !isActivationPlaying) {
       return;
     }
 
@@ -1422,7 +2116,7 @@ export function ECGExplorer() {
     }, intervalMs);
 
     return () => window.clearInterval(timer);
-  }, [result]);
+  }, [isActivationPlaying, result]);
 
   function updateParam<K extends keyof ECGParams>(key: K, value: number) {
     if (Number.isNaN(value)) {
@@ -1471,6 +2165,11 @@ export function ECGExplorer() {
     setCaseId(nextCase.id);
     setRevealedCase(false);
     applyCaseConsultFrame(nextCase.startingConsultFrameId);
+  }
+
+  function scrubFrame(nextFrameIndex: number) {
+    setIsActivationPlaying(false);
+    setFrameIndex(nextFrameIndex);
   }
 
   const activeFrame = result?.activation.frames[frameIndex] ?? null;
@@ -1540,6 +2239,44 @@ export function ECGExplorer() {
           </div>
         </div>
       </section>
+
+      {result ? (
+        <DiagnosticOverview
+          result={result}
+          presetLabel={presetLabel}
+          activeConsultFrame={activeConsultFrame}
+          selectedLead={selectedLead}
+          activeFrame={activeFrame}
+        />
+      ) : null}
+
+      {result ? (
+        <SurfaceDesk
+          result={result}
+          display={display}
+          paperDuration={paperDuration}
+          selectedLead={selectedLead}
+          activeFrame={activeFrame}
+          onSelectLead={setSelectedLead}
+        />
+      ) : null}
+
+      {result ? (
+        <ActivationGallery
+          result={result}
+          display={display}
+          activationFrames={activationFrames}
+          leadAxes={leadAxes}
+          activeFrame={activeFrame}
+          frameIndex={frameIndex}
+          selectedLead={selectedLead}
+          isActivationPlaying={isActivationPlaying}
+          onTogglePlaying={() =>
+            setIsActivationPlaying((current) => !current)
+          }
+          onScrubFrame={scrubFrame}
+        />
+      ) : null}
 
       <section className="grid gap-6 xl:grid-cols-[minmax(0,1.25fr)_380px]">
         <div className="rounded-[28px] border border-white/10 bg-white/6 p-5 backdrop-blur">
@@ -1951,95 +2688,54 @@ export function ECGExplorer() {
         </div>
       </CaseShell>
 
-      <section className="grid gap-4 xl:grid-cols-3">
-        {ecgControlGroups.map((group) => (
-          <article
-            key={group.id}
-            className="rounded-[28px] border border-white/10 bg-white/6 p-5 backdrop-blur"
-          >
+      <section className="space-y-5 rounded-[28px] border border-white/10 bg-white/6 p-5 backdrop-blur">
+        <div className="flex flex-col gap-4 xl:flex-row xl:items-end xl:justify-between">
+          <div>
             <p className="text-xs uppercase tracking-[0.24em] text-slate-400">
-              {group.label}
+              Workbench controls
             </p>
-            <p className="mt-3 text-sm leading-6 text-slate-300">
-              {group.description}
+            <h2 className="mt-1 text-xl font-semibold text-white">
+              Fine-tune physiology and regenerate the strip
+            </h2>
+            <p className="mt-3 max-w-3xl text-sm leading-7 text-slate-300">
+              Presets update immediately. Use these grouped controls when you
+              want to push a specific interval, axis, or morphology hypothesis
+              and then regenerate the ECG desk.
             </p>
-            <div className="mt-5 space-y-4">
-              {group.keys.map((key) => {
-                const definition = definitionByKey[key];
-                return (
-                  <label key={key} className="block">
-                    <div className="flex items-center justify-between gap-4">
-                      <span className="text-sm font-medium text-white">
-                        {definition.label}
-                      </span>
-                      <span className="font-mono text-xs text-slate-400">
-                        {params[key]}
-                        {definition.unit ? ` ${definition.unit}` : ""}
-                      </span>
-                    </div>
-                    <input
-                      type="range"
-                      min={definition.min}
-                      max={definition.max}
-                      step={definition.step}
-                      value={params[key]}
-                      onChange={(event) =>
-                        updateParam(key, Number(event.target.value))
-                      }
-                      className="mt-3 w-full accent-cyan-300"
-                    />
-                    <input
-                      type="number"
-                      value={params[key]}
-                      min={definition.min}
-                      max={definition.max}
-                      step={definition.step}
-                      onChange={(event) =>
-                        updateParam(key, Number(event.target.value))
-                      }
-                      className="mt-3 w-full rounded-2xl border border-white/10 bg-slate-950/40 px-3 py-2 font-mono text-sm text-slate-100 outline-none transition focus:border-cyan-300/40 focus:bg-slate-950/60"
-                    />
-                  </label>
-                );
-              })}
-            </div>
-          </article>
-        ))}
-      </section>
-
-      <section className="rounded-[28px] border border-white/10 bg-white/6 p-5 backdrop-blur">
-        <div className="flex flex-wrap items-center gap-3">
-          <button
-            type="button"
-            onClick={() => void loadEcg()}
-            disabled={isLoading}
-            className="rounded-full bg-cyan-300 px-5 py-3 text-sm font-semibold text-slate-950 shadow-[0_12px_28px_rgba(103,211,255,0.24)] transition hover:-translate-y-0.5 disabled:cursor-not-allowed disabled:opacity-70"
-          >
-            {isLoading ? "Generating..." : "Generate ECG"}
-          </button>
-          <button
-            type="button"
-            onClick={() => {
-              setSelectedPresetId(DEFAULT_PRESET_ID);
-              setParams(defaultEcgParams);
-              void loadEcg(defaultEcgParams);
-            }}
-            disabled={isLoading}
-            className="rounded-full border border-white/10 bg-white/6 px-5 py-3 text-sm font-semibold text-slate-100 transition hover:bg-white/10 disabled:cursor-not-allowed disabled:opacity-70"
-          >
-            Reset defaults
-          </button>
-          {result ? (
-            <p className="text-sm text-slate-300">
-              {result.neurocardiac.autonomicState} | QTc{" "}
-              {result.summary.qtcBazettMs.toFixed(1)} ms | PR{" "}
-              {result.beat.intervals.prMs.toFixed(0)} ms
-            </p>
-          ) : null}
+          </div>
+          <div className="flex flex-wrap items-center gap-3">
+            <button
+              type="button"
+              onClick={() => void loadEcg()}
+              disabled={isLoading}
+              className="rounded-full bg-cyan-300 px-5 py-3 text-sm font-semibold text-slate-950 shadow-[0_12px_28px_rgba(103,211,255,0.24)] transition hover:-translate-y-0.5 disabled:cursor-not-allowed disabled:opacity-70"
+            >
+              {isLoading ? "Generating..." : "Generate ECG"}
+            </button>
+            <button
+              type="button"
+              onClick={() => {
+                setSelectedPresetId(DEFAULT_PRESET_ID);
+                setParams(defaultEcgParams);
+                void loadEcg(defaultEcgParams);
+              }}
+              disabled={isLoading}
+              className="rounded-full border border-white/10 bg-white/6 px-5 py-3 text-sm font-semibold text-slate-100 transition hover:bg-white/10 disabled:cursor-not-allowed disabled:opacity-70"
+            >
+              Reset defaults
+            </button>
+            {result ? (
+              <span className="rounded-full border border-white/10 bg-white/5 px-4 py-2 text-sm text-slate-200">
+                {result.neurocardiac.autonomicState} · QTc{" "}
+                {result.summary.qtcBazettMs.toFixed(1)} ms · PR{" "}
+                {result.beat.intervals.prMs.toFixed(0)} ms
+              </span>
+            ) : null}
+          </div>
         </div>
 
         {error ? (
-          <div className="mt-5 rounded-[24px] border border-rose-400/30 bg-rose-400/10 p-4 text-sm text-rose-100">
+          <div className="rounded-[24px] border border-rose-400/30 bg-rose-400/10 p-4 text-sm text-rose-100">
             <p className="font-medium">{error.message}</p>
             {error.suggestion ? (
               <p className="mt-2 text-rose-100/80">{error.suggestion}</p>
@@ -2051,292 +2747,62 @@ export function ECGExplorer() {
             ) : null}
           </div>
         ) : null}
-      </section>
 
-      {result ? (
-        <SurfaceDesk
-          result={result}
-          display={display}
-          paperDuration={paperDuration}
-          selectedLead={selectedLead}
-          activeFrame={activeFrame}
-          onSelectLead={setSelectedLead}
-        />
-      ) : null}
-
-      <section className="grid gap-6 xl:grid-cols-2">
-        <div className="rounded-[28px] border border-white/10 bg-white/6 p-5 backdrop-blur">
-          <p className="text-xs uppercase tracking-[0.24em] text-slate-400">
-            3D cardiac activation
-          </p>
-          <h2 className="mt-1 text-xl font-semibold text-white">
-            Dipole replay through the beat
-          </h2>
-          <svg
-            viewBox={`0 0 ${ACTIVATION_W} ${ACTIVATION_H}`}
-            className="mt-5 w-full rounded-[24px] border border-white/6 bg-slate-950/45"
-          >
-            <rect
-              x="12"
-              y="12"
-              width="336"
-              height="256"
-              rx="16"
-              fill="#0d1424"
-              stroke="#1e2d4a"
-            />
-            {activationFrames.length ? (
-              <>
-                {display.vectorTrail ? (
-                  <path
-                    d={activationFrames
-                      .map((frame, index) => {
-                        const point = project3D(frame.vector, 182, 146, 42);
-                        return `${index === 0 ? "M" : "L"}${point.x.toFixed(2)} ${point.y.toFixed(2)}`;
-                      })
-                      .join(" ")}
-                    fill="none"
-                    stroke="rgba(79,195,247,0.26)"
-                    strokeWidth="1.2"
-                  />
-                ) : null}
-                <path
-                  d="M180 76 C138 34 88 58 88 116 C88 154 118 178 145 200 C162 214 172 228 180 246 C188 228 198 214 215 200 C242 178 272 154 272 116 C272 58 222 34 180 76Z"
-                  fill="#141f35"
-                  stroke="#233557"
-                  strokeWidth="1.2"
-                />
-                <path
-                  d="M198 82 C228 58 258 70 266 104 C272 132 252 162 221 184 C205 195 194 206 186 219 C198 190 204 162 206 130 C207 111 205 96 198 82Z"
-                  fill="rgba(255,255,255,0.03)"
-                />
-                {activeFrame
-                  ? heartChambers.map((chamber) => {
-                      const projected = project3D(chamber, 182, 146, 84);
-                      const intensity = activeFrame.regions[chamber.key];
-
-                      return (
-                        <g key={chamber.key}>
-                          <ellipse
-                            cx={projected.x}
-                            cy={projected.y}
-                            rx={chamber.rx}
-                            ry={chamber.ry}
-                            fill={activationFill(intensity, chamber.color)}
-                            stroke="rgba(200,214,229,0.18)"
-                            strokeWidth="1"
-                          />
-                          <text
-                            x={projected.x}
-                            y={projected.y + 4}
-                            textAnchor="middle"
-                            fill="#c8d6e5"
-                            fontSize="10"
-                          >
-                            {chamber.label}
-                          </text>
-                        </g>
-                      );
-                    })
-                  : null}
-                {activeFrame ? (
-                  <>
-                    {(() => {
-                      const origin = project3D(
-                        { x: 0, y: 0, z: 0 },
-                        182,
-                        146,
-                        46.2,
-                      );
-                      const tip = project3D(activeFrame.vector, 182, 146, 46.2);
-
-                      return (
-                        <>
-                          <line
-                            x1={origin.x}
-                            y1={origin.y}
-                            x2={tip.x}
-                            y2={tip.y}
-                            stroke="#ffd166"
-                            strokeWidth="3"
-                            strokeLinecap="round"
-                          />
-                          <circle cx={tip.x} cy={tip.y} r="4.5" fill="#ffd166" />
-                        </>
-                      );
-                    })()}
-                    <text x="28" y="28" fill="#6b7f99" fontSize="11">
-                      Phase: {activeFrame.phase}
-                    </text>
-                    <text x="28" y="44" fill="#6b7f99" fontSize="11">
-                      Dominant lead: {activeFrame.dominantLead}
-                    </text>
-                    <text x="28" y="60" fill="#6b7f99" fontSize="11">
-                      Vector magnitude: {activeFrame.vector.magnitude.toFixed(3)}
-                    </text>
-                  </>
-                ) : (
-                  <text
-                    x="180"
-                    y="140"
-                    textAnchor="middle"
-                    fill="#6b7f99"
-                    fontSize="12"
-                  >
-                    Generate ECG to animate a beat
-                  </text>
-                )}
-              </>
-            ) : (
-              <text
-                x="180"
-                y="140"
-                textAnchor="middle"
-                fill="#6b7f99"
-                fontSize="12"
-              >
-                Generate ECG to animate a beat
-              </text>
-            )}
-          </svg>
-        </div>
-
-        <div className="rounded-[28px] border border-white/10 bg-white/6 p-5 backdrop-blur">
-          <p className="text-xs uppercase tracking-[0.24em] text-slate-400">
-            Lead constellation
-          </p>
-          <h2 className="mt-1 text-xl font-semibold text-white">
-            Which lead sees the strongest vector
-          </h2>
-          <svg
-            viewBox={`0 0 ${ACTIVATION_W} ${ACTIVATION_H}`}
-            className="mt-5 w-full rounded-[24px] border border-white/6 bg-slate-950/45"
-          >
-            <rect
-              x="12"
-              y="12"
-              width="336"
-              height="256"
-              rx="16"
-              fill="#0d1424"
-              stroke="#1e2d4a"
-            />
-            {activationFrames.length ? (
-              <>
-                {display.vectorTrail ? (
-                  <path
-                    d={activationFrames
-                      .map((frame, index) => {
-                        const point = project3D(frame.vector, 182, 146, 36.12);
-                        return `${index === 0 ? "M" : "L"}${point.x.toFixed(2)} ${point.y.toFixed(2)}`;
-                      })
-                      .join(" ")}
-                    fill="none"
-                    stroke="rgba(0,230,118,0.34)"
-                    strokeWidth="1.4"
-                  />
-                ) : null}
-                {leadAxes.map((axis) => {
-                  const point = project3D(axis, 182, 146, 86);
-                  const stroke =
-                    axis.group === "limb" ? "#4fc3f7" : "#ff8a65";
+        <div className="grid gap-4 xl:grid-cols-3">
+          {ecgControlGroups.map((group) => (
+            <article
+              key={group.id}
+              className="rounded-[28px] border border-white/10 bg-slate-950/28 p-5"
+            >
+              <p className="text-xs uppercase tracking-[0.24em] text-slate-400">
+                {group.label}
+              </p>
+              <p className="mt-3 text-sm leading-6 text-slate-300">
+                {group.description}
+              </p>
+              <div className="mt-5 space-y-4">
+                {group.keys.map((key) => {
+                  const definition = definitionByKey[key];
                   return (
-                    <g key={axis.name}>
-                      <line
-                        x1="182"
-                        y1="146"
-                        x2={point.x}
-                        y2={point.y}
-                        stroke={stroke}
-                        strokeWidth="1.2"
-                        opacity="0.75"
+                    <label key={key} className="block">
+                      <div className="flex items-center justify-between gap-4">
+                        <span className="text-sm font-medium text-white">
+                          {definition.label}
+                        </span>
+                        <span className="font-mono text-xs text-slate-400">
+                          {params[key]}
+                          {definition.unit ? ` ${definition.unit}` : ""}
+                        </span>
+                      </div>
+                      <input
+                        type="range"
+                        min={definition.min}
+                        max={definition.max}
+                        step={definition.step}
+                        value={params[key]}
+                        onChange={(event) =>
+                          updateParam(key, Number(event.target.value))
+                        }
+                        className="mt-3 w-full accent-cyan-300"
                       />
-                      <circle cx={point.x} cy={point.y} r="4" fill={stroke} />
-                      <text
-                        x={point.x + 7}
-                        y={point.y - 5}
-                        fill="#c8d6e5"
-                        fontSize="10"
-                      >
-                        {axis.name}
-                      </text>
-                    </g>
+                      <input
+                        type="number"
+                        value={params[key]}
+                        min={definition.min}
+                        max={definition.max}
+                        step={definition.step}
+                        onChange={(event) =>
+                          updateParam(key, Number(event.target.value))
+                        }
+                        className="mt-3 w-full rounded-2xl border border-white/10 bg-slate-950/40 px-3 py-2 font-mono text-sm text-slate-100 outline-none transition focus:border-cyan-300/40 focus:bg-slate-950/60"
+                      />
+                    </label>
                   );
                 })}
-                {activeFrame ? (
-                  <>
-                    {(() => {
-                      const tip = project3D(activeFrame.vector, 182, 146, 47.3);
-
-                      return (
-                        <>
-                          <circle cx="182" cy="146" r="5" fill="#c8d6e5" />
-                          <line
-                            x1="182"
-                            y1="146"
-                            x2={tip.x}
-                            y2={tip.y}
-                            stroke="#ffd166"
-                            strokeWidth="3"
-                            strokeLinecap="round"
-                          />
-                          <circle cx={tip.x} cy={tip.y} r="5" fill="#ffd166" />
-                        </>
-                      );
-                    })()}
-                    <text x="24" y="28" fill="#6b7f99" fontSize="11">
-                      Limb leads: cyan
-                    </text>
-                    <text x="24" y="44" fill="#6b7f99" fontSize="11">
-                      Chest leads: orange
-                    </text>
-                    <text x="24" y="60" fill="#6b7f99" fontSize="11">
-                      Projection on {activeFrame.dominantLead}:{" "}
-                      {activeFrame.dominantProjection.toFixed(3)}
-                    </text>
-                  </>
-                ) : null}
-              </>
-            ) : (
-              <text
-                x="180"
-                y="140"
-                textAnchor="middle"
-                fill="#6b7f99"
-                fontSize="12"
-              >
-                Generate ECG to inspect the vector field
-              </text>
-            )}
-          </svg>
+              </div>
+            </article>
+          ))}
         </div>
-      </section>
-
-      <section className="rounded-[28px] border border-white/10 bg-white/6 p-5 backdrop-blur">
-        <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
-          <div>
-            <p className="text-xs uppercase tracking-[0.24em] text-slate-400">
-              Representative beat phase
-            </p>
-            <h2 className="mt-1 text-xl font-semibold text-white">
-              Scrub through activation timing
-            </h2>
-          </div>
-          <p className="text-sm text-slate-300">
-            {activeFrame
-              ? `t=${activeFrame.t.toFixed(1)} ms | ${activeFrame.phase} | strongest view ${activeFrame.dominantLead}`
-              : "Generate ECG to animate a representative beat."}
-          </p>
-        </div>
-        <input
-          type="range"
-          min={0}
-          max={Math.max(activationFrames.length - 1, 0)}
-          step={1}
-          value={frameIndex}
-          onChange={(event) => setFrameIndex(Number(event.target.value))}
-          className="mt-5 w-full accent-cyan-300"
-        />
       </section>
 
       {result ? (
