@@ -18,6 +18,9 @@ export const navItems = [
   { href: "/plasticity", label: "Plasticity" },
   { href: "/dopamine", label: "Dopamine" },
   { href: "/vision", label: "Vision" },
+  { href: "/action-potential", label: "Action Potential" },
+  { href: "/motor-pathway", label: "Motor Pathway" },
+  { href: "/sleep", label: "Sleep" },
   { href: "/ask", label: "Ask" },
 ] as const;
 
@@ -109,5 +112,29 @@ export const moduleCards: ModuleCard[] = [
       "Trace arena trajectories, spike clouds, and hexagonal rate maps in a typed navigation lab driven by a shared simulator.",
     badge: "Navigation",
     href: "/grid-cell",
+  },
+  {
+    slug: "action-potential",
+    title: "Action Potential (Hodgkin-Huxley)",
+    description:
+      "Full ionic model with Na+ and K+ channel gating dynamics, pharmacological blockade (TTX, TEA), and clinical presets from normal conduction to demyelination.",
+    badge: "Ion Channels",
+    href: "/action-potential",
+  },
+  {
+    slug: "motor-pathway",
+    title: "Motor Pathway Explorer",
+    description:
+      "Corticospinal tract from cortex to muscle. Select a lesion level to see UMN vs LMN signs, brainstem crossed findings, and clinical vignettes.",
+    badge: "Motor System",
+    href: "/motor-pathway",
+  },
+  {
+    slug: "sleep",
+    title: "Sleep Architecture",
+    description:
+      "Hypnogram generation with realistic stage cycling, EEG characteristics per stage, and clinical sleep disorder presets from narcolepsy to RBD.",
+    badge: "Sleep Medicine",
+    href: "/sleep",
   },
 ];

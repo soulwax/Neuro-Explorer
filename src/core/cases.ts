@@ -44,3 +44,18 @@ export interface EEGClinicalCase extends InstructionCase {
   expectedPresetId: string;
   startingPresetId: string;
 }
+
+export interface ActionPotentialClinicalCase extends InstructionCase {
+  expectedPresetId: string;
+  startingPresetId: string;
+}
+
+export interface MotorPathwayClinicalCase extends InstructionCase {
+  expectedLesionId: string;
+  startingLesionId: string;
+}
+
+export interface SleepClinicalCase extends InstructionCase {
+  expectedPresetId: string;
+  startingPresetId: string;
+}

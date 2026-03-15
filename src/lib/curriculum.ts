@@ -227,6 +227,73 @@ export const curriculumModules: CurriculumModule[] = [
       "Grid patterns require explicit landmarks at all times.",
     ],
   },
+  {
+    slug: "action-potential",
+    title: "Action Potential (Hodgkin-Huxley)",
+    trainingStage: "Advanced biophysics and pharmacology",
+    learningGoals: [
+      "Understand the ionic basis of the action potential through the Hodgkin-Huxley model",
+      "Explain how Na+ activation, inactivation, and K+ delayed rectification produce the spike waveform",
+      "Predict the effects of pharmacological blockade (TTX, TEA, local anesthetics) on excitability",
+    ],
+    advancedObjectives: [
+      "Connect gating variable kinetics (m, h, n) to the biophysical phases of the action potential.",
+      "Relate channel blockade to clinical scenarios: local anesthesia, tetrodotoxin poisoning, and demyelination.",
+      "Explain why the LIF model in the Neuron module is an abstraction of these dynamics and when the abstraction breaks down.",
+    ],
+    prerequisites: ["Basic action potential physiology", "Ion channel concepts"],
+    linkedModules: ["neuron", "plasticity", "motor-pathway", "eeg"],
+    commonMisconceptions: [
+      "The action potential is caused by Na+ alone — K+ is equally essential for repolarization.",
+      "Threshold is a fixed voltage — it depends on the state of h gates (inactivation).",
+      "TTX and lidocaine are identical — they block from different sides of the channel.",
+    ],
+  },
+  {
+    slug: "motor-pathway",
+    title: "Motor Pathway Explorer",
+    trainingStage: "Clinical motor system localization",
+    learningGoals: [
+      "Distinguish UMN from LMN signs at the bedside",
+      "Localize motor lesions along the corticospinal tract from cortex to muscle",
+      "Recognize brainstem crossed findings as definitive localizers",
+    ],
+    advancedObjectives: [
+      "Use the distribution and pattern of weakness (face/arm vs. leg, proximal vs. distal) to narrow localization before imaging.",
+      "Explain why mixed UMN+LMN signs (ALS) cannot be produced by a single focal lesion.",
+      "Differentiate acute UMN presentations (flaccid shock phase) from established UMN patterns (spasticity).",
+    ],
+    prerequisites: ["Basic neuroanatomy", "Brain Atlas module"],
+    linkedModules: ["brain-atlas", "action-potential", "neuron", "ask"],
+    commonMisconceptions: [
+      "UMN always means spastic — acute UMN lesions are initially flaccid.",
+      "Fasciculations always mean ALS — benign fasciculations are common.",
+      "Forehead involvement in facial weakness is a minor detail — it is the key UMN vs. LMN distinction.",
+    ],
+  },
+  {
+    slug: "sleep",
+    title: "Sleep Architecture",
+    trainingStage: "Clinical sleep medicine fundamentals",
+    learningGoals: [
+      "Understand normal NREM-REM cycling and its evolution across the night",
+      "Identify EEG markers of each sleep stage (spindles, K-complexes, delta, sawtooth waves)",
+      "Recognize pathological sleep architecture patterns in narcolepsy, OSA, depression, and RBD",
+    ],
+    advancedObjectives: [
+      "Interpret a hypnogram to identify disordered sleep architecture and generate a differential diagnosis.",
+      "Explain why REM sleep behavior disorder is the strongest prodromal marker for alpha-synucleinopathies.",
+      "Connect sleep stage physiology to clinical phenomena: SWS to growth hormone, REM to dreaming, spindles to memory consolidation.",
+    ],
+    prerequisites: ["EEG module basics", "Basic neuroanatomy"],
+    linkedModules: ["eeg", "brain-atlas", "dopamine", "motor-pathway", "ask"],
+    commonMisconceptions: [
+      "Deep sleep = REM — actually N3 (slow-wave) is the deepest NREM stage; REM is 'paradoxical' sleep.",
+      "Everyone needs exactly 8 hours — sleep need varies from 6-9 hours in healthy adults.",
+      "Dreaming only occurs in REM — NREM dreaming exists but is less vivid.",
+      "RBD is just nightmares — it is a neurodegenerative prodrome requiring follow-up.",
+    ],
+  },
 ];
 
 export function getCurriculumModule(slug: string) {
