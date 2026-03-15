@@ -59,3 +59,18 @@ export interface SleepClinicalCase extends InstructionCase {
   expectedPresetId: string;
   startingPresetId: string;
 }
+
+export interface CranialNerveClinicalCase extends InstructionCase {
+  expectedNerveNumber: number;
+  syndromeId: string | null;
+}
+
+export interface StrokeClinicalCase extends InstructionCase {
+  expectedTerritoryId: string;
+  startingTerritoryId: string;
+}
+
+export interface DermatomeClinicalCase extends InstructionCase {
+  expectedLesionId: string;
+  startingLesionId: string;
+}

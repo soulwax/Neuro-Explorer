@@ -294,6 +294,72 @@ export const curriculumModules: CurriculumModule[] = [
       "RBD is just nightmares — it is a neurodegenerative prodrome requiring follow-up.",
     ],
   },
+  {
+    slug: "cranial-nerves",
+    title: "Cranial Nerves Explorer",
+    trainingStage: "Clinical neurological examination",
+    learningGoals: [
+      "Systematically examine all 12 cranial nerves at the bedside",
+      "Distinguish peripheral from central lesion patterns for each nerve",
+      "Recognize brainstem syndromes by their cranial nerve combinations",
+    ],
+    advancedObjectives: [
+      "Use the specific CN involved to identify the brainstem level (III = midbrain, VI/VII = pons, IX/X/XII = medulla).",
+      "Differentiate pupil-involving from pupil-sparing CN III palsy and the emergency implications.",
+      "Apply the HINTS exam in acute vertigo to distinguish peripheral from central vestibular syndromes.",
+    ],
+    prerequisites: ["Basic neuroanatomy", "Brain Atlas module"],
+    linkedModules: ["brain-atlas", "motor-pathway", "stroke", "visual-field", "ask"],
+    commonMisconceptions: [
+      "Bell's palsy always means stroke — check the forehead first.",
+      "CN VI palsy always localizes to the pons — it can be a false localizing sign from raised ICP.",
+      "The gag reflex is reliable — it is absent in ~20% of normal adults.",
+    ],
+  },
+  {
+    slug: "stroke",
+    title: "Stroke Vascular Territories",
+    trainingStage: "Acute neurovascular localization",
+    learningGoals: [
+      "Map stroke symptoms to specific arterial territories",
+      "Distinguish anterior from posterior circulation syndromes",
+      "Recognize stroke mimics and the importance of time-to-treatment",
+    ],
+    advancedObjectives: [
+      "Use the presence or absence of cortical signs to differentiate cortical from subcortical (lacunar) stroke.",
+      "Identify large vessel occlusion patterns amenable to thrombectomy.",
+      "Recognize posterior circulation stroke presentations that are commonly missed (PCA hemianopia, Wallenberg, locked-in).",
+    ],
+    prerequisites: ["Brain Atlas module", "Motor Pathway module", "Cranial Nerves module"],
+    linkedModules: ["brain-atlas", "motor-pathway", "cranial-nerves", "visual-field", "ecg", "ask"],
+    commonMisconceptions: [
+      "All strokes cause weakness — PCA strokes often present with isolated visual field loss.",
+      "Lacunar strokes are always benign — they can cause dense hemiplegia.",
+      "Posterior circulation strokes are rare — they account for ~20% of all ischemic strokes.",
+    ],
+  },
+  {
+    slug: "dermatome",
+    title: "Dermatome & Sensory Pathways",
+    trainingStage: "Sensory system localization",
+    learningGoals: [
+      "Distinguish dorsal column from spinothalamic tract dysfunction at the bedside",
+      "Map sensory patterns to anatomical lesion levels (peripheral nerve, root, cord, brainstem, thalamus, cortex)",
+      "Perform and interpret Romberg test, dermatomal mapping, and cortical sensory testing",
+    ],
+    advancedObjectives: [
+      "Explain why Brown-Séquard produces ipsilateral proprioception loss but contralateral pain/temperature loss using tract crossing anatomy.",
+      "Differentiate sensory ataxia (positive Romberg) from cerebellar ataxia (Romberg-independent).",
+      "Recognize cortical sensory loss (astereognosis, agraphesthesia) as distinct from peripheral or spinal patterns.",
+    ],
+    prerequisites: ["Motor Pathway module", "Brain Atlas module"],
+    linkedModules: ["motor-pathway", "brain-atlas", "cranial-nerves", "stroke", "action-potential", "ask"],
+    commonMisconceptions: [
+      "Numbness always means a peripheral nerve problem — spinal, brainstem, thalamic, and cortical lesions all cause numbness.",
+      "The Romberg test detects cerebellar disease — it detects proprioceptive loss.",
+      "Dissociated sensory loss is rare — it is common and highly localizing (cord, brainstem).",
+    ],
+  },
 ];
 
 export function getCurriculumModule(slug: string) {
