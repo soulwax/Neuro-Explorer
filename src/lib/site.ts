@@ -32,7 +32,7 @@ export const moduleCards: ModuleCard[] = [
     slug: "brain-atlas",
     title: "Brain Atlas",
     description:
-      "Explore major regions, convergence overlays, and conference-style localization cases with vascular, visual-stream, brainstem, and loop-based rival reasoning.",
+      "Explore major regions, convergence overlays, and conference-style localization cases that now include medial motivation hubs, parietal attention maps, insular interoception, and salience-autonomic network reasoning.",
     badge: "Anatomy",
     href: "/brain-atlas",
   },
@@ -72,7 +72,7 @@ export const moduleCards: ModuleCard[] = [
     slug: "dopamine",
     title: "Dopamine Prediction Error Lab",
     description:
-      "Watch prediction errors shift from reward delivery to the predictive cue as learning unfolds.",
+      "Compare canonical transfer, cue capture, blunted transfer, and omission-sensitive phenotypes as prediction errors shift from reward delivery toward the predictive cue.",
     badge: "Reinforcement",
     href: "/dopamine",
   },

@@ -22,7 +22,7 @@ const ROUTES: Record<string, string> = {
 	'/vision':
 		'Image classification via ResNet-50, mapped to cortical visual processing and used alongside consult-level field-entry, ventral-stream, dorsal-stream, and attention-network teaching. Param: url=<image_url>',
 	'/brain-atlas':
-		'Interactive brain atlas with Chapter 1 on regional functions, Chapter 2 on interlinked circuits, and convergence overlays for vascular, visual-system, brainstem, and loop reasoning.',
+		'Interactive brain atlas with Chapter 1 on regional functions, Chapter 2 on interlinked circuits, and convergence overlays for vascular, visual-system, brainstem, salience-autonomic, and loop reasoning.',
 	'/ask':
 		'Post-clinical neuroscience and clinical neurology tutor with a shared consult-reasoning rubric. Params: q=<question>, topic=<optional_topic>, level=<post-clinical|oral-boards|consult-rounds>',
 	'/plasticity': 'Spike-Timing Dependent Plasticity (STDP) simulation. Params: deltaT, pairCount, aPlus, aMinus, tauPlus, tauMinus, initialWeight',
@@ -31,7 +31,7 @@ const ROUTES: Record<string, string> = {
 	'/grid-cell':
 		'Entorhinal grid-cell simulator with spatial firing fields, navigation path, and rate-map controls. Params: arenaSize, durationSec, speed, spacing, orientation, phaseX, phaseY, sharpness, maxRate, thetaMod, turnNoise',
 	'/dopamine':
-		'Dopamine reward-prediction error simulator. Params: durationMs, dtMs, trialCount, cueTime, rewardTime, rewardSize, learningRate, discount, traceDecay, omissionTrial',
+		'Dopamine reward-prediction error simulator with phenotype presets for canonical transfer, cue capture, blunted transfer, and brittle omission sensitivity. Params: durationMs, dtMs, trialCount, cueTime, rewardTime, rewardSize, learningRate, discount, traceDecay, omissionTrial',
 	'/retina':
 		'Retinal receptive field simulator with prechiasmal neuro-ophthalmology teaching. Params: gridSize, centerSigma, surroundSigma, surroundStrength, stimulusType, stimulusRadius, annulusWidth, stimulusX, stimulusY, contrast',
 	'/eeg':

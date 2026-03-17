@@ -44,6 +44,48 @@ export const brainAtlasCases: BrainAtlasLocalizationCase[] = [
     startingRegionId: "motor",
   },
   {
+    id: "abulia-medial-frontal",
+    title: "Alert but barely self-initiating after an ACA-pattern stroke",
+    oneLiner:
+      "A patient is awake and can move on command, yet almost never initiates speech, movement, or goal-directed behavior without repeated prompting.",
+    chiefComplaint:
+      "Family says the patient seems present but does not start conversations, meals, or movement unless someone pushes every step.",
+    history:
+      "Strength is largely preserved when the examiner insists, but spontaneous output is sparse. Affect is flat, responses are delayed, and the team worries about depression or aphasia.",
+    syndromeFrame:
+      "This is a medial frontal motivational-initiation syndrome. The key question is not whether the patient can move, but whether the circuitry that converts intention into self-generated behavior is failing.",
+    examFindings: [
+      "Marked reduction in spontaneous speech and movement",
+      "Can generate near-full effort when strongly cued",
+      "Flat affect with long response latency but without dense aphasia",
+    ],
+    prompt:
+      "Which region best explains profound loss of self-initiation despite preserved raw strength, and why is that stronger than a pure prefrontal or corticospinal label?",
+    hints: [
+      "Prompted movement is stronger than self-generated movement.",
+      "Think motivational drive and conflict-to-action conversion, not output weakness.",
+    ],
+    localizationCues: [
+      "The patient can act, but the internal launch signal is weak.",
+      "Spontaneous behavior collapses out of proportion to measured pyramidal strength.",
+    ],
+    differentialTraps: [
+      "Do not call every low-output state depression without checking cued performance and neurological onset.",
+      "Aphasia changes language content and form; abulia changes whether behavior is initiated at all.",
+    ],
+    nextDataRequests: [
+      "Compare spontaneous versus externally cued speech and movement.",
+      "Review medial frontal and ACA-territory imaging rather than stopping at a generic frontal label.",
+    ],
+    teachingPoints: [
+      "Abulia often points to anterior cingulate and medial frontal circuitry more strongly than to primary motor cortex.",
+      "Initiation failure is not the same thing as weakness; the patient may be able to perform when the loop is externally driven.",
+    ],
+    followUpModules: ["stroke", "dopamine", "ask"],
+    expectedRegionId: "anteriorCingulate",
+    startingRegionId: "prefrontal",
+  },
+  {
     id: "anterograde-amnesia",
     title: "Cannot form new episodic memories",
     oneLiner:
@@ -250,6 +292,48 @@ export const brainAtlasCases: BrainAtlasLocalizationCase[] = [
     followUpModules: ["brain-atlas", "vision", "ask"],
     expectedRegionId: "thalamus",
     startingRegionId: "somatosensory",
+  },
+  {
+    id: "insula-autonomic-lability",
+    title: "Visceral alarm and autonomic swings after a right hemispheric event",
+    oneLiner:
+      "A patient with an acute right-sided cortical stroke has nausea, palpitations, blood-pressure lability, and a striking sense that the body feels wrong.",
+    chiefComplaint:
+      "The patient keeps describing an internal sense of alarm and bodily discomfort even when the motor exam changes little.",
+    history:
+      "Telemetry shows intermittent autonomic variability, there is no prior arrhythmia history, and the neurological syndrome feels more visceral and salience-heavy than a pure motor-sensory stroke.",
+    syndromeFrame:
+      "This is an interoceptive-autonomic salience syndrome. The localization question is which cortical hub best links body-state awareness to autonomic output and urgency.",
+    examFindings: [
+      "Nausea with fluctuating heart rate and blood pressure",
+      "Altered awareness of internal bodily state",
+      "Subtle attentional or salience-shifting abnormality without a pure brainstem pattern",
+    ],
+    prompt:
+      "Which region best explains paired visceral-autonomic disturbance and salience shift, and why is it stronger than an amygdala-only or brainstem-only explanation?",
+    hints: [
+      "The lesion has cortical flavor, but the symptoms are bodily and urgent.",
+      "Think interoception plus autonomic regulation in one region.",
+    ],
+    localizationCues: [
+      "Internal body-state misreading and autonomic lability travel together.",
+      "The syndrome feels like salience circuitry has been distorted, not just a relay tract interrupted.",
+    ],
+    differentialTraps: [
+      "Do not reduce this to anxiety or a primary cardiac problem before explaining the acute neurological context.",
+      "Pure brainstem autonomic syndromes usually bring denser cranial or long-tract findings than this case does.",
+    ],
+    nextDataRequests: [
+      "Correlate telemetry and blood-pressure swings with lesion imaging.",
+      "Ask explicitly about taste, nausea, internal discomfort, and the sense that the body is not behaving normally.",
+    ],
+    teachingPoints: [
+      "The insula is a high-yield cortical localization for interoception, visceral discomfort, and autonomic salience.",
+      "Right insular involvement is often discussed when stroke syndromes seem to distort both body-state awareness and cardiovascular control.",
+    ],
+    followUpModules: ["ecg", "stroke", "ask"],
+    expectedRegionId: "insula",
+    startingRegionId: "amygdala",
   },
   {
     id: "crossed-brainstem-pattern",

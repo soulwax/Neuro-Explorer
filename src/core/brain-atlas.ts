@@ -139,6 +139,52 @@ export const atlasRegions: AtlasRegion[] = [
 		},
 	},
 	{
+		id: 'anteriorCingulate',
+		name: 'Anterior Cingulate Cortex',
+		shortLabel: 'ACC',
+		category: 'limbic',
+		lobe: 'Medial frontal lobe',
+		x: 118,
+		y: 108,
+		chapter1: {
+			summary: 'Allocates effort, monitors conflict, and helps convert motivation into initiated behavior.',
+			functions: ['Effort allocation', 'Conflict monitoring', 'Motivational drive', 'Pain-affect integration'],
+			signatureTasks: ['Task persistence', 'Error monitoring', 'Response-conflict paradigms', 'Initiation of goal-directed output'],
+			clinicalLink: 'Lesions can produce abulia, reduced spontaneous speech or movement, impaired effortful control, and flattened affective engagement.',
+		},
+		chapter2: {
+			role: 'Acts as a bridge between salience, motivation, autonomic state, and the frontostriatal loops that decide whether behavior is actually launched.',
+			systems: ['Salience network', 'Cingulo-striatal loop', 'Medial frontal control network'],
+			interlinks: [
+				{
+					target: 'prefrontal',
+					label: 'Effort to executive set',
+					description: 'Conflict and effort signals help prefrontal systems decide whether a goal is worth maintaining.',
+				},
+				{
+					target: 'basalGanglia',
+					label: 'Initiation gating',
+					description: 'Motivational drive influences whether frontostriatal loops release or withhold action.',
+				},
+				{
+					target: 'insula',
+					label: 'Salience coupling',
+					description: 'Internal bodily urgency and external salience are integrated into one action priority signal.',
+				},
+				{
+					target: 'amygdala',
+					label: 'Affective biasing',
+					description: 'Emotionally charged cues alter conflict weighting, persistence, and avoidance behavior.',
+				},
+				{
+					target: 'hypothalamus',
+					label: 'Autonomic effort state',
+					description: 'Motivational demand is translated into autonomic arousal and bodily readiness.',
+				},
+			],
+		},
+	},
+	{
 		id: 'motor',
 		name: 'Motor Cortex',
 		shortLabel: 'M1',
@@ -226,6 +272,52 @@ export const atlasRegions: AtlasRegion[] = [
 		},
 	},
 	{
+		id: 'parietalAssociation',
+		name: 'Parietal Association Cortex',
+		shortLabel: 'PAC',
+		category: 'cortex',
+		lobe: 'Parietal lobe',
+		x: 238,
+		y: 76,
+		chapter1: {
+			summary: 'Builds multimodal body-space maps, attentional priority maps, and the spatial frame used for reaching and awareness.',
+			functions: ['Spatial attention', 'Body-space integration', 'Visuomotor transformation', 'Scene scanning'],
+			signatureTasks: ['Line bisection', 'Cancellation testing', 'Visually guided reaching', 'Double simultaneous stimulation'],
+			clinicalLink: 'Damage can produce neglect, extinction, optic ataxia-like misreaching, constructional difficulty, and poor awareness of one side of space.',
+		},
+		chapter2: {
+			role: 'This is the dorsal hub where visual space, somatic coordinates, and action plans are aligned into one usable map for behavior.',
+			systems: ['Dorsal attention network', 'Dorsal visual stream', 'Sensorimotor integration network'],
+			interlinks: [
+				{
+					target: 'occipital',
+					label: 'Spatial visual feed',
+					description: 'Posterior visual cortex supplies the scene map that parietal systems weight and localize.',
+				},
+				{
+					target: 'somatosensory',
+					label: 'Body-position anchor',
+					description: 'A body-state estimate is required before visual coordinates can guide action in space.',
+				},
+				{
+					target: 'prefrontal',
+					label: 'Attention control',
+					description: 'Executive systems bias which side of space and which task-relevant signals reach awareness.',
+				},
+				{
+					target: 'motor',
+					label: 'Vision for action',
+					description: 'Parietal coordinates are converted into reach targets, movement vectors, and online correction signals.',
+				},
+				{
+					target: 'thalamus',
+					label: 'Priority relay',
+					description: 'Pulvinar-thalamic pathways help stabilize attention toward relevant spatial sectors.',
+				},
+			],
+		},
+	},
+	{
 		id: 'temporal',
 		name: 'Temporal Cortex',
 		shortLabel: 'TL',
@@ -262,6 +354,52 @@ export const atlasRegions: AtlasRegion[] = [
 					target: 'prefrontal',
 					label: 'Meaning to action',
 					description: 'Semantic and contextual information informs goals and decisions.',
+				},
+			],
+		},
+	},
+	{
+		id: 'insula',
+		name: 'Insula',
+		shortLabel: 'INS',
+		category: 'cortex',
+		lobe: 'Insular cortex',
+		x: 162,
+		y: 138,
+		chapter1: {
+			summary: 'Represents internal bodily state, visceral sensation, and the salience of what the body feels right now.',
+			functions: ['Interoception', 'Autonomic integration', 'Visceral sensation', 'Salience detection'],
+			signatureTasks: ['Heartbeat awareness', 'Visceral discomfort localization', 'Taste and internal-state reporting', 'Rapid salience switching'],
+			clinicalLink: 'Insular lesions can distort body awareness, autonomic tone, gustation, and the feeling that internal alarms are or are not relevant.',
+		},
+		chapter2: {
+			role: 'The insula links internal bodily signals to salience, emotion, autonomic output, and attentional reorientation.',
+			systems: ['Salience network', 'Central autonomic network', 'Interoceptive awareness network'],
+			interlinks: [
+				{
+					target: 'anteriorCingulate',
+					label: 'Salience core',
+					description: 'Together these regions decide whether a bodily or environmental signal should seize control of the system.',
+				},
+				{
+					target: 'amygdala',
+					label: 'Affective tagging',
+					description: 'Visceral sensations are emotionally colored and rapidly linked to threat or reward significance.',
+				},
+				{
+					target: 'hypothalamus',
+					label: 'Body-state regulation',
+					description: 'The hypothalamus converts perceived internal need into set-point correction and endocrine-autonomic output.',
+				},
+				{
+					target: 'brainstem',
+					label: 'Autonomic expression',
+					description: 'Visceral-autonomic state is broadcast into heart rate, respiration, nausea, and arousal outputs.',
+				},
+				{
+					target: 'prefrontal',
+					label: 'Conscious report',
+					description: 'Internal states become deliberate appraisal, worry, or strategic control once frontal systems engage.',
 				},
 			],
 		},
@@ -436,6 +574,52 @@ export const atlasRegions: AtlasRegion[] = [
 		},
 	},
 	{
+		id: 'hypothalamus',
+		name: 'Hypothalamus',
+		shortLabel: 'HYP',
+		category: 'subcortical',
+		lobe: 'Diencephalon',
+		x: 214,
+		y: 146,
+		chapter1: {
+			summary: 'Maintains homeostasis by coordinating autonomic set points, endocrine output, circadian timing, and basic drives.',
+			functions: ['Autonomic set-point control', 'Endocrine regulation', 'Hunger and thirst', 'Circadian timing'],
+			signatureTasks: ['Sleep-wake regulation', 'Thermoregulation', 'Stress-axis coordination', 'Feeding and fluid balance'],
+			clinicalLink: 'Lesions can produce sleep-wake disturbance, autonomic instability, appetite change, endocrine disruption, and altered drive states.',
+		},
+		chapter2: {
+			role: 'Sits between limbic salience and body-state output, translating what matters into hormonal, autonomic, and circadian corrections.',
+			systems: ['Central autonomic network', 'Hypothalamic-pituitary axis', 'Sleep-wake regulation circuits'],
+			interlinks: [
+				{
+					target: 'insula',
+					label: 'Interoceptive readout',
+					description: 'Internal-state signals from cortex inform whether homeostatic set points need to be corrected.',
+				},
+				{
+					target: 'anteriorCingulate',
+					label: 'Drive and effort',
+					description: 'Motivational urgency and effort are partly shaped by bodily need and arousal state.',
+				},
+				{
+					target: 'amygdala',
+					label: 'Emotional-homeostatic link',
+					description: 'Threat and reward relevance are translated into stress, hunger, defensive, or reproductive body states.',
+				},
+				{
+					target: 'brainstem',
+					label: 'Autonomic broadcast',
+					description: 'Hypothalamic commands are expressed through brainstem cardiovascular, respiratory, and visceral nuclei.',
+				},
+				{
+					target: 'thalamus',
+					label: 'State influence',
+					description: 'Arousal and circadian state alter thalamic gating of what reaches cortex clearly.',
+				},
+			],
+		},
+	},
+	{
 		id: 'basalGanglia',
 		name: 'Basal Ganglia',
 		shortLabel: 'BG',
@@ -587,6 +771,8 @@ export const atlasOverlays: AtlasOverlay[] = [
 			{ regionId: 'prefrontal', emphasis: 'primary', label: 'Frontal eye and executive signs', reason: 'Explains gaze preference and executive collapse in large lateral hemispheric syndromes.' },
 			{ regionId: 'motor', emphasis: 'primary', label: 'Face-arm motor output', reason: 'Captures the classic lateral sensorimotor bias.' },
 			{ regionId: 'somatosensory', emphasis: 'supporting', label: 'Face-arm sensory integration', reason: 'Adds cortical sensory and neglect-adjacent findings.' },
+			{ regionId: 'parietalAssociation', emphasis: 'supporting', label: 'Spatial weighting and neglect', reason: 'Lateral parietal involvement explains extinction, neglect, and scene-scanning failure that often ride with MCA syndromes.' },
+			{ regionId: 'insula', emphasis: 'supporting', label: 'Autonomic and salience consequences', reason: 'Insular extension helps explain visceral alarm, autonomic lability, and the sense that the body is suddenly wrong.' },
 			{ regionId: 'temporal', emphasis: 'primary', label: 'Language and semantic cortex', reason: 'Explains dominant-hemisphere aphasic patterns.' },
 			{ regionId: 'occipital', emphasis: 'supporting', label: 'Field-cut neighborhood', reason: 'Posterior extension helps explain homonymous visual loss when present.' },
 		],
@@ -658,7 +844,8 @@ export const atlasOverlays: AtlasOverlay[] = [
 		linkedModules: ['visual-field', 'vision', 'brain-atlas', 'ask'],
 		regions: [
 			{ regionId: 'occipital', emphasis: 'primary', label: 'Visual-space entry', reason: 'Early visual encoding still anchors the spatial map.' },
-			{ regionId: 'somatosensory', emphasis: 'primary', label: 'Body-space alignment', reason: 'Parietal body coordinates and dorsal space merge here.' },
+			{ regionId: 'parietalAssociation', emphasis: 'primary', label: 'Spatial attention map', reason: 'Posterior parietal cortex builds the hemispace weighting and multisensory spatial map that dorsal syndromes disrupt.' },
+			{ regionId: 'somatosensory', emphasis: 'supporting', label: 'Body-space alignment', reason: 'Somatic coordinates keep the parietal map anchored to the body rather than pure visual space.' },
 			{ regionId: 'prefrontal', emphasis: 'supporting', label: 'Top-down attentional biasing', reason: 'Executive control reshapes which spatial signals reach awareness.' },
 			{ regionId: 'motor', emphasis: 'supporting', label: 'Vision for action', reason: 'Spatial coordinates become goal-directed movement plans.' },
 		],
@@ -707,9 +894,36 @@ export const atlasOverlays: AtlasOverlay[] = [
 		linkedModules: ['dopamine', 'ecg', 'ask'],
 		regions: [
 			{ regionId: 'prefrontal', emphasis: 'primary', label: 'Executive set and goal selection', reason: 'Control signals define what should be gated into action.' },
+			{ regionId: 'anteriorCingulate', emphasis: 'supporting', label: 'Effort and initiation drive', reason: 'Motivation and conflict monitoring influence whether the loop actually releases behavior.' },
 			{ regionId: 'basalGanglia', emphasis: 'primary', label: 'Action gating core', reason: 'Competing motor and cognitive programs are released or suppressed here.' },
 			{ regionId: 'thalamus', emphasis: 'supporting', label: 'Loop return relay', reason: 'Selected signals re-enter cortex through thalamic relay.' },
 			{ regionId: 'motor', emphasis: 'supporting', label: 'Final motor expression', reason: 'The output looks weak only if you forget the upstream gating layer.' },
+		],
+	},
+	{
+		id: 'salience-autonomic-network',
+		category: 'loop',
+		title: 'Salience-autonomic network',
+		summary:
+			'This overlay captures the circuitry that decides a bodily or environmental signal is urgent enough to seize attention, change autonomic tone, and redirect behavior.',
+		clinicalFrame:
+			'Use this when interoceptive alarm, autonomic lability, nausea, visceral discomfort, abulia, or stress-linked body-state shifts travel with the neurological syndrome.',
+		weakerAlternative: 'Pure relay or corticospinal syndrome',
+		whyAlternativeWeaker:
+			'Relay and motor syndromes can change sensation or output, but they do not usually assemble visceral salience, autonomic swings, motivational arrest, and body-state misreading into one circuit explanation.',
+		decisiveNextData: [
+			'Ask whether the problem is weakness or whether the patient says the body suddenly feels wrong, unsafe, or effortless to engage',
+			'Look for paired autonomic readouts such as heart-rate variability, blood-pressure swings, sweating, nausea, or interoceptive misreporting',
+		],
+		compareRegionId: 'thalamus',
+		linkedModules: ['ecg', 'stroke', 'ask'],
+		regions: [
+			{ regionId: 'insula', emphasis: 'primary', label: 'Interoceptive salience hub', reason: 'The insula reads the internal body and flags whether a signal deserves immediate attention.' },
+			{ regionId: 'anteriorCingulate', emphasis: 'primary', label: 'Effort and urgency allocation', reason: 'Anterior cingulate translates salience into persistence, alarm, and initiated behavior.' },
+			{ regionId: 'amygdala', emphasis: 'supporting', label: 'Emotional tagging', reason: 'Threat and reward relevance rapidly bias which body-state changes feel urgent.' },
+			{ regionId: 'hypothalamus', emphasis: 'primary', label: 'Set-point controller', reason: 'Homeostatic and endocrine corrections are issued here once the system decides something matters.' },
+			{ regionId: 'brainstem', emphasis: 'supporting', label: 'Autonomic expression', reason: 'Visceral consequences reach heart rate, blood pressure, respiration, and nausea through brainstem output.' },
+			{ regionId: 'prefrontal', emphasis: 'supporting', label: 'Conscious appraisal', reason: 'Frontal systems decide whether salience becomes deliberate worry, strategy, or controlled response.' },
 		],
 	},
 ];
@@ -718,6 +932,7 @@ export const atlasNetworkNotes = [
 	'Most brain communication is recurrent rather than one-way: cortex sends down, subcortex sends back, and both reshape each other.',
 	'Hub regions such as the thalamus and prefrontal cortex matter because they coordinate timing and routing, not because they work alone.',
 	'Clinical syndromes often reflect broken loops rather than isolated damage to a single named structure.',
+	'Salience and autonomic symptoms localize best when you can connect interoception, motivation, and body-state output in one network instead of splitting them into separate complaints.',
 ];
 
 export const atlasTitle = 'Brain Atlas';

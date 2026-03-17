@@ -1,5 +1,17 @@
 # Changelog
 
+## [0.28.0] - 2026-03-17
+
+### Added
+
+- Added new `Brain Atlas` teaching regions for the anterior cingulate, parietal association cortex, insula, and hypothalamus, plus salience-autonomic and medial-frontal localization cases.
+- Added richer `Dopamine Prediction Error Lab` presets, snapshot metrics, and phenotype interpretation for cue capture, blunted transfer, volatile expectation, and slow conditioning.
+
+### Changed
+
+- Expanded `Brain Atlas` overlays so MCA, dorsal-attention, and frontostriatal reasoning now incorporate spatial-attention, interoceptive, autonomic, and motivational network logic.
+- Rebuilt `Dopamine` around clinically framed teaching presets, omission-severity summaries, behavioral readouts, and follow-on module handoffs instead of a slider-only reward-shift demo.
+
 ## [0.27.0] - 2026-03-17
 
 ### Added

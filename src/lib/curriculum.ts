@@ -17,13 +17,15 @@ export const curriculumModules: CurriculumModule[] = [
     learningGoals: [
       "Localize neurological syndromes to major brain systems",
       "Understand why loops and distributed systems matter more than isolated structures",
+      "Recognize when motivation, salience, autonomic control, and body-space mapping require network rather than single-structure reasoning",
     ],
     advancedObjectives: [
       "Separate vascular-territory, visual-stream, loop, and brainstem long-tract explanations before naming a disease.",
       "Reject weaker competing localizations using exam asymmetry, cortical signs, negative findings, and network logic.",
+      "Use anterior cingulate, insular, hypothalamic, and parietal-association findings to distinguish motivational arrest, autonomic salience syndromes, and spatial-attention failures from simpler relay lesions.",
     ],
     prerequisites: ["Basic neuroanatomy"],
-    linkedModules: ["retina", "visual-field", "vision", "dopamine", "ecg", "ask"],
+    linkedModules: ["retina", "visual-field", "vision", "dopamine", "ecg", "stroke", "ask"],
     commonMisconceptions: [
       "One symptom always equals one structure.",
       "Naming a vascular territory is the same as proving the localization.",
@@ -112,18 +114,20 @@ export const curriculumModules: CurriculumModule[] = [
     title: "Dopamine Prediction Error Lab",
     trainingStage: "Computational clinical neuroscience",
     learningGoals: [
-      "Understand reward prediction error",
-      "Connect dopamine signals to action selection and habit learning",
+      "Understand reward prediction error across cue, reward, and omission conditions",
+      "Connect dopamine-like signals to action selection, cue capture, and habit learning",
     ],
     advancedObjectives: [
       "Distinguish reward prediction error from hedonic tone, salience, and movement vigor.",
+      "Compare canonical transfer, cue capture, blunted transfer, and brittle omission sensitivity without over-reading the model as a disease simulator.",
       "Relate reinforcement-learning abstractions to basal ganglia loops and movement-disorder phenomenology.",
     ],
     prerequisites: ["Basic reinforcement learning concepts"],
-    linkedModules: ["plasticity", "brain-atlas"],
+    linkedModules: ["plasticity", "brain-atlas", "ask"],
     commonMisconceptions: [
       "Dopamine only means pleasure.",
       "Prediction error and reward size are identical.",
+      "A larger cue response proves a patient is feeling more pleasure rather than learning stronger prediction.",
     ],
   },
   {

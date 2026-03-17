@@ -26,9 +26,11 @@ describe('Neuro Explorer API', () => {
 		expect(data.name).toBe('Neuro Explorer');
 		expect(data.routes['/ask']).toContain('clinical neurology tutor');
 		expect(data.routes['/brain-atlas']).toContain('Interactive brain atlas');
+		expect(data.routes['/brain-atlas']).toContain('salience-autonomic');
 		expect(data.routes['/ecg']).toContain('12-lead neurocardiac ECG lab');
 		expect(data.routes['/grid-cell']).toContain('Entorhinal grid-cell simulator');
 		expect(data.routes['/dopamine']).toContain('reward-prediction error simulator');
+		expect(data.routes['/dopamine']).toContain('cue capture');
 		expect(data.routes['/retina']).toContain('Retinal receptive field simulator');
 	});
 
@@ -153,12 +155,32 @@ describe('Neuro Explorer API', () => {
 		expect(response.status).toBe(200);
 		const data = (await response.json()) as {
 			snapshots: Array<{ label: string }>;
+			snapshotMetrics: Array<{
+				label: string;
+				rewardDelivered: boolean;
+				cuePeak: number;
+			}>;
 			learningCurve: Array<{ cueError: number; rewardError: number }>;
-			summary: { omissionDip: number };
+			summary: {
+				omissionDip: number;
+				cueRewardRatio: number;
+				learningRegime: string;
+			};
+			interpretation: {
+				headline: string;
+				behaviorSignals: string[];
+			};
 		};
-		expect(data.snapshots.length).toBeGreaterThanOrEqual(3);
+		expect(data.snapshots.length).toBeGreaterThanOrEqual(4);
+		expect(data.snapshotMetrics.length).toBeGreaterThanOrEqual(4);
+		expect(data.snapshotMetrics.some((metric) => metric.rewardDelivered === false)).toBe(true);
+		expect(data.snapshotMetrics.some((metric) => metric.cuePeak > 0)).toBe(true);
 		expect(data.learningCurve[data.learningCurve.length - 1]!.cueError).toBeGreaterThan(0);
 		expect(data.summary.omissionDip).toBeLessThan(0);
+		expect(data.summary.cueRewardRatio).toBeGreaterThan(0);
+		expect(data.summary.learningRegime.length).toBeGreaterThan(8);
+		expect(data.interpretation.headline.length).toBeGreaterThan(10);
+		expect(data.interpretation.behaviorSignals.length).toBeGreaterThanOrEqual(2);
 	});
 
 	it('returns center-surround retinal tuning data', async () => {
@@ -255,11 +277,16 @@ describe('Neuro Explorer API', () => {
 			overlays: Array<{ id: string; compareRegionId: string }>;
 		};
 		expect(data.chapters.map((chapter) => chapter.id)).toEqual(['functions', 'interlinks']);
-		expect(data.regions.length).toBeGreaterThan(8);
+		expect(data.regions.length).toBeGreaterThan(12);
 		const thalamus = data.regions.find((region) => region.id === 'thalamus');
 		expect(thalamus?.chapter1.functions.length).toBeGreaterThan(2);
 		expect(thalamus?.chapter2.interlinks.some((link) => link.target === 'prefrontal')).toBe(true);
+		expect(data.regions.some((region) => region.id === 'insula')).toBe(true);
+		expect(data.regions.some((region) => region.id === 'anteriorCingulate')).toBe(true);
+		expect(data.regions.some((region) => region.id === 'parietalAssociation')).toBe(true);
+		expect(data.regions.some((region) => region.id === 'hypothalamus')).toBe(true);
 		expect(data.overlays.some((overlay) => overlay.id === 'middle-cerebral-territory')).toBe(true);
+		expect(data.overlays.some((overlay) => overlay.id === 'salience-autonomic-network')).toBe(true);
 		expect(data.overlays.some((overlay) => overlay.compareRegionId === 'temporal')).toBe(true);
 	});
 
