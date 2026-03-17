@@ -1,10 +1,10 @@
 'use client';
 
-import { useMemo } from 'react';
+import { Suspense, useMemo } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { parseCaseHandoff } from '~/lib/case-handoff';
 
-export function ModuleHandoffBanner() {
+function ModuleHandoffBannerContent() {
   const searchParams = useSearchParams();
   const context = useMemo(() => parseCaseHandoff(searchParams), [searchParams]);
 
@@ -29,5 +29,13 @@ export function ModuleHandoffBanner() {
         <span className="font-semibold text-white">{context.targetLabel || 'not recorded'}</span>.
       </p>
     </section>
+  );
+}
+
+export function ModuleHandoffBanner() {
+  return (
+    <Suspense fallback={null}>
+      <ModuleHandoffBannerContent />
+    </Suspense>
   );
 }

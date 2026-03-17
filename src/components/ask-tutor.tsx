@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { Suspense, useEffect, useState, type Dispatch, type SetStateAction } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { ModuleHandoffBanner } from '~/components/module-handoff-banner';
 import { buildApiUrl, describeApiTarget, extractApiError, type ApiErrorInfo } from '~/lib/api';
@@ -25,18 +25,18 @@ function isAskSuccessResponse(payload: unknown): payload is AskSuccessResponse {
 	return typeof payload === 'object' && payload !== null && typeof (payload as AskSuccessResponse).answer === 'string';
 }
 
-export function AskTutor() {
+function AskTutorSearchPrefill({
+	hasAppliedSearchPrefill,
+	setHasAppliedSearchPrefill,
+	setQuestion,
+	setTopic,
+}: Readonly<{
+	hasAppliedSearchPrefill: boolean;
+	setHasAppliedSearchPrefill: Dispatch<SetStateAction<boolean>>;
+	setQuestion: Dispatch<SetStateAction<string>>;
+	setTopic: Dispatch<SetStateAction<string>>;
+}>) {
 	const searchParams = useSearchParams();
-	const [level, setLevel] = useState('post-clinical');
-	const [topic, setTopic] = useState('');
-	const [question, setQuestion] = useState('');
-	const [result, setResult] = useState<AskSuccessResponse | null>(null);
-	const [error, setError] = useState<ApiErrorInfo | null>(null);
-	const [isLoading, setIsLoading] = useState(false);
-	const [hasAppliedSearchPrefill, setHasAppliedSearchPrefill] = useState(false);
-
-	const selectedLevel = askLevelOptions.find((option) => option.id === level) ?? askLevelOptions[0]!;
-	const selectedTopic = askTopicOptions.find((option) => option.id === topic) ?? null;
 
 	useEffect(() => {
 		if (hasAppliedSearchPrefill) {
@@ -57,7 +57,28 @@ export function AskTutor() {
 			setTopic(nextTopic);
 		}
 		setHasAppliedSearchPrefill(true);
-	}, [hasAppliedSearchPrefill, searchParams]);
+	}, [
+		hasAppliedSearchPrefill,
+		searchParams,
+		setHasAppliedSearchPrefill,
+		setQuestion,
+		setTopic,
+	]);
+
+	return null;
+}
+
+export function AskTutor() {
+	const [level, setLevel] = useState('post-clinical');
+	const [topic, setTopic] = useState('');
+	const [question, setQuestion] = useState('');
+	const [result, setResult] = useState<AskSuccessResponse | null>(null);
+	const [error, setError] = useState<ApiErrorInfo | null>(null);
+	const [isLoading, setIsLoading] = useState(false);
+	const [hasAppliedSearchPrefill, setHasAppliedSearchPrefill] = useState(false);
+
+	const selectedLevel = askLevelOptions.find((option) => option.id === level) ?? askLevelOptions[0]!;
+	const selectedTopic = askTopicOptions.find((option) => option.id === topic) ?? null;
 
 	async function askQuestion(nextQuestion = question, nextTopic = topic, nextLevel = level) {
 		const trimmedQuestion = nextQuestion.trim();
@@ -131,6 +152,15 @@ export function AskTutor() {
 
 	return (
 		<div className="space-y-6">
+			<Suspense fallback={null}>
+				<AskTutorSearchPrefill
+					hasAppliedSearchPrefill={hasAppliedSearchPrefill}
+					setHasAppliedSearchPrefill={setHasAppliedSearchPrefill}
+					setQuestion={setQuestion}
+					setTopic={setTopic}
+				/>
+			</Suspense>
+
 			<section className="rounded-[28px] border border-white/10 bg-white/6 p-5 shadow-[0_16px_48px_rgba(3,10,20,0.22)] backdrop-blur">
 				<div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
 					<div>
