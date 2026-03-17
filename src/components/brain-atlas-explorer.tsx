@@ -3,9 +3,13 @@
 import { useMemo, useState } from "react";
 import { CompareShell } from "~/components/compare-shell";
 import { CaseQuestionPanel } from "~/components/case-question-panel";
+import { CaseProgressPanel } from "~/components/case-progress-panel";
 import { CaseShell } from "~/components/case-shell";
+import { ModuleHandoffBanner } from "~/components/module-handoff-banner";
 import { RevealPanel } from "~/components/reveal-panel";
 import { brainAtlasCases } from "~/core/cases/brain-atlas";
+import { buildCaseHandoffLinks } from "~/lib/case-handoff";
+import { useCaseProgress } from "~/lib/case-progress";
 import {
   atlasCategories,
   atlasChapters,
@@ -53,6 +57,11 @@ export function BrainAtlasExplorer() {
   );
   const [caseId, setCaseId] = useState<string>(brainAtlasCases[0]!.id);
   const [revealed, setRevealed] = useState(false);
+  const {
+    summary: caseProgressSummary,
+    recordAttempt,
+    resetProgress,
+  } = useCaseProgress("brain-atlas", brainAtlasCases.length);
   const region = useMemo(() => regionById(regionId), [regionId]);
   const overlay = useMemo(
     () => getAtlasOverlay(overlayId) ?? atlasOverlays[0]!,
@@ -79,10 +88,27 @@ export function BrainAtlasExplorer() {
       ),
     [overlay],
   );
-  const followUpTitles = activeCase.followUpModules.map(
-    (slug) => getCurriculumModule(slug)?.title ?? slug,
-  );
+  const followUpLinks = buildCaseHandoffLinks(activeCase.followUpModules, {
+    fromSlug: "brain-atlas",
+    fromTitle: brainAtlasCurriculum?.title ?? "Brain Atlas",
+    caseId: activeCase.id,
+    caseTitle: activeCase.title,
+    prompt: activeCase.prompt,
+    selectedLabel: region.name,
+    targetLabel: targetRegion.name,
+  });
   const selectionMatchesCase = region.id === targetRegion.id;
+
+  function revealCase() {
+    recordAttempt({
+      caseId: activeCase.id,
+      caseTitle: activeCase.title,
+      correct: selectionMatchesCase,
+      selectedLabel: region.name,
+      targetLabel: targetRegion.name,
+    });
+    setRevealed(true);
+  }
 
   return (
     <div className="space-y-6">
@@ -117,6 +143,8 @@ export function BrainAtlasExplorer() {
           {chapterMeta.summary}
         </p>
       </section>
+
+      <ModuleHandoffBanner />
 
       <section className="rounded-[28px] border border-white/10 bg-white/6 p-5 backdrop-blur">
         <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
@@ -242,6 +270,11 @@ export function BrainAtlasExplorer() {
         }
       >
         <div className="space-y-5">
+          <CaseProgressPanel
+            summary={caseProgressSummary}
+            onReset={resetProgress}
+          />
+
           {brainAtlasCurriculum ? (
             <div className="grid gap-4 lg:grid-cols-[240px_minmax(0,1fr)]">
               <div className="rounded-[20px] border border-white/10 bg-slate-950/45 p-4">
@@ -282,7 +315,7 @@ export function BrainAtlasExplorer() {
           <div className="flex flex-wrap items-center gap-3">
             <button
               type="button"
-              onClick={() => setRevealed(true)}
+              onClick={revealCase}
               className="rounded-full bg-cyan-300 px-5 py-3 text-sm font-semibold text-slate-950 shadow-[0_12px_28px_rgba(103,211,255,0.24)] transition hover:-translate-y-0.5"
             >
               Reveal localization
@@ -311,7 +344,7 @@ export function BrainAtlasExplorer() {
                 explanation={targetRegion.chapter1.clinicalLink}
                 teachingPoints={activeCase.teachingPoints}
                 nextDataRequests={activeCase.nextDataRequests}
-                linkedModules={followUpTitles}
+                followUpLinks={followUpLinks}
               />
 
               <CompareShell

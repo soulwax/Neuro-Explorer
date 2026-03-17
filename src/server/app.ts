@@ -7,6 +7,7 @@ import { handleNeuron } from './routes/neuron';
 import { handlePlasticity } from './routes/plasticity';
 import { handleRetina } from './routes/retina';
 import { handleVision } from './routes/vision';
+import { handleEEG } from './routes/eeg';
 import type { AiClient } from './ai/client';
 
 const ROUTES: Record<string, string> = {
@@ -27,6 +28,8 @@ const ROUTES: Record<string, string> = {
 		'Dopamine reward-prediction error simulator. Params: durationMs, dtMs, trialCount, cueTime, rewardTime, rewardSize, learningRate, discount, traceDecay, omissionTrial',
 	'/retina':
 		'Retinal receptive field simulator with prechiasmal neuro-ophthalmology teaching. Params: gridSize, centerSigma, surroundSigma, surroundStrength, stimulusType, stimulusRadius, annulusWidth, stimulusX, stimulusY, contrast',
+	'/eeg':
+		'EEG neural oscillations simulator with multi-channel 10-20 montage, band power analysis, clinical presets, epileptiform patterns, and case-based neurophysiology teaching. Params: durationSec, samplingRate, deltaAmp, thetaAmp, alphaAmp, betaAmp, gammaAmp, alphaReactivity, focalSlowing, focalSlowingStrength, epileptiform, epileptiformRate, asymmetry, noise, muscleArtifact, seed',
 };
 
 export interface AppEnv {
@@ -67,6 +70,8 @@ export async function handleApiRequest(request: Request, env: AppEnv): Promise<R
 			return handleDopamine(request);
 		case '/retina':
 			return handleRetina(request);
+		case '/eeg':
+			return handleEEG(request);
 		case '/routes':
 			return Response.json({
 				name: 'Neuro Explorer',

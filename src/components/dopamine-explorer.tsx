@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import { ModuleHandoffBanner } from "~/components/module-handoff-banner";
 import {
   defaultDopamineParams,
   dopamineParamDefinitions,
@@ -139,6 +140,8 @@ export function DopamineExplorer() {
           </button>
         </div>
       </section>
+
+      <ModuleHandoffBanner />
 
       <section className="rounded-[28px] border border-white/10 bg-white/6 p-5 backdrop-blur">
         <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">

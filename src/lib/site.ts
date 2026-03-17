@@ -14,6 +14,7 @@ export const navItems = [
   { href: "/visual-field", label: "Visual Field" },
   { href: "/grid-cell", label: "Grid Cell" },
   { href: "/ecg", label: "ECG" },
+  { href: "/eeg", label: "EEG" },
   { href: "/plasticity", label: "Plasticity" },
   { href: "/dopamine", label: "Dopamine" },
   { href: "/vision", label: "Vision" },
@@ -92,6 +93,14 @@ export const moduleCards: ModuleCard[] = [
       "Study ECGs through a neurocritical neurocardiac lens with autonomic presets, consult frames, case mode, annotated rhythm strips, red flags, and a 3D activation map.",
     badge: "Clinical",
     href: "/ecg",
+  },
+  {
+    slug: "eeg",
+    title: "EEG & Neural Oscillations",
+    description:
+      "Explore 19-channel EEG with band-power analysis, clinical presets from normal alpha to burst suppression, epileptiform pattern generation, and consult-level neurophysiology cases.",
+    badge: "Neurophysiology",
+    href: "/eeg",
   },
   {
     slug: "grid-cell",

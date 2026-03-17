@@ -1,6 +1,8 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { useSearchParams } from 'next/navigation';
+import { ModuleHandoffBanner } from '~/components/module-handoff-banner';
 import { buildApiUrl, describeApiTarget, extractApiError, type ApiErrorInfo } from '~/lib/api';
 import {
 	askExamplePrompts,
@@ -24,15 +26,38 @@ function isAskSuccessResponse(payload: unknown): payload is AskSuccessResponse {
 }
 
 export function AskTutor() {
+	const searchParams = useSearchParams();
 	const [level, setLevel] = useState('post-clinical');
 	const [topic, setTopic] = useState('');
 	const [question, setQuestion] = useState('');
 	const [result, setResult] = useState<AskSuccessResponse | null>(null);
 	const [error, setError] = useState<ApiErrorInfo | null>(null);
 	const [isLoading, setIsLoading] = useState(false);
+	const [hasAppliedSearchPrefill, setHasAppliedSearchPrefill] = useState(false);
 
 	const selectedLevel = askLevelOptions.find((option) => option.id === level) ?? askLevelOptions[0]!;
 	const selectedTopic = askTopicOptions.find((option) => option.id === topic) ?? null;
+
+	useEffect(() => {
+		if (hasAppliedSearchPrefill) {
+			return;
+		}
+
+		const nextQuestion = searchParams.get('question')?.trim() ?? '';
+		const nextTopic = searchParams.get('topic')?.trim() ?? '';
+
+		if (!nextQuestion && !nextTopic) {
+			return;
+		}
+
+		if (nextQuestion) {
+			setQuestion(nextQuestion);
+		}
+		if (nextTopic && askTopicOptions.some((option) => option.id === nextTopic)) {
+			setTopic(nextTopic);
+		}
+		setHasAppliedSearchPrefill(true);
+	}, [hasAppliedSearchPrefill, searchParams]);
 
 	async function askQuestion(nextQuestion = question, nextTopic = topic, nextLevel = level) {
 		const trimmedQuestion = nextQuestion.trim();
@@ -121,6 +146,8 @@ export function AskTutor() {
 					</div>
 				</div>
 			</section>
+
+			<ModuleHandoffBanner />
 
 			<section className="grid gap-6 xl:grid-cols-[minmax(0,1.05fr)_340px]">
 				<div className="rounded-[28px] border border-white/10 bg-white/6 p-5 backdrop-blur">

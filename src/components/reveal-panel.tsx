@@ -1,3 +1,7 @@
+import Link from "next/link";
+
+import type { CaseHandoffLink } from "~/lib/case-handoff";
+
 export function RevealPanel({
   correct,
   selectedLabel,
@@ -5,7 +9,7 @@ export function RevealPanel({
   explanation,
   teachingPoints,
   nextDataRequests,
-  linkedModules,
+  followUpLinks,
 }: Readonly<{
   correct: boolean;
   selectedLabel: string;
@@ -13,7 +17,7 @@ export function RevealPanel({
   explanation: string;
   teachingPoints: string[];
   nextDataRequests: string[];
-  linkedModules: string[];
+  followUpLinks: CaseHandoffLink[];
 }>) {
   return (
     <div
@@ -60,13 +64,14 @@ export function RevealPanel({
       </div>
 
       <div className="mt-4 flex flex-wrap gap-2">
-        {linkedModules.map((moduleTitle) => (
-          <span
-            key={moduleTitle}
-            className="rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs text-slate-200"
+        {followUpLinks.map((moduleLink) => (
+          <Link
+            key={moduleLink.slug}
+            href={moduleLink.href}
+            className="rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs text-slate-200 transition hover:border-cyan-300/30 hover:bg-white/10 hover:text-white"
           >
-            Follow-up: {moduleTitle}
-          </span>
+            Continue to {moduleLink.title}
+          </Link>
         ))}
       </div>
     </div>

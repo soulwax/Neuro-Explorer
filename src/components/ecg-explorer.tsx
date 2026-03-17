@@ -2,8 +2,10 @@
 
 import { useEffect, useState } from "react";
 import { CaseQuestionPanel } from "~/components/case-question-panel";
+import { CaseProgressPanel } from "~/components/case-progress-panel";
 import { CaseShell } from "~/components/case-shell";
 import { CompareShell } from "~/components/compare-shell";
+import { ModuleHandoffBanner } from "~/components/module-handoff-banner";
 import { RevealPanel } from "~/components/reveal-panel";
 import { ecgCases } from "~/core/cases/ecg";
 import {
@@ -12,6 +14,8 @@ import {
   extractApiError,
   type ApiErrorInfo,
 } from "~/lib/api";
+import { buildCaseHandoffLinks } from "~/lib/case-handoff";
+import { useCaseProgress } from "~/lib/case-progress";
 import {
   defaultEcgParams,
   ecgConsultFrames,
@@ -34,11 +38,25 @@ const LEAD_MIN = -2.2;
 const LEAD_MAX = 2.2;
 const RHYTHM_WIDTH = 1180;
 const RHYTHM_HEIGHT = 220;
+const FOCUS_WIDTH = 560;
+const FOCUS_HEIGHT = 240;
 const ACTIVATION_W = 360;
 const ACTIVATION_H = 280;
 const DEFAULT_PRESET_ID = ecgPresets[0]!.id;
 const CUSTOM_PRESET_ID = "custom";
 const DEFAULT_CONSULT_FRAME_ID = ecgConsultFrames[0]!.id;
+const ECG_PAPER_BG = "#fff8fa";
+const ECG_PAPER_PANEL = "#fff1f4";
+const ECG_GRID_MINOR = "rgba(218, 96, 119, 0.12)";
+const ECG_GRID_MAJOR = "rgba(218, 96, 119, 0.28)";
+const ECG_BASELINE = "rgba(120, 74, 88, 0.32)";
+const ECG_TRACE = "#2e2340";
+const ECG_TRACE_GLOW = "rgba(46, 35, 64, 0.14)";
+const ECG_CALIBRATION = "#433347";
+const ECG_LABEL = "#7a4b61";
+const ECG_LABEL_MUTED = "#9a6a7c";
+const ECG_SELECTED_STROKE = "rgba(103, 211, 255, 0.92)";
+const ECG_SELECTED_FILL = "rgba(103, 211, 255, 0.16)";
 
 const clinicalLeadRows: readonly (readonly ECGLeadName[])[] = [
   ["I", "aVR", "V1", "V4"],
@@ -304,6 +322,883 @@ function beatWindows(landmarks: ECGBeatLandmarks) {
   ] as const;
 }
 
+function formatSigned(value: number, fractionDigits = 2) {
+  const rounded = value.toFixed(fractionDigits);
+  return value > 0 ? `+${rounded}` : rounded;
+}
+
+function summarizeLead(points: ReadonlyArray<{ mv: number }>) {
+  if (!points.length) {
+    return {
+      positivePeak: 0,
+      negativePeak: 0,
+      span: 0,
+    };
+  }
+
+  let positivePeak = points[0]!.mv;
+  let negativePeak = points[0]!.mv;
+
+  for (const point of points) {
+    positivePeak = Math.max(positivePeak, point.mv);
+    negativePeak = Math.min(negativePeak, point.mv);
+  }
+
+  return {
+    positivePeak,
+    negativePeak,
+    span: positivePeak - negativePeak,
+  };
+}
+
+function describeLeadView(lead: ECGLeadName) {
+  if (lead.startsWith("V")) {
+    const index = Number(lead.slice(1));
+    if (index <= 2) {
+      return "Septal-anterior chest view";
+    }
+    if (index <= 4) {
+      return "Anterior chest view";
+    }
+    return "Lateral chest view";
+  }
+
+  switch (lead) {
+    case "I":
+      return "Lateral limb view";
+    case "II":
+      return "Inferior rhythm lead";
+    case "III":
+      return "Inferior-right limb view";
+    case "aVR":
+      return "Rightward limb view";
+    case "aVL":
+      return "High lateral limb view";
+    case "aVF":
+      return "Inferior limb view";
+    default:
+      return "Frontal plane limb view";
+  }
+}
+
+function LeadMetric({
+  label,
+  value,
+}: Readonly<{
+  label: string;
+  value: string;
+}>) {
+  return (
+    <div className="rounded-[20px] border border-[#d88ca1]/20 bg-white/80 px-4 py-3 shadow-[inset_0_1px_0_rgba(255,255,255,0.7)]">
+      <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-[#8f6274]">
+        {label}
+      </p>
+      <p className="mt-2 text-lg font-semibold text-[#362742]">{value}</p>
+    </div>
+  );
+}
+
+function LeadSpotlight({
+  result,
+  display,
+  paperDuration,
+  selectedLead,
+  activeFrame,
+  onSelectLead,
+}: Readonly<{
+  result: ECGResult;
+  display: DisplayOptions;
+  paperDuration: number;
+  selectedLead: ECGLeadName;
+  activeFrame: ECGResult["activation"]["frames"][number] | null;
+  onSelectLead: (lead: ECGLeadName) => void;
+}>) {
+  const leadPoints = result.leads[selectedLead] ?? [];
+  const leadPath = leadPathWindow(
+    leadPoints,
+    0,
+    paperDuration,
+    FOCUS_WIDTH,
+    FOCUS_HEIGHT,
+  );
+  const baselineY = mvToY(0, FOCUS_HEIGHT);
+  const metrics = summarizeLead(leadPoints);
+  const beatBoxes =
+    display.beatAnnotations ? beatWindows(result.beat.landmarks) : [];
+  const selectedLeadView = describeLeadView(selectedLead);
+  const vectorComment =
+    activeFrame?.dominantLead === selectedLead
+      ? "This phase is maximally aligned with the selected lead."
+      : activeFrame
+        ? `Current beat phase is leaning most strongly toward ${activeFrame.dominantLead}.`
+        : "Scrub the beat phase above to see which lead owns the active vector.";
+
+  return (
+    <article className="rounded-[30px] border border-white/10 bg-[linear-gradient(180deg,rgba(255,255,255,0.1),rgba(255,255,255,0.04))] p-5 backdrop-blur">
+      <div className="flex flex-col gap-4">
+        <div>
+          <p className="text-xs uppercase tracking-[0.24em] text-slate-400">
+            Lead spotlight
+          </p>
+          <h3 className="mt-1 text-xl font-semibold text-white">
+            Read one lead at diagnostic scale
+          </h3>
+          <p className="mt-3 text-sm leading-7 text-slate-300">
+            The full sheet stays visible, but the selected lead is enlarged so
+            interval landmarks and amplitude changes are easier to judge.
+          </p>
+        </div>
+
+        <div className="flex flex-wrap gap-2">
+          {ecgLeadNames.map((leadName) => {
+            const active = leadName === selectedLead;
+            return (
+              <button
+                key={leadName}
+                type="button"
+                onClick={() => onSelectLead(leadName)}
+                className={`rounded-full border px-3 py-2 text-sm font-medium transition ${
+                  active
+                    ? "border-cyan-300/50 bg-cyan-300/14 text-cyan-100 shadow-[0_10px_24px_rgba(103,211,255,0.18)]"
+                    : "border-white/10 bg-white/6 text-slate-300 hover:border-white/20 hover:bg-white/10 hover:text-white"
+                }`}
+              >
+                {leadName}
+              </button>
+            );
+          })}
+        </div>
+
+        <div className="rounded-[28px] border border-[#d88ca1]/20 bg-[linear-gradient(180deg,#fffafb_0%,#fff1f4_100%)] p-4 shadow-[inset_0_1px_0_rgba(255,255,255,0.8),0_24px_50px_rgba(15,23,42,0.18)]">
+          <div className="flex flex-col gap-2 border-b border-[#d88ca1]/20 pb-4 sm:flex-row sm:items-end sm:justify-between">
+            <div>
+              <p className="text-[11px] font-semibold uppercase tracking-[0.26em] text-[#8f6274]">
+                Lead {selectedLead}
+              </p>
+              <p className="mt-1 text-base font-semibold text-[#362742]">
+                {selectedLeadView}
+              </p>
+            </div>
+            <p className="text-xs leading-6 text-[#8f6274]">
+              {paperDuration} ms window at {display.paperSpeed} mm/s and 10
+              mm/mV.
+            </p>
+          </div>
+
+          <svg
+            viewBox={`0 0 ${FOCUS_WIDTH} ${FOCUS_HEIGHT}`}
+            className="mt-4 w-full overflow-visible rounded-[22px] border border-[#d88ca1]/20 bg-[linear-gradient(180deg,#fffafb_0%,#fff3f6_100%)]"
+          >
+            <rect
+              x="0"
+              y="0"
+              width={FOCUS_WIDTH}
+              height={FOCUS_HEIGHT}
+              rx="22"
+              fill={ECG_PAPER_BG}
+            />
+            <rect
+              x="10"
+              y="10"
+              width={FOCUS_WIDTH - 20}
+              height={FOCUS_HEIGHT - 20}
+              rx="16"
+              fill={ECG_PAPER_PANEL}
+              stroke="rgba(190, 112, 131, 0.18)"
+            />
+            {display.graphPaper
+              ? buildPaperLines(
+                  FOCUS_WIDTH,
+                  FOCUS_HEIGHT,
+                  paperDuration,
+                  display.paperSpeed,
+                ).map((line, index) => (
+                  <line
+                    key={`lead-focus-grid-${index}`}
+                    x1={line.x1}
+                    y1={line.y1}
+                    x2={line.x2}
+                    y2={line.y2}
+                    stroke={
+                      line.tone === "major" ? ECG_GRID_MAJOR : ECG_GRID_MINOR
+                    }
+                    strokeWidth={line.tone === "major" ? "0.9" : "0.5"}
+                  />
+                ))
+              : null}
+            <line
+              x1={LEAD_PAD_X}
+              y1={baselineY}
+              x2={FOCUS_WIDTH - LEAD_PAD_X}
+              y2={baselineY}
+              stroke={ECG_BASELINE}
+              strokeWidth="0.85"
+            />
+            {beatBoxes.map((window) => {
+              const x = timeToX(window.start, 0, paperDuration, FOCUS_WIDTH);
+              const width =
+                timeToX(window.end, 0, paperDuration, FOCUS_WIDTH) - x;
+              return (
+                <g key={`lead-focus-${window.key}`}>
+                  <rect
+                    x={x}
+                    y={18}
+                    width={width}
+                    height={FOCUS_HEIGHT - 36}
+                    fill={window.fill}
+                    stroke={window.stroke}
+                    strokeDasharray="6 5"
+                  />
+                  <text
+                    x={x + width / 2}
+                    y="34"
+                    textAnchor="middle"
+                    fill={window.stroke}
+                    fontSize="11"
+                    fontWeight="600"
+                  >
+                    {window.label}
+                  </text>
+                </g>
+              );
+            })}
+            {display.calibrationPulse ? (
+              <path
+                d={calibrationPulsePath(FOCUS_WIDTH, FOCUS_HEIGHT)}
+                fill="none"
+                stroke={ECG_CALIBRATION}
+                strokeWidth="1.2"
+              />
+            ) : null}
+            <path
+              d={leadPath}
+              fill="none"
+              stroke={ECG_TRACE_GLOW}
+              strokeWidth="5.2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
+            <path
+              d={leadPath}
+              fill="none"
+              stroke={ECG_TRACE}
+              strokeWidth="2.1"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
+            <text x="24" y="28" fill={ECG_LABEL_MUTED} fontSize="11">
+              Lead {selectedLead}
+            </text>
+            <text x={FOCUS_WIDTH - 24} y="28" textAnchor="end" fill={ECG_LABEL_MUTED} fontSize="11">
+              1 mV calibration
+            </text>
+          </svg>
+
+          <div className="mt-4 grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
+            <LeadMetric
+              label="Peak positive"
+              value={`${formatSigned(metrics.positivePeak)} mV`}
+            />
+            <LeadMetric
+              label="Peak negative"
+              value={`${formatSigned(metrics.negativePeak)} mV`}
+            />
+            <LeadMetric
+              label="Voltage span"
+              value={`${metrics.span.toFixed(2)} mV`}
+            />
+            <LeadMetric
+              label="QRS width"
+              value={`${result.beat.intervals.qrsMs.toFixed(0)} ms`}
+            />
+          </div>
+
+          <div className="mt-4 rounded-[20px] border border-[#d88ca1]/20 bg-white/75 px-4 py-3 shadow-[inset_0_1px_0_rgba(255,255,255,0.6)]">
+            <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-[#8f6274]">
+              Phase note
+            </p>
+            <p className="mt-2 text-sm leading-6 text-[#5d4253]">
+              {vectorComment}
+            </p>
+          </div>
+        </div>
+      </div>
+    </article>
+  );
+}
+
+function SurfaceDesk({
+  result,
+  display,
+  paperDuration,
+  selectedLead,
+  activeFrame,
+  onSelectLead,
+}: Readonly<{
+  result: ECGResult;
+  display: DisplayOptions;
+  paperDuration: number;
+  selectedLead: ECGLeadName;
+  activeFrame: ECGResult["activation"]["frames"][number] | null;
+  onSelectLead: (lead: ECGLeadName) => void;
+}>) {
+  const clinicalSegmentDuration = paperDuration / 4;
+  const rhythmLead = result.beat.rhythmStripLead;
+  const rhythmPoints = result.leads[rhythmLead] ?? [];
+  const rhythmBaseY = mvToY(0, RHYTHM_HEIGHT);
+  const selectedLeadView = describeLeadView(selectedLead);
+  const selectedLeadAxisGroup = selectedLead.startsWith("V")
+    ? "Precordial"
+    : "Limb";
+
+  return (
+    <section className="rounded-[28px] border border-white/10 bg-white/6 p-5 backdrop-blur">
+      <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+        <div>
+          <p className="text-xs uppercase tracking-[0.24em] text-slate-400">
+            Surface ECG
+          </p>
+          <h2 className="mt-1 text-xl font-semibold text-white">
+            Diagnostic paper desk
+          </h2>
+          <p className="mt-3 max-w-3xl text-sm leading-7 text-slate-300">
+            The full 12-lead sheet stays visible, the rhythm strip preserves
+            interval landmarks, and one lead expands into a spotlight so the
+            waveform is easier to read at a glance.
+          </p>
+        </div>
+        <div className="flex flex-wrap gap-2 text-xs font-medium uppercase tracking-[0.18em] text-slate-300">
+          <span className="rounded-full border border-white/10 bg-white/6 px-3 py-2">
+            {display.leadLayout === "clinical"
+              ? "Clinical sheet"
+              : "Stacked leads"}
+          </span>
+          <span className="rounded-full border border-white/10 bg-white/6 px-3 py-2">
+            {paperDuration} ms window
+          </span>
+          <span className="rounded-full border border-white/10 bg-white/6 px-3 py-2">
+            {display.paperSpeed} mm/s
+          </span>
+          <span className="rounded-full border border-cyan-300/25 bg-cyan-300/10 px-3 py-2 text-cyan-100">
+            Focus lead {selectedLead}
+          </span>
+        </div>
+      </div>
+
+      <div className="mt-6 grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
+        <div className="rounded-[24px] border border-white/10 bg-slate-950/35 p-4">
+          <p className="text-xs uppercase tracking-[0.18em] text-slate-400">
+            Heart rate
+          </p>
+          <p className="mt-2 text-3xl font-semibold text-white">
+            {result.params.heartRate.toFixed(0)}
+            <span className="ml-2 text-sm font-medium text-slate-300">bpm</span>
+          </p>
+        </div>
+        <div className="rounded-[24px] border border-white/10 bg-slate-950/35 p-4">
+          <p className="text-xs uppercase tracking-[0.18em] text-slate-400">
+            Rhythm
+          </p>
+          <p className="mt-2 text-lg font-semibold text-white">
+            {result.summary.dominantRhythm}
+          </p>
+        </div>
+        <div className="rounded-[24px] border border-white/10 bg-slate-950/35 p-4">
+          <p className="text-xs uppercase tracking-[0.18em] text-slate-400">
+            Axis
+          </p>
+          <p className="mt-2 text-lg font-semibold text-white">
+            {result.summary.electricalAxis}
+          </p>
+        </div>
+        <div className="rounded-[24px] border border-white/10 bg-slate-950/35 p-4">
+          <p className="text-xs uppercase tracking-[0.18em] text-slate-400">
+            QTc Bazett
+          </p>
+          <p className="mt-2 text-3xl font-semibold text-white">
+            {result.summary.qtcBazettMs.toFixed(0)}
+            <span className="ml-2 text-sm font-medium text-slate-300">ms</span>
+          </p>
+        </div>
+      </div>
+
+      <div className="mt-6 flex flex-wrap gap-2">
+        <span className="rounded-full border border-[#d88ca1]/25 bg-[#fff4f6] px-3 py-2 text-xs font-medium text-[#7a4b61]">
+          Major box:{" "}
+          {display.paperSpeed === 25 ? "200 ms / 0.5 mV" : "100 ms / 0.5 mV"}
+        </span>
+        <span className="rounded-full border border-[#d88ca1]/25 bg-[#fff4f6] px-3 py-2 text-xs font-medium text-[#7a4b61]">
+          Small box:{" "}
+          {display.paperSpeed === 25 ? "40 ms / 0.1 mV" : "20 ms / 0.1 mV"}
+        </span>
+        {display.beatAnnotations ? (
+          <>
+            <span className="rounded-full border border-sky-300/30 bg-sky-300/10 px-3 py-2 text-xs font-medium text-sky-100">
+              P window
+            </span>
+            <span className="rounded-full border border-amber-300/30 bg-amber-300/10 px-3 py-2 text-xs font-medium text-amber-100">
+              QRS window
+            </span>
+            <span className="rounded-full border border-orange-300/30 bg-orange-300/10 px-3 py-2 text-xs font-medium text-orange-100">
+              T window
+            </span>
+          </>
+        ) : null}
+      </div>
+
+      <div className="mt-6 grid gap-6 2xl:grid-cols-[minmax(0,1.35fr)_minmax(340px,0.65fr)]">
+        <div className="space-y-6">
+          {display.leadLayout === "clinical" ? (
+            <div className="overflow-x-auto rounded-[28px] border border-[#d88ca1]/20 bg-[linear-gradient(180deg,#fffafb_0%,#fff1f4_100%)] p-4 shadow-[inset_0_1px_0_rgba(255,255,255,0.8),0_24px_50px_rgba(15,23,42,0.16)]">
+              <div className="mb-4 flex flex-col gap-2 border-b border-[#d88ca1]/20 pb-4 sm:flex-row sm:items-end sm:justify-between">
+                <div>
+                  <p className="text-[11px] font-semibold uppercase tracking-[0.26em] text-[#8f6274]">
+                    Standard 12-lead paper
+                  </p>
+                  <p className="mt-1 text-sm text-[#6c4a59]">
+                    Four-column bedside layout with the focus lead highlighted.
+                  </p>
+                </div>
+                <p className="text-xs leading-6 text-[#8f6274]">
+                  Selected lead: {selectedLead} · {selectedLeadView}
+                </p>
+              </div>
+              <svg
+                viewBox={`0 0 ${LEAD_WIDTH * 4} ${LEAD_HEIGHT * 3}`}
+                className="min-w-[980px] w-full"
+              >
+                {clinicalLeadRows.map((row, rowIndex) =>
+                  row.map((lead, colIndex) => {
+                    const xOffset = colIndex * LEAD_WIDTH;
+                    const yOffset = rowIndex * LEAD_HEIGHT;
+                    const startMs = colIndex * clinicalSegmentDuration;
+                    const endMs = startMs + clinicalSegmentDuration;
+                    const path = leadPathWindow(
+                      result.leads[lead],
+                      startMs,
+                      endMs,
+                      LEAD_WIDTH,
+                      LEAD_HEIGHT,
+                    );
+                    const baselineY = mvToY(0, LEAD_HEIGHT);
+                    const isSelected = lead === selectedLead;
+
+                    return (
+                      <g
+                        key={`${lead}-${rowIndex}-${colIndex}`}
+                        transform={`translate(${xOffset} ${yOffset})`}
+                      >
+                        <rect
+                          x="3"
+                          y="3"
+                          width={LEAD_WIDTH - 6}
+                          height={LEAD_HEIGHT - 6}
+                          rx="16"
+                          fill={isSelected ? ECG_SELECTED_FILL : ECG_PAPER_PANEL}
+                          stroke={
+                            isSelected
+                              ? ECG_SELECTED_STROKE
+                              : "rgba(190, 112, 131, 0.18)"
+                          }
+                          strokeWidth={isSelected ? "1.6" : "1"}
+                        />
+                        {display.graphPaper
+                          ? buildPaperLines(
+                              LEAD_WIDTH,
+                              LEAD_HEIGHT,
+                              clinicalSegmentDuration,
+                              display.paperSpeed,
+                            ).map((line, lineIndex) => (
+                              <line
+                                key={`${lead}-grid-${lineIndex}`}
+                                x1={line.x1}
+                                y1={line.y1}
+                                x2={line.x2}
+                                y2={line.y2}
+                                stroke={
+                                  line.tone === "major"
+                                    ? ECG_GRID_MAJOR
+                                    : ECG_GRID_MINOR
+                                }
+                                strokeWidth={
+                                  line.tone === "major" ? "0.9" : "0.5"
+                                }
+                              />
+                            ))
+                          : null}
+                        <line
+                          x1={LEAD_PAD_X}
+                          y1={baselineY}
+                          x2={LEAD_WIDTH - LEAD_PAD_X}
+                          y2={baselineY}
+                          stroke={ECG_BASELINE}
+                          strokeWidth="0.8"
+                        />
+                        {display.calibrationPulse && colIndex === 0 ? (
+                          <path
+                            d={calibrationPulsePath(LEAD_WIDTH, LEAD_HEIGHT)}
+                            fill="none"
+                            stroke={ECG_CALIBRATION}
+                            strokeWidth="1.2"
+                          />
+                        ) : null}
+                        <path
+                          d={path}
+                          fill="none"
+                          stroke={ECG_TRACE_GLOW}
+                          strokeWidth="4.4"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                        />
+                        <path
+                          d={path}
+                          fill="none"
+                          stroke={ECG_TRACE}
+                          strokeWidth="1.75"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                        />
+                        <text
+                          x="18"
+                          y="22"
+                          fill={isSelected ? "#23556d" : ECG_LABEL}
+                          fontSize="11"
+                          fontWeight="700"
+                        >
+                          {lead}
+                        </text>
+                        {isSelected ? (
+                          <text
+                            x={LEAD_WIDTH - 18}
+                            y="22"
+                            textAnchor="end"
+                            fill="#23556d"
+                            fontSize="10"
+                            fontWeight="700"
+                          >
+                            Focus
+                          </text>
+                        ) : null}
+                      </g>
+                    );
+                  }),
+                )}
+              </svg>
+            </div>
+          ) : (
+            <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+              {ecgLeadNames.map((leadName) => {
+                const baselineY = mvToY(0, LEAD_HEIGHT);
+                const path = leadPathWindow(
+                  result.leads[leadName],
+                  0,
+                  paperDuration,
+                  LEAD_WIDTH,
+                  LEAD_HEIGHT,
+                );
+                const active = leadName === selectedLead;
+
+                return (
+                  <button
+                    key={leadName}
+                    type="button"
+                    onClick={() => onSelectLead(leadName)}
+                    className={`rounded-[24px] border p-3 text-left transition ${
+                      active
+                        ? "border-cyan-300/35 bg-cyan-300/10 shadow-[0_12px_28px_rgba(103,211,255,0.14)]"
+                        : "border-white/10 bg-white/6 hover:border-white/20 hover:bg-white/10"
+                    }`}
+                  >
+                    <div className="flex items-center justify-between gap-3">
+                      <div>
+                        <p className="text-sm font-semibold text-white">
+                          {leadName}
+                        </p>
+                        <p className="text-xs text-slate-400">
+                          {describeLeadView(leadName)}
+                        </p>
+                      </div>
+                      {active ? (
+                        <span className="rounded-full border border-cyan-300/35 bg-cyan-300/12 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.18em] text-cyan-100">
+                          Focus
+                        </span>
+                      ) : null}
+                    </div>
+                    <svg
+                      viewBox={`0 0 ${LEAD_WIDTH} ${LEAD_HEIGHT}`}
+                      className="mt-3 w-full rounded-[18px] border border-[#d88ca1]/20 bg-[linear-gradient(180deg,#fffafb_0%,#fff1f4_100%)]"
+                    >
+                      <rect
+                        x="0"
+                        y="0"
+                        width={LEAD_WIDTH}
+                        height={LEAD_HEIGHT}
+                        rx="18"
+                        fill={ECG_PAPER_BG}
+                      />
+                      {display.graphPaper
+                        ? buildPaperLines(
+                            LEAD_WIDTH,
+                            LEAD_HEIGHT,
+                            paperDuration,
+                            display.paperSpeed,
+                          ).map((line, lineIndex) => (
+                            <line
+                              key={`${leadName}-line-${lineIndex}`}
+                              x1={line.x1}
+                              y1={line.y1}
+                              x2={line.x2}
+                              y2={line.y2}
+                              stroke={
+                                line.tone === "major"
+                                  ? ECG_GRID_MAJOR
+                                  : ECG_GRID_MINOR
+                              }
+                              strokeWidth={line.tone === "major" ? "0.9" : "0.5"}
+                            />
+                          ))
+                        : null}
+                      <line
+                        x1={LEAD_PAD_X}
+                        y1={baselineY}
+                        x2={LEAD_WIDTH - LEAD_PAD_X}
+                        y2={baselineY}
+                        stroke={ECG_BASELINE}
+                        strokeWidth="0.8"
+                      />
+                      {display.calibrationPulse ? (
+                        <path
+                          d={calibrationPulsePath(LEAD_WIDTH, LEAD_HEIGHT)}
+                          fill="none"
+                          stroke={ECG_CALIBRATION}
+                          strokeWidth="1.1"
+                        />
+                      ) : null}
+                      <path
+                        d={path}
+                        fill="none"
+                        stroke={ECG_TRACE_GLOW}
+                        strokeWidth="4.2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      />
+                      <path
+                        d={path}
+                        fill="none"
+                        stroke={ECG_TRACE}
+                        strokeWidth="1.65"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      />
+                    </svg>
+                  </button>
+                );
+              })}
+            </div>
+          )}
+
+          <div className="rounded-[28px] border border-[#d88ca1]/20 bg-[linear-gradient(180deg,#fffafb_0%,#fff1f4_100%)] p-4 shadow-[inset_0_1px_0_rgba(255,255,255,0.8),0_24px_50px_rgba(15,23,42,0.16)]">
+            <div className="flex flex-col gap-3 border-b border-[#d88ca1]/20 pb-4 sm:flex-row sm:items-end sm:justify-between">
+              <div>
+                <p className="text-[11px] font-semibold uppercase tracking-[0.26em] text-[#8f6274]">
+                  Rhythm strip
+                </p>
+                <h3 className="mt-1 text-lg font-semibold text-[#362742]">
+                  Lead {rhythmLead} with interval landmarks
+                </h3>
+              </div>
+              <p className="text-xs leading-6 text-[#8f6274]">
+                PR {result.beat.intervals.prMs.toFixed(0)} ms · QRS{" "}
+                {result.beat.intervals.qrsMs.toFixed(0)} ms · QT{" "}
+                {result.beat.intervals.qtMs.toFixed(0)} ms
+              </p>
+            </div>
+            <div className="mt-4 overflow-x-auto">
+              <svg
+                viewBox={`0 0 ${RHYTHM_WIDTH} ${RHYTHM_HEIGHT}`}
+                className="min-w-[980px] w-full rounded-[20px] border border-[#d88ca1]/20 bg-[linear-gradient(180deg,#fffafb_0%,#fff1f4_100%)]"
+              >
+                <rect
+                  x="0"
+                  y="0"
+                  width={RHYTHM_WIDTH}
+                  height={RHYTHM_HEIGHT}
+                  rx="20"
+                  fill={ECG_PAPER_BG}
+                />
+                {display.graphPaper
+                  ? buildPaperLines(
+                      RHYTHM_WIDTH,
+                      RHYTHM_HEIGHT,
+                      paperDuration,
+                      display.paperSpeed,
+                    ).map((line, index) => (
+                      <line
+                        key={`rhythm-grid-${index}`}
+                        x1={line.x1}
+                        y1={line.y1}
+                        x2={line.x2}
+                        y2={line.y2}
+                        stroke={
+                          line.tone === "major"
+                            ? ECG_GRID_MAJOR
+                            : ECG_GRID_MINOR
+                        }
+                        strokeWidth={line.tone === "major" ? "0.9" : "0.5"}
+                      />
+                    ))
+                  : null}
+                <line
+                  x1={LEAD_PAD_X}
+                  y1={rhythmBaseY}
+                  x2={RHYTHM_WIDTH - LEAD_PAD_X}
+                  y2={rhythmBaseY}
+                  stroke={ECG_BASELINE}
+                  strokeWidth="0.8"
+                />
+                {display.beatAnnotations
+                  ? beatWindows(result.beat.landmarks).map((window) => {
+                      const x = timeToX(
+                        window.start,
+                        0,
+                        paperDuration,
+                        RHYTHM_WIDTH,
+                      );
+                      const width =
+                        timeToX(window.end, 0, paperDuration, RHYTHM_WIDTH) - x;
+                      return (
+                        <g key={window.key}>
+                          <rect
+                            x={x}
+                            y={18}
+                            width={width}
+                            height={RHYTHM_HEIGHT - 36}
+                            fill={window.fill}
+                            stroke={window.stroke}
+                            strokeDasharray="5 4"
+                          />
+                          <text
+                            x={x + width / 2}
+                            y="34"
+                            textAnchor="middle"
+                            fill={window.stroke}
+                            fontSize="11"
+                            fontWeight="600"
+                          >
+                            {window.label}
+                          </text>
+                        </g>
+                      );
+                    })
+                  : null}
+                {display.calibrationPulse ? (
+                  <path
+                    d={calibrationPulsePath(RHYTHM_WIDTH, RHYTHM_HEIGHT)}
+                    fill="none"
+                    stroke={ECG_CALIBRATION}
+                    strokeWidth="1.2"
+                  />
+                ) : null}
+                <path
+                  d={leadPathWindow(
+                    rhythmPoints,
+                    0,
+                    paperDuration,
+                    RHYTHM_WIDTH,
+                    RHYTHM_HEIGHT,
+                  )}
+                  fill="none"
+                  stroke={ECG_TRACE_GLOW}
+                  strokeWidth="5"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+                <path
+                  d={leadPathWindow(
+                    rhythmPoints,
+                    0,
+                    paperDuration,
+                    RHYTHM_WIDTH,
+                    RHYTHM_HEIGHT,
+                  )}
+                  fill="none"
+                  stroke={ECG_TRACE}
+                  strokeWidth="1.95"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+              </svg>
+            </div>
+          </div>
+        </div>
+
+        <div className="space-y-6">
+          <LeadSpotlight
+            result={result}
+            display={display}
+            paperDuration={paperDuration}
+            selectedLead={selectedLead}
+            activeFrame={activeFrame}
+            onSelectLead={onSelectLead}
+          />
+
+          <article className="rounded-[28px] border border-white/10 bg-white/6 p-5 backdrop-blur">
+            <p className="text-xs uppercase tracking-[0.24em] text-slate-400">
+              Reading context
+            </p>
+            <h3 className="mt-1 text-xl font-semibold text-white">
+              Lead {selectedLead} in context
+            </h3>
+            <div className="mt-5 space-y-4">
+              <div className="rounded-[24px] border border-white/10 bg-slate-950/35 p-4">
+                <p className="text-xs uppercase tracking-[0.18em] text-cyan-100">
+                  Lead family
+                </p>
+                <p className="mt-2 text-base font-semibold text-white">
+                  {selectedLeadAxisGroup} lead
+                </p>
+                <p className="mt-2 text-sm leading-6 text-slate-300">
+                  {selectedLeadView}. Compare the spotlight against the full
+                  sheet rather than reading this lead in isolation.
+                </p>
+              </div>
+              <div className="rounded-[24px] border border-white/10 bg-slate-950/35 p-4">
+                <p className="text-xs uppercase tracking-[0.18em] text-slate-400">
+                  Current autonomic frame
+                </p>
+                <p className="mt-2 text-base font-semibold text-white">
+                  {result.neurocardiac.autonomicState}
+                </p>
+                <p className="mt-2 text-sm leading-6 text-slate-300">
+                  {result.neurocardiac.narrative}
+                </p>
+              </div>
+              <div className="grid gap-3 sm:grid-cols-2">
+                <div className="rounded-[22px] border border-white/10 bg-slate-950/35 p-4">
+                  <p className="text-xs uppercase tracking-[0.18em] text-slate-400">
+                    PR interval
+                  </p>
+                  <p className="mt-2 text-2xl font-semibold text-white">
+                    {result.beat.intervals.prMs.toFixed(0)} ms
+                  </p>
+                </div>
+                <div className="rounded-[22px] border border-white/10 bg-slate-950/35 p-4">
+                  <p className="text-xs uppercase tracking-[0.18em] text-slate-400">
+                    RR interval
+                  </p>
+                  <p className="mt-2 text-2xl font-semibold text-white">
+                    {result.summary.rrMsNominal.toFixed(0)} ms
+                  </p>
+                </div>
+              </div>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+  );
+}
+
 function NeuroMetricCard({
   label,
   value,
@@ -461,6 +1356,12 @@ export function ECGExplorer() {
     ecgCases[0]!.startingConsultFrameId,
   );
   const [revealedCase, setRevealedCase] = useState(false);
+  const {
+    summary: caseProgressSummary,
+    recordAttempt,
+    resetProgress,
+  } = useCaseProgress("ecg", ecgCases.length);
+  const [selectedLead, setSelectedLead] = useState<ECGLeadName>("II");
   const [display, setDisplay] =
     useState<DisplayOptions>(defaultDisplayOptions);
 
@@ -588,10 +1489,6 @@ export function ECGExplorer() {
     result?.params.duration ?? params.duration,
     display.paperSpeed,
   );
-  const clinicalSegmentDuration = paperDuration / 4;
-  const rhythmLead = result?.beat.rhythmStripLead ?? "II";
-  const rhythmPoints = result?.leads[rhythmLead] ?? [];
-  const rhythmBaseY = mvToY(0, RHYTHM_HEIGHT);
   const presetLabel =
     selectedPresetId === CUSTOM_PRESET_ID
       ? "Custom physiology"
@@ -609,9 +1506,26 @@ export function ECGExplorer() {
     ecgConsultFrames.find((item) => item.id === activeCase.expectedConsultFrameId) ??
     ecgConsultFrames[0]!;
   const caseMatches = caseConsultFrame.id === targetCaseConsultFrame.id;
-  const ecgFollowUpTitles = activeCase.followUpModules.map(
-    (slug) => getCurriculumModule(slug)?.title ?? slug,
-  );
+  const ecgFollowUpLinks = buildCaseHandoffLinks(activeCase.followUpModules, {
+    fromSlug: "ecg",
+    fromTitle: ecgCurriculum?.title ?? "12-Lead ECG Explorer",
+    caseId: activeCase.id,
+    caseTitle: activeCase.title,
+    prompt: activeCase.prompt,
+    selectedLabel: caseConsultFrame.title,
+    targetLabel: targetCaseConsultFrame.title,
+  });
+
+  function revealCase() {
+    recordAttempt({
+      caseId: activeCase.id,
+      caseTitle: activeCase.title,
+      correct: caseMatches,
+      selectedLabel: caseConsultFrame.title,
+      targetLabel: targetCaseConsultFrame.title,
+    });
+    setRevealedCase(true);
+  }
 
   return (
     <div className="space-y-6">
@@ -652,6 +1566,8 @@ export function ECGExplorer() {
           </div>
         </div>
       </section>
+
+      <ModuleHandoffBanner />
 
       <section className="grid gap-6 xl:grid-cols-[minmax(0,1.25fr)_380px]">
         <div className="rounded-[28px] border border-white/10 bg-white/6 p-5 backdrop-blur">
@@ -910,7 +1826,14 @@ export function ECGExplorer() {
           <>
             <button
               type="button"
-              onClick={() => setRevealedCase((current) => !current)}
+              onClick={() => {
+                if (revealedCase) {
+                  setRevealedCase(false);
+                  return;
+                }
+
+                revealCase();
+              }}
               className="rounded-full border border-cyan-300/30 bg-cyan-300/10 px-4 py-2 text-sm font-medium text-cyan-100 transition hover:bg-cyan-300/18"
             >
               {revealedCase ? "Hide reveal" : "Reveal best frame"}
@@ -928,6 +1851,11 @@ export function ECGExplorer() {
           </>
         }
       >
+        <CaseProgressPanel
+          summary={caseProgressSummary}
+          onReset={resetProgress}
+        />
+
         <div className="flex flex-wrap gap-3">
           {ecgCases.map((item) => (
             <button
@@ -1006,12 +1934,12 @@ export function ECGExplorer() {
                   Follow-up modules
                 </p>
                 <div className="mt-3 flex flex-wrap gap-2">
-                  {ecgFollowUpTitles.map((title) => (
+                  {ecgFollowUpLinks.map((link) => (
                     <span
-                      key={title}
+                      key={link.slug}
                       className="rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs text-slate-200"
                     >
-                      {title}
+                      {link.title}
                     </span>
                   ))}
                 </div>
@@ -1029,7 +1957,7 @@ export function ECGExplorer() {
               explanation={`${targetCaseConsultFrame.strongestMechanism} ${targetCaseConsultFrame.whyAlternativeWeaker}`}
               teachingPoints={activeCase.teachingPoints}
               nextDataRequests={activeCase.nextDataRequests}
-              linkedModules={ecgFollowUpTitles}
+              followUpLinks={ecgFollowUpLinks}
             />
           </div>
         ) : null}
@@ -1164,6 +2092,17 @@ export function ECGExplorer() {
           </div>
         ) : null}
       </section>
+
+      {result ? (
+        <SurfaceDesk
+          result={result}
+          display={display}
+          paperDuration={paperDuration}
+          selectedLead={selectedLead}
+          activeFrame={activeFrame}
+          onSelectLead={setSelectedLead}
+        />
+      ) : null}
 
       <section className="grid gap-6 xl:grid-cols-2">
         <div className="rounded-[28px] border border-white/10 bg-white/6 p-5 backdrop-blur">
@@ -1438,308 +2377,6 @@ export function ECGExplorer() {
           onChange={(event) => setFrameIndex(Number(event.target.value))}
           className="mt-5 w-full accent-cyan-300"
         />
-      </section>
-
-      <section className="rounded-[28px] border border-white/10 bg-white/6 p-5 backdrop-blur">
-        <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
-          <div>
-            <p className="text-xs uppercase tracking-[0.24em] text-slate-400">
-              Surface ECG
-            </p>
-            <h2 className="mt-1 text-xl font-semibold text-white">
-              {display.leadLayout === "clinical"
-                ? "Clinical 12-lead sheet"
-                : "Stacked lead overview"}
-            </h2>
-          </div>
-          <p className="text-sm text-slate-300">
-            Showing {paperDuration} ms at {display.paperSpeed} mm/s with a
-            10 mm/mV teaching reference.
-          </p>
-        </div>
-
-        {result ? (
-          display.leadLayout === "clinical" ? (
-            <div className="mt-5 overflow-x-auto rounded-[24px] border border-white/8 bg-[#120f16] p-4">
-              <svg
-                viewBox={`0 0 ${LEAD_WIDTH * 4} ${LEAD_HEIGHT * 3}`}
-                className="min-w-[980px] w-full"
-              >
-                {clinicalLeadRows.map((row, rowIndex) =>
-                  row.map((lead, colIndex) => {
-                    const xOffset = colIndex * LEAD_WIDTH;
-                    const yOffset = rowIndex * LEAD_HEIGHT;
-                    const startMs = colIndex * clinicalSegmentDuration;
-                    const endMs = startMs + clinicalSegmentDuration;
-                    const path = leadPathWindow(
-                      result.leads[lead],
-                      startMs,
-                      endMs,
-                      LEAD_WIDTH,
-                      LEAD_HEIGHT,
-                    );
-                    const baselineY = mvToY(0, LEAD_HEIGHT);
-
-                    return (
-                      <g
-                        key={`${lead}-${rowIndex}-${colIndex}`}
-                        transform={`translate(${xOffset} ${yOffset})`}
-                      >
-                        <rect
-                          x="0"
-                          y="0"
-                          width={LEAD_WIDTH}
-                          height={LEAD_HEIGHT}
-                          fill="#18121c"
-                          stroke="rgba(255,255,255,0.06)"
-                        />
-                        {display.graphPaper
-                          ? buildPaperLines(
-                              LEAD_WIDTH,
-                              LEAD_HEIGHT,
-                              clinicalSegmentDuration,
-                              display.paperSpeed,
-                            ).map((line, lineIndex) => (
-                              <line
-                                key={`${lead}-grid-${lineIndex}`}
-                                x1={line.x1}
-                                y1={line.y1}
-                                x2={line.x2}
-                                y2={line.y2}
-                                stroke={
-                                  line.tone === "major"
-                                    ? "rgba(205, 92, 92, 0.28)"
-                                    : "rgba(205, 92, 92, 0.12)"
-                                }
-                                strokeWidth={line.tone === "major" ? "0.8" : "0.45"}
-                              />
-                            ))
-                          : null}
-                        <line
-                          x1={LEAD_PAD_X}
-                          y1={baselineY}
-                          x2={LEAD_WIDTH - LEAD_PAD_X}
-                          y2={baselineY}
-                          stroke="rgba(160, 80, 80, 0.4)"
-                          strokeWidth="0.8"
-                        />
-                        {display.calibrationPulse && colIndex === 0 ? (
-                          <path
-                            d={calibrationPulsePath(LEAD_WIDTH, LEAD_HEIGHT)}
-                            fill="none"
-                            stroke="rgba(255,245,245,0.78)"
-                            strokeWidth="1.2"
-                          />
-                        ) : null}
-                        <path
-                          d={path}
-                          fill="none"
-                          stroke="#fff1f2"
-                          strokeWidth="1.55"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                        />
-                        <text
-                          x="18"
-                          y="18"
-                          fill="#fce7f3"
-                          fontSize="11"
-                          fontWeight="600"
-                        >
-                          {lead}
-                        </text>
-                      </g>
-                    );
-                  }),
-                )}
-              </svg>
-            </div>
-          ) : (
-            <div className="mt-5 grid gap-4 md:grid-cols-2 xl:grid-cols-3">
-              {ecgLeadNames.map((leadName) => {
-                const baselineY = mvToY(0, LEAD_HEIGHT);
-                const path = leadPathWindow(
-                  result.leads[leadName],
-                  0,
-                  paperDuration,
-                  LEAD_WIDTH,
-                  LEAD_HEIGHT,
-                );
-
-                return (
-                  <article
-                    key={leadName}
-                    className="rounded-[24px] border border-white/10 bg-[#120f16] p-3"
-                  >
-                    <p className="text-sm font-semibold text-rose-50">
-                      {leadName}
-                    </p>
-                    <svg
-                      viewBox={`0 0 ${LEAD_WIDTH} ${LEAD_HEIGHT}`}
-                      className="mt-3 w-full rounded-[18px] border border-white/5"
-                    >
-                      {display.graphPaper
-                        ? buildPaperLines(
-                            LEAD_WIDTH,
-                            LEAD_HEIGHT,
-                            paperDuration,
-                            display.paperSpeed,
-                          ).map((line, lineIndex) => (
-                            <line
-                              key={`${leadName}-line-${lineIndex}`}
-                              x1={line.x1}
-                              y1={line.y1}
-                              x2={line.x2}
-                              y2={line.y2}
-                              stroke={
-                                line.tone === "major"
-                                  ? "rgba(205, 92, 92, 0.28)"
-                                  : "rgba(205, 92, 92, 0.12)"
-                              }
-                              strokeWidth={line.tone === "major" ? "0.8" : "0.45"}
-                            />
-                          ))
-                        : null}
-                      <line
-                        x1={LEAD_PAD_X}
-                        y1={baselineY}
-                        x2={LEAD_WIDTH - LEAD_PAD_X}
-                        y2={baselineY}
-                        stroke="rgba(160, 80, 80, 0.4)"
-                        strokeWidth="0.8"
-                      />
-                      {display.calibrationPulse ? (
-                        <path
-                          d={calibrationPulsePath(LEAD_WIDTH, LEAD_HEIGHT)}
-                          fill="none"
-                          stroke="rgba(255,245,245,0.78)"
-                          strokeWidth="1.1"
-                        />
-                      ) : null}
-                      <path
-                        d={path}
-                        fill="none"
-                        stroke="#fff1f2"
-                        strokeWidth="1.5"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      />
-                    </svg>
-                  </article>
-                );
-              })}
-            </div>
-          )
-        ) : null}
-
-        {result ? (
-          <div className="mt-6 rounded-[24px] border border-white/8 bg-[#120f16] p-4">
-            <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
-              <div>
-                <p className="text-xs uppercase tracking-[0.24em] text-rose-100/70">
-                  Rhythm strip
-                </p>
-                <h3 className="mt-1 text-lg font-semibold text-rose-50">
-                  Lead {rhythmLead} with interval landmarks
-                </h3>
-              </div>
-              <p className="text-sm text-rose-100/75">
-                PR {result.beat.intervals.prMs.toFixed(0)} ms | QRS{" "}
-                {result.beat.intervals.qrsMs.toFixed(0)} ms | QT{" "}
-                {result.beat.intervals.qtMs.toFixed(0)} ms
-              </p>
-            </div>
-            <div className="mt-4 overflow-x-auto">
-              <svg
-                viewBox={`0 0 ${RHYTHM_WIDTH} ${RHYTHM_HEIGHT}`}
-                className="min-w-[980px] w-full rounded-[20px] border border-white/5"
-              >
-                {display.graphPaper
-                  ? buildPaperLines(
-                      RHYTHM_WIDTH,
-                      RHYTHM_HEIGHT,
-                      paperDuration,
-                      display.paperSpeed,
-                    ).map((line, index) => (
-                      <line
-                        key={`rhythm-grid-${index}`}
-                        x1={line.x1}
-                        y1={line.y1}
-                        x2={line.x2}
-                        y2={line.y2}
-                        stroke={
-                          line.tone === "major"
-                            ? "rgba(205, 92, 92, 0.28)"
-                            : "rgba(205, 92, 92, 0.12)"
-                        }
-                        strokeWidth={line.tone === "major" ? "0.8" : "0.45"}
-                      />
-                    ))
-                  : null}
-                <line
-                  x1={LEAD_PAD_X}
-                  y1={rhythmBaseY}
-                  x2={RHYTHM_WIDTH - LEAD_PAD_X}
-                  y2={rhythmBaseY}
-                  stroke="rgba(160, 80, 80, 0.4)"
-                  strokeWidth="0.8"
-                />
-                {display.beatAnnotations
-                  ? beatWindows(result.beat.landmarks).map((window) => {
-                      const x = timeToX(window.start, 0, paperDuration, RHYTHM_WIDTH);
-                      const width =
-                        timeToX(window.end, 0, paperDuration, RHYTHM_WIDTH) - x;
-                      return (
-                        <g key={window.key}>
-                          <rect
-                            x={x}
-                            y={18}
-                            width={width}
-                            height={RHYTHM_HEIGHT - 36}
-                            fill={window.fill}
-                            stroke={window.stroke}
-                            strokeDasharray="5 4"
-                          />
-                          <text
-                            x={x + width / 2}
-                            y="34"
-                            textAnchor="middle"
-                            fill={window.stroke}
-                            fontSize="11"
-                            fontWeight="600"
-                          >
-                            {window.label}
-                          </text>
-                        </g>
-                      );
-                    })
-                  : null}
-                {display.calibrationPulse ? (
-                  <path
-                    d={calibrationPulsePath(RHYTHM_WIDTH, RHYTHM_HEIGHT)}
-                    fill="none"
-                    stroke="rgba(255,245,245,0.78)"
-                    strokeWidth="1.2"
-                  />
-                ) : null}
-                <path
-                  d={leadPathWindow(
-                    rhythmPoints,
-                    0,
-                    paperDuration,
-                    RHYTHM_WIDTH,
-                    RHYTHM_HEIGHT,
-                  )}
-                  fill="none"
-                  stroke="#fff1f2"
-                  strokeWidth="1.7"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-              </svg>
-            </div>
-          </div>
-        ) : null}
       </section>
 
       {result ? (

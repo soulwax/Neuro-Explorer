@@ -1,5 +1,29 @@
 # Changelog
 
+## [0.27.0] - 2026-03-17
+
+### Added
+
+- Added contextual case handoff links to reveal panels so students can continue directly into downstream modules or `Ask` with the prior case context attached.
+- Added a lightweight per-module case-progress layer that stores completed reveals, correct picks, and last-attempt summaries in local browser storage.
+- Added module-level handoff banners plus tutor prefill support so follow-on pages know which case the student just completed.
+
+### Changed
+
+- Reworked `RevealPanel` from passive follow-up badges into actionable continuation links.
+- Upgraded the case-mode teaching flow in `retina`, `visual-field`, `brain-atlas`, `vision`, and `ecg` so each reveal now records study progress before the learner moves on.
+
+## [0.26.0] - 2026-03-10
+
+### Added
+
+- Added an interactive `ECG` lead spotlight with full-scale single-lead review, live peak/span metrics, and direct lead selection.
+
+### Changed
+
+- Reworked `ECG` around a brighter diagnostic paper desk that groups the 12-lead sheet, rhythm strip, focus lead, and rapid summary cards into one primary reading surface.
+- Moved the main `ECG` tracing surface higher in the page flow and highlighted the selected lead across the sheet so bedside-style interval inspection is easier.
+
 ## [0.25.0] - 2026-03-09
 
 ### Added

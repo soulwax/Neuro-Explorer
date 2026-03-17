@@ -2,10 +2,14 @@
 
 import { useMemo, useState } from "react";
 import { CaseQuestionPanel } from "~/components/case-question-panel";
+import { CaseProgressPanel } from "~/components/case-progress-panel";
 import { CaseShell } from "~/components/case-shell";
 import { CompareShell } from "~/components/compare-shell";
+import { ModuleHandoffBanner } from "~/components/module-handoff-banner";
 import { RevealPanel } from "~/components/reveal-panel";
 import { retinaCases } from "~/core/cases/retina";
+import { buildCaseHandoffLinks } from "~/lib/case-handoff";
+import { useCaseProgress } from "~/lib/case-progress";
 import {
   defaultRetinaParams,
   getRetinaClinicalPreset,
@@ -489,6 +493,11 @@ export function RetinaExplorer() {
     retinaCases[0]!.startingPresetId,
   );
   const [revealed, setRevealed] = useState(false);
+  const {
+    summary: caseProgressSummary,
+    recordAttempt,
+    resetProgress,
+  } = useCaseProgress("retina", retinaCases.length);
 
   const result = useMemo(() => simulateRetina(params), [params]);
   const selectedPhysiologyPreset = useMemo(
@@ -525,9 +534,15 @@ export function RetinaExplorer() {
     [activeCase],
   );
   const caseMatches = casePreset.id === targetPreset.id;
-  const followUpTitles = activeCase.followUpModules.map(
-    (slug) => getCurriculumModule(slug)?.title ?? slug,
-  );
+  const followUpLinks = buildCaseHandoffLinks(activeCase.followUpModules, {
+    fromSlug: "retina",
+    fromTitle: retinaCurriculum?.title ?? "Retinal Receptive Field Lab",
+    caseId: activeCase.id,
+    caseTitle: activeCase.title,
+    prompt: activeCase.prompt,
+    selectedLabel: casePreset.title,
+    targetLabel: targetPreset.title,
+  });
 
   function updateNumericParam<K extends keyof RetinaParams>(
     key: K,
@@ -563,6 +578,17 @@ export function RetinaExplorer() {
     setCompareClinicalPresetId(preset.comparePresetId);
   }
 
+  function revealCase() {
+    recordAttempt({
+      caseId: activeCase.id,
+      caseTitle: activeCase.title,
+      correct: caseMatches,
+      selectedLabel: casePreset.title,
+      targetLabel: targetPreset.title,
+    });
+    setRevealed(true);
+  }
+
   return (
     <div className="space-y-6">
       <section className="rounded-[28px] border border-white/10 bg-white/6 p-5 shadow-[0_16px_48px_rgba(3,10,20,0.22)] backdrop-blur">
@@ -588,6 +614,8 @@ export function RetinaExplorer() {
           ) : null}
         </div>
       </section>
+
+      <ModuleHandoffBanner />
 
       <section className="rounded-[28px] border border-white/10 bg-white/6 p-5 backdrop-blur">
         <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
@@ -1005,6 +1033,11 @@ export function RetinaExplorer() {
         }
       >
         <div className="space-y-5">
+          <CaseProgressPanel
+            summary={caseProgressSummary}
+            onReset={resetProgress}
+          />
+
           {retinaCurriculum ? (
             <div className="grid gap-4 lg:grid-cols-[240px_minmax(0,1fr)]">
               <div className="rounded-[20px] border border-white/10 bg-slate-950/45 p-4">
@@ -1071,7 +1104,7 @@ export function RetinaExplorer() {
           <div className="flex flex-wrap gap-3">
             <button
               type="button"
-              onClick={() => setRevealed(true)}
+              onClick={revealCase}
               className="rounded-full bg-cyan-300 px-5 py-3 text-sm font-semibold text-slate-950 shadow-[0_12px_28px_rgba(103,211,255,0.24)] transition hover:-translate-y-0.5"
             >
               Reveal localization
@@ -1097,7 +1130,7 @@ export function RetinaExplorer() {
                 explanation={`${targetPreset.lesionSite}. ${targetPreset.whyItFits}`}
                 teachingPoints={activeCase.teachingPoints}
                 nextDataRequests={activeCase.nextDataRequests}
-                linkedModules={followUpTitles}
+                followUpLinks={followUpLinks}
               />
 
               <CompareShell

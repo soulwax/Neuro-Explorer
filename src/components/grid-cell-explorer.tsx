@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { ModuleHandoffBanner } from '~/components/module-handoff-banner';
 import { buildApiUrl, describeApiTarget, extractApiError, type ApiErrorInfo } from '~/lib/api';
 import { defaultGridCellParams, gridCellParamDefinitions, type GridCellParams, type GridCellResult } from '~/lib/grid-cell';
 
@@ -140,6 +141,8 @@ export function GridCellExplorer() {
 					</div>
 				</div>
 			</section>
+
+			<ModuleHandoffBanner />
 
 			<section className="rounded-[28px] border border-white/10 bg-white/6 p-5 backdrop-blur">
 				<div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">

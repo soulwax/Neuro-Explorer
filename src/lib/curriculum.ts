@@ -186,6 +186,29 @@ export const curriculumModules: CurriculumModule[] = [
     ],
   },
   {
+    slug: "eeg",
+    title: "EEG & Neural Oscillations",
+    trainingStage: "Consult-level neurophysiology interpretation",
+    learningGoals: [
+      "Identify normal EEG rhythms and their topographic distribution across the 10-20 system",
+      "Recognize epileptiform discharges and distinguish them from normal sharp transients and artifacts",
+      "Use EEG patterns to grade encephalopathy and assess cortical function",
+    ],
+    advancedObjectives: [
+      "Separate epileptiform from non-epileptiform sharps using morphology, field, aftergoing slow wave, and clinical context.",
+      "Use background continuity, reactivity, and dominant frequency to grade encephalopathy severity and distinguish metabolic from structural causes.",
+      "Interpret patterns on the ictal-interictal continuum (LPDs, GPDs, LRDA) using the ACNS standardized terminology.",
+    ],
+    prerequisites: ["Basic neuroanatomy", "Action potential physiology"],
+    linkedModules: ["neuron", "brain-atlas", "ecg", "ask"],
+    commonMisconceptions: [
+      "Any sharp waveform on EEG is a seizure.",
+      "A normal interictal EEG rules out epilepsy.",
+      "Triphasic waves are specific to hepatic encephalopathy.",
+      "Burst suppression always means brain death.",
+    ],
+  },
+  {
     slug: "grid-cell",
     title: "Grid Cell Navigator",
     trainingStage: "Network navigation coding",

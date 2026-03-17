@@ -39,3 +39,8 @@ export interface ECGClinicalCase extends InstructionCase {
   expectedConsultFrameId: string;
   startingConsultFrameId: string;
 }
+
+export interface EEGClinicalCase extends InstructionCase {
+  expectedPresetId: string;
+  startingPresetId: string;
+}
