@@ -44,3 +44,33 @@ export interface EEGClinicalCase extends InstructionCase {
   expectedPresetId: string;
   startingPresetId: string;
 }
+
+export interface ActionPotentialClinicalCase extends InstructionCase {
+  expectedPresetId: string;
+  startingPresetId: string;
+}
+
+export interface MotorPathwayClinicalCase extends InstructionCase {
+  expectedLesionId: string;
+  startingLesionId: string;
+}
+
+export interface SleepClinicalCase extends InstructionCase {
+  expectedPresetId: string;
+  startingPresetId: string;
+}
+
+export interface CranialNerveClinicalCase extends InstructionCase {
+  expectedNerveNumber: number;
+  syndromeId: string | null;
+}
+
+export interface StrokeClinicalCase extends InstructionCase {
+  expectedTerritoryId: string;
+  startingTerritoryId: string;
+}
+
+export interface DermatomeClinicalCase extends InstructionCase {
+  expectedLesionId: string;
+  startingLesionId: string;
+}

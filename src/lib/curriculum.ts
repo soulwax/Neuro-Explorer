@@ -227,6 +227,139 @@ export const curriculumModules: CurriculumModule[] = [
       "Grid patterns require explicit landmarks at all times.",
     ],
   },
+  {
+    slug: "action-potential",
+    title: "Action Potential (Hodgkin-Huxley)",
+    trainingStage: "Advanced biophysics and pharmacology",
+    learningGoals: [
+      "Understand the ionic basis of the action potential through the Hodgkin-Huxley model",
+      "Explain how Na+ activation, inactivation, and K+ delayed rectification produce the spike waveform",
+      "Predict the effects of pharmacological blockade (TTX, TEA, local anesthetics) on excitability",
+    ],
+    advancedObjectives: [
+      "Connect gating variable kinetics (m, h, n) to the biophysical phases of the action potential.",
+      "Relate channel blockade to clinical scenarios: local anesthesia, tetrodotoxin poisoning, and demyelination.",
+      "Explain why the LIF model in the Neuron module is an abstraction of these dynamics and when the abstraction breaks down.",
+    ],
+    prerequisites: ["Basic action potential physiology", "Ion channel concepts"],
+    linkedModules: ["neuron", "plasticity", "motor-pathway", "eeg"],
+    commonMisconceptions: [
+      "The action potential is caused by Na+ alone — K+ is equally essential for repolarization.",
+      "Threshold is a fixed voltage — it depends on the state of h gates (inactivation).",
+      "TTX and lidocaine are identical — they block from different sides of the channel.",
+    ],
+  },
+  {
+    slug: "motor-pathway",
+    title: "Motor Pathway Explorer",
+    trainingStage: "Clinical motor system localization",
+    learningGoals: [
+      "Distinguish UMN from LMN signs at the bedside",
+      "Localize motor lesions along the corticospinal tract from cortex to muscle",
+      "Recognize brainstem crossed findings as definitive localizers",
+    ],
+    advancedObjectives: [
+      "Use the distribution and pattern of weakness (face/arm vs. leg, proximal vs. distal) to narrow localization before imaging.",
+      "Explain why mixed UMN+LMN signs (ALS) cannot be produced by a single focal lesion.",
+      "Differentiate acute UMN presentations (flaccid shock phase) from established UMN patterns (spasticity).",
+    ],
+    prerequisites: ["Basic neuroanatomy", "Brain Atlas module"],
+    linkedModules: ["brain-atlas", "action-potential", "neuron", "ask"],
+    commonMisconceptions: [
+      "UMN always means spastic — acute UMN lesions are initially flaccid.",
+      "Fasciculations always mean ALS — benign fasciculations are common.",
+      "Forehead involvement in facial weakness is a minor detail — it is the key UMN vs. LMN distinction.",
+    ],
+  },
+  {
+    slug: "sleep",
+    title: "Sleep Architecture",
+    trainingStage: "Clinical sleep medicine fundamentals",
+    learningGoals: [
+      "Understand normal NREM-REM cycling and its evolution across the night",
+      "Identify EEG markers of each sleep stage (spindles, K-complexes, delta, sawtooth waves)",
+      "Recognize pathological sleep architecture patterns in narcolepsy, OSA, depression, and RBD",
+    ],
+    advancedObjectives: [
+      "Interpret a hypnogram to identify disordered sleep architecture and generate a differential diagnosis.",
+      "Explain why REM sleep behavior disorder is the strongest prodromal marker for alpha-synucleinopathies.",
+      "Connect sleep stage physiology to clinical phenomena: SWS to growth hormone, REM to dreaming, spindles to memory consolidation.",
+    ],
+    prerequisites: ["EEG module basics", "Basic neuroanatomy"],
+    linkedModules: ["eeg", "brain-atlas", "dopamine", "motor-pathway", "ask"],
+    commonMisconceptions: [
+      "Deep sleep = REM — actually N3 (slow-wave) is the deepest NREM stage; REM is 'paradoxical' sleep.",
+      "Everyone needs exactly 8 hours — sleep need varies from 6-9 hours in healthy adults.",
+      "Dreaming only occurs in REM — NREM dreaming exists but is less vivid.",
+      "RBD is just nightmares — it is a neurodegenerative prodrome requiring follow-up.",
+    ],
+  },
+  {
+    slug: "cranial-nerves",
+    title: "Cranial Nerves Explorer",
+    trainingStage: "Clinical neurological examination",
+    learningGoals: [
+      "Systematically examine all 12 cranial nerves at the bedside",
+      "Distinguish peripheral from central lesion patterns for each nerve",
+      "Recognize brainstem syndromes by their cranial nerve combinations",
+    ],
+    advancedObjectives: [
+      "Use the specific CN involved to identify the brainstem level (III = midbrain, VI/VII = pons, IX/X/XII = medulla).",
+      "Differentiate pupil-involving from pupil-sparing CN III palsy and the emergency implications.",
+      "Apply the HINTS exam in acute vertigo to distinguish peripheral from central vestibular syndromes.",
+    ],
+    prerequisites: ["Basic neuroanatomy", "Brain Atlas module"],
+    linkedModules: ["brain-atlas", "motor-pathway", "stroke", "visual-field", "ask"],
+    commonMisconceptions: [
+      "Bell's palsy always means stroke — check the forehead first.",
+      "CN VI palsy always localizes to the pons — it can be a false localizing sign from raised ICP.",
+      "The gag reflex is reliable — it is absent in ~20% of normal adults.",
+    ],
+  },
+  {
+    slug: "stroke",
+    title: "Stroke Vascular Territories",
+    trainingStage: "Acute neurovascular localization",
+    learningGoals: [
+      "Map stroke symptoms to specific arterial territories",
+      "Distinguish anterior from posterior circulation syndromes",
+      "Recognize stroke mimics and the importance of time-to-treatment",
+    ],
+    advancedObjectives: [
+      "Use the presence or absence of cortical signs to differentiate cortical from subcortical (lacunar) stroke.",
+      "Identify large vessel occlusion patterns amenable to thrombectomy.",
+      "Recognize posterior circulation stroke presentations that are commonly missed (PCA hemianopia, Wallenberg, locked-in).",
+    ],
+    prerequisites: ["Brain Atlas module", "Motor Pathway module", "Cranial Nerves module"],
+    linkedModules: ["brain-atlas", "motor-pathway", "cranial-nerves", "visual-field", "ecg", "ask"],
+    commonMisconceptions: [
+      "All strokes cause weakness — PCA strokes often present with isolated visual field loss.",
+      "Lacunar strokes are always benign — they can cause dense hemiplegia.",
+      "Posterior circulation strokes are rare — they account for ~20% of all ischemic strokes.",
+    ],
+  },
+  {
+    slug: "dermatome",
+    title: "Dermatome & Sensory Pathways",
+    trainingStage: "Sensory system localization",
+    learningGoals: [
+      "Distinguish dorsal column from spinothalamic tract dysfunction at the bedside",
+      "Map sensory patterns to anatomical lesion levels (peripheral nerve, root, cord, brainstem, thalamus, cortex)",
+      "Perform and interpret Romberg test, dermatomal mapping, and cortical sensory testing",
+    ],
+    advancedObjectives: [
+      "Explain why Brown-Séquard produces ipsilateral proprioception loss but contralateral pain/temperature loss using tract crossing anatomy.",
+      "Differentiate sensory ataxia (positive Romberg) from cerebellar ataxia (Romberg-independent).",
+      "Recognize cortical sensory loss (astereognosis, agraphesthesia) as distinct from peripheral or spinal patterns.",
+    ],
+    prerequisites: ["Motor Pathway module", "Brain Atlas module"],
+    linkedModules: ["motor-pathway", "brain-atlas", "cranial-nerves", "stroke", "action-potential", "ask"],
+    commonMisconceptions: [
+      "Numbness always means a peripheral nerve problem — spinal, brainstem, thalamic, and cortical lesions all cause numbness.",
+      "The Romberg test detects cerebellar disease — it detects proprioceptive loss.",
+      "Dissociated sensory loss is rare — it is common and highly localizing (cord, brainstem).",
+    ],
+  },
 ];
 
 export function getCurriculumModule(slug: string) {

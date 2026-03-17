@@ -1,11 +1,17 @@
+import { handleActionPotential } from './routes/action-potential';
 import { handleAsk } from './routes/ask';
 import { handleBrainAtlas } from './routes/brain-atlas';
+import { handleCranialNerves } from './routes/cranial-nerves';
+import { handleDermatome } from './routes/dermatome';
 import { handleDopamine } from './routes/dopamine';
 import { handleECG } from './routes/ecg';
 import { handleGridCell } from './routes/grid-cell';
+import { handleMotorPathway } from './routes/motor-pathway';
 import { handleNeuron } from './routes/neuron';
 import { handlePlasticity } from './routes/plasticity';
 import { handleRetina } from './routes/retina';
+import { handleSleep } from './routes/sleep';
+import { handleStroke } from './routes/stroke';
 import { handleVision } from './routes/vision';
 import { handleEEG } from './routes/eeg';
 import type { AiClient } from './ai/client';
@@ -30,6 +36,18 @@ const ROUTES: Record<string, string> = {
 		'Retinal receptive field simulator with prechiasmal neuro-ophthalmology teaching. Params: gridSize, centerSigma, surroundSigma, surroundStrength, stimulusType, stimulusRadius, annulusWidth, stimulusX, stimulusY, contrast',
 	'/eeg':
 		'EEG neural oscillations simulator with multi-channel 10-20 montage, band power analysis, clinical presets, epileptiform patterns, and case-based neurophysiology teaching. Params: durationSec, samplingRate, deltaAmp, thetaAmp, alphaAmp, betaAmp, gammaAmp, alphaReactivity, focalSlowing, focalSlowingStrength, epileptiform, epileptiformRate, asymmetry, noise, muscleArtifact, seed',
+	'/action-potential':
+		'Hodgkin-Huxley action potential simulator with Na+/K+ channel gating, pharmacological blockade (TTX, TEA), and clinical presets. Params: gNa, gK, gL, eNa, eK, eL, cm, injectedCurrent, duration, dt, ttxBlock, teaBlock, pulseOnset, pulseDuration',
+	'/motor-pathway':
+		'Corticospinal tract motor pathway explorer with UMN vs LMN lesion patterns, brainstem crossed findings, and clinical sign generation. Params: lesionId',
+	'/sleep':
+		'Sleep architecture simulator with hypnogram generation, stage cycling, and clinical sleep disorder presets. Params: totalTime, sleepOnsetLatency, remLatency, swsFraction, remFraction, sleepEfficiency, awakenings, cycleLength, seed',
+	'/cranial-nerves':
+		'Interactive cranial nerve explorer with all 12 CNs, exam techniques, lesion patterns (peripheral vs central), brainstem syndromes, and clinical presets. Params: nerve=<1-12>, syndrome=<syndromeId>',
+	'/stroke':
+		'Stroke vascular territory mapper with anterior/posterior circulation syndromes, clinical signs, NIHSS estimates, and acute management. Params: territory=<territoryId>',
+	'/dermatome':
+		'Dermatome and sensory pathway explorer with tract anatomy, sensory lesion level simulation, and clinical sensory syndromes. Params: lesionId=<lesionId>',
 };
 
 export interface AppEnv {
@@ -52,6 +70,8 @@ export async function handleApiRequest(request: Request, env: AppEnv): Promise<R
 	const path = normalizeRoutePath(url.pathname);
 
 	switch (path) {
+		case '/action-potential':
+			return handleActionPotential(request);
 		case '/neuron':
 			return handleNeuron(request);
 		case '/vision':
@@ -72,6 +92,16 @@ export async function handleApiRequest(request: Request, env: AppEnv): Promise<R
 			return handleRetina(request);
 		case '/eeg':
 			return handleEEG(request);
+		case '/motor-pathway':
+			return handleMotorPathway(request);
+		case '/sleep':
+			return handleSleep(request);
+		case '/cranial-nerves':
+			return handleCranialNerves(request);
+		case '/stroke':
+			return handleStroke(request);
+		case '/dermatome':
+			return handleDermatome(request);
 		case '/routes':
 			return Response.json({
 				name: 'Neuro Explorer',

@@ -4,7 +4,10 @@ import {
 	type EEGParams,
 } from '../../core/eeg';
 
-const STRING_KEYS = new Set<keyof EEGParams>(['focalSlowing', 'epileptiform']);
+type EEGStringKey = 'focalSlowing' | 'epileptiform';
+type EEGNumericKey = Exclude<keyof EEGParams, EEGStringKey>;
+
+const STRING_KEYS = new Set<EEGStringKey>(['focalSlowing', 'epileptiform']);
 
 const FOCAL_VALUES = new Set(['none', 'left-temporal', 'right-temporal', 'left-frontal', 'right-frontal']);
 const EPI_VALUES = new Set(['none', 'left-temporal-spikes', 'right-temporal-spikes', 'generalized-spike-wave', 'burst-suppression']);
@@ -18,7 +21,7 @@ function parseParams(url: URL): EEGParams {
 			continue;
 		}
 
-		if (STRING_KEYS.has(key)) {
+		if (STRING_KEYS.has(key as EEGStringKey)) {
 			if (key === 'focalSlowing' && FOCAL_VALUES.has(raw)) {
 				params.focalSlowing = raw as EEGParams['focalSlowing'];
 			}
@@ -30,7 +33,7 @@ function parseParams(url: URL): EEGParams {
 
 		const parsed = Number.parseFloat(raw);
 		if (!Number.isNaN(parsed)) {
-			(params as Record<string, number>)[key] = parsed;
+			(params as Record<EEGNumericKey, number>)[key as EEGNumericKey] = parsed;
 		}
 	}
 
