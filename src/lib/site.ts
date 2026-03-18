@@ -40,7 +40,7 @@ export const moduleCards: ModuleCard[] = [
     slug: "neuron",
     title: "Neuron Simulation",
     description:
-      "Tune the LIF parameters and see the membrane trace update through shared local simulation code.",
+      "Compare quiet reserve, near-threshold recruitment, regular spiking, and refractory-limited high-drive phenotypes in a clinically framed LIF lab.",
     badge: "Simulation",
     href: "/neuron",
   },
@@ -64,7 +64,7 @@ export const moduleCards: ModuleCard[] = [
     slug: "plasticity",
     title: "Synaptic Plasticity",
     description:
-      "Explore causal versus non-causal spike timing with a typed STDP curve and weight-evolution view.",
+      "Compare causal potentiation, anti-causal depression, metaplastic restraint, and saturation risk with a richer STDP teaching surface.",
     badge: "Learning",
     href: "/plasticity",
   },
@@ -112,7 +112,7 @@ export const moduleCards: ModuleCard[] = [
     slug: "grid-cell",
     title: "Grid Cell Navigator",
     description:
-      "Trace arena trajectories, spike clouds, and hexagonal rate maps in a typed navigation lab driven by a shared simulator.",
+      "Explore canonical lattices, broad low-resolution fields, noisy path integration, and compact-room remapping in a clinically framed navigation lab.",
     badge: "Navigation",
     href: "/grid-cell",
   },

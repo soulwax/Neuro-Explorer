@@ -3,7 +3,14 @@
 import { useEffect, useState } from 'react';
 import { ModuleHandoffBanner } from '~/components/module-handoff-banner';
 import { buildApiUrl, describeApiTarget, extractApiError, type ApiErrorInfo } from '~/lib/api';
-import { defaultGridCellParams, gridCellParamDefinitions, type GridCellParams, type GridCellResult } from '~/lib/grid-cell';
+import { getCurriculumModule } from '~/lib/curriculum';
+import {
+	defaultGridCellParams,
+	gridCellParamDefinitions,
+	gridCellPresets,
+	type GridCellParams,
+	type GridCellResult,
+} from '~/lib/grid-cell';
 
 const GRID_W = 340;
 const GRID_H = 340;
@@ -11,6 +18,8 @@ const GRID_PAD = 20;
 const TRACE_W = 760;
 const TRACE_H = 180;
 const TRACE_PAD = 24;
+const CUSTOM_PRESET_ID = 'custom';
+const DEFAULT_PRESET_ID = gridCellPresets[0]!.id;
 
 function isRecord(value: unknown): value is Record<string, unknown> {
 	return typeof value === 'object' && value !== null;
@@ -22,7 +31,8 @@ function isGridCellResult(payload: unknown): payload is GridCellResult {
 		Array.isArray(payload.path) &&
 		Array.isArray(payload.spikes) &&
 		Array.isArray(payload.rateMap) &&
-		isRecord(payload.summary)
+		isRecord(payload.summary) &&
+		isRecord(payload.interpretation)
 	);
 }
 
@@ -60,11 +70,43 @@ function rateTracePath(points: GridCellResult['path'], durationSec: number) {
 		.join(' ');
 }
 
+function SummaryCard({
+	label,
+	value,
+	accent,
+	detail,
+}: Readonly<{
+	label: string;
+	value: string;
+	accent: string;
+	detail: string;
+}>) {
+	return (
+		<div className="rounded-[24px] border border-white/10 bg-slate-950/35 p-4">
+			<p className="text-xs uppercase tracking-[0.18em] text-slate-400">{label}</p>
+			<p className={`mt-2 text-2xl font-semibold ${accent}`}>{value}</p>
+			<p className="mt-3 text-sm leading-6 text-slate-300">{detail}</p>
+		</div>
+	);
+}
+
 export function GridCellExplorer() {
 	const [params, setParams] = useState<GridCellParams>(defaultGridCellParams);
+	const [activePresetId, setActivePresetId] = useState(DEFAULT_PRESET_ID);
 	const [result, setResult] = useState<GridCellResult | null>(null);
 	const [error, setError] = useState<ApiErrorInfo | null>(null);
 	const [isLoading, setIsLoading] = useState(false);
+
+	const activePreset =
+		gridCellPresets.find((preset) => preset.id === activePresetId) ?? null;
+	const handoffModules = ['brain-atlas', 'sleep', 'ask']
+		.map((slug) => getCurriculumModule(slug))
+		.filter(
+			(
+				module,
+			): module is NonNullable<ReturnType<typeof getCurriculumModule>> =>
+				module !== undefined,
+		);
 
 	async function loadGridField(nextParams = params) {
 		setIsLoading(true);
@@ -108,6 +150,17 @@ export function GridCellExplorer() {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
+	function applyPreset(presetId: string) {
+		const preset = gridCellPresets.find((item) => item.id === presetId);
+		if (!preset) {
+			return;
+		}
+
+		setParams(preset.params);
+		setActivePresetId(preset.id);
+		void loadGridField(preset.params);
+	}
+
 	function updateParam<K extends keyof GridCellParams>(key: K, value: number) {
 		if (Number.isNaN(value)) {
 			return;
@@ -117,6 +170,7 @@ export function GridCellExplorer() {
 			...current,
 			[key]: value,
 		}));
+		setActivePresetId(CUSTOM_PRESET_ID);
 	}
 
 	const maxMapRate = Math.max(0, ...(result?.rateMap.flatMap((row) => row) ?? [0]));
@@ -129,11 +183,12 @@ export function GridCellExplorer() {
 					<div>
 						<p className="text-xs font-semibold uppercase tracking-[0.28em] text-cyan-200/80">Grid Cell Navigator</p>
 						<h1 className="mt-2 text-3xl font-semibold tracking-tight text-white sm:text-4xl">
-							Typed navigation maps for entorhinal lattice firing
+							Spatial code precision, theta framing, and navigation phenotypes
 						</h1>
-						<p className="mt-4 max-w-3xl text-sm leading-7 text-slate-300">
-							The frontend now renders arena trajectories, spikes, rate maps, and temporal firing structure. The deterministic simulation is
-							served from a shared API layer.
+						<p className="mt-4 max-w-4xl text-sm leading-7 text-slate-300">
+							Grid Cell now teaches more than a nice lattice. It compares canonical maps, broad low-resolution
+							fields, noisy exploration, compact-room remapping, and theta-locked precision so students can
+							reason about what actually makes a spatial code useful.
 						</p>
 					</div>
 					<div className="rounded-3xl border border-cyan-300/15 bg-cyan-300/8 px-4 py-3 text-xs uppercase tracking-[0.18em] text-cyan-100">
@@ -143,6 +198,57 @@ export function GridCellExplorer() {
 			</section>
 
 			<ModuleHandoffBanner />
+
+			<section className="rounded-[28px] border border-white/10 bg-white/6 p-5 backdrop-blur">
+				<div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
+					<div>
+						<p className="text-xs uppercase tracking-[0.24em] text-slate-400">Teaching presets</p>
+						<h2 className="mt-1 text-xl font-semibold text-white">Start from a navigation phenotype</h2>
+					</div>
+					<p className="max-w-2xl text-sm leading-7 text-slate-300">
+						Each preset emphasizes a different spatial story: crisp entorhinal tiling, diffuse low-resolution
+						maps, noisy path integration, or environment-driven rescaling.
+					</p>
+				</div>
+
+				<div className="mt-5 flex flex-wrap gap-3">
+					{gridCellPresets.map((preset) => (
+						<button
+							key={preset.id}
+							type="button"
+							onClick={() => applyPreset(preset.id)}
+							className={`rounded-full px-4 py-2 text-sm font-medium transition ${
+								activePresetId === preset.id
+									? 'bg-cyan-300 text-slate-950 shadow-[0_10px_24px_rgba(103,211,255,0.24)]'
+									: 'border border-white/10 bg-white/6 text-slate-300 hover:bg-white/10 hover:text-white'
+							}`}
+						>
+							{preset.label}
+						</button>
+					))}
+					{activePresetId === CUSTOM_PRESET_ID ? (
+						<span className="rounded-full border border-white/10 bg-slate-950/35 px-4 py-2 text-sm text-slate-300">
+							Custom parameter set
+						</span>
+					) : null}
+				</div>
+
+				<div className="mt-5 rounded-[24px] border border-cyan-300/15 bg-cyan-300/8 p-4">
+					<p className="text-xs uppercase tracking-[0.18em] text-cyan-100">
+						{activePreset?.label ?? 'Custom interpretation'}
+					</p>
+					<p className="mt-3 text-sm leading-7 text-slate-200">
+						{activePreset?.description ??
+							'You are outside the canned presets now. Use the phenotype summary below to see what kind of spatial code the current parameters are really producing.'}
+					</p>
+					<p className="mt-3 text-sm leading-7 text-slate-300">
+						{activePreset?.clinicalLens ?? result?.interpretation.clinicalLens ?? 'Generate a field to see the clinical teaching frame.'}
+					</p>
+					<p className="mt-3 text-xs uppercase tracking-[0.18em] text-slate-400">
+						{activePreset?.caution ?? 'Treat this as a navigation-coding scaffold rather than a literal recording.'}
+					</p>
+				</div>
+			</section>
 
 			<section className="rounded-[28px] border border-white/10 bg-white/6 p-5 backdrop-blur">
 				<div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
@@ -178,6 +284,7 @@ export function GridCellExplorer() {
 						type="button"
 						onClick={() => {
 							setParams(defaultGridCellParams);
+							setActivePresetId(DEFAULT_PRESET_ID);
 							void loadGridField(defaultGridCellParams);
 						}}
 						disabled={isLoading}
@@ -331,43 +438,136 @@ export function GridCellExplorer() {
 			</section>
 
 			{result ? (
-				<section className="grid gap-4 xl:grid-cols-[minmax(0,1fr)_360px]">
-					<div className="rounded-[28px] border border-white/10 bg-white/6 p-5 backdrop-blur">
-						<p className="text-xs uppercase tracking-[0.24em] text-slate-400">What you are seeing</p>
-						<h2 className="mt-1 text-xl font-semibold text-white">Space tiling summary</h2>
-						<div className="mt-5 grid gap-3 sm:grid-cols-2">
-							<div className="rounded-3xl border border-white/10 bg-slate-950/35 p-4">
-								<p className="text-xs uppercase tracking-[0.18em] text-slate-400">Coverage</p>
-								<p className="mt-2 text-3xl font-semibold text-white">{result.summary.coveragePct.toFixed(1)}%</p>
+				<>
+					<section className="grid gap-6 xl:grid-cols-[minmax(0,1.05fr)_340px]">
+						<div className="rounded-[28px] border border-white/10 bg-white/6 p-5 backdrop-blur">
+							<p className="text-xs uppercase tracking-[0.24em] text-slate-400">Phenotype</p>
+							<h2 className="mt-1 text-xl font-semibold text-white">{result.interpretation.headline}</h2>
+							<div className="mt-4 flex flex-wrap gap-2">
+								<span className="rounded-full border border-cyan-300/20 bg-cyan-300/10 px-3 py-1 text-xs font-semibold uppercase tracking-[0.16em] text-cyan-100">
+									{result.summary.navigationRegime}
+								</span>
+								<span className="rounded-full border border-emerald-300/20 bg-emerald-300/10 px-3 py-1 text-xs font-semibold uppercase tracking-[0.16em] text-emerald-100">
+									{result.summary.thetaState}
+								</span>
 							</div>
-							<div className="rounded-3xl border border-white/10 bg-slate-950/35 p-4">
-								<p className="text-xs uppercase tracking-[0.18em] text-slate-400">Mean Rate</p>
-								<p className="mt-2 text-3xl font-semibold text-white">{result.summary.meanRateHz.toFixed(2)} Hz</p>
-							</div>
-							<div className="rounded-3xl border border-white/10 bg-slate-950/35 p-4">
-								<p className="text-xs uppercase tracking-[0.18em] text-slate-400">Spikes</p>
-								<p className="mt-2 text-3xl font-semibold text-white">{result.summary.spikeCount}</p>
-							</div>
-							<div className="rounded-3xl border border-white/10 bg-slate-950/35 p-4">
-								<p className="text-xs uppercase tracking-[0.18em] text-slate-400">Orientation</p>
-								<p className="mt-2 text-3xl font-semibold text-white">{result.summary.orientationDeg.toFixed(1)}°</p>
+							<p className="mt-4 text-sm leading-7 text-slate-300">{result.interpretation.mechanism}</p>
+
+							<div className="mt-5 grid gap-3 sm:grid-cols-2">
+								<SummaryCard
+									label="Coverage"
+									value={`${result.summary.coveragePct.toFixed(1)}%`}
+									accent="text-white"
+									detail="How much of the arena was actually sampled strongly enough to estimate the map."
+								/>
+								<SummaryCard
+									label="Mean rate"
+									value={`${result.summary.meanRateHz.toFixed(2)} Hz`}
+									accent="text-cyan-100"
+									detail="The average output rate across the full navigation run."
+								/>
+								<SummaryCard
+									label="Peak contrast"
+									value={`${result.summary.peakToMeanRatio.toFixed(2)}x`}
+									accent="text-amber-100"
+									detail="How sharply the field's best hot spots stand out over the average rate."
+								/>
+								<SummaryCard
+									label="Boundary bias"
+									value={`${result.summary.boundaryBiasPct.toFixed(1)}%`}
+									accent="text-rose-100"
+									detail="How much the exploration path hugged arena walls rather than sampling the center evenly."
+								/>
+								<SummaryCard
+									label="Distance"
+									value={`${result.summary.totalDistanceCm.toFixed(1)} cm`}
+									accent="text-sky-100"
+									detail="Total path length traversed during the run."
+								/>
+								<SummaryCard
+									label="Spacing"
+									value={`${result.summary.spacingCm.toFixed(1)} cm`}
+									accent="text-emerald-100"
+									detail="The intrinsic scale of the lattice relative to the explored environment."
+								/>
 							</div>
 						</div>
-					</div>
 
-					<div className="rounded-[28px] border border-white/10 bg-white/6 p-5 backdrop-blur">
-						<p className="text-xs uppercase tracking-[0.24em] text-slate-400">Model notes</p>
-						<h2 className="mt-1 text-xl font-semibold text-white">Why the field looks hexagonal</h2>
-						<p className="mt-4 text-sm leading-7 text-slate-300">{result.explanation.model}</p>
-						<ul className="mt-4 space-y-3 text-sm leading-7 text-slate-300">
-							{result.explanation.notes.map((note) => (
-								<li key={note} className="rounded-3xl border border-white/10 bg-slate-950/35 px-4 py-3">
-									{note}
-								</li>
-							))}
-						</ul>
-					</div>
-				</section>
+						<div className="rounded-[28px] border border-white/10 bg-white/6 p-5 backdrop-blur">
+							<p className="text-xs uppercase tracking-[0.24em] text-slate-400">Clinical lens</p>
+							<h2 className="mt-1 text-xl font-semibold text-white">What this map teaches</h2>
+							<p className="mt-4 text-sm leading-7 text-slate-300">{result.interpretation.clinicalLens}</p>
+							<div className="mt-5 rounded-3xl border border-cyan-300/15 bg-cyan-300/8 p-4 text-sm leading-7 text-slate-200">
+								{result.explanation.model}
+							</div>
+						</div>
+					</section>
+
+					<section className="grid gap-6 lg:grid-cols-3">
+						<div className="rounded-[28px] border border-white/10 bg-white/6 p-5 backdrop-blur">
+							<p className="text-xs uppercase tracking-[0.24em] text-slate-400">Behavioral readout</p>
+							<h2 className="mt-1 text-xl font-semibold text-white">What learners should notice</h2>
+							<ul className="mt-4 space-y-3 text-sm leading-7 text-slate-300">
+								{result.interpretation.behaviorSignals.map((item) => (
+									<li key={item} className="rounded-3xl border border-white/10 bg-slate-950/35 p-4">
+										{item}
+									</li>
+								))}
+							</ul>
+						</div>
+
+						<div className="rounded-[28px] border border-white/10 bg-white/6 p-5 backdrop-blur">
+							<p className="text-xs uppercase tracking-[0.24em] text-slate-400">Differential traps</p>
+							<h2 className="mt-1 text-xl font-semibold text-white">What not to overclaim</h2>
+							<ul className="mt-4 space-y-3 text-sm leading-7 text-slate-300">
+								{result.interpretation.differentialTraps.map((item) => (
+									<li key={item} className="rounded-3xl border border-white/10 bg-slate-950/35 p-4">
+										{item}
+									</li>
+								))}
+							</ul>
+						</div>
+
+						<div className="rounded-[28px] border border-white/10 bg-white/6 p-5 backdrop-blur">
+							<p className="text-xs uppercase tracking-[0.24em] text-slate-400">Next questions</p>
+							<h2 className="mt-1 text-xl font-semibold text-white">Useful follow-up experiments</h2>
+							<ul className="mt-4 space-y-3 text-sm leading-7 text-slate-300">
+								{result.interpretation.nextQuestions.map((item) => (
+									<li key={item} className="rounded-3xl border border-white/10 bg-slate-950/35 p-4">
+										{item}
+									</li>
+								))}
+							</ul>
+						</div>
+					</section>
+
+					<section className="grid gap-6 xl:grid-cols-[minmax(0,1.05fr)_340px]">
+						<div className="rounded-[28px] border border-white/10 bg-white/6 p-5 backdrop-blur">
+							<p className="text-xs uppercase tracking-[0.24em] text-slate-400">Model notes</p>
+							<h2 className="mt-1 text-xl font-semibold text-white">Why the map looks this way</h2>
+							<ul className="mt-4 space-y-3 text-sm leading-7 text-slate-300">
+								{result.explanation.notes.map((note) => (
+									<li key={note} className="rounded-3xl border border-white/10 bg-slate-950/35 px-4 py-3">
+										{note}
+									</li>
+								))}
+							</ul>
+						</div>
+
+						<div className="rounded-[28px] border border-white/10 bg-white/6 p-5 backdrop-blur">
+							<p className="text-xs uppercase tracking-[0.24em] text-slate-400">Continue the loop</p>
+							<h2 className="mt-1 text-xl font-semibold text-white">Use this with anatomy, sleep, and tutoring</h2>
+							<div className="mt-4 space-y-3">
+								{handoffModules.map((module) => (
+									<div key={module.slug} className="rounded-[24px] border border-white/10 bg-slate-950/35 p-4">
+										<p className="text-sm font-semibold text-white">{module.title}</p>
+										<p className="mt-2 text-sm leading-6 text-slate-300">{module.trainingStage}</p>
+									</div>
+								))}
+							</div>
+						</div>
+					</section>
+				</>
 			) : null}
 		</div>
 	);

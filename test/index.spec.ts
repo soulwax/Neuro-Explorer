@@ -27,8 +27,13 @@ describe('Neuro Explorer API', () => {
 		expect(data.routes['/ask']).toContain('clinical neurology tutor');
 		expect(data.routes['/brain-atlas']).toContain('Interactive brain atlas');
 		expect(data.routes['/brain-atlas']).toContain('salience-autonomic');
+		expect(data.routes['/neuron']).toContain('Leaky Integrate-and-Fire neuron simulation');
+		expect(data.routes['/neuron']).toContain('quiet reserve');
+		expect(data.routes['/plasticity']).toContain('Spike-Timing Dependent Plasticity (STDP) simulation');
+		expect(data.routes['/plasticity']).toContain('metaplastic restraint');
 		expect(data.routes['/ecg']).toContain('12-lead neurocardiac ECG lab');
 		expect(data.routes['/grid-cell']).toContain('Entorhinal grid-cell simulator');
+		expect(data.routes['/grid-cell']).toContain('noisy path integration');
 		expect(data.routes['/dopamine']).toContain('reward-prediction error simulator');
 		expect(data.routes['/dopamine']).toContain('cue capture');
 		expect(data.routes['/retina']).toContain('Retinal receptive field simulator');
@@ -138,12 +143,83 @@ describe('Neuro Explorer API', () => {
 			path: Array<{ x: number; y: number; rateHz: number }>;
 			spikes: Array<{ x: number; y: number }>;
 			rateMap: number[][];
-			summary: { coveragePct: number };
+			summary: {
+				coveragePct: number;
+				totalDistanceCm: number;
+				navigationRegime: string;
+				thetaState: string;
+			};
+			interpretation: { headline: string; behaviorSignals: string[] };
 		};
 		expect(data.path.length).toBeGreaterThan(100);
 		expect(data.spikes.length).toBeGreaterThan(0);
 		expect(data.rateMap.length).toBe(24);
 		expect(data.summary.coveragePct).toBeGreaterThan(5);
+		expect(data.summary.totalDistanceCm).toBeGreaterThan(0);
+		expect(data.summary.navigationRegime.length).toBeGreaterThan(8);
+		expect(data.summary.thetaState.length).toBeGreaterThan(8);
+		expect(data.interpretation.headline.length).toBeGreaterThan(10);
+		expect(data.interpretation.behaviorSignals.length).toBeGreaterThanOrEqual(2);
+	});
+
+	it('returns neuron phenotype metrics beyond the raw spike trace', async () => {
+		const response = await handleApiRequest(
+			request('/api/neuron?inputCurrent=2.6&threshold=-58&duration=140'),
+			{ ai: inertAiClient }
+		);
+
+		expect(response.status).toBe(200);
+		const data = (await response.json()) as {
+			spikeTimes: number[];
+			summary: {
+				firingPattern: string;
+				excitabilityClass: string;
+				steadyStateVoltage: number;
+				thresholdSlackMv: number;
+				refractoryLimited: boolean;
+			};
+			interpretation: {
+				headline: string;
+				bedsideSignals: string[];
+			};
+		};
+		expect(data.spikeTimes.length).toBeGreaterThan(0);
+		expect(data.summary.firingPattern.length).toBeGreaterThan(5);
+		expect(data.summary.excitabilityClass.length).toBeGreaterThan(8);
+		expect(Number.isFinite(data.summary.steadyStateVoltage)).toBe(true);
+		expect(Number.isFinite(data.summary.thresholdSlackMv)).toBe(true);
+		expect(typeof data.summary.refractoryLimited).toBe('boolean');
+		expect(data.interpretation.headline.length).toBeGreaterThan(10);
+		expect(data.interpretation.bedsideSignals.length).toBeGreaterThanOrEqual(2);
+	});
+
+	it('returns plasticity phenotype metrics beyond the raw STDP window', async () => {
+		const response = await handleApiRequest(
+			request('/api/plasticity?deltaT=-14&pairCount=90&aMinus=0.011&initialWeight=0.7'),
+			{ ai: inertAiClient }
+		);
+
+		expect(response.status).toBe(200);
+		const data = (await response.json()) as {
+			finalWeight: number;
+			summary: {
+				totalWeightChange: number;
+				windowBias: number;
+				saturationState: string;
+				learningRegime: string;
+			};
+			interpretation: {
+				headline: string;
+				differentialTraps: string[];
+			};
+		};
+		expect(Number.isFinite(data.finalWeight)).toBe(true);
+		expect(Number.isFinite(data.summary.totalWeightChange)).toBe(true);
+		expect(Number.isFinite(data.summary.windowBias)).toBe(true);
+		expect(['floor', 'midrange', 'ceiling']).toContain(data.summary.saturationState);
+		expect(data.summary.learningRegime.length).toBeGreaterThan(8);
+		expect(data.interpretation.headline.length).toBeGreaterThan(10);
+		expect(data.interpretation.differentialTraps.length).toBeGreaterThanOrEqual(2);
 	});
 
 	it('shows cueward shift and omission dip in dopamine learning', async () => {

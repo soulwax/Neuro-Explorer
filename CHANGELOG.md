@@ -1,5 +1,19 @@
 # Changelog
 
+## [0.29.0] - 2026-03-18
+
+### Added
+
+- Added clinically framed teaching presets, richer summary metrics, and interpretation layers to `Neuron Simulation`, including quiet-reserve, near-threshold, hyperexcitable, and refractory-limited firing regimes.
+- Added clinically framed learning presets to `Synaptic Plasticity`, including causal potentiation, anti-causal depression, metaplastic restraint, runaway potentiation, and washout-depression teaching modes.
+- Added navigation presets, shared simulation logic, and richer interpretation output to `Grid Cell Navigator`, including canonical lattice, broad-field, noisy-explorer, theta-locked, and compact-room teaching frames.
+- Added dedicated teaching-layer tests for `neuron`, `plasticity`, and `grid-cell`.
+
+### Changed
+
+- Reworked `Neuron`, `Plasticity`, and `Grid Cell` from mostly parameter-centric labs into preset-driven teaching surfaces with phenotype summaries, pitfalls, next questions, and cross-module handoff framing.
+- Updated curriculum metadata, module-card copy, and API route descriptions so these modules now advertise their deeper clinical and mechanistic teaching depth from the home surface and route index.
+
 ## [0.28.0] - 2026-03-17
 
 ### Added

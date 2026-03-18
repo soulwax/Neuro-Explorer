@@ -38,13 +38,15 @@ export const curriculumModules: CurriculumModule[] = [
     learningGoals: [
       "Understand membrane time constants and threshold behavior",
       "Connect ion-channel behavior to excitability",
+      "Distinguish subthreshold reserve, recruitable output, and refractory-limited firing as different physiological regimes",
     ],
     advancedObjectives: [
       "Explain refractoriness as state-dependent channel availability rather than a memorized pause.",
       "Relate altered excitability to demyelination, sodium-channel block, and conduction failure.",
+      "Use threshold slack, steady-state drive, and refractory occupancy to explain why two neurons with similar traces can still have different recruitment bottlenecks.",
     ],
     prerequisites: ["Basic action potential physiology"],
-    linkedModules: ["plasticity", "ecg"],
+    linkedModules: ["action-potential", "plasticity", "eeg", "ecg", "ask"],
     commonMisconceptions: [
       "Bigger input always means immediate spiking.",
       "Threshold is fixed and context-free.",
@@ -97,13 +99,15 @@ export const curriculumModules: CurriculumModule[] = [
     learningGoals: [
       "Interpret timing-dependent changes in synaptic strength",
       "Relate timing rules to learning and maladaptation",
+      "Distinguish strengthening, weakening, stability bias, and saturation as separate plasticity outcomes",
     ],
     advancedObjectives: [
       "Compare Hebbian potentiation, LTD, metaplasticity, and homeostatic scaling in one framework.",
       "Map plasticity rules onto addiction, chronic pain, recovery, and maladaptive network stabilization.",
+      "Separate causal timing, amplitude asymmetry, and saturation pressure instead of collapsing them into one vague 'Hebbian' label.",
     ],
     prerequisites: ["Action potentials", "Synaptic transmission"],
-    linkedModules: ["neuron", "dopamine"],
+    linkedModules: ["neuron", "dopamine", "ask"],
     commonMisconceptions: [
       "Any repeated firing strengthens a synapse.",
       "Plasticity is always beneficial.",
@@ -219,13 +223,15 @@ export const curriculumModules: CurriculumModule[] = [
     learningGoals: [
       "Understand spatial firing fields",
       "Relate navigation coding to entorhinal function",
+      "Recognize how theta state, sampling quality, and field sharpness change the usefulness of a spatial code",
     ],
     advancedObjectives: [
       "Explain how path integration, theta timing, and entorhinal coding interact rather than treating grid fields as static pictures.",
       "Connect entorhinal dysfunction to memory, navigation failure, and medial temporal network breakdown.",
+      "Separate a degraded lattice from degraded exploration by comparing turn noise, coverage, boundary bias, and field contrast.",
     ],
     prerequisites: ["Basic spatial navigation concepts"],
-    linkedModules: ["brain-atlas", "ask"],
+    linkedModules: ["brain-atlas", "sleep", "ask"],
     commonMisconceptions: [
       "Navigation is only hippocampal.",
       "Grid patterns require explicit landmarks at all times.",

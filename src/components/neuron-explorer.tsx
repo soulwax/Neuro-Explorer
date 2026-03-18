@@ -2,9 +2,11 @@
 
 import { useMemo, useState } from "react";
 import { ModuleHandoffBanner } from "~/components/module-handoff-banner";
+import { getCurriculumModule } from "~/lib/curriculum";
 import {
   defaultNeuronParams,
   neuronParamDefinitions,
+  neuronPresets,
   simulateNeuron,
   type NeuronParams,
 } from "~/lib/neuron";
@@ -14,35 +16,8 @@ const CHART_HEIGHT = 280;
 const CHART_PADDING = 36;
 const VOLTAGE_MIN = -85;
 const VOLTAGE_MAX = 50;
-
-function describeFiringPattern(spikeCount: number, firingRate: number) {
-  if (spikeCount === 0) {
-    return "Subthreshold";
-  }
-
-  if (firingRate < 20) {
-    return "Regular spiking";
-  }
-
-  if (firingRate < 60) {
-    return "Rapid spiking";
-  }
-
-  return "High-frequency";
-}
-
-function meanInterSpikeInterval(spikeTimes: number[]) {
-  if (spikeTimes.length < 2) {
-    return null;
-  }
-
-  const intervals = spikeTimes
-    .slice(1)
-    .map((spikeTime, index) => spikeTime - spikeTimes[index]!);
-  const mean =
-    intervals.reduce((total, value) => total + value, 0) / intervals.length;
-  return mean;
-}
+const CUSTOM_PRESET_ID = "custom";
+const DEFAULT_PRESET_ID = neuronPresets[0]!.id;
 
 function chartY(voltage: number) {
   const plotHeight = CHART_HEIGHT - 20;
@@ -50,12 +25,39 @@ function chartY(voltage: number) {
   return CHART_HEIGHT - 10 - (voltage - VOLTAGE_MIN) * yScale;
 }
 
+function formatSigned(value: number, digits = 2) {
+  const rounded = value.toFixed(digits);
+  return value > 0 ? `+${rounded}` : rounded;
+}
+
+function SummaryCard({
+  label,
+  value,
+  accent,
+  detail,
+}: Readonly<{
+  label: string;
+  value: string;
+  accent: string;
+  detail: string;
+}>) {
+  return (
+    <div className="rounded-[24px] border border-white/10 bg-slate-950/35 p-4">
+      <p className="text-xs uppercase tracking-[0.18em] text-slate-400">
+        {label}
+      </p>
+      <p className={`mt-2 text-2xl font-semibold ${accent}`}>{value}</p>
+      <p className="mt-3 text-sm leading-6 text-slate-300">{detail}</p>
+    </div>
+  );
+}
+
 export function NeuronExplorer() {
   const [params, setParams] = useState<NeuronParams>(defaultNeuronParams);
+  const [activePresetId, setActivePresetId] = useState(DEFAULT_PRESET_ID);
   const result = useMemo(() => simulateNeuron(params), [params]);
 
-  const plotWidth = CHART_WIDTH - CHART_PADDING;
-  const xScale = plotWidth / result.params.duration;
+  const xScale = (CHART_WIDTH - CHART_PADDING) / result.params.duration;
   const voltagePath = result.timeSeries
     .map((point, index) => {
       const x = CHART_PADDING + point.t * xScale;
@@ -66,11 +68,30 @@ export function NeuronExplorer() {
 
   const restingY = chartY(result.params.restingPotential);
   const thresholdY = chartY(result.params.threshold);
-  const spikePattern = describeFiringPattern(
-    result.spikeTimes.length,
-    result.firingRate,
-  );
-  const meanIsi = meanInterSpikeInterval(result.spikeTimes);
+  const meanIsiLabel =
+    result.summary.meanIsiMs === null
+      ? "n/a"
+      : `${result.summary.meanIsiMs.toFixed(1)} ms`;
+  const activePreset =
+    neuronPresets.find((preset) => preset.id === activePresetId) ?? null;
+  const handoffModules = ["action-potential", "plasticity", "ask"]
+    .map((slug) => getCurriculumModule(slug))
+    .filter(
+      (
+        module,
+      ): module is NonNullable<ReturnType<typeof getCurriculumModule>> =>
+        module !== undefined,
+    );
+
+  function applyPreset(presetId: string) {
+    const preset = neuronPresets.find((item) => item.id === presetId);
+    if (!preset) {
+      return;
+    }
+
+    setParams(preset.params);
+    setActivePresetId(preset.id);
+  }
 
   function updateParam<K extends keyof NeuronParams>(key: K, value: number) {
     if (Number.isNaN(value)) {
@@ -81,6 +102,7 @@ export function NeuronExplorer() {
       ...current,
       [key]: value,
     }));
+    setActivePresetId(CUSTOM_PRESET_ID);
   }
 
   return (
@@ -92,16 +114,23 @@ export function NeuronExplorer() {
               Neuron Simulation
             </p>
             <h1 className="mt-2 text-3xl font-semibold tracking-tight text-white sm:text-4xl">
-              Live leaky integrate-and-fire dynamics without the fetch loop
+              Recruitable membranes, refractory bottlenecks, and firing
+              phenotypes
             </h1>
-            <p className="mt-4 max-w-3xl text-sm leading-7 text-slate-300">
-              Deterministic physiology, local computation, and a typed UI state
-              model make this the cleanest baseline lab in the app.
+            <p className="mt-4 max-w-4xl text-sm leading-7 text-slate-300">
+              The neuron lab now teaches more than a clean membrane trace. It
+              frames the LIF model as a way to compare quiet reserve,
+              near-threshold recruitment, stable repetitive firing, and
+              refractory-limited high drive without pretending this is a full
+              conductance-level disease simulator.
             </p>
           </div>
           <button
             type="button"
-            onClick={() => setParams(defaultNeuronParams)}
+            onClick={() => {
+              setParams(defaultNeuronParams);
+              setActivePresetId(DEFAULT_PRESET_ID);
+            }}
             className="rounded-full border border-white/10 bg-white/6 px-4 py-2 text-sm font-medium text-slate-100 transition hover:bg-white/10"
           >
             Reset defaults
@@ -110,6 +139,63 @@ export function NeuronExplorer() {
       </section>
 
       <ModuleHandoffBanner />
+
+      <section className="rounded-[28px] border border-white/10 bg-white/6 p-5 backdrop-blur">
+        <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
+          <div>
+            <p className="text-xs uppercase tracking-[0.24em] text-slate-400">
+              Teaching presets
+            </p>
+            <h2 className="mt-1 text-xl font-semibold text-white">
+              Start from an excitability phenotype
+            </h2>
+          </div>
+          <p className="max-w-2xl text-sm leading-7 text-slate-300">
+            Each preset is a teaching frame for a different recruitment story:
+            silent reserve, borderline recruitment, regular spiking, or
+            refractory-limited high drive.
+          </p>
+        </div>
+
+        <div className="mt-5 flex flex-wrap gap-3">
+          {neuronPresets.map((preset) => (
+            <button
+              key={preset.id}
+              type="button"
+              onClick={() => applyPreset(preset.id)}
+              className={`rounded-full px-4 py-2 text-sm font-medium transition ${
+                activePresetId === preset.id
+                  ? "bg-cyan-300 text-slate-950 shadow-[0_10px_24px_rgba(103,211,255,0.24)]"
+                  : "border border-white/10 bg-white/6 text-slate-300 hover:bg-white/10 hover:text-white"
+              }`}
+            >
+              {preset.label}
+            </button>
+          ))}
+          {activePresetId === CUSTOM_PRESET_ID ? (
+            <span className="rounded-full border border-white/10 bg-slate-950/35 px-4 py-2 text-sm text-slate-300">
+              Custom parameter set
+            </span>
+          ) : null}
+        </div>
+
+        <div className="mt-5 rounded-[24px] border border-cyan-300/15 bg-cyan-300/8 p-4">
+          <p className="text-xs uppercase tracking-[0.18em] text-cyan-100">
+            {activePreset?.label ?? "Custom interpretation"}
+          </p>
+          <p className="mt-3 text-sm leading-7 text-slate-200">
+            {activePreset?.description ??
+              "You are outside the canned presets now. Use the phenotype summary below to see what recruitment story the current parameters are actually telling."}
+          </p>
+          <p className="mt-3 text-sm leading-7 text-slate-300">
+            {activePreset?.clinicalLens ?? result.interpretation.clinicalLens}
+          </p>
+          <p className="mt-3 text-xs uppercase tracking-[0.18em] text-slate-400">
+            {activePreset?.caution ??
+              "Treat this as a recruitment scaffold rather than a full biophysical neuron identity."}
+          </p>
+        </div>
+      </section>
 
       <section className="rounded-[28px] border border-white/10 bg-white/6 p-5 backdrop-blur">
         <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
@@ -135,7 +221,7 @@ export function NeuronExplorer() {
         </div>
       </section>
 
-      <section className="grid gap-6 xl:grid-cols-[minmax(0,1.2fr)_320px]">
+      <section className="grid gap-6 xl:grid-cols-[minmax(0,1.1fr)_340px]">
         <div className="rounded-[28px] border border-white/10 bg-white/6 p-5 backdrop-blur">
           <div className="flex items-center justify-between gap-4">
             <div>
@@ -147,7 +233,7 @@ export function NeuronExplorer() {
               </h2>
             </div>
             <div className="rounded-full border border-cyan-300/20 bg-cyan-300/10 px-3 py-1 text-xs uppercase tracking-[0.18em] text-cyan-100">
-              {spikePattern}
+              {result.summary.firingPattern}
             </div>
           </div>
 
@@ -245,84 +331,198 @@ export function NeuronExplorer() {
 
         <div className="rounded-[28px] border border-white/10 bg-white/6 p-5 backdrop-blur">
           <p className="text-xs uppercase tracking-[0.24em] text-slate-400">
-            Summary
+            Phenotype
           </p>
           <h2 className="mt-1 text-xl font-semibold text-white">
-            Firing regime
+            {result.interpretation.headline}
           </h2>
+          <div className="mt-4 flex flex-wrap gap-2">
+            <span className="rounded-full border border-cyan-300/20 bg-cyan-300/10 px-3 py-1 text-xs font-semibold uppercase tracking-[0.16em] text-cyan-100">
+              {result.summary.excitabilityClass}
+            </span>
+            {result.summary.refractoryLimited ? (
+              <span className="rounded-full border border-amber-300/20 bg-amber-200/10 px-3 py-1 text-xs font-semibold uppercase tracking-[0.16em] text-amber-100">
+                Refractory limited
+              </span>
+            ) : null}
+          </div>
+          <p className="mt-4 text-sm leading-7 text-slate-300">
+            {result.interpretation.mechanism}
+          </p>
 
           <div className="mt-5 grid gap-3">
-            <div className="rounded-3xl border border-white/10 bg-slate-950/35 p-4">
-              <p className="text-xs uppercase tracking-[0.18em] text-slate-400">
-                Spikes
-              </p>
-              <p className="mt-2 text-3xl font-semibold text-white">
-                {result.spikeTimes.length}
-              </p>
-            </div>
-            <div className="rounded-3xl border border-white/10 bg-slate-950/35 p-4">
-              <p className="text-xs uppercase tracking-[0.18em] text-slate-400">
-                Firing rate
-              </p>
-              <p className="mt-2 text-3xl font-semibold text-cyan-100">
-                {result.firingRate.toFixed(1)} Hz
-              </p>
-            </div>
-            <div className="rounded-3xl border border-white/10 bg-slate-950/35 p-4">
-              <p className="text-xs uppercase tracking-[0.18em] text-slate-400">
-                Mean ISI
-              </p>
-              <p className="mt-2 text-2xl font-semibold text-white">
-                {meanIsi ? `${meanIsi.toFixed(2)} ms` : "n/a"}
-              </p>
-            </div>
-          </div>
-
-          <div className="mt-5 rounded-3xl border border-amber-300/18 bg-amber-200/8 p-4 text-sm leading-7 text-slate-300">
-            <p className="font-semibold text-amber-100">What changes fastest</p>
-            <p className="mt-2">
-              <code>inputCurrent</code>, <code>threshold</code>, and{" "}
-              <code>refractoryPeriod</code> dominate the phenotype.{" "}
-              <code>tau</code> mostly changes how slowly the membrane ramps into
-              that phenotype.
-            </p>
+            <SummaryCard
+              label="Spikes"
+              value={result.summary.spikeCount.toString()}
+              accent="text-white"
+              detail="Raw output count across the full simulation window."
+            />
+            <SummaryCard
+              label="Firing rate"
+              value={`${result.summary.firingRateHz.toFixed(1)} Hz`}
+              accent="text-cyan-100"
+              detail="A quick read on how strongly the neuron is recruited into repetitive output."
+            />
+            <SummaryCard
+              label="Mean ISI"
+              value={meanIsiLabel}
+              accent="text-emerald-100"
+              detail="Long intervals suggest sparse recruitment; short intervals suggest denser output."
+            />
+            <SummaryCard
+              label="Steady-state V"
+              value={`${result.summary.steadyStateVoltage.toFixed(1)} mV`}
+              accent="text-sky-100"
+              detail="The simple equilibrium estimate for how far drive would depolarize the membrane without spiking."
+            />
+            <SummaryCard
+              label="Threshold slack"
+              value={`${formatSigned(result.summary.thresholdSlackMv, 1)} mV`}
+              accent="text-amber-100"
+              detail="Positive means the drive wants to live above threshold; negative means it still settles below it."
+            />
+            <SummaryCard
+              label="Refractory occupancy"
+              value={`${(result.summary.refractoryFraction * 100).toFixed(1)}%`}
+              accent="text-rose-100"
+              detail="How much of the run is effectively spent in the recovery pause rather than integrating."
+            />
           </div>
         </div>
       </section>
 
-      <section className="grid gap-4 lg:grid-cols-2">
+      <section className="grid gap-6 lg:grid-cols-3">
         <div className="rounded-[28px] border border-white/10 bg-white/6 p-5 backdrop-blur">
-          <h2 className="text-xl font-semibold text-white">What to notice</h2>
+          <p className="text-xs uppercase tracking-[0.24em] text-slate-400">
+            Clinical lens
+          </p>
+          <h2 className="mt-1 text-xl font-semibold text-white">
+            What this regime teaches
+          </h2>
+          <p className="mt-4 text-sm leading-7 text-slate-300">
+            {result.interpretation.clinicalLens}
+          </p>
+        </div>
+
+        <div className="rounded-[28px] border border-white/10 bg-white/6 p-5 backdrop-blur">
+          <p className="text-xs uppercase tracking-[0.24em] text-slate-400">
+            Bedside signals
+          </p>
+          <h2 className="mt-1 text-xl font-semibold text-white">
+            What learners should notice
+          </h2>
           <ul className="mt-4 space-y-3 text-sm leading-7 text-slate-300">
-            {result.explanation.whatToNotice.map((note) => (
+            {result.interpretation.bedsideSignals.map((item) => (
               <li
-                key={note}
+                key={item}
                 className="rounded-3xl border border-white/10 bg-slate-950/35 p-4"
               >
-                {note}
+                {item}
               </li>
             ))}
           </ul>
         </div>
 
         <div className="rounded-[28px] border border-white/10 bg-white/6 p-5 backdrop-blur">
-          <h2 className="text-xl font-semibold text-white">
-            Biological analogies
+          <p className="text-xs uppercase tracking-[0.24em] text-slate-400">
+            Differential traps
+          </p>
+          <h2 className="mt-1 text-xl font-semibold text-white">
+            What not to overclaim
           </h2>
-          <div className="mt-4 space-y-3 text-sm leading-7 text-slate-300">
-            {Object.entries(result.explanation.biologicalAnalogies).map(
-              ([key, value]) => (
-                <div
-                  key={key}
+          <ul className="mt-4 space-y-3 text-sm leading-7 text-slate-300">
+            {result.interpretation.differentialTraps.map((item) => (
+              <li
+                key={item}
+                className="rounded-3xl border border-white/10 bg-slate-950/35 p-4"
+              >
+                {item}
+              </li>
+            ))}
+          </ul>
+        </div>
+      </section>
+
+      <section className="grid gap-6 xl:grid-cols-[minmax(0,1.05fr)_340px]">
+        <div className="grid gap-6 lg:grid-cols-2">
+          <div className="rounded-[28px] border border-white/10 bg-white/6 p-5 backdrop-blur">
+            <h2 className="text-xl font-semibold text-white">What to notice</h2>
+            <ul className="mt-4 space-y-3 text-sm leading-7 text-slate-300">
+              {result.explanation.whatToNotice.map((note) => (
+                <li
+                  key={note}
                   className="rounded-3xl border border-white/10 bg-slate-950/35 p-4"
                 >
-                  <p className="font-semibold capitalize text-cyan-100">
-                    {key}
+                  {note}
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          <div className="rounded-[28px] border border-white/10 bg-white/6 p-5 backdrop-blur">
+            <h2 className="text-xl font-semibold text-white">
+              Biological analogies
+            </h2>
+            <div className="mt-4 space-y-3 text-sm leading-7 text-slate-300">
+              {Object.entries(result.explanation.biologicalAnalogies).map(
+                ([key, value]) => (
+                  <div
+                    key={key}
+                    className="rounded-3xl border border-white/10 bg-slate-950/35 p-4"
+                  >
+                    <p className="font-semibold capitalize text-cyan-100">
+                      {key}
+                    </p>
+                    <p className="mt-2">{value}</p>
+                  </div>
+                ),
+              )}
+            </div>
+          </div>
+        </div>
+
+        <div className="space-y-6">
+          <div className="rounded-[28px] border border-white/10 bg-white/6 p-5 backdrop-blur">
+            <p className="text-xs uppercase tracking-[0.24em] text-slate-400">
+              Next questions
+            </p>
+            <h2 className="mt-1 text-xl font-semibold text-white">
+              Useful follow-up experiments
+            </h2>
+            <ul className="mt-4 space-y-3 text-sm leading-7 text-slate-300">
+              {result.interpretation.nextQuestions.map((item) => (
+                <li
+                  key={item}
+                  className="rounded-3xl border border-white/10 bg-slate-950/35 p-4"
+                >
+                  {item}
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          <div className="rounded-[28px] border border-white/10 bg-white/6 p-5 backdrop-blur">
+            <p className="text-xs uppercase tracking-[0.24em] text-slate-400">
+              Continue the loop
+            </p>
+            <h2 className="mt-1 text-xl font-semibold text-white">
+              Carry this into channels, learning, and tutoring
+            </h2>
+            <div className="mt-4 space-y-3">
+              {handoffModules.map((module) => (
+                <div
+                  key={module.slug}
+                  className="rounded-[24px] border border-white/10 bg-slate-950/35 p-4"
+                >
+                  <p className="text-sm font-semibold text-white">
+                    {module.title}
                   </p>
-                  <p className="mt-2">{value}</p>
+                  <p className="mt-2 text-sm leading-6 text-slate-300">
+                    {module.trainingStage}
+                  </p>
                 </div>
-              ),
-            )}
+              ))}
+            </div>
           </div>
         </div>
       </section>
