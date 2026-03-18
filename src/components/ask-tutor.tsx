@@ -9,7 +9,10 @@ import {
 	askLevelOptions,
 	askPromptKits,
 	askReasoningRubric,
+	askScoreScale,
 	askTopicOptions,
+	type AskCriterionScore,
+	type AskEvaluation,
 	type AskExamplePrompt,
 	type AskPromptKit,
 } from '~/lib/ask';
@@ -19,10 +22,70 @@ interface AskSuccessResponse {
 	level: string;
 	question: string;
 	answer: string;
+	evaluation: AskEvaluation;
 }
 
+const rubricById = new Map(askReasoningRubric.map((criterion) => [criterion.id, criterion]));
+
 function isAskSuccessResponse(payload: unknown): payload is AskSuccessResponse {
-	return typeof payload === 'object' && payload !== null && typeof (payload as AskSuccessResponse).answer === 'string';
+	return (
+		typeof payload === 'object' &&
+		payload !== null &&
+		typeof (payload as AskSuccessResponse).answer === 'string' &&
+		typeof (payload as AskSuccessResponse).evaluation === 'object' &&
+		(payload as AskSuccessResponse).evaluation !== null
+	);
+}
+
+function formatLevelLabel(levelId: string) {
+	return askLevelOptions.find((option) => option.id === levelId)?.label ?? levelId;
+}
+
+function formatTopicLabel(topicId: string) {
+	if (!topicId || topicId === 'general') {
+		return 'General';
+	}
+
+	return askTopicOptions.find((option) => option.id === topicId)?.label ?? topicId;
+}
+
+function formatScore(score: number | null, maxScore: number) {
+	return score === null ? 'Manual rubric' : `${score}/${maxScore}`;
+}
+
+function formatCriterionScore(score: number | null) {
+	return score === null ? 'Manual' : `${score}/4`;
+}
+
+function scoreTone(score: number | null) {
+	if (score === null) {
+		return 'border-white/10 bg-white/6 text-slate-300';
+	}
+
+	if (score >= 4) {
+		return 'border-emerald-300/30 bg-emerald-300/10 text-emerald-50';
+	}
+
+	if (score >= 3) {
+		return 'border-cyan-300/30 bg-cyan-300/10 text-cyan-50';
+	}
+
+	if (score >= 2) {
+		return 'border-amber-300/30 bg-amber-300/10 text-amber-50';
+	}
+
+	return 'border-rose-300/30 bg-rose-300/12 text-rose-50';
+}
+
+function confidenceTone(confidenceLabel: AskEvaluation['confidenceLabel']) {
+	switch (confidenceLabel) {
+		case 'high':
+			return 'border-emerald-300/30 bg-emerald-300/10 text-emerald-50';
+		case 'low':
+			return 'border-rose-300/30 bg-rose-300/12 text-rose-50';
+		default:
+			return 'border-amber-300/30 bg-amber-300/10 text-amber-50';
+	}
 }
 
 function AskTutorSearchPrefill({
@@ -66,6 +129,50 @@ function AskTutorSearchPrefill({
 	]);
 
 	return null;
+}
+
+function CriterionScoreCard({ criterion }: Readonly<{ criterion: AskCriterionScore }>) {
+	const rubricCriterion = rubricById.get(criterion.id);
+
+	return (
+		<div className="rounded-[24px] border border-white/10 bg-slate-950/35 p-4">
+			<div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+				<div>
+					<p className="text-xs uppercase tracking-[0.18em] text-cyan-100">
+						{rubricCriterion?.label ?? criterion.id}
+					</p>
+					{rubricCriterion ? (
+						<p className="mt-2 text-sm leading-6 text-slate-400">{rubricCriterion.description}</p>
+					) : null}
+				</div>
+				<span
+					className={`inline-flex rounded-full border px-3 py-1 text-xs font-semibold uppercase tracking-[0.18em] ${scoreTone(
+						criterion.score,
+					)}`}
+				>
+					{formatCriterionScore(criterion.score)}
+				</span>
+			</div>
+
+			<p className="mt-4 text-sm leading-7 text-slate-300">{criterion.feedback}</p>
+
+			<div className="mt-4 rounded-[18px] border border-white/10 bg-white/6 p-3">
+				<p className="text-xs uppercase tracking-[0.18em] text-slate-400">Strongest signal</p>
+				<p className="mt-2 text-sm leading-6 text-slate-200">{criterion.strongestSignal}</p>
+			</div>
+
+			{criterion.missedSignals.length > 0 ? (
+				<div className="mt-4 rounded-[18px] border border-white/10 bg-white/6 p-3">
+					<p className="text-xs uppercase tracking-[0.18em] text-slate-400">Still missing</p>
+					<ul className="mt-3 space-y-2 text-sm leading-6 text-slate-300">
+						{criterion.missedSignals.map((signal) => (
+							<li key={signal}>• {signal}</li>
+						))}
+					</ul>
+				</div>
+			) : null}
+		</div>
+	);
 }
 
 export function AskTutor() {
@@ -167,8 +274,8 @@ export function AskTutor() {
 						<p className="text-xs font-semibold uppercase tracking-[0.28em] text-cyan-200/80">Neuro Tutor</p>
 						<h1 className="mt-2 text-3xl font-semibold tracking-tight text-white sm:text-4xl">Post-clinical neurology tutoring</h1>
 						<p className="mt-4 max-w-3xl text-sm leading-7 text-slate-300">
-							The tutor now defaults to consult-level teaching: syndrome grammar, localization hierarchy, competing alternatives, and the
-							single next data point that should sharpen the case.
+							The tutor now answers like consult rounds and then self-audits the reasoning: syndrome grammar, localization hierarchy,
+							mechanism, alternatives, decisive next data, and the one finding that should overturn the current frame.
 						</p>
 					</div>
 					<div className="rounded-3xl border border-cyan-300/15 bg-cyan-300/8 px-4 py-3 text-xs uppercase tracking-[0.18em] text-cyan-100">
@@ -258,13 +365,13 @@ export function AskTutor() {
 
 				<div className="rounded-[28px] border border-white/10 bg-white/6 p-5 backdrop-blur">
 					<p className="text-xs uppercase tracking-[0.24em] text-slate-400">Reasoning standard</p>
-					<h2 className="mt-1 text-xl font-semibold text-white">What the tutor now tries to do</h2>
+					<h2 className="mt-1 text-xl font-semibold text-white">What the tutor now checks explicitly</h2>
 					<ul className="mt-4 space-y-3 text-sm leading-7 text-slate-300">
 						<li>Force syndrome formulation before naming a lesion or disease.</li>
 						<li>Rank localization layers instead of jumping to one label too early.</li>
 						<li>Explain what additional data would most efficiently change the differential.</li>
 						<li>State what finding would most change the localization if the current answer is wrong.</li>
-						<li>Teach like consult rounds or oral boards, not like a flashcard deck.</li>
+						<li>Return a rubric-based self-audit instead of leaving the grading implicit.</li>
 					</ul>
 				</div>
 			</section>
@@ -273,6 +380,18 @@ export function AskTutor() {
 				<div className="rounded-[28px] border border-white/10 bg-white/6 p-5 backdrop-blur">
 					<p className="text-xs uppercase tracking-[0.24em] text-slate-400">Shared reasoning rubric</p>
 					<h2 className="mt-1 text-xl font-semibold text-white">Grade the answer step by step</h2>
+
+					<div className="mt-5 flex flex-wrap gap-2">
+						{askScoreScale.map((entry) => (
+							<div
+								key={entry.score}
+								className="rounded-full border border-white/10 bg-slate-950/35 px-3 py-2 text-xs text-slate-200"
+							>
+								<span className="font-semibold text-white">{entry.score}</span> {entry.label}
+							</div>
+						))}
+					</div>
+
 					<div className="mt-5 grid gap-4 md:grid-cols-2 xl:grid-cols-3">
 						{askReasoningRubric.map((criterion) => (
 							<div key={criterion.id} className="rounded-[24px] border border-white/10 bg-slate-950/35 p-4">
@@ -313,20 +432,85 @@ export function AskTutor() {
 			<section className="grid gap-6 xl:grid-cols-[minmax(0,1.05fr)_340px]">
 				<div className="rounded-[28px] border border-white/10 bg-white/6 p-5 backdrop-blur">
 					<p className="text-xs uppercase tracking-[0.24em] text-slate-400">Tutor response</p>
-					<h2 className="mt-1 text-xl font-semibold text-white">Tutor answer</h2>
+					<h2 className="mt-1 text-xl font-semibold text-white">Answer and score</h2>
 
 					{result ? (
 						<div className="mt-5 space-y-4">
 							<div className="rounded-[24px] border border-white/10 bg-slate-950/35 p-4">
 								<p className="text-xs uppercase tracking-[0.18em] text-slate-400">Topic</p>
-								<p className="mt-2 text-sm font-medium text-white">{result.topic}</p>
+								<p className="mt-2 text-sm font-medium text-white">{formatTopicLabel(result.topic)}</p>
 								<p className="mt-4 text-xs uppercase tracking-[0.18em] text-slate-400">Depth mode</p>
-								<p className="mt-2 text-sm font-medium text-white">{result.level}</p>
+								<p className="mt-2 text-sm font-medium text-white">{formatLevelLabel(result.level)}</p>
 								<p className="mt-4 text-xs uppercase tracking-[0.18em] text-slate-400">Question</p>
 								<p className="mt-2 text-sm leading-7 text-slate-300">{result.question}</p>
 							</div>
+
+							<div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+								<div className="rounded-[24px] border border-white/10 bg-slate-950/35 p-4">
+									<p className="text-xs uppercase tracking-[0.18em] text-slate-400">Rubric score</p>
+									<p className="mt-3 text-2xl font-semibold text-white">
+										{formatScore(result.evaluation.overallScore, result.evaluation.maxScore)}
+									</p>
+									<p className="mt-3 text-sm leading-6 text-slate-300">{result.evaluation.overallVerdict}</p>
+								</div>
+
+								<div className="rounded-[24px] border border-white/10 bg-slate-950/35 p-4">
+									<p className="text-xs uppercase tracking-[0.18em] text-slate-400">Confidence</p>
+									<span
+										className={`mt-3 inline-flex rounded-full border px-3 py-1 text-xs font-semibold uppercase tracking-[0.18em] ${confidenceTone(
+											result.evaluation.confidenceLabel,
+										)}`}
+									>
+										{result.evaluation.confidenceLabel}
+									</span>
+									<p className="mt-3 text-sm leading-6 text-slate-300">{result.evaluation.confidenceReason}</p>
+								</div>
+
+								<div className="rounded-[24px] border border-white/10 bg-slate-950/35 p-4">
+									<p className="text-xs uppercase tracking-[0.18em] text-slate-400">Next step</p>
+									<p className="mt-3 text-sm leading-6 text-slate-200">{result.evaluation.nextStep}</p>
+								</div>
+
+								<div className="rounded-[24px] border border-white/10 bg-slate-950/35 p-4">
+									<p className="text-xs uppercase tracking-[0.18em] text-slate-400">Change-my-mind finding</p>
+									<p className="mt-3 text-sm leading-6 text-slate-200">{result.evaluation.changeMindFinding}</p>
+								</div>
+							</div>
+
+							{!result.evaluation.scoreAvailable ? (
+								<div className="rounded-[24px] border border-amber-300/30 bg-amber-300/10 p-4 text-sm leading-7 text-amber-50">
+									Structured scoring was not fully available for this run, so the tutor returned the answer with a manual-grading fallback.
+								</div>
+							) : null}
+
 							<div className="rounded-[24px] border border-cyan-300/15 bg-cyan-300/8 p-4 whitespace-pre-wrap text-sm leading-7 text-slate-100">
 								{result.answer}
+							</div>
+
+							<div className="grid gap-4 md:grid-cols-2">
+								<div className="rounded-[24px] border border-emerald-300/20 bg-emerald-300/10 p-4">
+									<p className="text-xs uppercase tracking-[0.18em] text-emerald-100">Strengths</p>
+									<ul className="mt-3 space-y-2 text-sm leading-7 text-slate-100">
+										{result.evaluation.strengths.map((strength) => (
+											<li key={strength}>• {strength}</li>
+										))}
+									</ul>
+								</div>
+
+								<div className="rounded-[24px] border border-rose-300/25 bg-rose-300/12 p-4">
+									<p className="text-xs uppercase tracking-[0.18em] text-rose-100">Gaps to tighten</p>
+									<ul className="mt-3 space-y-2 text-sm leading-7 text-rose-50">
+										{result.evaluation.gaps.map((gap) => (
+											<li key={gap}>• {gap}</li>
+										))}
+									</ul>
+								</div>
+							</div>
+
+							<div className="grid gap-4 xl:grid-cols-2">
+								{result.evaluation.criterionScores.map((criterion) => (
+									<CriterionScoreCard key={criterion.id} criterion={criterion} />
+								))}
 							</div>
 						</div>
 					) : error ? (
@@ -341,7 +525,7 @@ export function AskTutor() {
 						</div>
 					) : (
 						<p className="mt-5 rounded-[24px] border border-white/10 bg-slate-950/35 p-4 text-sm leading-7 text-slate-300">
-							Ask a question to exercise the tutor route.
+							Ask a question to exercise the tutor route and see the structured rubric scoring.
 						</p>
 					)}
 				</div>

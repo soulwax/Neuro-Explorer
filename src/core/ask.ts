@@ -3,6 +3,18 @@ export type AskLevelId =
   | "oral-boards"
   | "consult-rounds";
 
+export const askRubricCriterionIds = [
+  "syndrome",
+  "hierarchy",
+  "mechanism",
+  "alternative",
+  "next-data",
+  "reversal",
+] as const;
+
+export type AskRubricCriterionId = (typeof askRubricCriterionIds)[number];
+export type AskConfidenceLabel = "low" | "moderate" | "high";
+
 export interface AskTopicOption {
   id: string;
   label: string;
@@ -24,7 +36,7 @@ export interface AskExamplePrompt {
 }
 
 export interface AskRubricCriterion {
-  id: string;
+  id: AskRubricCriterionId;
   label: string;
   description: string;
   signals: string[];
@@ -41,6 +53,39 @@ export interface AskPromptKit {
   level: AskLevelId;
   levelLabel: string;
   whyUse: string;
+}
+
+export interface AskCriterionScore {
+  id: AskRubricCriterionId;
+  score: number | null;
+  feedback: string;
+  strongestSignal: string;
+  missedSignals: string[];
+}
+
+export interface AskEvaluation {
+  scoreAvailable: boolean;
+  overallScore: number | null;
+  maxScore: number;
+  overallVerdict: string;
+  confidenceLabel: AskConfidenceLabel;
+  confidenceReason: string;
+  strengths: string[];
+  gaps: string[];
+  nextStep: string;
+  changeMindFinding: string;
+  criterionScores: AskCriterionScore[];
+}
+
+export interface AskScoredResponse {
+  answer: string;
+  evaluation: AskEvaluation;
+}
+
+export interface AskScoreScaleEntry {
+  score: number;
+  label: string;
+  description: string;
 }
 
 const askBaseSystemPrompt = `You are a neuroscience and clinical neurology tutor for post-clinical learners: residents, fellows, and supervising clinicians using the tool for teaching.
@@ -378,6 +423,178 @@ export const askReasoningRubric: AskRubricCriterion[] = [
     ],
   },
 ];
+
+export const askScoreScale: AskScoreScaleEntry[] = [
+  {
+    score: 0,
+    label: "Missing",
+    description: "The answer does not engage this reasoning step at all.",
+  },
+  {
+    score: 1,
+    label: "Weak",
+    description: "Touches the step superficially but misses the decisive logic.",
+  },
+  {
+    score: 2,
+    label: "Partial",
+    description: "Captures part of the reasoning but leaves important gaps or ambiguity.",
+  },
+  {
+    score: 3,
+    label: "Strong",
+    description: "Explains the step clearly with only minor omissions.",
+  },
+  {
+    score: 4,
+    label: "Exemplary",
+    description: "Teaches the step crisply, completely, and in a clinically useful way.",
+  },
+];
+
+const askRubricPromptBlock = askReasoningRubric
+  .map(
+    (criterion) =>
+      `- ${criterion.id}: ${criterion.label}. Signals: ${criterion.signals.join(
+        "; ",
+      )}.`,
+  )
+  .join("\n");
+
+const askScorePromptBlock = askScoreScale
+  .map(
+    (entry) => `- ${entry.score}: ${entry.label}. ${entry.description}`,
+  )
+  .join("\n");
+
+export const askStructuredResponseSchema = {
+  type: "object",
+  additionalProperties: false,
+  properties: {
+    answer: {
+      type: "string",
+    },
+    evaluation: {
+      type: "object",
+      additionalProperties: false,
+      properties: {
+        overallScore: {
+          type: "integer",
+          minimum: 0,
+          maximum: askReasoningRubric.length * 4,
+        },
+        overallVerdict: {
+          type: "string",
+        },
+        confidenceLabel: {
+          type: "string",
+          enum: ["low", "moderate", "high"],
+        },
+        confidenceReason: {
+          type: "string",
+        },
+        strengths: {
+          type: "array",
+          items: {
+            type: "string",
+          },
+          minItems: 2,
+          maxItems: 4,
+        },
+        gaps: {
+          type: "array",
+          items: {
+            type: "string",
+          },
+          minItems: 2,
+          maxItems: 4,
+        },
+        nextStep: {
+          type: "string",
+        },
+        changeMindFinding: {
+          type: "string",
+        },
+        criterionScores: {
+          type: "array",
+          minItems: askReasoningRubric.length,
+          maxItems: askReasoningRubric.length,
+          items: {
+            type: "object",
+            additionalProperties: false,
+            properties: {
+              id: {
+                type: "string",
+                enum: [...askRubricCriterionIds],
+              },
+              score: {
+                type: "integer",
+                minimum: 0,
+                maximum: 4,
+              },
+              feedback: {
+                type: "string",
+              },
+              strongestSignal: {
+                type: "string",
+              },
+              missedSignals: {
+                type: "array",
+                items: {
+                  type: "string",
+                },
+                maxItems: 3,
+              },
+            },
+            required: [
+              "id",
+              "score",
+              "feedback",
+              "strongestSignal",
+              "missedSignals",
+            ],
+          },
+        },
+      },
+      required: [
+        "overallScore",
+        "overallVerdict",
+        "confidenceLabel",
+        "confidenceReason",
+        "strengths",
+        "gaps",
+        "nextStep",
+        "changeMindFinding",
+        "criterionScores",
+      ],
+    },
+  },
+  required: ["answer", "evaluation"],
+} as const;
+
+export function buildAskScoredSystemPrompt(level: AskLevelId): string {
+  return `${buildAskSystemPrompt(level)}
+
+You must do two jobs in one response:
+1. Answer the learner's question in dense, consult-level teaching prose.
+2. Grade your own answer against the shared rubric using the provided JSON schema.
+
+Scoring rules:
+${askScorePromptBlock}
+
+Rubric criteria:
+${askRubricPromptBlock}
+
+Output rules:
+- Return JSON only and follow the supplied schema exactly.
+- Keep the answer itself to about 220-420 words unless the learner explicitly asks for more.
+- For criterionScores, include exactly one entry for each rubric id.
+- Make overallScore equal the sum of the six criterion scores.
+- confidenceLabel reflects how well the question constrains localization or mechanism, not your general knowledge.
+- strengths and gaps should be concrete, not generic praise or apology.
+- nextStep should be the single most useful follow-up question, exam maneuver, or comparison for the learner.
+- changeMindFinding should be the one finding most likely to reverse the current localization or mechanism.`;
+}
 
 export const askExamplePrompts: AskExamplePrompt[] = [
   {

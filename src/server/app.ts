@@ -24,7 +24,7 @@ const ROUTES: Record<string, string> = {
 	'/brain-atlas':
 		'Interactive brain atlas with Chapter 1 on regional functions, Chapter 2 on interlinked circuits, and convergence overlays for vascular, visual-system, brainstem, salience-autonomic, and loop reasoning.',
 	'/ask':
-		'Post-clinical neuroscience and clinical neurology tutor with a shared consult-reasoning rubric. Params: q=<question>, topic=<optional_topic>, level=<post-clinical|oral-boards|consult-rounds>',
+		'Post-clinical neuroscience and clinical neurology tutor with a shared consult-reasoning rubric, structured rubric scoring, confidence grading, and change-my-mind feedback. Params: q=<question>, topic=<optional_topic>, level=<post-clinical|oral-boards|consult-rounds>',
 	'/plasticity':
 		'Spike-Timing Dependent Plasticity (STDP) simulation with presets for causal potentiation, anti-causal depression, metaplastic restraint, and saturation risk. Params: deltaT, pairCount, aPlus, aMinus, tauPlus, tauMinus, initialWeight',
 	'/ecg':

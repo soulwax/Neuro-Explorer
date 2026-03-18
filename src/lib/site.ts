@@ -88,7 +88,7 @@ export const moduleCards: ModuleCard[] = [
     slug: "ask",
     title: "Neuro Tutor",
     description:
-      "Use a shared consult-level reasoning rubric across lesion localization, neuro-ophthalmology, epileptology, neurovascular syndromes, and neurocardiology.",
+      "Use a shared consult-level reasoning rubric across lesion localization, neuro-ophthalmology, epileptology, neurovascular syndromes, and neurocardiology, now with structured scoring, confidence grading, and explicit missed-step feedback.",
     badge: "Cloudflare AI",
     href: "/ask",
   },

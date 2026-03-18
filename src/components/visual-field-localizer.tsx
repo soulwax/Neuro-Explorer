@@ -21,7 +21,7 @@ import {
 import { getCurriculumModule } from "~/lib/curriculum";
 
 const VIEWBOX_WIDTH = 420;
-const VIEWBOX_HEIGHT = 220;
+const VIEWBOX_HEIGHT = 236;
 const EYE_RADIUS = 76;
 const LEFT_EYE = { x: 118, y: 108 };
 const RIGHT_EYE = { x: 302, y: 108 };
@@ -218,8 +218,9 @@ function EyeDiagram({
         x="0"
         y={EYE_RADIUS + 40}
         textAnchor="middle"
-        fill={palette.stroke}
+        fill={pattern.tone === "attention" ? "#ffe08a" : "#fecdd3"}
         fontSize="10"
+        fontWeight="600"
       >
         {pattern.label}
       </text>
@@ -279,7 +280,7 @@ function BinocularFieldCard({
         className={`mt-4 rounded-[18px] border px-4 py-3 text-sm leading-7 ${
           hasAttentionTone
             ? "border-amber-300/25 bg-amber-200/8 text-slate-300"
-            : "border-rose-300/20 bg-rose-300/10 text-slate-300"
+            : "border-rose-300/30 bg-rose-300/12 text-rose-50"
         }`}
       >
         {hasAttentionTone

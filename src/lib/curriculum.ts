@@ -157,14 +157,16 @@ export const curriculumModules: CurriculumModule[] = [
   {
     slug: "ask",
     title: "Neuro Tutor",
-    trainingStage: "Cross-module consult reasoning rubric",
+    trainingStage: "Cross-module consult reasoning with explicit scoring",
     learningGoals: [
       "Practice verbal reasoning and explanation across the whole app",
       "Strengthen mechanism-based clinical thinking with explicit reversal logic",
+      "See which reasoning step is strongest, weakest, and least certain after each tutor response",
     ],
     advancedObjectives: [
       "Move from bedside phenotype to syndrome, localization hierarchy, mechanism, competing alternative, and decisive next data without collapsing the steps.",
       "Practice case-conference style reasoning with explicit rejection of weaker alternatives and a concrete statement of what would change your mind.",
+      "Use structured rubric scores, confidence grading, and missed-signal feedback to tighten the next iteration of the same question.",
     ],
     prerequisites: [],
     linkedModules: ["retina", "visual-field", "vision", "brain-atlas", "ecg", "dopamine"],

@@ -70,6 +70,7 @@ describe('Neuro Explorer API', () => {
 			level_options: Array<{ id: string }>;
 			example_prompts: Array<{ topic: string; level: string }>;
 			reasoning_rubric: Array<{ id: string }>;
+			score_scale: Array<{ score: number }>;
 			prompt_kits: Array<{ moduleSlug: string }>;
 		};
 		expect(data.usage).toContain('/api/ask');
@@ -78,16 +79,44 @@ describe('Neuro Explorer API', () => {
 		expect(data.example_prompts.some((example) => example.topic === 'epileptology')).toBe(true);
 		expect(data.example_prompts.some((example) => example.level === 'oral-boards')).toBe(true);
 		expect(data.reasoning_rubric.some((criterion) => criterion.id === 'reversal')).toBe(true);
+		expect(data.score_scale.some((entry) => entry.score === 4)).toBe(true);
 		expect(data.prompt_kits.some((kit) => kit.moduleSlug === 'ecg')).toBe(true);
 	});
 
-	it('normalizes legacy ask level aliases to the new consult-level vocabulary', async () => {
+	it('normalizes legacy ask level aliases and requests structured ask scoring', async () => {
+		let capturedModel = '';
+		let capturedInput: unknown;
+
 		const response = await handleApiRequest(
 			request('/api/ask?q=localize%20this&level=case-conference'),
 			{
 				ai: {
-					async run() {
-						return { response: 'ok' };
+					async run(model, input) {
+						capturedModel = model;
+						capturedInput = input;
+						return {
+							response: {
+								answer: 'ok',
+								evaluation: {
+									overallScore: 20,
+									overallVerdict: 'Strong consult-style reasoning with a few remaining omissions.',
+									confidenceLabel: 'moderate',
+									confidenceReason: 'The prompt does not fully constrain the strongest competing localization.',
+									strengths: ['Names the syndrome first.', 'Ranks the localization hierarchy explicitly.'],
+									gaps: ['Could reject the rival diagnosis more sharply.', 'Needs a crisper reversal trigger.'],
+									nextStep: 'Ask which finding would most strongly push the case out of the brainstem.',
+									changeMindFinding: 'A cortical sign such as aphasia or neglect.',
+									criterionScores: [
+										{ id: 'syndrome', score: 4, feedback: 'Clear syndrome first.', strongestSignal: 'Defines what is failing.', missedSignals: [] },
+										{ id: 'hierarchy', score: 4, feedback: 'Ranks the strongest levels.', strongestSignal: 'Best-fit level comes first.', missedSignals: [] },
+										{ id: 'mechanism', score: 4, feedback: 'Connects signs to tract logic.', strongestSignal: 'Named tract and circuit logic.', missedSignals: [] },
+										{ id: 'alternative', score: 3, feedback: 'Names a real rival frame.', strongestSignal: 'Uses negative findings.', missedSignals: ['Decisive mismatch with the observed signs'] },
+										{ id: 'next-data', score: 3, feedback: 'Asks for a decisive next step.', strongestSignal: 'Explains why the next test matters.', missedSignals: ['How it would change the differential'] },
+										{ id: 'reversal', score: 2, feedback: 'Mentions what would change the frame.', strongestSignal: 'Offers a disconfirming finding.', missedSignals: ['A new localization if that finding appears'] },
+									],
+								},
+							},
+						};
 					},
 				},
 			}
@@ -97,11 +126,65 @@ describe('Neuro Explorer API', () => {
 		const data = (await response.json()) as {
 			level: string;
 			answer: string;
+			evaluation: {
+				scoreAvailable: boolean;
+				overallScore: number | null;
+				criterionScores: Array<{ id: string; score: number | null }>;
+			};
 			reasoning_rubric: Array<{ id: string }>;
 		};
+		const askInput = capturedInput as {
+			response_format?: { type?: string; json_schema?: unknown };
+		};
+
+		expect(capturedModel).toBe('@cf/meta/llama-3.1-8b-instruct');
+		expect(askInput.response_format?.type).toBe('json_schema');
+		expect(askInput.response_format?.json_schema).toBeTruthy();
 		expect(data.level).toBe('consult-rounds');
 		expect(data.answer).toBe('ok');
+		expect(data.evaluation.scoreAvailable).toBe(true);
+		expect(data.evaluation.overallScore).toBe(20);
+		expect(data.evaluation.criterionScores.find((criterion) => criterion.id === 'reversal')?.score).toBe(2);
 		expect(data.reasoning_rubric.some((criterion) => criterion.id === 'next-data')).toBe(true);
+	});
+
+	it('falls back to answer-only mode when structured scoring cannot be satisfied', async () => {
+		let callCount = 0;
+
+		const response = await handleApiRequest(
+			request('/api/ask?q=localize%20this'),
+			{
+				ai: {
+					async run() {
+						callCount += 1;
+						if (callCount === 1) {
+							throw new Error("JSON Mode couldn't be met");
+						}
+
+						return { response: 'fallback answer' };
+					},
+				},
+			}
+		);
+
+		expect(response.status).toBe(200);
+		const data = (await response.json()) as {
+			answer: string;
+			evaluation: {
+				scoreAvailable: boolean;
+				overallScore: number | null;
+				confidenceReason: string;
+				criterionScores: Array<{ score: number | null }>;
+			};
+		};
+
+		expect(callCount).toBe(2);
+		expect(data.answer).toBe('fallback answer');
+		expect(data.evaluation.scoreAvailable).toBe(false);
+		expect(data.evaluation.overallScore).toBeNull();
+		expect(data.evaluation.confidenceReason).toContain("JSON Mode couldn't be met");
+		expect(data.evaluation.criterionScores).toHaveLength(6);
+		expect(data.evaluation.criterionScores.every((criterion) => criterion.score === null)).toBe(true);
 	});
 
 	it('answers CORS preflight for ask and vision routes', async () => {

@@ -1,5 +1,21 @@
 # Changelog
 
+## [0.30.0] - 2026-03-18
+
+### Added
+
+- Added structured rubric scoring to `Neuro Tutor`, including per-criterion scores, strengths, gaps, confidence grading, and explicit change-my-mind feedback returned from the `/api/ask` route.
+- Added `Ask` teaching-layer tests for the new scoring schema, prompt contract, and fallback behavior when Workers AI cannot satisfy JSON mode.
+
+### Changed
+
+- Reworked `Ask` from a free-form tutor answer into an answer-plus-evaluation flow that now scores syndrome formulation, localization hierarchy, mechanism, competing alternatives, next data, and reversal logic.
+- Updated app metadata, curriculum copy, and route descriptions so `Ask` now advertises structured scoring rather than only a shared rubric.
+
+### Fixed
+
+- Fixed the clipped red lesion-pattern labels in `Visual Field Localizer` and improved the visibility of the defect-status callout for rose-toned field cuts.
+
 ## [0.29.0] - 2026-03-18
 
 ### Added
