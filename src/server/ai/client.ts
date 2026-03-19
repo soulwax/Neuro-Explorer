@@ -48,6 +48,20 @@ export function createRestAiClient(options: RestAiClientOptions): AiClient {
 
 			const json = (await response.json()) as WorkersAiRunResponse<unknown>;
 			if (!response.ok || json.success === false) {
+				const isAuthenticationError =
+					response.status === 401 ||
+					json.errors?.some(
+						(error) =>
+							error.code === 10000 ||
+							error.message?.toLowerCase().includes('authentication error'),
+					) === true;
+
+				if (isAuthenticationError) {
+					throw new Error(
+						'Workers AI authentication failed. Verify the Cloudflare account ID, the API token value, and that the token has Workers AI permissions.',
+					);
+				}
+
 				const reason = json.errors?.map((error) => error.message ?? `code=${error.code ?? 'unknown'}`).join('; ') ?? response.statusText;
 				throw new Error(`Workers AI request failed: ${reason}`);
 			}

@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.30.1] - 2026-03-19
+
+### Fixed
+
+- Hardened the Vercel and plain Next.js Cloudflare AI fallback so blank, whitespace-only, or accidentally quoted `CLOUDFLARE_*` / `CF_*` credentials are treated as missing configuration instead of being sent as invalid Bearer tokens.
+- Improved Workers AI REST auth failures to surface an explicit credential-and-permissions message when Cloudflare rejects the account/token pair, making Vercel deployment issues easier to diagnose.
+
 ## [0.30.0] - 2026-03-18
 
 ### Added

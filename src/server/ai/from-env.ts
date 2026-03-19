@@ -14,14 +14,34 @@ const missingAiClient: AiClient = {
   },
 };
 
+function normalizeAiCredential(value?: string): string | undefined {
+  const trimmed = value?.trim();
+
+  if (!trimmed) {
+    return undefined;
+  }
+
+  const withoutWrappingQuotes =
+    (trimmed.startsWith('"') && trimmed.endsWith('"')) ||
+    (trimmed.startsWith("'") && trimmed.endsWith("'"))
+      ? trimmed.slice(1, -1).trim()
+      : trimmed;
+
+  return withoutWrappingQuotes || undefined;
+}
+
 export function createAiClientFromEnv(env: {
   CLOUDFLARE_ACCOUNT_ID?: string;
   CF_ACCOUNT_ID?: string;
   CLOUDFLARE_API_TOKEN?: string;
   CF_API_TOKEN?: string;
 }): AiClient {
-  const accountId = env.CLOUDFLARE_ACCOUNT_ID ?? env.CF_ACCOUNT_ID;
-  const apiToken = env.CLOUDFLARE_API_TOKEN ?? env.CF_API_TOKEN;
+  const accountId = normalizeAiCredential(
+    env.CLOUDFLARE_ACCOUNT_ID ?? env.CF_ACCOUNT_ID,
+  );
+  const apiToken = normalizeAiCredential(
+    env.CLOUDFLARE_API_TOKEN ?? env.CF_API_TOKEN,
+  );
 
   if (!accountId || !apiToken) {
     return missingAiClient;
