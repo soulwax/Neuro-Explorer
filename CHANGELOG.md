@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.30.2] - 2026-03-19
+
+### Fixed
+
+- Fixed the `Neuro Tutor` request flow so new questions clear stale output, scroll the response panel into view, and show a visible loading state where the answer will appear instead of making the top button appear to silently reset.
+
 ## [0.30.1] - 2026-03-19
 
 ### Fixed

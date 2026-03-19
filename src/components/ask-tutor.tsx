@@ -1,6 +1,6 @@
 'use client';
 
-import { Suspense, useEffect, useState, type Dispatch, type SetStateAction } from 'react';
+import { Suspense, useEffect, useRef, useState, type Dispatch, type SetStateAction } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { ModuleHandoffBanner } from '~/components/module-handoff-banner';
 import { buildApiUrl, describeApiTarget, extractApiError, type ApiErrorInfo } from '~/lib/api';
@@ -183,9 +183,23 @@ export function AskTutor() {
 	const [error, setError] = useState<ApiErrorInfo | null>(null);
 	const [isLoading, setIsLoading] = useState(false);
 	const [hasAppliedSearchPrefill, setHasAppliedSearchPrefill] = useState(false);
+	const responseSectionRef = useRef<HTMLDivElement | null>(null);
 
 	const selectedLevel = askLevelOptions.find((option) => option.id === level) ?? askLevelOptions[0]!;
 	const selectedTopic = askTopicOptions.find((option) => option.id === topic) ?? null;
+
+	useEffect(() => {
+		if (!isLoading && !result && !error) {
+			return;
+		}
+
+		requestAnimationFrame(() => {
+			responseSectionRef.current?.scrollIntoView({
+				behavior: 'smooth',
+				block: 'start',
+			});
+		});
+	}, [error, isLoading, result]);
 
 	async function askQuestion(nextQuestion = question, nextTopic = topic, nextLevel = level) {
 		const trimmedQuestion = nextQuestion.trim();
@@ -200,6 +214,7 @@ export function AskTutor() {
 
 		setIsLoading(true);
 		setError(null);
+		setResult(null);
 
 		try {
 			const response = await fetch(buildApiUrl('/ask'), {
@@ -361,6 +376,12 @@ export function AskTutor() {
 							Clear
 						</button>
 					</div>
+
+					<p className="mt-4 text-sm leading-6 text-slate-400">
+						{isLoading
+							? 'Consulting the tutor now. The response panel below will update automatically.'
+							: 'The answer and rubric audit appear in the Tutor response panel below.'}
+					</p>
 				</div>
 
 				<div className="rounded-[28px] border border-white/10 bg-white/6 p-5 backdrop-blur">
@@ -430,11 +451,30 @@ export function AskTutor() {
 			</section>
 
 			<section className="grid gap-6 xl:grid-cols-[minmax(0,1.05fr)_340px]">
-				<div className="rounded-[28px] border border-white/10 bg-white/6 p-5 backdrop-blur">
+				<div
+					ref={responseSectionRef}
+					className="rounded-[28px] border border-white/10 bg-white/6 p-5 backdrop-blur"
+				>
 					<p className="text-xs uppercase tracking-[0.24em] text-slate-400">Tutor response</p>
 					<h2 className="mt-1 text-xl font-semibold text-white">Answer and score</h2>
 
-					{result ? (
+					{isLoading ? (
+						<div
+							className="mt-5 rounded-[24px] border border-cyan-300/20 bg-cyan-300/10 p-5 text-sm text-cyan-50"
+							aria-live="polite"
+						>
+							<p className="font-semibold uppercase tracking-[0.18em] text-cyan-100">Generating response</p>
+							<p className="mt-3 leading-7 text-cyan-50/90">
+								Workers AI is building the tutor answer and rubric audit now. This panel will populate as soon as the request finishes.
+							</p>
+							{question.trim() ? (
+								<div className="mt-4 rounded-[18px] border border-white/10 bg-slate-950/35 p-4 text-slate-100">
+									<p className="text-xs uppercase tracking-[0.18em] text-slate-400">Current question</p>
+									<p className="mt-2 leading-7">{question.trim()}</p>
+								</div>
+							) : null}
+						</div>
+					) : result ? (
 						<div className="mt-5 space-y-4">
 							<div className="rounded-[24px] border border-white/10 bg-slate-950/35 p-4">
 								<p className="text-xs uppercase tracking-[0.18em] text-slate-400">Topic</p>
@@ -514,7 +554,7 @@ export function AskTutor() {
 							</div>
 						</div>
 					) : error ? (
-						<div className="mt-5 rounded-[24px] border border-rose-300/20 bg-rose-300/10 p-4 text-sm text-rose-100">
+						<div className="mt-5 rounded-[24px] border border-rose-300/20 bg-rose-300/10 p-4 text-sm text-rose-100" aria-live="polite">
 							<p className="font-semibold">{error.message}</p>
 							{error.suggestion ? <p className="mt-3 leading-6 text-rose-50/90">{error.suggestion}</p> : null}
 							{error.details ? (
