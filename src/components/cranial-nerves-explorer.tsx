@@ -49,9 +49,9 @@ export function CranialNervesExplorer() {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="app-page-stack">
       {/* Header */}
-      <section className="rounded-[28px] border border-white/10 bg-white/6 p-5 shadow-[0_16px_48px_rgba(3,10,20,0.22)] backdrop-blur">
+      <section className="app-surface app-surface--hero">
         <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
           <div>
             <p className="text-xs font-semibold uppercase tracking-[0.28em] text-cyan-200/80">
@@ -86,7 +86,7 @@ export function CranialNervesExplorer() {
       </section>
 
       {/* Presets */}
-      <section className="rounded-[28px] border border-white/10 bg-white/6 p-5 backdrop-blur">
+      <section className="app-surface">
         <p className="mb-3 text-xs uppercase tracking-[0.24em] text-slate-400">
           Clinical Presets
         </p>
@@ -134,7 +134,7 @@ function NerveView({
   return (
     <section className="grid gap-6 lg:grid-cols-[240px_minmax(0,1fr)]">
       {/* Nerve selector */}
-      <div className="rounded-[28px] border border-white/10 bg-white/6 p-5 backdrop-blur">
+      <div className="app-surface">
         <p className="mb-3 text-xs uppercase tracking-[0.24em] text-slate-400">
           Select Nerve
         </p>
@@ -166,9 +166,9 @@ function NerveView({
 
       {/* Nerve details */}
       {nerve && (
-        <div className="space-y-6">
+        <div className="app-page-stack">
           {/* Header */}
-          <div className="rounded-[28px] border border-white/10 bg-white/6 p-5 backdrop-blur">
+          <div className="app-surface">
             <div className="flex items-baseline gap-3">
               <span className="text-3xl font-bold text-cyan-100">
                 {nerve.numeral}
@@ -200,7 +200,7 @@ function NerveView({
 
           {/* Functions + Exam */}
           <div className="grid gap-4 lg:grid-cols-2">
-            <div className="rounded-[28px] border border-white/10 bg-white/6 p-5 backdrop-blur">
+            <div className="app-surface">
               <h3 className="text-lg font-semibold text-white">Functions</h3>
               <ul className="mt-3 space-y-2">
                 {nerve.functions.map((f) => (
@@ -213,7 +213,7 @@ function NerveView({
                 ))}
               </ul>
             </div>
-            <div className="rounded-[28px] border border-white/10 bg-white/6 p-5 backdrop-blur">
+            <div className="app-surface">
               <h3 className="text-lg font-semibold text-white">
                 Exam Technique
               </h3>
@@ -235,7 +235,7 @@ function NerveView({
 
           {/* Lesion patterns */}
           <div className="grid gap-4 lg:grid-cols-2">
-            <div className="rounded-[28px] border border-white/10 bg-white/6 p-5 backdrop-blur">
+            <div className="app-surface">
               <h3 className="text-lg font-semibold text-amber-100">
                 Peripheral Lesion
               </h3>
@@ -270,7 +270,7 @@ function NerveView({
             </div>
 
             {nerve.centralLesion ? (
-              <div className="rounded-[28px] border border-white/10 bg-white/6 p-5 backdrop-blur">
+              <div className="app-surface">
                 <h3 className="text-lg font-semibold text-cyan-100">
                   Central Lesion
                 </h3>
@@ -304,7 +304,7 @@ function NerveView({
                 </div>
               </div>
             ) : (
-              <div className="rounded-[28px] border border-white/10 bg-white/6 p-5 backdrop-blur">
+              <div className="app-surface">
                 <h3 className="text-lg font-semibold text-slate-500">
                   Central Lesion
                 </h3>
@@ -350,7 +350,7 @@ function SyndromeView({
   return (
     <section className="grid gap-6 lg:grid-cols-[280px_minmax(0,1fr)]">
       {/* Syndrome selector */}
-      <div className="rounded-[28px] border border-white/10 bg-white/6 p-5 backdrop-blur">
+      <div className="app-surface">
         <p className="mb-3 text-xs uppercase tracking-[0.24em] text-slate-400">
           Brainstem Syndromes
         </p>
@@ -381,8 +381,8 @@ function SyndromeView({
 
       {/* Syndrome details */}
       {syndrome ? (
-        <div className="space-y-6">
-          <div className="rounded-[28px] border border-white/10 bg-white/6 p-5 backdrop-blur">
+        <div className="app-page-stack">
+          <div className="app-surface">
             <h2 className="text-2xl font-semibold text-white">
               {syndrome.label}
             </h2>
@@ -409,7 +409,7 @@ function SyndromeView({
             </div>
           </div>
 
-          <div className="rounded-[28px] border border-white/10 bg-white/6 p-5 backdrop-blur">
+          <div className="app-surface">
             <h3 className="text-lg font-semibold text-white">Clinical Signs</h3>
             <ul className="mt-3 space-y-2">
               {syndrome.signs.map((sign) => (
@@ -424,7 +424,7 @@ function SyndromeView({
           </div>
 
           <div className="grid gap-4 lg:grid-cols-2">
-            <div className="rounded-[28px] border border-white/10 bg-white/6 p-5 backdrop-blur">
+            <div className="app-surface">
               <h3 className="text-lg font-semibold text-white">Mechanism</h3>
               <p className="mt-3 text-sm leading-7 text-slate-300">
                 {syndrome.mechanism}

@@ -242,8 +242,8 @@ export function DopamineExplorer() {
   }
 
   return (
-    <div className="space-y-6">
-      <section className="rounded-[28px] border border-white/10 bg-white/6 p-5 shadow-[0_16px_48px_rgba(3,10,20,0.22)] backdrop-blur">
+    <div className="app-page-stack">
+      <section className="app-surface app-surface--hero">
         <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
           <div>
             <p className="text-xs font-semibold uppercase tracking-[0.28em] text-cyan-200/80">
@@ -275,7 +275,7 @@ export function DopamineExplorer() {
 
       <ModuleHandoffBanner />
 
-      <section className="rounded-[28px] border border-white/10 bg-white/6 p-5 backdrop-blur">
+      <section className="app-surface">
         <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
           <div>
             <p className="text-xs uppercase tracking-[0.24em] text-slate-400">
@@ -333,7 +333,7 @@ export function DopamineExplorer() {
         </div>
       </section>
 
-      <section className="rounded-[28px] border border-white/10 bg-white/6 p-5 backdrop-blur">
+      <section className="app-surface">
         <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
           {dopamineParamDefinitions.map((definition) => (
             <label key={definition.key} className="block">
@@ -358,7 +358,7 @@ export function DopamineExplorer() {
       </section>
 
       <section className="grid gap-6 xl:grid-cols-[minmax(0,1.05fr)_340px]">
-        <div className="rounded-[28px] border border-white/10 bg-white/6 p-5 backdrop-blur">
+        <div className="app-surface">
           <p className="text-xs uppercase tracking-[0.24em] text-slate-400">
             Prediction error across a trial
           </p>
@@ -440,7 +440,7 @@ export function DopamineExplorer() {
           </svg>
         </div>
 
-        <div className="rounded-[28px] border border-white/10 bg-white/6 p-5 backdrop-blur">
+        <div className="app-surface">
           <p className="text-xs uppercase tracking-[0.24em] text-slate-400">
             Learning phenotype
           </p>
@@ -509,7 +509,7 @@ export function DopamineExplorer() {
       </section>
 
       <section className="grid gap-6 xl:grid-cols-[minmax(0,1fr)_minmax(0,1fr)_340px]">
-        <div className="rounded-[28px] border border-white/10 bg-white/6 p-5 backdrop-blur">
+        <div className="app-surface">
           <p className="text-xs uppercase tracking-[0.24em] text-slate-400">
             Value function
           </p>
@@ -543,7 +543,7 @@ export function DopamineExplorer() {
           </svg>
         </div>
 
-        <div className="rounded-[28px] border border-white/10 bg-white/6 p-5 backdrop-blur">
+        <div className="app-surface">
           <p className="text-xs uppercase tracking-[0.24em] text-slate-400">
             Learning curve
           </p>
@@ -606,7 +606,7 @@ export function DopamineExplorer() {
           </div>
         </div>
 
-        <div className="rounded-[28px] border border-white/10 bg-white/6 p-5 backdrop-blur">
+        <div className="app-surface">
           <p className="text-xs uppercase tracking-[0.24em] text-slate-400">
             Snapshot comparison
           </p>
@@ -623,7 +623,7 @@ export function DopamineExplorer() {
 
       <section className="grid gap-6 xl:grid-cols-[minmax(0,1.05fr)_340px]">
         <div className="grid gap-6 lg:grid-cols-2">
-          <div className="rounded-[28px] border border-white/10 bg-white/6 p-5 backdrop-blur">
+          <div className="app-surface">
             <p className="text-xs uppercase tracking-[0.24em] text-slate-400">
               Clinical lens
             </p>
@@ -638,7 +638,7 @@ export function DopamineExplorer() {
             </div>
           </div>
 
-          <div className="rounded-[28px] border border-white/10 bg-white/6 p-5 backdrop-blur">
+          <div className="app-surface">
             <p className="text-xs uppercase tracking-[0.24em] text-slate-400">
               Behavioral readout
             </p>
@@ -657,7 +657,7 @@ export function DopamineExplorer() {
             </ul>
           </div>
 
-          <div className="rounded-[28px] border border-white/10 bg-white/6 p-5 backdrop-blur">
+          <div className="app-surface">
             <p className="text-xs uppercase tracking-[0.24em] text-slate-400">
               Differential traps
             </p>
@@ -676,7 +676,7 @@ export function DopamineExplorer() {
             </ul>
           </div>
 
-          <div className="rounded-[28px] border border-white/10 bg-white/6 p-5 backdrop-blur">
+          <div className="app-surface">
             <p className="text-xs uppercase tracking-[0.24em] text-slate-400">
               Next questions
             </p>
@@ -696,8 +696,8 @@ export function DopamineExplorer() {
           </div>
         </div>
 
-        <div className="space-y-6">
-          <div className="rounded-[28px] border border-white/10 bg-white/6 p-5 backdrop-blur">
+        <div className="app-page-stack">
+          <div className="app-surface">
             <p className="text-xs uppercase tracking-[0.24em] text-slate-400">
               Model notes
             </p>
@@ -716,7 +716,7 @@ export function DopamineExplorer() {
             </ul>
           </div>
 
-          <div className="rounded-[28px] border border-white/10 bg-white/6 p-5 backdrop-blur">
+          <div className="app-surface">
             <p className="text-xs uppercase tracking-[0.24em] text-slate-400">
               Continue the loop
             </p>

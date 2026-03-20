@@ -60,9 +60,9 @@ export function DermatomeExplorer() {
   ];
 
   return (
-    <div className="space-y-6">
+    <div className="app-page-stack">
       {/* Header */}
-      <section className="rounded-[28px] border border-white/10 bg-white/6 p-5 shadow-[0_16px_48px_rgba(3,10,20,0.22)] backdrop-blur">
+      <section className="app-surface app-surface--hero">
         <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
           <div>
             <p className="text-xs font-semibold uppercase tracking-[0.28em] text-cyan-200/80">
@@ -97,7 +97,7 @@ export function DermatomeExplorer() {
       </section>
 
       {/* Presets */}
-      <section className="rounded-[28px] border border-white/10 bg-white/6 p-5 backdrop-blur">
+      <section className="app-surface">
         <p className="mb-3 text-xs uppercase tracking-[0.24em] text-slate-400">
           Clinical Presets
         </p>
@@ -150,7 +150,7 @@ function LesionView({
   return (
     <section className="grid gap-6 lg:grid-cols-[260px_minmax(0,1fr)]">
       {/* Lesion level selector */}
-      <div className="rounded-[28px] border border-white/10 bg-white/6 p-5 backdrop-blur">
+      <div className="app-surface">
         <p className="mb-3 text-xs uppercase tracking-[0.24em] text-slate-400">
           Lesion Level
         </p>
@@ -178,7 +178,7 @@ function LesionView({
       </div>
 
       {/* Results */}
-      <div className="space-y-6">
+      <div className="app-page-stack">
         {/* Vignette */}
         {currentPreset && (
           <div className="rounded-[28px] border border-amber-300/18 bg-amber-200/8 p-5 backdrop-blur">
@@ -192,7 +192,7 @@ function LesionView({
         )}
 
         {/* Lesion info */}
-        <div className="rounded-[28px] border border-white/10 bg-white/6 p-5 backdrop-blur">
+        <div className="app-surface">
           <div className="flex items-baseline gap-3">
             <h2 className="text-xl font-semibold text-white">
               {result.lesion.label}
@@ -212,7 +212,7 @@ function LesionView({
         </div>
 
         {/* Findings */}
-        <div className="rounded-[28px] border border-white/10 bg-white/6 p-5 backdrop-blur">
+        <div className="app-surface">
           <h3 className="text-lg font-semibold text-white">
             Sensory Findings
           </h3>
@@ -248,7 +248,7 @@ function LesionView({
 
         {/* Spared + Key distinctions */}
         <div className="grid gap-4 lg:grid-cols-2">
-          <div className="rounded-[28px] border border-white/10 bg-white/6 p-5 backdrop-blur">
+          <div className="app-surface">
             <h3 className="text-lg font-semibold text-green-200">
               Spared Modalities
             </h3>
@@ -264,7 +264,7 @@ function LesionView({
             </ul>
           </div>
 
-          <div className="rounded-[28px] border border-white/10 bg-white/6 p-5 backdrop-blur">
+          <div className="app-surface">
             <h3 className="text-lg font-semibold text-white">
               Key Distinctions
             </h3>
@@ -310,7 +310,7 @@ function LesionView({
 
 function DermatomeMapView() {
   return (
-    <section className="rounded-[28px] border border-white/10 bg-white/6 p-5 backdrop-blur">
+    <section className="app-surface">
       <h2 className="text-xl font-semibold text-white">
         Key Dermatome Landmarks
       </h2>
@@ -357,11 +357,11 @@ function DermatomeMapView() {
 
 function TractsView() {
   return (
-    <section className="space-y-6">
+    <section className="app-page-stack">
       {sensoryTracts.map((tract) => (
         <div
           key={tract.id}
-          className="rounded-[28px] border border-white/10 bg-white/6 p-5 backdrop-blur"
+          className="app-surface"
         >
           <h2 className="text-xl font-semibold text-white">{tract.name}</h2>
           <div className="mt-2 flex flex-wrap gap-2">
@@ -413,7 +413,7 @@ function ModalitiesView() {
       {sensoryModalities.map((mod) => (
         <div
           key={mod.id}
-          className="rounded-[28px] border border-white/10 bg-white/6 p-5 backdrop-blur"
+          className="app-surface"
         >
           <h2 className="text-lg font-semibold text-white">{mod.name}</h2>
           <div className="mt-4 space-y-3 text-sm">

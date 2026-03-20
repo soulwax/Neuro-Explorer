@@ -7,18 +7,176 @@
 
 :root {
   color-scheme: dark;
+  --surface-shell: oklch(0.24 0.024 246 / 0.72);
+  --surface-panel: oklch(0.27 0.02 244 / 0.74);
+  --surface-panel-hero: oklch(0.29 0.024 242 / 0.82);
+  --surface-panel-subtle: oklch(0.25 0.018 244 / 0.62);
+  --surface-border: oklch(0.76 0.03 228 / 0.16);
+  --surface-border-strong: oklch(0.83 0.036 220 / 0.24);
+  --surface-ink: oklch(0.96 0.008 250);
+  --surface-ink-muted: oklch(0.8 0.02 240);
+  --surface-shadow: 0 16px 40px rgba(2, 8, 18, 0.18);
+  --surface-frame-glow: linear-gradient(
+      180deg,
+      oklch(0.95 0.01 235 / 0.03) 0%,
+      transparent 14%,
+      transparent 86%,
+      oklch(0.9 0.01 235 / 0.02) 100%
+    ),
+    linear-gradient(
+      90deg,
+      transparent 0%,
+      oklch(0.84 0.03 220 / 0.04) 18%,
+      transparent 36%,
+      transparent 64%,
+      oklch(0.82 0.03 160 / 0.04) 82%,
+      transparent 100%
+    );
 }
 
 html {
-  background: #08111d;
+  background:
+    radial-gradient(circle at 14% 0%, oklch(0.72 0.07 218 / 0.18), transparent 24%),
+    radial-gradient(circle at 86% 0%, oklch(0.86 0.05 88 / 0.12), transparent 20%),
+    linear-gradient(
+      180deg,
+      oklch(0.23 0.026 246) 0%,
+      oklch(0.18 0.02 246) 54%,
+      oklch(0.15 0.016 246) 100%
+    );
 }
 
 body {
   min-height: 100vh;
+  position: relative;
   font-feature-settings: "liga" 1, "kern" 1;
+  color: var(--surface-ink);
+  background:
+    linear-gradient(
+      90deg,
+      transparent 0%,
+      oklch(0.82 0.03 220 / 0.035) 16%,
+      transparent 31%,
+      transparent 69%,
+      oklch(0.82 0.03 160 / 0.03) 84%,
+      transparent 100%
+    );
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0.75rem;
+  border: 1px solid var(--surface-border);
+  border-radius: clamp(1.25rem, 2.6vw, 2rem);
+  background-image: var(--surface-frame-glow);
+  pointer-events: none;
+  z-index: 0;
+}
+
+body::after {
+  content: "";
+  position: fixed;
+  left: clamp(1rem, 4vw, 3rem);
+  right: clamp(1rem, 4vw, 3rem);
+  top: clamp(4.75rem, 15vh, 8rem);
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    oklch(0.82 0.03 220 / 0.24) 18%,
+    oklch(0.84 0.035 165 / 0.18) 50%,
+    oklch(0.86 0.05 88 / 0.2) 82%,
+    transparent 100%
+  );
+  opacity: 0.85;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.app-page-stack {
+  display: grid;
+  gap: clamp(1rem, 1.8vw, 1.25rem);
+}
+
+.app-stage {
+  position: relative;
+  padding-inline: clamp(1rem, 2vw, 2.75rem);
+  padding-block: clamp(1rem, 1.8vw, 1.75rem);
+}
+
+.app-stage > * {
+  position: relative;
+  z-index: 1;
+}
+
+.app-stage::before {
+  content: "";
+  position: absolute;
+  inset: 0.75rem;
+  border-radius: clamp(1.4rem, 2.2vw, 1.9rem);
+  border: 1px solid var(--surface-border);
+  background-image: var(--surface-frame-glow);
+  pointer-events: none;
+}
+
+.app-stage::after {
+  content: "";
+  position: absolute;
+  left: 1.25rem;
+  right: 1.25rem;
+  top: 1rem;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    oklch(0.82 0.03 220 / 0.16) 18%,
+    oklch(0.82 0.03 160 / 0.14) 50%,
+    oklch(0.86 0.05 88 / 0.16) 82%,
+    transparent 100%
+  );
+  pointer-events: none;
+}
+
+.app-surface {
+  border: 1px solid var(--surface-border);
+  border-radius: 1.625rem;
+  background: var(--surface-panel);
+  padding: clamp(1rem, 1.5vw, 1.25rem);
+  backdrop-filter: blur(18px);
+}
+
+.app-surface--hero {
+  background:
+    linear-gradient(
+      180deg,
+      oklch(0.31 0.024 242 / 0.86) 0%,
+      oklch(0.27 0.02 244 / 0.78) 100%
+    );
+  box-shadow: var(--surface-shadow);
+}
+
+@media (max-width: 1023px) {
+  body::before,
+  body::after,
+  .app-stage::before,
+  .app-stage::after {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  ::before,
+  ::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }
 
 ::selection {
-  background: rgba(103, 211, 255, 0.32);
-  color: #f8fbff;
+  background: oklch(0.79 0.07 218 / 0.32);
+  color: oklch(0.97 0.008 250);
 }

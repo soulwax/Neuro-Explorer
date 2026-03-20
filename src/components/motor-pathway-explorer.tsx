@@ -71,9 +71,9 @@ export function MotorPathwayExplorer() {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="app-page-stack">
       {/* Header */}
-      <section className="rounded-[28px] border border-white/10 bg-white/6 p-5 shadow-[0_16px_48px_rgba(3,10,20,0.22)] backdrop-blur">
+      <section className="app-surface app-surface--hero">
         <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
           <div>
             <p className="text-xs font-semibold uppercase tracking-[0.28em] text-cyan-200/80">
@@ -97,7 +97,7 @@ export function MotorPathwayExplorer() {
       </section>
 
       {/* Clinical presets */}
-      <section className="rounded-[28px] border border-white/10 bg-white/6 p-5 backdrop-blur">
+      <section className="app-surface">
         <p className="mb-3 text-xs uppercase tracking-[0.24em] text-slate-400">
           Clinical Presets
         </p>
@@ -123,7 +123,7 @@ export function MotorPathwayExplorer() {
       {/* Pathway diagram + Lesion selector */}
       <section className="grid gap-6 lg:grid-cols-[280px_minmax(0,1fr)]">
         {/* Pathway */}
-        <div className="rounded-[28px] border border-white/10 bg-white/6 p-5 backdrop-blur">
+        <div className="app-surface">
           <p className="mb-3 text-xs uppercase tracking-[0.24em] text-slate-400">
             Lesion Level
           </p>
@@ -194,7 +194,7 @@ export function MotorPathwayExplorer() {
         </div>
 
         {/* Results */}
-        <div className="space-y-6">
+        <div className="app-page-stack">
           {/* Clinical vignette */}
           {currentPreset && (
             <div className="rounded-[28px] border border-amber-300/18 bg-amber-200/8 p-5 backdrop-blur">
@@ -208,7 +208,7 @@ export function MotorPathwayExplorer() {
           )}
 
           {/* Lesion info */}
-          <div className="rounded-[28px] border border-white/10 bg-white/6 p-5 backdrop-blur">
+          <div className="app-surface">
             <p className="text-xs uppercase tracking-[0.24em] text-slate-400">
               {result.lesion.anatomicalLevel}
             </p>
@@ -232,7 +232,7 @@ export function MotorPathwayExplorer() {
 
           {/* Signs */}
           {result.contralateral.length > 0 && (
-            <div className="rounded-[28px] border border-white/10 bg-white/6 p-5 backdrop-blur">
+            <div className="app-surface">
               <h2 className="text-lg font-semibold text-white">
                 Contralateral signs
               </h2>
@@ -245,7 +245,7 @@ export function MotorPathwayExplorer() {
           )}
 
           {result.ipsilateral.length > 0 && (
-            <div className="rounded-[28px] border border-white/10 bg-white/6 p-5 backdrop-blur">
+            <div className="app-surface">
               <h2 className="text-lg font-semibold text-white">
                 Ipsilateral signs
               </h2>
@@ -258,7 +258,7 @@ export function MotorPathwayExplorer() {
           )}
 
           {result.bilateral.length > 0 && (
-            <div className="rounded-[28px] border border-white/10 bg-white/6 p-5 backdrop-blur">
+            <div className="app-surface">
               <h2 className="text-lg font-semibold text-white">
                 {result.classification === "NMJ" ||
                 result.classification === "myopathic"
@@ -277,7 +277,7 @@ export function MotorPathwayExplorer() {
 
           {/* Acute vs Chronic + Red flags */}
           <div className="grid gap-4 lg:grid-cols-2">
-            <div className="rounded-[28px] border border-white/10 bg-white/6 p-5 backdrop-blur">
+            <div className="app-surface">
               <h2 className="text-lg font-semibold text-white">
                 Temporal evolution
               </h2>
@@ -293,7 +293,7 @@ export function MotorPathwayExplorer() {
               </div>
             </div>
 
-            <div className="rounded-[28px] border border-white/10 bg-white/6 p-5 backdrop-blur">
+            <div className="app-surface">
               <h2 className="text-lg font-semibold text-white">
                 Key distinctions
               </h2>
@@ -321,7 +321,7 @@ export function MotorPathwayExplorer() {
           </div>
 
           {/* Full pathway */}
-          <div className="rounded-[28px] border border-white/10 bg-white/6 p-5 backdrop-blur">
+          <div className="app-surface">
             <h2 className="text-lg font-semibold text-white">
               Complete motor pathway
             </h2>

@@ -273,7 +273,7 @@ export function AskTutor() {
 	}
 
 	return (
-		<div className="space-y-6">
+		<div className="app-page-stack">
 			<Suspense fallback={null}>
 				<AskTutorSearchPrefill
 					hasAppliedSearchPrefill={hasAppliedSearchPrefill}
@@ -283,7 +283,7 @@ export function AskTutor() {
 				/>
 			</Suspense>
 
-			<section className="rounded-[28px] border border-white/10 bg-white/6 p-5 shadow-[0_16px_48px_rgba(3,10,20,0.22)] backdrop-blur">
+			<section className="app-surface app-surface--hero">
 				<div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
 					<div>
 						<p className="text-xs font-semibold uppercase tracking-[0.28em] text-cyan-200/80">Neuro Tutor</p>
@@ -302,7 +302,7 @@ export function AskTutor() {
 			<ModuleHandoffBanner />
 
 			<section className="grid gap-6 xl:grid-cols-[minmax(0,1.05fr)_340px]">
-				<div className="rounded-[28px] border border-white/10 bg-white/6 p-5 backdrop-blur">
+				<div className="app-surface">
 					<div className="grid gap-4 md:grid-cols-3">
 						<label className="block">
 							<span className="mb-2 block text-xs uppercase tracking-[0.18em] text-slate-400">Depth mode</span>
@@ -384,7 +384,7 @@ export function AskTutor() {
 					</p>
 				</div>
 
-				<div className="rounded-[28px] border border-white/10 bg-white/6 p-5 backdrop-blur">
+				<div className="app-surface">
 					<p className="text-xs uppercase tracking-[0.24em] text-slate-400">Reasoning standard</p>
 					<h2 className="mt-1 text-xl font-semibold text-white">What the tutor now checks explicitly</h2>
 					<ul className="mt-4 space-y-3 text-sm leading-7 text-slate-300">
@@ -398,7 +398,7 @@ export function AskTutor() {
 			</section>
 
 			<section className="grid gap-6 xl:grid-cols-[minmax(0,1.05fr)_340px]">
-				<div className="rounded-[28px] border border-white/10 bg-white/6 p-5 backdrop-blur">
+				<div className="app-surface">
 					<p className="text-xs uppercase tracking-[0.24em] text-slate-400">Shared reasoning rubric</p>
 					<h2 className="mt-1 text-xl font-semibold text-white">Grade the answer step by step</h2>
 
@@ -428,7 +428,7 @@ export function AskTutor() {
 					</div>
 				</div>
 
-				<div className="rounded-[28px] border border-white/10 bg-white/6 p-5 backdrop-blur">
+				<div className="app-surface">
 					<p className="text-xs uppercase tracking-[0.24em] text-slate-400">Module handoff</p>
 					<h2 className="mt-1 text-xl font-semibold text-white">Use the tutor across the whole app</h2>
 					<div className="mt-4 space-y-3">
@@ -453,7 +453,7 @@ export function AskTutor() {
 			<section className="grid gap-6 xl:grid-cols-[minmax(0,1.05fr)_340px]">
 				<div
 					ref={responseSectionRef}
-					className="rounded-[28px] border border-white/10 bg-white/6 p-5 backdrop-blur"
+					className="app-surface"
 				>
 					<p className="text-xs uppercase tracking-[0.24em] text-slate-400">Tutor response</p>
 					<h2 className="mt-1 text-xl font-semibold text-white">Answer and score</h2>
@@ -570,7 +570,7 @@ export function AskTutor() {
 					)}
 				</div>
 
-				<div className="rounded-[28px] border border-white/10 bg-white/6 p-5 backdrop-blur">
+				<div className="app-surface">
 					<p className="text-xs uppercase tracking-[0.24em] text-slate-400">Suggested prompts</p>
 					<h2 className="mt-1 text-xl font-semibold text-white">Start with these advanced prompts</h2>
 					<div className="mt-4 space-y-3">

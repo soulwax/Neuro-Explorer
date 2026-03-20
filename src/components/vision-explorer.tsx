@@ -267,8 +267,8 @@ export function VisionExplorer() {
 	}
 
 	return (
-		<div className="space-y-6">
-			<section className="rounded-[28px] border border-white/10 bg-white/6 p-5 shadow-[0_16px_48px_rgba(3,10,20,0.22)] backdrop-blur">
+		<div className="app-page-stack">
+			<section className="app-surface app-surface--hero">
 				<div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
 					<div>
 						<p className="text-xs font-semibold uppercase tracking-[0.28em] text-cyan-200/80">Visual Cortex</p>
@@ -286,7 +286,7 @@ export function VisionExplorer() {
 
 			<ModuleHandoffBanner />
 
-			<section className="rounded-[28px] border border-white/10 bg-white/6 p-5 backdrop-blur">
+			<section className="app-surface">
 				<div className="grid gap-4 lg:grid-cols-[minmax(0,1.3fr)_320px]">
 					<label className="block">
 						<span className="mb-2 block text-xs uppercase tracking-[0.18em] text-slate-400">Image URL</span>
@@ -379,7 +379,7 @@ export function VisionExplorer() {
 			</section>
 
 			<section className="grid gap-6 xl:grid-cols-[minmax(0,1.05fr)_340px]">
-				<div className="rounded-[28px] border border-white/10 bg-white/6 p-5 backdrop-blur">
+				<div className="app-surface">
 					<p className="text-xs uppercase tracking-[0.24em] text-slate-400">Classification output</p>
 					<h2 className="mt-1 text-xl font-semibold text-white">Workers AI labels</h2>
 
@@ -420,7 +420,7 @@ export function VisionExplorer() {
 					)}
 				</div>
 
-				<div className="rounded-[28px] border border-white/10 bg-white/6 p-5 backdrop-blur">
+				<div className="app-surface">
 					<p className="text-xs uppercase tracking-[0.24em] text-slate-400">Residual reasoning</p>
 					<h2 className="mt-1 text-xl font-semibold text-white">Why recurrence still matters</h2>
 					<p className="mt-4 text-sm leading-7 text-slate-300">{skipConnections.what}</p>
@@ -428,7 +428,7 @@ export function VisionExplorer() {
 				</div>
 			</section>
 
-			<section className="rounded-[28px] border border-white/10 bg-white/6 p-5 backdrop-blur">
+			<section className="app-surface">
 				<div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
 					<div>
 						<p className="text-xs uppercase tracking-[0.24em] text-slate-400">Syndrome presets</p>
@@ -691,7 +691,7 @@ export function VisionExplorer() {
 			</CaseShell>
 
 			<section className="grid gap-6 xl:grid-cols-[minmax(0,1.05fr)_340px]">
-				<div className="rounded-[28px] border border-white/10 bg-white/6 p-5 backdrop-blur">
+				<div className="app-surface">
 					<p className="text-xs uppercase tracking-[0.24em] text-slate-400">Reading rules</p>
 					<h2 className="mt-1 text-xl font-semibold text-white">Four rules that prevent most cortical-vision mistakes</h2>
 					<div className="mt-5 grid gap-4 md:grid-cols-2">
@@ -704,7 +704,7 @@ export function VisionExplorer() {
 					</div>
 				</div>
 
-				<div className="rounded-[28px] border border-white/10 bg-white/6 p-5 backdrop-blur">
+				<div className="app-surface">
 					<p className="text-xs uppercase tracking-[0.24em] text-slate-400">Module handoff</p>
 					<h2 className="mt-1 text-xl font-semibold text-white">Continue the pathway</h2>
 					<div className="mt-5 space-y-3">
@@ -725,7 +725,7 @@ export function VisionExplorer() {
 				</div>
 			</section>
 
-			<section className="rounded-[28px] border border-white/10 bg-white/6 p-5 backdrop-blur">
+			<section className="app-surface">
 				<p className="text-xs uppercase tracking-[0.24em] text-slate-400">Stage biology</p>
 				<h2 className="mt-1 text-xl font-semibold text-white">Why each modeled stage still matters</h2>
 				<div className="mt-5 grid gap-4 lg:grid-cols-2">

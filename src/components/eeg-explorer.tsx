@@ -134,9 +134,9 @@ export function EEGExplorer() {
 	const activePresetData = eegPresets.find((p) => p.id === activePreset);
 
 	return (
-		<div className="space-y-6">
+		<div className="app-page-stack">
 			{/* Header */}
-			<section className="rounded-[28px] border border-white/10 bg-white/6 p-5 shadow-[0_16px_48px_rgba(3,10,20,0.22)] backdrop-blur">
+			<section className="app-surface app-surface--hero">
 				<div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
 					<div>
 						<p className="text-xs font-semibold uppercase tracking-[0.28em] text-cyan-200/80">
@@ -180,7 +180,7 @@ export function EEGExplorer() {
 			) : (
 				<>
 					{/* Preset selector */}
-					<section className="rounded-[28px] border border-white/10 bg-white/6 p-5 backdrop-blur">
+					<section className="app-surface">
 						<p className="text-xs uppercase tracking-[0.24em] text-slate-400">
 							Clinical presets
 						</p>
@@ -209,7 +209,7 @@ export function EEGExplorer() {
 					</section>
 
 					{/* Parameter controls */}
-					<section className="rounded-[28px] border border-white/10 bg-white/6 p-5 backdrop-blur">
+					<section className="app-surface">
 						<div className="space-y-5">
 							{eegControlGroups.map((group) => (
 								<div key={group.id}>
@@ -287,7 +287,7 @@ export function EEGExplorer() {
 					</section>
 
 					{/* Channel selector */}
-					<section className="rounded-[28px] border border-white/10 bg-white/6 p-5 backdrop-blur">
+					<section className="app-surface">
 						<div className="flex items-center gap-3">
 							<p className="text-xs uppercase tracking-[0.24em] text-slate-400">
 								Channels
@@ -319,7 +319,7 @@ export function EEGExplorer() {
 					</section>
 
 					{/* Multi-channel trace display */}
-					<section className="rounded-[28px] border border-white/10 bg-white/6 p-5 backdrop-blur">
+					<section className="app-surface">
 						<p className="text-xs uppercase tracking-[0.24em] text-slate-400">
 							EEG Traces
 						</p>
@@ -395,7 +395,7 @@ export function EEGExplorer() {
 					{/* Band powers and interpretation */}
 					<section className="grid gap-6 xl:grid-cols-[minmax(0,1fr)_380px]">
 						{/* Band power bar chart */}
-						<div className="rounded-[28px] border border-white/10 bg-white/6 p-5 backdrop-blur">
+						<div className="app-surface">
 							<p className="text-xs uppercase tracking-[0.24em] text-slate-400">
 								Spectral power
 							</p>
@@ -459,7 +459,7 @@ export function EEGExplorer() {
 						</div>
 
 						{/* Interpretation panel */}
-						<div className="rounded-[28px] border border-white/10 bg-white/6 p-5 backdrop-blur">
+						<div className="app-surface">
 							<p className="text-xs uppercase tracking-[0.24em] text-slate-400">
 								Interpretation
 							</p>
@@ -509,9 +509,9 @@ function EEGCaseMode({ onApplyPreset }: { onApplyPreset: (id: string) => void })
 	if (!activeCase) return null;
 
 	return (
-		<div className="space-y-6">
+		<div className="app-page-stack">
 			{/* Case selector */}
-			<section className="rounded-[28px] border border-white/10 bg-white/6 p-5 backdrop-blur">
+			<section className="app-surface">
 				<p className="text-xs uppercase tracking-[0.24em] text-slate-400">
 					Clinical cases
 				</p>
@@ -534,7 +534,7 @@ function EEGCaseMode({ onApplyPreset }: { onApplyPreset: (id: string) => void })
 			</section>
 
 			{/* Case content */}
-			<section className="rounded-[28px] border border-white/10 bg-white/6 p-5 backdrop-blur">
+			<section className="app-surface">
 				<p className="text-xs uppercase tracking-[0.24em] text-slate-400">
 					{activeCase.oneLiner}
 				</p>

@@ -369,8 +369,8 @@ export function VisualFieldLocalizer() {
   }
 
   return (
-    <div className="space-y-6">
-      <section className="rounded-[28px] border border-white/10 bg-white/6 p-5 shadow-[0_16px_48px_rgba(3,10,20,0.22)] backdrop-blur">
+    <div className="app-page-stack">
+      <section className="app-surface app-surface--hero">
         <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
           <div>
             <p className="text-xs font-semibold uppercase tracking-[0.28em] text-cyan-200/80">
@@ -395,7 +395,7 @@ export function VisualFieldLocalizer() {
 
       <ModuleHandoffBanner />
 
-      <section className="rounded-[28px] border border-white/10 bg-white/6 p-5 backdrop-blur">
+      <section className="app-surface">
         <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
           <div>
             <p className="text-xs uppercase tracking-[0.24em] text-slate-400">
@@ -697,7 +697,7 @@ export function VisualFieldLocalizer() {
       </CaseShell>
 
       <section className="grid gap-6 xl:grid-cols-[minmax(0,1.05fr)_340px]">
-        <div className="rounded-[28px] border border-white/10 bg-white/6 p-5 backdrop-blur">
+        <div className="app-surface">
           <p className="text-xs uppercase tracking-[0.24em] text-slate-400">
             Reading rules
           </p>
@@ -719,7 +719,7 @@ export function VisualFieldLocalizer() {
           </div>
         </div>
 
-        <div className="rounded-[28px] border border-white/10 bg-white/6 p-5 backdrop-blur">
+        <div className="app-surface">
           <p className="text-xs uppercase tracking-[0.24em] text-slate-400">
             Module handoff
           </p>

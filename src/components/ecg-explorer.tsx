@@ -652,7 +652,7 @@ function SurfaceDesk({
     : "Limb";
 
   return (
-    <section className="rounded-[28px] border border-white/10 bg-white/6 p-5 backdrop-blur">
+    <section className="app-surface">
       <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
         <div>
           <p className="text-xs uppercase tracking-[0.24em] text-slate-400">
@@ -747,7 +747,7 @@ function SurfaceDesk({
       </div>
 
       <div className="mt-6 grid gap-6 2xl:grid-cols-[minmax(0,1.35fr)_minmax(340px,0.65fr)]">
-        <div className="space-y-6">
+        <div className="app-page-stack">
           {display.leadLayout === "clinical" ? (
             <div className="overflow-x-auto rounded-[28px] border border-[#d88ca1]/20 bg-[linear-gradient(180deg,#fffafb_0%,#fff1f4_100%)] p-4 shadow-[inset_0_1px_0_rgba(255,255,255,0.8),0_24px_50px_rgba(15,23,42,0.16)]">
               <div className="mb-4 flex flex-col gap-2 border-b border-[#d88ca1]/20 pb-4 sm:flex-row sm:items-end sm:justify-between">
@@ -1132,7 +1132,7 @@ function SurfaceDesk({
           </div>
         </div>
 
-        <div className="space-y-6">
+        <div className="app-page-stack">
           <LeadSpotlight
             result={result}
             display={display}
@@ -1142,7 +1142,7 @@ function SurfaceDesk({
             onSelectLead={onSelectLead}
           />
 
-          <article className="rounded-[28px] border border-white/10 bg-white/6 p-5 backdrop-blur">
+          <article className="app-surface">
             <p className="text-xs uppercase tracking-[0.24em] text-slate-400">
               Reading context
             </p>
@@ -1528,7 +1528,7 @@ export function ECGExplorer() {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="app-page-stack">
       <section className="overflow-hidden rounded-[32px] border border-white/10 bg-[radial-gradient(circle_at_top_right,rgba(103,211,255,0.18),transparent_30%),radial-gradient(circle_at_bottom_left,rgba(255,209,102,0.12),transparent_26%),rgba(255,255,255,0.05)] p-6 shadow-[0_18px_50px_rgba(3,10,20,0.22)] backdrop-blur sm:p-8">
         <div className="flex flex-col gap-6 xl:flex-row xl:items-end xl:justify-between">
           <div className="max-w-4xl">
@@ -1570,7 +1570,7 @@ export function ECGExplorer() {
       <ModuleHandoffBanner />
 
       <section className="grid gap-6 xl:grid-cols-[minmax(0,1.25fr)_380px]">
-        <div className="rounded-[28px] border border-white/10 bg-white/6 p-5 backdrop-blur">
+        <div className="app-surface">
           <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
             <div>
               <p className="text-xs uppercase tracking-[0.24em] text-slate-400">
@@ -1613,7 +1613,7 @@ export function ECGExplorer() {
           </div>
         </div>
 
-        <div className="rounded-[28px] border border-white/10 bg-white/6 p-5 backdrop-blur">
+        <div className="app-surface">
           <p className="text-xs uppercase tracking-[0.24em] text-slate-400">
             Display toggles
           </p>
@@ -1718,7 +1718,7 @@ export function ECGExplorer() {
         </div>
       </section>
 
-      <section className="rounded-[28px] border border-white/10 bg-white/6 p-5 backdrop-blur">
+      <section className="app-surface">
         <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
           <div>
             <p className="text-xs uppercase tracking-[0.24em] text-slate-400">
@@ -1995,7 +1995,7 @@ export function ECGExplorer() {
         {ecgControlGroups.map((group) => (
           <article
             key={group.id}
-            className="rounded-[28px] border border-white/10 bg-white/6 p-5 backdrop-blur"
+            className="app-surface"
           >
             <p className="text-xs uppercase tracking-[0.24em] text-slate-400">
               {group.label}
@@ -2047,7 +2047,7 @@ export function ECGExplorer() {
         ))}
       </section>
 
-      <section className="rounded-[28px] border border-white/10 bg-white/6 p-5 backdrop-blur">
+      <section className="app-surface">
         <div className="flex flex-wrap items-center gap-3">
           <button
             type="button"
@@ -2105,7 +2105,7 @@ export function ECGExplorer() {
       ) : null}
 
       <section className="grid gap-6 xl:grid-cols-2">
-        <div className="rounded-[28px] border border-white/10 bg-white/6 p-5 backdrop-blur">
+        <div className="app-surface">
           <p className="text-xs uppercase tracking-[0.24em] text-slate-400">
             3D cardiac activation
           </p>
@@ -2241,7 +2241,7 @@ export function ECGExplorer() {
           </svg>
         </div>
 
-        <div className="rounded-[28px] border border-white/10 bg-white/6 p-5 backdrop-blur">
+        <div className="app-surface">
           <p className="text-xs uppercase tracking-[0.24em] text-slate-400">
             Lead constellation
           </p>
@@ -2352,7 +2352,7 @@ export function ECGExplorer() {
         </div>
       </section>
 
-      <section className="rounded-[28px] border border-white/10 bg-white/6 p-5 backdrop-blur">
+      <section className="app-surface">
         <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
           <div>
             <p className="text-xs uppercase tracking-[0.24em] text-slate-400">
@@ -2381,8 +2381,8 @@ export function ECGExplorer() {
 
       {result ? (
         <section className="grid gap-6 xl:grid-cols-[minmax(0,1.15fr)_minmax(0,0.85fr)]">
-          <div className="space-y-6">
-            <div className="rounded-[28px] border border-white/10 bg-white/6 p-5 backdrop-blur">
+          <div className="app-page-stack">
+            <div className="app-surface">
               <p className="text-xs uppercase tracking-[0.24em] text-slate-400">
                 Neurological perspective
               </p>
@@ -2497,7 +2497,7 @@ export function ECGExplorer() {
               </div>
             </div>
 
-            <div className="rounded-[28px] border border-white/10 bg-white/6 p-5 backdrop-blur">
+            <div className="app-surface">
               <p className="text-xs uppercase tracking-[0.24em] text-slate-400">
                 Model notes
               </p>
@@ -2520,8 +2520,8 @@ export function ECGExplorer() {
             </div>
           </div>
 
-          <div className="space-y-6">
-            <div className="rounded-[28px] border border-white/10 bg-white/6 p-5 backdrop-blur">
+          <div className="app-page-stack">
+            <div className="app-surface">
               <p className="text-xs uppercase tracking-[0.24em] text-slate-400">
                 Brain-heart map
               </p>
@@ -2538,7 +2538,7 @@ export function ECGExplorer() {
               </p>
             </div>
 
-            <div className="rounded-[28px] border border-white/10 bg-white/6 p-5 backdrop-blur">
+            <div className="app-surface">
               <p className="text-xs uppercase tracking-[0.24em] text-slate-400">
                 Rhythm summary
               </p>

@@ -119,9 +119,9 @@ export function SleepExplorer() {
     : null;
 
   return (
-    <div className="space-y-6">
+    <div className="app-page-stack">
       {/* Header */}
-      <section className="rounded-[28px] border border-white/10 bg-white/6 p-5 shadow-[0_16px_48px_rgba(3,10,20,0.22)] backdrop-blur">
+      <section className="app-surface app-surface--hero">
         <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
           <div>
             <p className="text-xs font-semibold uppercase tracking-[0.28em] text-cyan-200/80">
@@ -150,7 +150,7 @@ export function SleepExplorer() {
       </section>
 
       {/* Presets */}
-      <section className="rounded-[28px] border border-white/10 bg-white/6 p-5 backdrop-blur">
+      <section className="app-surface">
         <p className="mb-3 text-xs uppercase tracking-[0.24em] text-slate-400">
           Clinical Presets
         </p>
@@ -188,7 +188,7 @@ export function SleepExplorer() {
       </section>
 
       {/* Parameters */}
-      <section className="rounded-[28px] border border-white/10 bg-white/6 p-5 backdrop-blur">
+      <section className="app-surface">
         <div className="grid gap-3 md:grid-cols-3 xl:grid-cols-5">
           {sleepParamDefinitions.map((def) => (
             <label key={def.key} className="block">
@@ -212,7 +212,7 @@ export function SleepExplorer() {
 
       {/* Hypnogram + Summary */}
       <section className="grid gap-6 xl:grid-cols-[minmax(0,1.2fr)_300px]">
-        <div className="rounded-[28px] border border-white/10 bg-white/6 p-5 backdrop-blur">
+        <div className="app-surface">
           <div className="flex items-center justify-between gap-4">
             <div>
               <p className="text-xs uppercase tracking-[0.24em] text-slate-400">
@@ -302,7 +302,7 @@ export function SleepExplorer() {
         </div>
 
         {/* Summary */}
-        <div className="rounded-[28px] border border-white/10 bg-white/6 p-5 backdrop-blur">
+        <div className="app-surface">
           <p className="text-xs uppercase tracking-[0.24em] text-slate-400">
             Sleep metrics
           </p>
@@ -366,7 +366,7 @@ export function SleepExplorer() {
 
       {/* Stage percentages bar chart + Stage info */}
       <section className="grid gap-6 lg:grid-cols-2">
-        <div className="rounded-[28px] border border-white/10 bg-white/6 p-5 backdrop-blur">
+        <div className="app-surface">
           <h2 className="text-xl font-semibold text-white">
             Stage distribution
           </h2>
@@ -414,7 +414,7 @@ export function SleepExplorer() {
         </div>
 
         {/* Stage EEG info */}
-        <div className="rounded-[28px] border border-white/10 bg-white/6 p-5 backdrop-blur">
+        <div className="app-surface">
           <h2 className="text-xl font-semibold text-white">
             {selectedStageInfo
               ? selectedStageInfo.label
@@ -477,7 +477,7 @@ export function SleepExplorer() {
 
       {/* Educational content */}
       <section className="grid gap-4 lg:grid-cols-2">
-        <div className="rounded-[28px] border border-white/10 bg-white/6 p-5 backdrop-blur">
+        <div className="app-surface">
           <h2 className="text-xl font-semibold text-white">
             Normal sleep architecture
           </h2>
@@ -492,7 +492,7 @@ export function SleepExplorer() {
             ))}
           </ul>
         </div>
-        <div className="rounded-[28px] border border-white/10 bg-white/6 p-5 backdrop-blur">
+        <div className="app-surface">
           <h2 className="text-xl font-semibold text-white">What to notice</h2>
           <ul className="mt-4 space-y-3 text-sm leading-7 text-slate-300">
             {result.explanation.whatToNotice.map((item) => (

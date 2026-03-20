@@ -111,9 +111,9 @@ export function BrainAtlasExplorer() {
   }
 
   return (
-    <div className="space-y-6">
-      <section className="rounded-[28px] border border-white/10 bg-white/6 p-5 shadow-[0_16px_48px_rgba(3,10,20,0.22)] backdrop-blur">
-        <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+    <div className="app-page-stack">
+      <section className="app-surface app-surface--hero">
+        <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
           <div>
             <p className="text-xs font-semibold uppercase tracking-[0.28em] text-cyan-200/80">
               Brain Atlas
@@ -128,7 +128,7 @@ export function BrainAtlasExplorer() {
                 key={item.id}
                 type="button"
                 onClick={() => setChapter(item.id)}
-                className={`rounded-full px-4 py-2 text-sm font-medium transition ${
+                className={`inline-flex min-h-12 items-center rounded-full px-4 py-2 text-sm font-medium transition ${
                   chapter === item.id
                     ? "bg-cyan-300 text-slate-950 shadow-[0_10px_24px_rgba(103,211,255,0.24)]"
                     : "border border-white/10 bg-white/6 text-slate-300 hover:bg-white/10 hover:text-white"
@@ -139,15 +139,15 @@ export function BrainAtlasExplorer() {
             ))}
           </div>
         </div>
-        <p className="mt-4 max-w-3xl text-sm leading-7 text-slate-300">
+        <p className="mt-3 max-w-3xl text-sm leading-6 text-slate-300">
           {chapterMeta.summary}
         </p>
       </section>
 
       <ModuleHandoffBanner />
 
-      <section className="rounded-[28px] border border-white/10 bg-white/6 p-5 backdrop-blur">
-        <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
+      <section className="app-surface">
+        <div className="flex flex-col gap-3 lg:flex-row lg:items-end lg:justify-between">
           <div>
             <p className="text-xs uppercase tracking-[0.24em] text-slate-400">
               Convergence overlays
@@ -162,7 +162,7 @@ export function BrainAtlasExplorer() {
           </p>
         </div>
 
-        <div className="mt-5 flex flex-wrap gap-3">
+        <div className="mt-4 flex flex-wrap gap-2.5">
           {atlasOverlays.map((item) => (
             <button
               key={item.id}
@@ -171,7 +171,7 @@ export function BrainAtlasExplorer() {
                 setOverlayId(item.id);
                 setCompareRegionId(item.compareRegionId);
               }}
-              className={`rounded-full px-4 py-2 text-sm font-medium transition ${
+              className={`inline-flex min-h-12 items-center rounded-full px-4 py-2 text-sm font-medium transition ${
                 item.id === overlay.id
                   ? "bg-cyan-300 text-slate-950 shadow-[0_10px_24px_rgba(103,211,255,0.24)]"
                   : "border border-white/10 bg-white/6 text-slate-300 hover:bg-white/10 hover:text-white"
@@ -182,31 +182,31 @@ export function BrainAtlasExplorer() {
           ))}
         </div>
 
-        <div className="mt-5 grid gap-6 xl:grid-cols-[minmax(0,1.05fr)_340px]">
-          <div className="rounded-[24px] border border-white/10 bg-slate-950/35 p-5">
+        <div className="mt-4 grid gap-4 xl:grid-cols-[minmax(0,1.05fr)_320px]">
+          <div className="rounded-[22px] border border-white/10 bg-slate-950/35 p-4 sm:p-5">
             <p className="text-xs uppercase tracking-[0.18em] text-cyan-100">
               Clinical frame
             </p>
             <h3 className="mt-2 text-lg font-semibold text-white">
               {overlay.title}
             </h3>
-            <p className="mt-4 text-sm leading-7 text-slate-300">
+            <p className="mt-3 text-sm leading-6 text-slate-300">
               {overlay.summary}
             </p>
-            <div className="mt-5 grid gap-4 lg:grid-cols-2">
-              <div className="rounded-[20px] border border-white/10 bg-white/6 p-4">
+            <div className="mt-4 grid gap-3 lg:grid-cols-2">
+              <div className="rounded-[18px] border border-white/10 bg-white/6 p-4">
                 <p className="text-xs uppercase tracking-[0.18em] text-slate-400">
                   Why this overlay matters
                 </p>
-                <p className="mt-2 text-sm leading-7 text-slate-300">
+                <p className="mt-2 text-sm leading-6 text-slate-300">
                   {overlay.clinicalFrame}
                 </p>
               </div>
-              <div className="rounded-[20px] border border-white/10 bg-white/6 p-4">
+              <div className="rounded-[18px] border border-white/10 bg-white/6 p-4">
                 <p className="text-xs uppercase tracking-[0.18em] text-slate-400">
                   Decisive next data
                 </p>
-                <ul className="mt-3 space-y-2 text-sm leading-7 text-slate-300">
+                <ul className="mt-3 space-y-1.5 text-sm leading-6 text-slate-300">
                   {overlay.decisiveNextData.map((item) => (
                     <li key={item}>• {item}</li>
                   ))}
@@ -215,22 +215,22 @@ export function BrainAtlasExplorer() {
             </div>
           </div>
 
-          <div className="rounded-[24px] border border-white/10 bg-slate-950/35 p-5">
+          <div className="rounded-[22px] border border-white/10 bg-slate-950/35 p-4 sm:p-5">
             <p className="text-xs uppercase tracking-[0.18em] text-slate-400">
               Overlay regions
             </p>
-            <div className="mt-4 space-y-3">
+            <div className="mt-3 space-y-2.5">
               {overlay.regions.map((item) => {
                 const target = regionById(item.regionId);
                 return (
                   <div
                     key={item.regionId}
-                    className="rounded-[20px] border border-white/10 bg-white/6 p-4"
+                    className="rounded-[18px] border border-white/10 bg-white/6 p-4"
                   >
                     <p className="text-sm font-semibold text-white">
                       {item.label} · {target.name}
                     </p>
-                    <p className="mt-2 text-sm leading-7 text-slate-300">
+                    <p className="mt-2 text-sm leading-6 text-slate-300">
                       {item.reason}
                     </p>
                   </div>
@@ -257,7 +257,7 @@ export function BrainAtlasExplorer() {
                   setRevealed(false);
                   setChapter("functions");
                 }}
-                className={`rounded-full px-4 py-2 text-sm font-medium transition ${
+                className={`inline-flex min-h-12 items-center rounded-full px-4 py-2 text-sm font-medium transition ${
                   item.id === activeCase.id
                     ? "bg-cyan-300 text-slate-950 shadow-[0_10px_24px_rgba(103,211,255,0.24)]"
                     : "border border-white/10 bg-white/6 text-slate-300 hover:bg-white/10 hover:text-white"
@@ -269,15 +269,15 @@ export function BrainAtlasExplorer() {
           </>
         }
       >
-        <div className="space-y-5">
+        <div className="space-y-4">
           <CaseProgressPanel
             summary={caseProgressSummary}
             onReset={resetProgress}
           />
 
           {brainAtlasCurriculum ? (
-            <div className="grid gap-4 lg:grid-cols-[240px_minmax(0,1fr)]">
-              <div className="rounded-[20px] border border-white/10 bg-slate-950/45 p-4">
+            <div className="grid gap-3 lg:grid-cols-[220px_minmax(0,1fr)]">
+              <div className="rounded-[18px] border border-white/10 bg-slate-950/45 p-4">
                 <p className="text-xs uppercase tracking-[0.18em] text-slate-400">
                   Training stage
                 </p>
@@ -285,11 +285,11 @@ export function BrainAtlasExplorer() {
                   {brainAtlasCurriculum.trainingStage}
                 </p>
               </div>
-              <div className="rounded-[20px] border border-white/10 bg-slate-950/45 p-4">
+              <div className="rounded-[18px] border border-white/10 bg-slate-950/45 p-4">
                 <p className="text-xs uppercase tracking-[0.18em] text-slate-400">
                   Post-clinical objectives
                 </p>
-                <ul className="mt-3 space-y-2 text-sm leading-7 text-slate-300">
+                <ul className="mt-3 space-y-1.5 text-sm leading-6 text-slate-300">
                   {brainAtlasCurriculum.advancedObjectives.map((objective) => (
                     <li key={objective}>• {objective}</li>
                   ))}
@@ -316,7 +316,7 @@ export function BrainAtlasExplorer() {
             <button
               type="button"
               onClick={revealCase}
-              className="rounded-full bg-cyan-300 px-5 py-3 text-sm font-semibold text-slate-950 shadow-[0_12px_28px_rgba(103,211,255,0.24)] transition hover:-translate-y-0.5"
+              className="inline-flex min-h-12 items-center rounded-full bg-cyan-300 px-5 py-3 text-sm font-semibold text-slate-950 shadow-[0_12px_28px_rgba(103,211,255,0.24)] transition hover:-translate-y-0.5"
             >
               Reveal localization
             </button>
@@ -326,7 +326,7 @@ export function BrainAtlasExplorer() {
                 setRegionId(activeCase.startingRegionId);
                 setRevealed(false);
               }}
-              className="rounded-full border border-white/10 bg-white/6 px-5 py-3 text-sm font-semibold text-slate-100 transition hover:bg-white/10"
+              className="inline-flex min-h-12 items-center rounded-full border border-white/10 bg-white/6 px-5 py-3 text-sm font-semibold text-slate-100 transition hover:bg-white/10"
             >
               Reset selection
             </button>
@@ -371,8 +371,8 @@ export function BrainAtlasExplorer() {
         </div>
       </CaseShell>
 
-      <section className="grid gap-6 lg:grid-cols-[minmax(0,1.05fr)_minmax(320px,0.95fr)]">
-        <div className="rounded-[28px] border border-white/10 bg-white/6 p-5 backdrop-blur">
+      <section className="grid gap-4 lg:grid-cols-[minmax(0,1.05fr)_minmax(300px,0.95fr)]">
+        <div className="app-surface">
           <div className="flex items-center justify-between gap-4">
             <div>
               <p className="text-xs uppercase tracking-[0.24em] text-slate-400">
@@ -494,7 +494,7 @@ export function BrainAtlasExplorer() {
             })}
           </svg>
 
-          <div className="mt-5 flex flex-wrap gap-2">
+          <div className="mt-4 flex flex-wrap gap-2">
             {atlasRegions.map((item) => {
               const active = item.id === region.id;
               return (
@@ -502,7 +502,7 @@ export function BrainAtlasExplorer() {
                   key={item.id}
                   type="button"
                   onClick={() => setRegionId(item.id)}
-                  className={`rounded-full border px-3 py-2 text-sm transition ${
+                  className={`inline-flex min-h-12 items-center rounded-full border px-3 py-2 text-sm transition ${
                     active
                       ? "border-cyan-300/40 bg-cyan-300/12 text-cyan-100"
                       : "border-white/10 bg-white/5 text-slate-300 hover:bg-white/10 hover:text-white"
@@ -515,9 +515,9 @@ export function BrainAtlasExplorer() {
           </div>
         </div>
 
-        <div className="rounded-[28px] border border-white/10 bg-white/6 p-5 backdrop-blur">
+        <div className="app-surface">
           <div
-            className="inline-flex rounded-full border border-white/10 px-3 py-1 text-xs font-medium uppercase tracking-[0.24em]"
+            className="inline-flex min-h-9 items-center rounded-full border border-white/10 px-3 py-1 text-xs font-medium uppercase tracking-[0.24em]"
             style={{
               color: categoryColor(region),
               borderColor: `${categoryColor(region)}44`,
@@ -527,19 +527,19 @@ export function BrainAtlasExplorer() {
           </div>
 
           <h2 className="mt-4 text-2xl font-semibold text-white">{region.name}</h2>
-          <p className="mt-3 text-sm leading-7 text-slate-300">
+          <p className="mt-3 text-sm leading-6 text-slate-300">
             {chapter === "functions"
               ? region.chapter1.summary
               : region.chapter2.role}
           </p>
 
           {chapter === "functions" ? (
-            <div className="mt-6 space-y-5">
+            <div className="mt-5 space-y-4">
               <div>
                 <h3 className="text-sm font-semibold uppercase tracking-[0.2em] text-amber-200/90">
                   Core functions
                 </h3>
-                <ul className="mt-3 space-y-2 text-sm text-slate-300">
+                <ul className="mt-3 space-y-1.5 text-sm leading-6 text-slate-300">
                   {region.chapter1.functions.map((item) => (
                     <li key={item}>• {item}</li>
                   ))}
@@ -550,47 +550,47 @@ export function BrainAtlasExplorer() {
                 <h3 className="text-sm font-semibold uppercase tracking-[0.2em] text-amber-200/90">
                   Signature tasks
                 </h3>
-                <ul className="mt-3 space-y-2 text-sm text-slate-300">
+                <ul className="mt-3 space-y-1.5 text-sm leading-6 text-slate-300">
                   {region.chapter1.signatureTasks.map((item) => (
                     <li key={item}>• {item}</li>
                   ))}
                 </ul>
               </div>
 
-              <div className="rounded-3xl border border-white/10 bg-slate-950/35 p-4">
+              <div className="rounded-[20px] border border-white/10 bg-slate-950/35 p-4">
                 <h3 className="text-sm font-semibold uppercase tracking-[0.2em] text-cyan-200/90">
                   Clinical link
                 </h3>
-                <p className="mt-3 text-sm leading-7 text-slate-300">
+                <p className="mt-3 text-sm leading-6 text-slate-300">
                   {region.chapter1.clinicalLink}
                 </p>
               </div>
             </div>
           ) : (
-            <div className="mt-6 space-y-5">
+            <div className="mt-5 space-y-4">
               <div className="flex flex-wrap gap-2">
                 {region.chapter2.systems.map((system) => (
                   <span
                     key={system}
-                    className="rounded-full border border-white/10 bg-slate-950/35 px-3 py-1 text-xs text-slate-200"
+                    className="inline-flex min-h-9 items-center rounded-full border border-white/10 bg-slate-950/35 px-3 py-1 text-xs text-slate-200"
                   >
                     {system}
                   </span>
                 ))}
               </div>
 
-              <div className="space-y-3">
+              <div className="space-y-2.5">
                 {region.chapter2.interlinks.map((link) => {
                   const target = regionById(link.target);
                   return (
                     <div
                       key={link.target}
-                      className="rounded-3xl border border-white/10 bg-slate-950/35 p-4"
+                      className="rounded-[20px] border border-white/10 bg-slate-950/35 p-4"
                     >
                       <p className="text-sm font-semibold text-cyan-100">
                         {link.label} → {target.name}
                       </p>
-                      <p className="mt-2 text-sm leading-7 text-slate-300">
+                      <p className="mt-2 text-sm leading-6 text-slate-300">
                         {link.description}
                       </p>
                     </div>
@@ -656,34 +656,34 @@ export function BrainAtlasExplorer() {
         }
       />
 
-      <section className="rounded-[28px] border border-white/10 bg-white/6 p-5 backdrop-blur">
+      <section className="app-surface">
         <h2 className="text-xl font-semibold text-white">
           {chapter === "functions"
             ? "How to read Chapter 1"
             : "How to read Chapter 2"}
         </h2>
         {chapter === "functions" ? (
-          <div className="mt-4 grid gap-4 md:grid-cols-3">
+          <div className="mt-4 grid gap-3 md:grid-cols-3">
             {atlasNetworkNotes.map((note, index) => (
               <div
                 key={note}
-                className="rounded-3xl border border-white/10 bg-slate-950/35 p-4"
+                className="rounded-[20px] border border-white/10 bg-slate-950/35 p-4"
               >
                 <p className="text-sm font-semibold text-amber-200/90">
                   Principle {index + 1}
                 </p>
-                <p className="mt-2 text-sm leading-7 text-slate-300">{note}</p>
+                <p className="mt-2 text-sm leading-6 text-slate-300">{note}</p>
               </div>
             ))}
           </div>
         ) : (
-          <div className="mt-4 space-y-3 text-sm text-slate-300">
+          <div className="mt-4 space-y-2.5 text-sm text-slate-300">
             {region.chapter2.interlinks.map((link) => {
               const target = regionById(link.target);
               return (
                 <p
                   key={link.target}
-                  className="rounded-3xl border border-white/10 bg-slate-950/35 p-4 leading-7"
+                  className="rounded-[20px] border border-white/10 bg-slate-950/35 p-4 leading-6"
                 >
                   <span className="font-semibold text-white">{target.name}:</span>{" "}
                   {link.description}

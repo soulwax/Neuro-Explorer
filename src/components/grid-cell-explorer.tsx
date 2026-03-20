@@ -177,8 +177,8 @@ export function GridCellExplorer() {
 	const maxTraceRate = Math.max(1, ...(result?.path.map((point) => point.rateHz) ?? [1]));
 
 	return (
-		<div className="space-y-6">
-			<section className="rounded-[28px] border border-white/10 bg-white/6 p-5 shadow-[0_16px_48px_rgba(3,10,20,0.22)] backdrop-blur">
+		<div className="app-page-stack">
+			<section className="app-surface app-surface--hero">
 				<div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
 					<div>
 						<p className="text-xs font-semibold uppercase tracking-[0.28em] text-cyan-200/80">Grid Cell Navigator</p>
@@ -199,7 +199,7 @@ export function GridCellExplorer() {
 
 			<ModuleHandoffBanner />
 
-			<section className="rounded-[28px] border border-white/10 bg-white/6 p-5 backdrop-blur">
+			<section className="app-surface">
 				<div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
 					<div>
 						<p className="text-xs uppercase tracking-[0.24em] text-slate-400">Teaching presets</p>
@@ -250,7 +250,7 @@ export function GridCellExplorer() {
 				</div>
 			</section>
 
-			<section className="rounded-[28px] border border-white/10 bg-white/6 p-5 backdrop-blur">
+			<section className="app-surface">
 				<div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
 					{gridCellParamDefinitions.map((definition) => (
 						<label key={definition.key} className="block">
@@ -311,7 +311,7 @@ export function GridCellExplorer() {
 			</section>
 
 			<section className="grid gap-6 xl:grid-cols-2">
-				<div className="rounded-[28px] border border-white/10 bg-white/6 p-5 backdrop-blur">
+				<div className="app-surface">
 					<p className="text-xs uppercase tracking-[0.24em] text-slate-400">Arena path + spikes</p>
 					<h2 className="mt-1 text-xl font-semibold text-white">Navigation through physical space</h2>
 					<svg viewBox={`0 0 ${GRID_W} ${GRID_H}`} className="mt-5 w-full rounded-[24px] border border-white/6 bg-slate-950/45">
@@ -368,7 +368,7 @@ export function GridCellExplorer() {
 					</svg>
 				</div>
 
-				<div className="rounded-[28px] border border-white/10 bg-white/6 p-5 backdrop-blur">
+				<div className="app-surface">
 					<p className="text-xs uppercase tracking-[0.24em] text-slate-400">Firing rate map</p>
 					<h2 className="mt-1 text-xl font-semibold text-white">Hexagonal lattice occupancy</h2>
 					<svg viewBox={`0 0 ${GRID_W} ${GRID_H}`} className="mt-5 w-full rounded-[24px] border border-white/6 bg-slate-950/45">
@@ -409,7 +409,7 @@ export function GridCellExplorer() {
 				</div>
 			</section>
 
-			<section className="rounded-[28px] border border-white/10 bg-white/6 p-5 backdrop-blur">
+			<section className="app-surface">
 				<p className="text-xs uppercase tracking-[0.24em] text-slate-400">Instantaneous firing rate</p>
 				<h2 className="mt-1 text-xl font-semibold text-white">Theta-modulated rate trace</h2>
 				<svg viewBox={`0 0 ${TRACE_W} ${TRACE_H}`} className="mt-5 w-full rounded-[24px] border border-white/6 bg-slate-950/45">
@@ -440,7 +440,7 @@ export function GridCellExplorer() {
 			{result ? (
 				<>
 					<section className="grid gap-6 xl:grid-cols-[minmax(0,1.05fr)_340px]">
-						<div className="rounded-[28px] border border-white/10 bg-white/6 p-5 backdrop-blur">
+						<div className="app-surface">
 							<p className="text-xs uppercase tracking-[0.24em] text-slate-400">Phenotype</p>
 							<h2 className="mt-1 text-xl font-semibold text-white">{result.interpretation.headline}</h2>
 							<div className="mt-4 flex flex-wrap gap-2">
@@ -493,7 +493,7 @@ export function GridCellExplorer() {
 							</div>
 						</div>
 
-						<div className="rounded-[28px] border border-white/10 bg-white/6 p-5 backdrop-blur">
+						<div className="app-surface">
 							<p className="text-xs uppercase tracking-[0.24em] text-slate-400">Clinical lens</p>
 							<h2 className="mt-1 text-xl font-semibold text-white">What this map teaches</h2>
 							<p className="mt-4 text-sm leading-7 text-slate-300">{result.interpretation.clinicalLens}</p>
@@ -504,7 +504,7 @@ export function GridCellExplorer() {
 					</section>
 
 					<section className="grid gap-6 lg:grid-cols-3">
-						<div className="rounded-[28px] border border-white/10 bg-white/6 p-5 backdrop-blur">
+						<div className="app-surface">
 							<p className="text-xs uppercase tracking-[0.24em] text-slate-400">Behavioral readout</p>
 							<h2 className="mt-1 text-xl font-semibold text-white">What learners should notice</h2>
 							<ul className="mt-4 space-y-3 text-sm leading-7 text-slate-300">
@@ -516,7 +516,7 @@ export function GridCellExplorer() {
 							</ul>
 						</div>
 
-						<div className="rounded-[28px] border border-white/10 bg-white/6 p-5 backdrop-blur">
+						<div className="app-surface">
 							<p className="text-xs uppercase tracking-[0.24em] text-slate-400">Differential traps</p>
 							<h2 className="mt-1 text-xl font-semibold text-white">What not to overclaim</h2>
 							<ul className="mt-4 space-y-3 text-sm leading-7 text-slate-300">
@@ -528,7 +528,7 @@ export function GridCellExplorer() {
 							</ul>
 						</div>
 
-						<div className="rounded-[28px] border border-white/10 bg-white/6 p-5 backdrop-blur">
+						<div className="app-surface">
 							<p className="text-xs uppercase tracking-[0.24em] text-slate-400">Next questions</p>
 							<h2 className="mt-1 text-xl font-semibold text-white">Useful follow-up experiments</h2>
 							<ul className="mt-4 space-y-3 text-sm leading-7 text-slate-300">
@@ -542,7 +542,7 @@ export function GridCellExplorer() {
 					</section>
 
 					<section className="grid gap-6 xl:grid-cols-[minmax(0,1.05fr)_340px]">
-						<div className="rounded-[28px] border border-white/10 bg-white/6 p-5 backdrop-blur">
+						<div className="app-surface">
 							<p className="text-xs uppercase tracking-[0.24em] text-slate-400">Model notes</p>
 							<h2 className="mt-1 text-xl font-semibold text-white">Why the map looks this way</h2>
 							<ul className="mt-4 space-y-3 text-sm leading-7 text-slate-300">
@@ -554,7 +554,7 @@ export function GridCellExplorer() {
 							</ul>
 						</div>
 
-						<div className="rounded-[28px] border border-white/10 bg-white/6 p-5 backdrop-blur">
+						<div className="app-surface">
 							<p className="text-xs uppercase tracking-[0.24em] text-slate-400">Continue the loop</p>
 							<h2 className="mt-1 text-xl font-semibold text-white">Use this with anatomy, sleep, and tutoring</h2>
 							<div className="mt-4 space-y-3">

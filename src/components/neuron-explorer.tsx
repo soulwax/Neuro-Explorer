@@ -106,8 +106,8 @@ export function NeuronExplorer() {
   }
 
   return (
-    <div className="space-y-6">
-      <section className="rounded-[28px] border border-white/10 bg-white/6 p-5 shadow-[0_16px_48px_rgba(3,10,20,0.22)] backdrop-blur">
+    <div className="app-page-stack">
+      <section className="app-surface app-surface--hero">
         <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
           <div>
             <p className="text-xs font-semibold uppercase tracking-[0.28em] text-cyan-200/80">
@@ -140,7 +140,7 @@ export function NeuronExplorer() {
 
       <ModuleHandoffBanner />
 
-      <section className="rounded-[28px] border border-white/10 bg-white/6 p-5 backdrop-blur">
+      <section className="app-surface">
         <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
           <div>
             <p className="text-xs uppercase tracking-[0.24em] text-slate-400">
@@ -197,7 +197,7 @@ export function NeuronExplorer() {
         </div>
       </section>
 
-      <section className="rounded-[28px] border border-white/10 bg-white/6 p-5 backdrop-blur">
+      <section className="app-surface">
         <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
           {neuronParamDefinitions.map((definition) => (
             <label key={definition.key} className="block">
@@ -222,7 +222,7 @@ export function NeuronExplorer() {
       </section>
 
       <section className="grid gap-6 xl:grid-cols-[minmax(0,1.1fr)_340px]">
-        <div className="rounded-[28px] border border-white/10 bg-white/6 p-5 backdrop-blur">
+        <div className="app-surface">
           <div className="flex items-center justify-between gap-4">
             <div>
               <p className="text-xs uppercase tracking-[0.24em] text-slate-400">
@@ -329,7 +329,7 @@ export function NeuronExplorer() {
           </svg>
         </div>
 
-        <div className="rounded-[28px] border border-white/10 bg-white/6 p-5 backdrop-blur">
+        <div className="app-surface">
           <p className="text-xs uppercase tracking-[0.24em] text-slate-400">
             Phenotype
           </p>
@@ -392,7 +392,7 @@ export function NeuronExplorer() {
       </section>
 
       <section className="grid gap-6 lg:grid-cols-3">
-        <div className="rounded-[28px] border border-white/10 bg-white/6 p-5 backdrop-blur">
+        <div className="app-surface">
           <p className="text-xs uppercase tracking-[0.24em] text-slate-400">
             Clinical lens
           </p>
@@ -404,7 +404,7 @@ export function NeuronExplorer() {
           </p>
         </div>
 
-        <div className="rounded-[28px] border border-white/10 bg-white/6 p-5 backdrop-blur">
+        <div className="app-surface">
           <p className="text-xs uppercase tracking-[0.24em] text-slate-400">
             Bedside signals
           </p>
@@ -423,7 +423,7 @@ export function NeuronExplorer() {
           </ul>
         </div>
 
-        <div className="rounded-[28px] border border-white/10 bg-white/6 p-5 backdrop-blur">
+        <div className="app-surface">
           <p className="text-xs uppercase tracking-[0.24em] text-slate-400">
             Differential traps
           </p>
@@ -445,7 +445,7 @@ export function NeuronExplorer() {
 
       <section className="grid gap-6 xl:grid-cols-[minmax(0,1.05fr)_340px]">
         <div className="grid gap-6 lg:grid-cols-2">
-          <div className="rounded-[28px] border border-white/10 bg-white/6 p-5 backdrop-blur">
+          <div className="app-surface">
             <h2 className="text-xl font-semibold text-white">What to notice</h2>
             <ul className="mt-4 space-y-3 text-sm leading-7 text-slate-300">
               {result.explanation.whatToNotice.map((note) => (
@@ -459,7 +459,7 @@ export function NeuronExplorer() {
             </ul>
           </div>
 
-          <div className="rounded-[28px] border border-white/10 bg-white/6 p-5 backdrop-blur">
+          <div className="app-surface">
             <h2 className="text-xl font-semibold text-white">
               Biological analogies
             </h2>
@@ -481,8 +481,8 @@ export function NeuronExplorer() {
           </div>
         </div>
 
-        <div className="space-y-6">
-          <div className="rounded-[28px] border border-white/10 bg-white/6 p-5 backdrop-blur">
+        <div className="app-page-stack">
+          <div className="app-surface">
             <p className="text-xs uppercase tracking-[0.24em] text-slate-400">
               Next questions
             </p>
@@ -501,7 +501,7 @@ export function NeuronExplorer() {
             </ul>
           </div>
 
-          <div className="rounded-[28px] border border-white/10 bg-white/6 p-5 backdrop-blur">
+          <div className="app-surface">
             <p className="text-xs uppercase tracking-[0.24em] text-slate-400">
               Continue the loop
             </p>

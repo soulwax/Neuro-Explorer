@@ -35,9 +35,9 @@ export function StrokeExplorer() {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="app-page-stack">
       {/* Header */}
-      <section className="rounded-[28px] border border-white/10 bg-white/6 p-5 shadow-[0_16px_48px_rgba(3,10,20,0.22)] backdrop-blur">
+      <section className="app-surface app-surface--hero">
         <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
           <div>
             <p className="text-xs font-semibold uppercase tracking-[0.28em] text-cyan-200/80">
@@ -57,7 +57,7 @@ export function StrokeExplorer() {
       </section>
 
       {/* Clinical presets */}
-      <section className="rounded-[28px] border border-white/10 bg-white/6 p-5 backdrop-blur">
+      <section className="app-surface">
         <p className="mb-3 text-xs uppercase tracking-[0.24em] text-slate-400">
           Clinical Presets
         </p>
@@ -83,7 +83,7 @@ export function StrokeExplorer() {
       {/* Territory selector + Details */}
       <section className="grid gap-6 lg:grid-cols-[260px_minmax(0,1fr)]">
         {/* Selector */}
-        <div className="rounded-[28px] border border-white/10 bg-white/6 p-5 backdrop-blur">
+        <div className="app-surface">
           <p className="mb-3 text-xs uppercase tracking-[0.24em] text-slate-400">
             Vascular Territory
           </p>
@@ -112,7 +112,7 @@ export function StrokeExplorer() {
 
         {/* Details */}
         {territory && (
-          <div className="space-y-6">
+          <div className="app-page-stack">
             {/* Clinical vignette */}
             {currentPreset && (
               <div className="rounded-[28px] border border-amber-300/18 bg-amber-200/8 p-5 backdrop-blur">
@@ -142,7 +142,7 @@ export function StrokeExplorer() {
             )}
 
             {/* Territory info */}
-            <div className="rounded-[28px] border border-white/10 bg-white/6 p-5 backdrop-blur">
+            <div className="app-surface">
               <div className="flex items-baseline gap-3">
                 <h2 className="text-xl font-semibold text-white">
                   {territory.fullName}
@@ -174,7 +174,7 @@ export function StrokeExplorer() {
             </div>
 
             {/* Syndrome */}
-            <div className="rounded-[28px] border border-white/10 bg-white/6 p-5 backdrop-blur">
+            <div className="app-surface">
               <h2 className="text-xl font-semibold text-white">
                 {territory.syndrome.name}
               </h2>
@@ -207,7 +207,7 @@ export function StrokeExplorer() {
 
             {/* Sparings + Mimics + Management */}
             <div className="grid gap-4 lg:grid-cols-3">
-              <div className="rounded-[28px] border border-white/10 bg-white/6 p-5 backdrop-blur">
+              <div className="app-surface">
                 <h3 className="text-lg font-semibold text-green-200">
                   What is SPARED
                 </h3>
@@ -223,7 +223,7 @@ export function StrokeExplorer() {
                 </ul>
               </div>
 
-              <div className="rounded-[28px] border border-white/10 bg-white/6 p-5 backdrop-blur">
+              <div className="app-surface">
                 <h3 className="text-lg font-semibold text-amber-200">
                   Mimics
                 </h3>
@@ -258,7 +258,7 @@ export function StrokeExplorer() {
 
             {/* Variants */}
             {territory.variants.length > 0 && (
-              <div className="rounded-[28px] border border-white/10 bg-white/6 p-5 backdrop-blur">
+              <div className="app-surface">
                 <h3 className="text-lg font-semibold text-white">Variants</h3>
                 <ul className="mt-3 space-y-2">
                   {territory.variants.map((v) => (

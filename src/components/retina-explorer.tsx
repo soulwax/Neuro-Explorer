@@ -590,8 +590,8 @@ export function RetinaExplorer() {
   }
 
   return (
-    <div className="space-y-6">
-      <section className="rounded-[28px] border border-white/10 bg-white/6 p-5 shadow-[0_16px_48px_rgba(3,10,20,0.22)] backdrop-blur">
+    <div className="app-page-stack">
+      <section className="app-surface app-surface--hero">
         <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
           <div>
             <p className="text-xs font-semibold uppercase tracking-[0.28em] text-cyan-200/80">
@@ -617,7 +617,7 @@ export function RetinaExplorer() {
 
       <ModuleHandoffBanner />
 
-      <section className="rounded-[28px] border border-white/10 bg-white/6 p-5 backdrop-blur">
+      <section className="app-surface">
         <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
           <div>
             <p className="text-xs uppercase tracking-[0.24em] text-slate-400">
@@ -730,7 +730,7 @@ export function RetinaExplorer() {
         </div>
       </section>
 
-      <section className="rounded-[28px] border border-white/10 bg-white/6 p-5 backdrop-blur">
+      <section className="app-surface">
         <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
           {retinaParamDefinitions.map((definition) => (
             <label key={definition.key} className="block">
@@ -778,7 +778,7 @@ export function RetinaExplorer() {
 
       <section className="grid gap-6 xl:grid-cols-[minmax(0,1.1fr)_320px]">
         <div className="grid gap-6 lg:grid-cols-2">
-          <div className="rounded-[28px] border border-white/10 bg-white/6 p-5 backdrop-blur">
+          <div className="app-surface">
             <p className="text-xs uppercase tracking-[0.24em] text-slate-400">
               Receptive field
             </p>
@@ -790,7 +790,7 @@ export function RetinaExplorer() {
             </div>
           </div>
 
-          <div className="rounded-[28px] border border-white/10 bg-white/6 p-5 backdrop-blur">
+          <div className="app-surface">
             <p className="text-xs uppercase tracking-[0.24em] text-slate-400">
               Stimulus
             </p>
@@ -803,7 +803,7 @@ export function RetinaExplorer() {
           </div>
         </div>
 
-        <div className="rounded-[28px] border border-white/10 bg-white/6 p-5 backdrop-blur">
+        <div className="app-surface">
           <p className="text-xs uppercase tracking-[0.24em] text-slate-400">
             Why this matters clinically
           </p>
@@ -830,7 +830,7 @@ export function RetinaExplorer() {
       </section>
 
       <section className="grid gap-6 lg:grid-cols-2">
-        <div className="rounded-[28px] border border-white/10 bg-white/6 p-5 backdrop-blur">
+        <div className="app-surface">
           <p className="text-xs uppercase tracking-[0.24em] text-slate-400">
             Size tuning
           </p>
@@ -846,7 +846,7 @@ export function RetinaExplorer() {
           </div>
         </div>
 
-        <div className="rounded-[28px] border border-white/10 bg-white/6 p-5 backdrop-blur">
+        <div className="app-surface">
           <p className="text-xs uppercase tracking-[0.24em] text-slate-400">
             Position scan
           </p>
@@ -863,7 +863,7 @@ export function RetinaExplorer() {
         </div>
       </section>
 
-      <section className="rounded-[28px] border border-white/10 bg-white/6 p-5 backdrop-blur">
+      <section className="app-surface">
         <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
           <div>
             <p className="text-xs uppercase tracking-[0.24em] text-slate-400">
@@ -1160,7 +1160,7 @@ export function RetinaExplorer() {
       </CaseShell>
 
       <section className="grid gap-6 xl:grid-cols-[minmax(0,1.05fr)_340px]">
-        <div className="rounded-[28px] border border-white/10 bg-white/6 p-5 backdrop-blur">
+        <div className="app-surface">
           <p className="text-xs uppercase tracking-[0.24em] text-slate-400">
             Localization rules
           </p>
@@ -1182,7 +1182,7 @@ export function RetinaExplorer() {
           </div>
         </div>
 
-        <div className="rounded-[28px] border border-white/10 bg-white/6 p-5 backdrop-blur">
+        <div className="app-surface">
           <p className="text-xs uppercase tracking-[0.24em] text-slate-400">
             Module handoff
           </p>

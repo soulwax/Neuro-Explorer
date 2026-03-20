@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.31.0] - 2026-03-20
+
+### Changed
+
+- Reworked the shared app shell, page spacing, and surface styling around a denser lecture-friendly frame so long vertical scroll sessions stay visually coherent instead of feeling over-padded between modules.
+- Introduced shared `app-page-stack`, `app-stage`, and `app-surface` styling primitives in the Tailwind v4 CSS layer, using an OKLCH-based slate, sage, and warm-cyan palette to tighten spacing without losing the horizontal clinical frame.
+- Updated the home page, Brain Atlas, and the common case/compare/reveal panels to use smaller vertical rhythms, more compact card spacing, and stronger alignment between major surfaces.
+
 ## [0.30.2] - 2026-03-19
 
 ### Fixed

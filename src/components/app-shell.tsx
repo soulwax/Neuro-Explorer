@@ -17,29 +17,29 @@ export function AppShell({ children }: Readonly<{ children: React.ReactNode }>) 
 	}
 
 	return (
-		<div className="min-h-screen bg-[radial-gradient(circle_at_top_left,rgba(103,211,255,0.14),transparent_25%),radial-gradient(circle_at_top_right,rgba(255,213,138,0.12),transparent_20%),linear-gradient(180deg,#0c1729_0%,#08111d_58%,#07101a_100%)] text-slate-100">
-			<div className="mx-auto grid min-h-screen max-w-370 grid-cols-1 lg:grid-cols-[272px_minmax(0,1fr)]">
-				<aside className="border-b border-white/10 bg-slate-950/35 px-5 py-6 backdrop-blur lg:border-b-0 lg:border-r">
-					<Link href="/" className="block text-lg font-semibold tracking-[0.14em] text-white">
+		<div className="relative z-10 min-h-screen text-[var(--surface-ink)]">
+			<div className="mx-auto grid min-h-screen max-w-[1520px] grid-cols-1 lg:grid-cols-[248px_minmax(0,1fr)] xl:grid-cols-[264px_minmax(0,1fr)]">
+				<aside className="border-b border-[var(--surface-border)] bg-[var(--surface-shell)] px-4 py-5 backdrop-blur-xl sm:px-5 lg:sticky lg:top-0 lg:h-screen lg:overflow-y-auto lg:border-r lg:border-b-0 lg:py-6">
+					<Link href="/" className="block text-base font-semibold tracking-[0.14em] text-white sm:text-lg">
 						Neuro Explorer
 					</Link>
-					<p className="mt-2 max-w-56 text-sm leading-6 text-slate-400">
+					<p className="mt-2 max-w-58 text-sm leading-6 text-slate-300/88">
 						Neuroscience teaching and exploration platform for the University of Amsterdam and its clinical partners. No use of LLMs.
 					</p>
-					<div className="mt-4 inline-flex rounded-full border border-cyan-300/20 bg-cyan-300/10 px-3 py-1 text-xs font-medium uppercase tracking-[0.18em] text-cyan-100">
+					<div className="mt-4 inline-flex min-h-10 items-center rounded-full border border-cyan-300/18 bg-cyan-300/10 px-3 text-[11px] font-medium uppercase tracking-[0.18em] text-cyan-100">
 						{moduleCount} modules
 					</div>
 
-					<nav className="mt-8 flex flex-wrap gap-2 lg:flex-col">
+					<nav className="mt-6 grid gap-2">
 						{navItems.map((item) => (
 							<Link
 								key={item.href}
 								href={item.href}
 								aria-current={isActive(item.href) ? 'page' : undefined}
-								className={`rounded-full border px-4 py-2 text-sm transition ${
+								className={`inline-flex min-h-12 items-center rounded-[18px] border px-4 py-3 text-sm font-medium transition ${
 									isActive(item.href)
-										? 'border-cyan-300/30 bg-cyan-300/12 text-cyan-100'
-										: 'border-white/10 bg-white/5 text-slate-300 hover:border-cyan-300/30 hover:bg-white/10 hover:text-white'
+										? 'border-cyan-300/28 bg-cyan-300/12 text-cyan-100'
+										: 'border-white/8 bg-white/4 text-slate-300 hover:border-cyan-300/24 hover:bg-white/8 hover:text-white'
 								}`}
 							>
 								{item.label}
@@ -47,27 +47,29 @@ export function AppShell({ children }: Readonly<{ children: React.ReactNode }>) 
 						))}
 					</nav>
 
-					<div className="mt-4 flex flex-wrap gap-2 lg:flex-col">
+					<div className="mt-4 grid gap-2">
 						<a
 							href="https://legal.bluesix.dev"
 							target="_blank"
 							rel="noreferrer"
-							className="rounded-full border border-white/10 bg-white/5 px-4 py-2 text-sm text-slate-300 transition hover:border-cyan-300/30 hover:bg-white/10 hover:text-white"
+							className="inline-flex min-h-12 items-center rounded-[18px] border border-white/8 bg-white/4 px-4 py-3 text-sm font-medium text-slate-300 transition hover:border-cyan-300/24 hover:bg-white/8 hover:text-white"
 						>
 							Legal
 						</a>
 					</div>
 
-					<div className="mt-8 rounded-3xl border border-cyan-300/15 bg-cyan-300/8 p-4 text-sm text-slate-300">
+					<div className="mt-6 rounded-[22px] border border-cyan-300/14 bg-cyan-300/8 p-4 text-sm text-slate-300">
 						<p className="font-medium text-cyan-100">How it is built</p>
 						<p className="mt-2 leading-6 text-slate-300/85">
-							The UI and API are implemenented using Next.JS. Deterministic labs run through shared TypeScript engines, and the AI routes
+							The UI and API are implemented in Next.js. Deterministic labs run through shared TypeScript engines, and the AI routes
 							talk to Cloudflare from the server side.
 						</p>
 					</div>
 				</aside>
 
-				<main className="px-5 py-8 sm:px-8 lg:px-10">{children}</main>
+				<main className="app-stage">
+					<div className="relative mx-auto max-w-[1180px]">{children}</div>
+				</main>
 			</div>
 		</div>
 	);
