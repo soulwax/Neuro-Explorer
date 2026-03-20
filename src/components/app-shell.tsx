@@ -18,7 +18,7 @@ export function AppShell({ children }: Readonly<{ children: React.ReactNode }>) 
 
 	return (
 		<div className="relative z-10 min-h-screen text-[var(--surface-ink)]">
-			<div className="mx-auto grid min-h-screen max-w-[1520px] grid-cols-1 lg:grid-cols-[248px_minmax(0,1fr)] xl:grid-cols-[264px_minmax(0,1fr)]">
+			<div className="mx-auto grid min-h-screen max-w-[1520px] grid-cols-1 lg:grid-cols-[248px_minmax(0,1fr)] xl:grid-cols-[248px_minmax(0,1fr)]">
 				<aside className="border-b border-[var(--surface-border)] bg-[var(--surface-shell)] px-4 py-5 backdrop-blur-xl sm:px-5 lg:sticky lg:top-0 lg:h-screen lg:overflow-y-auto lg:border-r lg:border-b-0 lg:py-6">
 					<Link href="/" className="block text-base font-semibold tracking-[0.14em] text-white sm:text-lg">
 						Neuro Explorer

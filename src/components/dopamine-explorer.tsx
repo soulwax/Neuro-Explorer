@@ -144,6 +144,29 @@ function SnapshotMetricCard({
   );
 }
 
+function AnalysisInsetCard({
+  eyebrow,
+  title,
+  summary,
+  children,
+}: Readonly<{
+  eyebrow: string;
+  title: string;
+  summary: string;
+  children: React.ReactNode;
+}>) {
+  return (
+    <div className="rounded-[22px] border border-white/10 bg-slate-950/35 p-4">
+      <p className="text-[11px] uppercase tracking-[0.18em] text-slate-400">
+        {eyebrow}
+      </p>
+      <h3 className="mt-2 text-sm font-semibold text-white">{title}</h3>
+      <div className="mt-3">{children}</div>
+      <p className="mt-3 text-sm leading-6 text-slate-300">{summary}</p>
+    </div>
+  );
+}
+
 export function DopamineExplorer() {
   const [params, setParams] = useState<DopamineParams>(defaultDopamineParams);
   const [activePresetId, setActivePresetId] = useState(DEFAULT_PRESET_ID);
@@ -207,6 +230,46 @@ export function DopamineExplorer() {
     result.params.omissionTrial > 0
       ? SMALL_PAD + (result.params.omissionTrial - 1) * learningXScale
       : null;
+  const snapshotPeakAbs = Math.max(
+    0.15,
+    ...result.snapshotMetrics.flatMap((metric) => [
+      Math.abs(metric.cuePeak),
+      Math.abs(metric.rewardPeak),
+    ]),
+  );
+  const snapshotPeakZeroY = SMALL_HEIGHT / 2;
+  const snapshotPeakScale = (SMALL_HEIGHT - 30) / (snapshotPeakAbs * 2);
+  const snapshotGroupWidth =
+    (SMALL_WIDTH - SMALL_PAD * 2) / Math.max(result.snapshotMetrics.length, 1);
+  const transferSeries = result.learningCurve.map((point) => ({
+    trial: point.trial,
+    delta: point.cueError - point.rewardError,
+  }));
+  const transferAbs = Math.max(
+    0.15,
+    ...transferSeries.map((point) => Math.abs(point.delta)),
+  );
+  const transferXScale =
+    (SMALL_WIDTH - SMALL_PAD * 2) / Math.max(transferSeries.length - 1, 1);
+  const transferZeroY = SMALL_HEIGHT / 2;
+  const transferYScale = (SMALL_HEIGHT - 26) / (transferAbs * 2);
+  const transferPath = transferSeries
+    .map((point, index) => {
+      const x = SMALL_PAD + index * transferXScale;
+      const y = transferZeroY - point.delta * transferYScale;
+      return `${index === 0 ? "M" : "L"}${x.toFixed(2)} ${y.toFixed(2)}`;
+    })
+    .join(" ");
+  const anchorSummary =
+    result.snapshotMetrics.some((metric) => !metric.rewardDelivered)
+      ? "Anchor trials let you compare the cue takeover directly against the omission trial dip instead of only reading one full trace."
+      : "Anchor trials compress the whole training history into a few checkpoints, so cue takeover is easier to compare at a glance.";
+  const transferSummary =
+    result.summary.shiftTrial === null
+      ? "The curve stays reward-leaning throughout training, so the cue never fully takes over the predictive burden."
+      : result.summary.transferIndex > 0
+        ? `The curve crosses zero around trial ${result.summary.shiftTrial} and ends cue-dominant, which is the clean signature of transfer.`
+        : `The cue begins to catch up around trial ${result.summary.shiftTrial}, but reward delivery still carries most of the positive surprise.`;
 
   const activePreset =
     dopaminePresets.find((preset) => preset.id === activePresetId) ?? null;
@@ -438,6 +501,132 @@ export function DopamineExplorer() {
               </g>
             ))}
           </svg>
+
+          <div className="mt-4 grid gap-4 lg:grid-cols-2">
+            <AnalysisInsetCard
+              eyebrow="Anchor trials"
+              title="Cue and reward peaks by checkpoint"
+              summary={anchorSummary}
+            >
+              <svg
+                viewBox={`0 0 ${SMALL_WIDTH} ${SMALL_HEIGHT}`}
+                className="w-full rounded-[20px] border border-white/8 bg-slate-950/50"
+              >
+                <line
+                  x1={SMALL_PAD}
+                  y1={snapshotPeakZeroY}
+                  x2={SMALL_WIDTH - SMALL_PAD}
+                  y2={snapshotPeakZeroY}
+                  stroke="#2b476f"
+                />
+                {result.snapshotMetrics.map((metric, index) => {
+                  const groupX = SMALL_PAD + index * snapshotGroupWidth;
+                  const cueHeight = Math.abs(metric.cuePeak) * snapshotPeakScale;
+                  const rewardHeight =
+                    Math.abs(metric.rewardPeak) * snapshotPeakScale;
+                  const cueY =
+                    metric.cuePeak >= 0
+                      ? snapshotPeakZeroY - cueHeight
+                      : snapshotPeakZeroY;
+                  const rewardY =
+                    metric.rewardPeak >= 0
+                      ? snapshotPeakZeroY - rewardHeight
+                      : snapshotPeakZeroY;
+
+                  return (
+                    <g key={`${metric.trial}-${metric.label}`}>
+                      <rect
+                        x={groupX + 8}
+                        y={cueY}
+                        width={Math.max(12, snapshotGroupWidth / 2 - 14)}
+                        height={cueHeight}
+                        rx="5"
+                        fill="#ffd58a"
+                      />
+                      <rect
+                        x={groupX + snapshotGroupWidth / 2 + 2}
+                        y={rewardY}
+                        width={Math.max(12, snapshotGroupWidth / 2 - 14)}
+                        height={rewardHeight}
+                        rx="5"
+                        fill="#ff7c76"
+                        opacity={metric.rewardDelivered ? 0.92 : 0.72}
+                      />
+                      <text
+                        x={groupX + snapshotGroupWidth / 2}
+                        y={SMALL_HEIGHT - 6}
+                        textAnchor="middle"
+                        fill="#7f95ad"
+                        fontSize="9"
+                      >
+                        T{metric.trial}
+                      </text>
+                    </g>
+                  );
+                })}
+              </svg>
+              <div className="mt-3 flex flex-wrap gap-2 text-xs uppercase tracking-[0.18em] text-slate-400">
+                <span className="rounded-full border border-white/10 bg-white/5 px-3 py-1 text-amber-100">
+                  Cue peak
+                </span>
+                <span className="rounded-full border border-white/10 bg-white/5 px-3 py-1 text-rose-100">
+                  Reward peak
+                </span>
+              </div>
+            </AnalysisInsetCard>
+
+            <AnalysisInsetCard
+              eyebrow="Transfer balance"
+              title="Cue takeover index"
+              summary={transferSummary}
+            >
+              <svg
+                viewBox={`0 0 ${SMALL_WIDTH} ${SMALL_HEIGHT}`}
+                className="w-full rounded-[20px] border border-white/8 bg-slate-950/50"
+              >
+                <line
+                  x1={SMALL_PAD}
+                  y1={10}
+                  x2={SMALL_PAD}
+                  y2={SMALL_HEIGHT - 16}
+                  stroke="#1e2d4a"
+                />
+                <line
+                  x1={SMALL_PAD}
+                  y1={transferZeroY}
+                  x2={SMALL_WIDTH - SMALL_PAD}
+                  y2={transferZeroY}
+                  stroke="#2b476f"
+                />
+                <path
+                  d={transferPath}
+                  fill="none"
+                  stroke="#67d3ff"
+                  strokeWidth="1.6"
+                />
+                {omissionX ? (
+                  <line
+                    x1={omissionX}
+                    y1={10}
+                    x2={omissionX}
+                    y2={SMALL_HEIGHT - 16}
+                    stroke="#6b7f99"
+                    strokeDasharray="4 4"
+                  />
+                ) : null}
+              </svg>
+              <div className="mt-3 flex flex-wrap gap-2 text-xs uppercase tracking-[0.18em] text-slate-400">
+                <span className="rounded-full border border-white/10 bg-white/5 px-3 py-1 text-cyan-100">
+                  Cue error minus reward error
+                </span>
+                {omissionX ? (
+                  <span className="rounded-full border border-white/10 bg-white/5 px-3 py-1">
+                    Omission marked
+                  </span>
+                ) : null}
+              </div>
+            </AnalysisInsetCard>
+          </div>
         </div>
 
         <div className="app-surface">

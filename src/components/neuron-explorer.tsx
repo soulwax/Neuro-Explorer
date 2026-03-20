@@ -16,6 +16,12 @@ const CHART_HEIGHT = 280;
 const CHART_PADDING = 36;
 const VOLTAGE_MIN = -85;
 const VOLTAGE_MAX = 50;
+const DETAIL_CHART_WIDTH = 240;
+const DETAIL_CHART_HEIGHT = 150;
+const DETAIL_CHART_PADDING_X = 28;
+const DETAIL_CHART_PADDING_TOP = 16;
+const DETAIL_CHART_PADDING_BOTTOM = 22;
+const OCCUPANCY_BIN_COUNT = 6;
 const CUSTOM_PRESET_ID = "custom";
 const DEFAULT_PRESET_ID = neuronPresets[0]!.id;
 
@@ -23,6 +29,57 @@ function chartY(voltage: number) {
   const plotHeight = CHART_HEIGHT - 20;
   const yScale = plotHeight / (VOLTAGE_MAX - VOLTAGE_MIN);
   return CHART_HEIGHT - 10 - (voltage - VOLTAGE_MIN) * yScale;
+}
+
+function scaleLinear(
+  value: number,
+  domainMin: number,
+  domainMax: number,
+  rangeMin: number,
+  rangeMax: number,
+) {
+  if (domainMax === domainMin) {
+    return (rangeMin + rangeMax) / 2;
+  }
+
+  return (
+    rangeMin +
+    ((value - domainMin) / (domainMax - domainMin)) * (rangeMax - rangeMin)
+  );
+}
+
+function detailChartX(value: number, domainMin: number, domainMax: number) {
+  return scaleLinear(
+    value,
+    domainMin,
+    domainMax,
+    DETAIL_CHART_PADDING_X,
+    DETAIL_CHART_WIDTH - DETAIL_CHART_PADDING_X,
+  );
+}
+
+function detailChartY(value: number, domainMin: number, domainMax: number) {
+  return scaleLinear(
+    value,
+    domainMin,
+    domainMax,
+    DETAIL_CHART_HEIGHT - DETAIL_CHART_PADDING_BOTTOM,
+    DETAIL_CHART_PADDING_TOP,
+  );
+}
+
+function buildLinePath<T>(
+  points: T[],
+  getX: (point: T) => number,
+  getY: (point: T) => number,
+) {
+  return points
+    .map((point, index) => {
+      const x = getX(point);
+      const y = getY(point);
+      return `${index === 0 ? "M" : "L"}${x.toFixed(1)} ${y.toFixed(1)}`;
+    })
+    .join(" ");
 }
 
 function formatSigned(value: number, digits = 2) {
@@ -52,6 +109,29 @@ function SummaryCard({
   );
 }
 
+function TraceInsetCard({
+  eyebrow,
+  title,
+  summary,
+  children,
+}: Readonly<{
+  eyebrow: string;
+  title: string;
+  summary: string;
+  children: React.ReactNode;
+}>) {
+  return (
+    <div className="rounded-[22px] border border-white/10 bg-slate-950/35 p-4">
+      <p className="text-[11px] uppercase tracking-[0.18em] text-slate-400">
+        {eyebrow}
+      </p>
+      <h3 className="mt-2 text-sm font-semibold text-white">{title}</h3>
+      <div className="mt-3">{children}</div>
+      <p className="mt-3 text-sm leading-6 text-slate-300">{summary}</p>
+    </div>
+  );
+}
+
 export function NeuronExplorer() {
   const [params, setParams] = useState<NeuronParams>(defaultNeuronParams);
   const [activePresetId, setActivePresetId] = useState(DEFAULT_PRESET_ID);
@@ -72,6 +152,82 @@ export function NeuronExplorer() {
     result.summary.meanIsiMs === null
       ? "n/a"
       : `${result.summary.meanIsiMs.toFixed(1)} ms`;
+  const returnMapSeries = result.timeSeries
+    .slice(1)
+    .map((point, index) => ({
+      currentVoltage: result.timeSeries[index]!.voltage,
+      nextVoltage: point.voltage,
+    }));
+  const returnMapPath = buildLinePath(
+    returnMapSeries,
+    (point) => detailChartX(point.currentVoltage, VOLTAGE_MIN, VOLTAGE_MAX),
+    (point) => detailChartY(point.nextVoltage, VOLTAGE_MIN, VOLTAGE_MAX),
+  );
+  const cumulativeSpikeSeries = (() => {
+    let spikeIndex = 0;
+    let spikeCount = 0;
+
+    return result.timeSeries.map((point) => {
+      while (
+        spikeIndex < result.spikeTimes.length &&
+        result.spikeTimes[spikeIndex]! <= point.t + Number.EPSILON
+      ) {
+        spikeCount += 1;
+        spikeIndex += 1;
+      }
+
+      return { t: point.t, spikeCount };
+    });
+  })();
+  const cumulativeSpikeMax = Math.max(1, result.summary.spikeCount);
+  const cumulativeSpikePath = buildLinePath(
+    cumulativeSpikeSeries,
+    (point) => detailChartX(point.t, 0, result.params.duration),
+    (point) => detailChartY(point.spikeCount, 0, cumulativeSpikeMax),
+  );
+  const occupancyBins = Array.from({ length: OCCUPANCY_BIN_COUNT }, (_, index) => {
+    const start =
+      VOLTAGE_MIN +
+      (index * (VOLTAGE_MAX - VOLTAGE_MIN)) / OCCUPANCY_BIN_COUNT;
+    const end =
+      VOLTAGE_MIN +
+      ((index + 1) * (VOLTAGE_MAX - VOLTAGE_MIN)) / OCCUPANCY_BIN_COUNT;
+    const count = result.timeSeries.filter((point) => {
+      if (index === OCCUPANCY_BIN_COUNT - 1) {
+        return point.voltage >= start && point.voltage <= end;
+      }
+
+      return point.voltage >= start && point.voltage < end;
+    }).length;
+
+    return {
+      start,
+      end,
+      count,
+      label: `${Math.round(start)} to ${Math.round(end)} mV`,
+    };
+  });
+  const occupancyMax = Math.max(
+    1,
+    ...occupancyBins.map((bin) => bin.count),
+  );
+  const dominantOccupancy =
+    occupancyBins.reduce((best, bin) =>
+      bin.count > best.count ? bin : best,
+    ) ?? occupancyBins[0]!;
+  const returnMapSummary =
+    result.summary.spikeCount === 0
+      ? "The trace hugs the identity line below threshold, so the membrane is integrating without ever entering a reset loop."
+      : result.summary.refractoryLimited
+        ? "The low reset loop is prominent, which is exactly what you expect when recovery time becomes the main output bottleneck."
+        : "The loop away from the identity line turns threshold crossing and reset into one compact picture of each firing cycle.";
+  const cumulativeOutputSummary =
+    result.summary.spikeCount === 0
+      ? "The flat staircase confirms that this parameter set never recruits output, even though the membrane still ramps upward."
+      : result.summary.spikeCount === 1
+        ? "A single jump marks first-spike recruitment without enough drive to sustain a repeating train."
+        : `Plateaus between steps average ${meanIsiLabel}, so you can see how quickly each spike is recruited into the next one.`;
+  const occupancySummary = `Most sampled points live between ${dominantOccupancy.label}, which is the band that actually defines the phenotype more than the brief spike apex does.`;
   const activePreset =
     neuronPresets.find((preset) => preset.id === activePresetId) ?? null;
   const handoffModules = ["action-potential", "plasticity", "ask"]
@@ -221,7 +377,7 @@ export function NeuronExplorer() {
         </div>
       </section>
 
-      <section className="grid gap-6 xl:grid-cols-[minmax(0,1.1fr)_340px]">
+      <section className="grid gap-6 xl:grid-cols-[minmax(0,1.16fr)_340px]">
         <div className="app-surface">
           <div className="flex items-center justify-between gap-4">
             <div>
@@ -327,6 +483,206 @@ export function NeuronExplorer() {
               Membrane voltage (mV)
             </text>
           </svg>
+
+          <div className="mt-4 grid gap-4 lg:grid-cols-2">
+            <TraceInsetCard
+              eyebrow="State map"
+              title="Return map"
+              summary={returnMapSummary}
+            >
+              <svg
+                viewBox={`0 0 ${DETAIL_CHART_WIDTH} ${DETAIL_CHART_HEIGHT}`}
+                className="w-full rounded-[18px] border border-white/8 bg-slate-950/50"
+              >
+                <line
+                  x1={detailChartX(VOLTAGE_MIN, VOLTAGE_MIN, VOLTAGE_MAX)}
+                  y1={detailChartY(VOLTAGE_MIN, VOLTAGE_MIN, VOLTAGE_MAX)}
+                  x2={detailChartX(VOLTAGE_MAX, VOLTAGE_MIN, VOLTAGE_MAX)}
+                  y2={detailChartY(VOLTAGE_MAX, VOLTAGE_MIN, VOLTAGE_MAX)}
+                  stroke="#1e2d4a"
+                  strokeDasharray="4 4"
+                />
+                <line
+                  x1={detailChartX(result.params.threshold, VOLTAGE_MIN, VOLTAGE_MAX)}
+                  y1={DETAIL_CHART_PADDING_TOP}
+                  x2={detailChartX(result.params.threshold, VOLTAGE_MIN, VOLTAGE_MAX)}
+                  y2={DETAIL_CHART_HEIGHT - DETAIL_CHART_PADDING_BOTTOM}
+                  stroke="#ff7c76"
+                  strokeDasharray="4 4"
+                  opacity="0.6"
+                />
+                <line
+                  x1={DETAIL_CHART_PADDING_X}
+                  y1={detailChartY(result.params.threshold, VOLTAGE_MIN, VOLTAGE_MAX)}
+                  x2={DETAIL_CHART_WIDTH - DETAIL_CHART_PADDING_X}
+                  y2={detailChartY(result.params.threshold, VOLTAGE_MIN, VOLTAGE_MAX)}
+                  stroke="#ff7c76"
+                  strokeDasharray="4 4"
+                  opacity="0.35"
+                />
+                <path
+                  d={returnMapPath}
+                  fill="none"
+                  stroke="#67d3ff"
+                  strokeWidth="1.5"
+                />
+                <text
+                  x={DETAIL_CHART_WIDTH / 2}
+                  y={DETAIL_CHART_HEIGHT - 4}
+                  textAnchor="middle"
+                  fill="#7f95ad"
+                  fontSize="10"
+                >
+                  Current V (mV)
+                </text>
+                <text
+                  x={12}
+                  y={DETAIL_CHART_HEIGHT / 2}
+                  transform={`rotate(-90 12 ${DETAIL_CHART_HEIGHT / 2})`}
+                  fill="#7f95ad"
+                  fontSize="10"
+                >
+                  Next V (mV)
+                </text>
+              </svg>
+            </TraceInsetCard>
+
+            <TraceInsetCard
+              eyebrow="Output timing"
+              title="Cumulative spikes"
+              summary={cumulativeOutputSummary}
+            >
+              <svg
+                viewBox={`0 0 ${DETAIL_CHART_WIDTH} ${DETAIL_CHART_HEIGHT}`}
+                className="w-full rounded-[18px] border border-white/8 bg-slate-950/50"
+              >
+                <line
+                  x1={DETAIL_CHART_PADDING_X}
+                  y1={DETAIL_CHART_HEIGHT - DETAIL_CHART_PADDING_BOTTOM}
+                  x2={DETAIL_CHART_WIDTH - DETAIL_CHART_PADDING_X}
+                  y2={DETAIL_CHART_HEIGHT - DETAIL_CHART_PADDING_BOTTOM}
+                  stroke="#1e2d4a"
+                />
+                <line
+                  x1={DETAIL_CHART_PADDING_X}
+                  y1={DETAIL_CHART_PADDING_TOP}
+                  x2={DETAIL_CHART_PADDING_X}
+                  y2={DETAIL_CHART_HEIGHT - DETAIL_CHART_PADDING_BOTTOM}
+                  stroke="#1e2d4a"
+                />
+                <path
+                  d={cumulativeSpikePath}
+                  fill="none"
+                  stroke="#44d39a"
+                  strokeWidth="1.5"
+                  strokeLinejoin="round"
+                />
+                {result.spikeTimes.map((spikeTime, index) => (
+                  <circle
+                    key={spikeTime}
+                    cx={detailChartX(spikeTime, 0, result.params.duration)}
+                    cy={detailChartY(index + 1, 0, cumulativeSpikeMax)}
+                    r="3"
+                    fill="#44d39a"
+                  />
+                ))}
+                <text
+                  x={DETAIL_CHART_WIDTH / 2}
+                  y={DETAIL_CHART_HEIGHT - 4}
+                  textAnchor="middle"
+                  fill="#7f95ad"
+                  fontSize="10"
+                >
+                  Time (ms)
+                </text>
+                <text
+                  x={12}
+                  y={DETAIL_CHART_HEIGHT / 2}
+                  transform={`rotate(-90 12 ${DETAIL_CHART_HEIGHT / 2})`}
+                  fill="#7f95ad"
+                  fontSize="10"
+                >
+                  Spike count
+                </text>
+              </svg>
+            </TraceInsetCard>
+          </div>
+
+          <div className="mt-4">
+            <TraceInsetCard
+              eyebrow="Band occupancy"
+              title="Where the membrane spends its time"
+              summary={occupancySummary}
+            >
+              <svg
+                viewBox={`0 0 ${DETAIL_CHART_WIDTH} ${DETAIL_CHART_HEIGHT}`}
+                className="w-full rounded-[18px] border border-white/8 bg-slate-950/50"
+              >
+                <line
+                  x1={DETAIL_CHART_PADDING_X}
+                  y1={DETAIL_CHART_HEIGHT - DETAIL_CHART_PADDING_BOTTOM}
+                  x2={DETAIL_CHART_WIDTH - DETAIL_CHART_PADDING_X}
+                  y2={DETAIL_CHART_HEIGHT - DETAIL_CHART_PADDING_BOTTOM}
+                  stroke="#1e2d4a"
+                />
+                {occupancyBins.map((bin, index) => {
+                  const barWidth =
+                    (DETAIL_CHART_WIDTH - DETAIL_CHART_PADDING_X * 2) /
+                    OCCUPANCY_BIN_COUNT -
+                    6;
+                  const x =
+                    DETAIL_CHART_PADDING_X +
+                    index *
+                      ((DETAIL_CHART_WIDTH - DETAIL_CHART_PADDING_X * 2) /
+                        OCCUPANCY_BIN_COUNT) +
+                    3;
+                  const y = detailChartY(bin.count, 0, occupancyMax);
+                  const height =
+                    DETAIL_CHART_HEIGHT - DETAIL_CHART_PADDING_BOTTOM - y;
+                  const midVoltage = (bin.start + bin.end) / 2;
+                  const fill =
+                    midVoltage >= result.params.threshold
+                      ? "rgba(255,124,118,0.78)"
+                      : midVoltage >= result.params.threshold - 10
+                        ? "rgba(255,213,138,0.78)"
+                        : midVoltage <= result.params.resetPotential + 4
+                          ? "rgba(68,211,154,0.72)"
+                          : "rgba(103,211,255,0.76)";
+
+                  return (
+                    <g key={bin.label}>
+                      <rect
+                        x={x}
+                        y={y}
+                        width={barWidth}
+                        height={height}
+                        rx="8"
+                        fill={fill}
+                      />
+                      <text
+                        x={x + barWidth / 2}
+                        y={DETAIL_CHART_HEIGHT - 6}
+                        textAnchor="middle"
+                        fill="#7f95ad"
+                        fontSize="9"
+                      >
+                        {Math.round(bin.start)}
+                      </text>
+                    </g>
+                  );
+                })}
+                <text
+                  x={DETAIL_CHART_WIDTH / 2}
+                  y={DETAIL_CHART_PADDING_TOP - 2}
+                  textAnchor="middle"
+                  fill="#7f95ad"
+                  fontSize="10"
+                >
+                  Sample count by voltage band
+                </text>
+              </svg>
+            </TraceInsetCard>
+          </div>
         </div>
 
         <div className="app-surface">

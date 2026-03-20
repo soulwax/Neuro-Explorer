@@ -73,16 +73,16 @@ export function CaseQuestionPanel({
           Prompt
         </p>
         <p className="mt-2 text-sm leading-6 text-slate-200">{prompt}</p>
-        <div className="mt-3 flex flex-wrap gap-2">
+        <ul className="mt-3 flex flex-wrap gap-2" aria-label="Hints">
           {hints.map((hint) => (
-            <span
+            <li
               key={hint}
               className="inline-flex min-h-9 items-center rounded-full border border-white/10 bg-white/5 px-3 text-xs text-slate-300"
             >
               {hint}
-            </span>
+            </li>
           ))}
-        </div>
+        </ul>
       </div>
 
       <div className="mt-3 grid gap-3 lg:grid-cols-2">

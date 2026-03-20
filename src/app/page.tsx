@@ -4,7 +4,7 @@ import { moduleCards } from '~/lib/site';
 export default function HomePage() {
 	return (
 		<div className="app-page-stack">
-			<section className="app-surface app-surface--hero rounded-[30px] sm:p-7">
+			<section className="app-surface app-surface--hero rounded-[30px]">
 				<p className="text-xs font-semibold uppercase tracking-[0.3em] text-cyan-200/80">Next.js Platform</p>
 				<h1 className="mt-3 max-w-4xl text-4xl font-semibold tracking-tight text-white sm:text-[3.35rem]">Neuro Explorer</h1>
 				<p className="mt-3 max-w-3xl text-sm leading-6 text-slate-300 sm:text-base">

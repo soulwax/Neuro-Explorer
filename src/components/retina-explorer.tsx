@@ -35,10 +35,10 @@ const CURVE_WIDTH = 360;
 const CURVE_HEIGHT = 210;
 const CURVE_PADDING = 26;
 const FIELD_WIDTH = 420;
-const FIELD_HEIGHT = 220;
+const FIELD_HEIGHT = 248;
 const EYE_RADIUS = 76;
-const LEFT_EYE = { x: 118, y: 108 };
-const RIGHT_EYE = { x: 302, y: 108 };
+const LEFT_EYE = { x: 118, y: 100 };
+const RIGHT_EYE = { x: 302, y: 100 };
 const DEFAULT_PHYSIOLOGY_PRESET_ID = "balanced-on-center";
 const DEFAULT_CLINICAL_PRESET_ID = retinaClinicalPresets[0]!.id;
 

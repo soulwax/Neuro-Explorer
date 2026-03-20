@@ -1,5 +1,16 @@
 # Changelog
 
+## [0.32.0] - 2026-03-20
+
+### Added
+
+- Expanded the `/neuron` membrane-trace panel into a fuller analysis surface with a return map, cumulative spike chart, and voltage-band occupancy chart so the main trace no longer leaves a large empty block beside the phenotype cards.
+- Expanded the `/dopamine` trial-trace panel with anchor-trial peak bars and a cue-takeover index chart so the prediction-error section uses its vertical space to explain transfer rather than showing a single isolated plot.
+
+### Fixed
+
+- Increased the retinal clinical field-map canvas and shifted the eye diagrams upward so the eye labels and syndrome labels stay fully visible inside the enclosing card.
+
 ## [0.31.0] - 2026-03-20
 
 ### Changed

@@ -1,25 +1,25 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { CompareShell } from "~/components/compare-shell";
-import { CaseQuestionPanel } from "~/components/case-question-panel";
 import { CaseProgressPanel } from "~/components/case-progress-panel";
+import { CaseQuestionPanel } from "~/components/case-question-panel";
 import { CaseShell } from "~/components/case-shell";
+import { CompareShell } from "~/components/compare-shell";
 import { ModuleHandoffBanner } from "~/components/module-handoff-banner";
 import { RevealPanel } from "~/components/reveal-panel";
 import { brainAtlasCases } from "~/core/cases/brain-atlas";
+import {
+	atlasCategories,
+	atlasChapters,
+	atlasNetworkNotes,
+	atlasOverlays,
+	atlasRegions,
+	getAtlasOverlay,
+	type AtlasChapterId,
+	type AtlasRegion,
+} from "~/lib/brain-atlas";
 import { buildCaseHandoffLinks } from "~/lib/case-handoff";
 import { useCaseProgress } from "~/lib/case-progress";
-import {
-  atlasCategories,
-  atlasChapters,
-  atlasNetworkNotes,
-  atlasOverlays,
-  atlasRegions,
-  getAtlasOverlay,
-  type AtlasChapterId,
-  type AtlasRegion,
-} from "~/lib/brain-atlas";
 import { getCurriculumModule } from "~/lib/curriculum";
 
 const BRAIN_OUTLINE =
@@ -276,7 +276,7 @@ export function BrainAtlasExplorer() {
           />
 
           {brainAtlasCurriculum ? (
-            <div className="grid gap-3 lg:grid-cols-[220px_minmax(0,1fr)]">
+            <div className="grid gap-3 lg:grid-cols-[minmax(0,1.05fr)_minmax(300px,0.95fr)]">
               <div className="rounded-[18px] border border-white/10 bg-slate-950/45 p-4">
                 <p className="text-xs uppercase tracking-[0.18em] text-slate-400">
                   Training stage
