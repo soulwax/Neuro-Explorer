@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.35.0] - 2026-03-21
+
+### Added
+
+- Added a new `/vertigo` module with dense bedside teaching for vestibular neuritis, posterior circulation stroke, posterior canal BPPV, vestibular migraine, and Meniere patterns, including timing ladders, HINTS framing, provocation maps, and vestibular pathway localization.
+- Added a Vertigo tutor prompt kit so `/ask` can hand off directly into acute vestibular syndrome and peripheral-versus-central localization reasoning.
+
 ## [0.34.0] - 2026-03-21
 
 ### Added

@@ -23,6 +23,7 @@ export const navItems = [
   { href: "/action-potential", label: "Action Potential" },
   { href: "/motor-pathway", label: "Motor Pathway" },
   { href: "/gait", label: "Gait" },
+  { href: "/vertigo", label: "Vertigo" },
   { href: "/cranial-nerves", label: "Cranial Nerves" },
   { href: "/stroke", label: "Stroke" },
   { href: "/dermatome", label: "Dermatomes" },
@@ -158,6 +159,14 @@ export const moduleCards: ModuleCard[] = [
       "Compare parkinsonian, cerebellar, sensory, hemiparetic, and frontal gait phenotypes using footprint geometry, turning burden, and bedside discriminators.",
     badge: "Bedside Exam",
     href: "/gait",
+  },
+  {
+    slug: "vertigo",
+    title: "Vertigo & Vestibular Localizer",
+    description:
+      "Separate vestibular neuritis, posterior-fossa stroke, BPPV, vestibular migraine, and Meniere patterns using HINTS scope, timing ladders, provocation maps, and vestibular pathway localization.",
+    badge: "Vestibular",
+    href: "/vertigo",
   },
   {
     slug: "cranial-nerves",

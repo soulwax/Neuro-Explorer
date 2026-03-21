@@ -350,6 +350,28 @@ export const curriculumModules: CurriculumModule[] = [
     ],
   },
   {
+    slug: "vertigo",
+    title: "Vertigo & Vestibular Localizer",
+    trainingStage: "Bedside vestibular localization",
+    learningGoals: [
+      "Separate continuous acute vestibular syndrome from brief triggered positional vertigo and recurrent episodic vestibular syndromes",
+      "Use timing, triggers, hearing clues, gait burden, and eye-movement findings to rank peripheral versus central localization",
+      "Know when HINTS is appropriate and when Dix-Hallpike or cochlear history is the higher-yield discriminator",
+    ],
+    advancedObjectives: [
+      "Explain why a normal head impulse in acute continuous vertigo can be more dangerous than an abnormal one.",
+      "Use nystagmus direction, skew deviation, truncal ataxia, and hearing involvement to separate labyrinth, vestibular-nerve, brainstem-cerebellar, and multisensory network syndromes.",
+      "Teach students to localize vertigo from time course and trigger structure before they anchor on disease labels.",
+    ],
+    prerequisites: ["Cranial Nerves module", "Stroke module"],
+    linkedModules: ["cranial-nerves", "stroke", "gait", "brain-atlas", "ask"],
+    commonMisconceptions: [
+      "All vertigo is either BPPV or anxiety.",
+      "HINTS should be applied to every dizzy patient regardless of timing pattern.",
+      "Hearing symptoms are secondary details rather than major localization clues.",
+    ],
+  },
+  {
     slug: "sleep",
     title: "Sleep Architecture",
     trainingStage: "Clinical sleep medicine fundamentals",

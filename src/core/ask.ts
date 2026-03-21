@@ -739,6 +739,20 @@ export const askPromptKits: AskPromptKit[] = [
       "Use this after Gait when you want the tutor to reason from pattern grammar into basal ganglia, frontal, sensory, cerebellar, and corticospinal circuits.",
   },
   {
+    id: "vertigo-hints",
+    moduleSlug: "vertigo",
+    moduleTitle: "Vertigo",
+    title: "Timing and HINTS in acute vertigo",
+    topic: "lesion-localization",
+    topicLabel: "Lesion Localization",
+    level: "consult-rounds",
+    levelLabel: "Consult rounds",
+    question:
+      "A patient has abrupt continuous vertigo, vomiting, severe gait unsteadiness, direction-changing gaze-evoked nystagmus, a normal head impulse test, and skew deviation. Build the syndrome, rank central versus peripheral localization, explain why vestibular neuritis is weaker, and name the one finding that would most change your mind.",
+    whyUse:
+      "Use this after Vertigo when you want the tutor to reason from timing, HINTS scope, and posterior-fossa red flags rather than collapsing every dizzy patient into BPPV or neuritis.",
+  },
+  {
     id: "ecg-neurocritical",
     moduleSlug: "ecg",
     moduleTitle: "ECG",
