@@ -115,6 +115,28 @@ export const curriculumModules: CurriculumModule[] = [
     ],
   },
   {
+    slug: "aphasia",
+    title: "Aphasia Syndrome Localizer",
+    trainingStage: "Consult-level dominant-hemisphere language localization",
+    learningGoals: [
+      "Separate fluent from nonfluent aphasia at the bedside",
+      "Use comprehension, repetition, naming, reading, and writing to classify aphasia syndromes",
+      "Map aphasia patterns onto dominant perisylvian, disconnection, and watershed language networks",
+    ],
+    advancedObjectives: [
+      "Explain why repetition is the quickest bedside pivot between core perisylvian and transcortical aphasia patterns.",
+      "Separate aphasia from dysarthria, delirium, and neglect-driven communication failure by checking meaning, grammar, and task dissociations.",
+      "Use language profile splits to localize inferior frontal, posterior temporal, arcuate, and watershed lesions before naming etiology.",
+    ],
+    prerequisites: ["Brain Atlas module", "Stroke module"],
+    linkedModules: ["brain-atlas", "stroke", "neglect", "ask"],
+    commonMisconceptions: [
+      "Fluent speech means preserved comprehension.",
+      "Nonfluent speech always means dysarthria rather than aphasia.",
+      "Naming failure alone is enough to classify the aphasia syndrome.",
+    ],
+  },
+  {
     slug: "plasticity",
     title: "Synaptic Plasticity",
     trainingStage: "Mechanistic learning theory",

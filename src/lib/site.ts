@@ -13,6 +13,7 @@ export const navItems = [
   { href: "/retina", label: "Retina" },
   { href: "/visual-field", label: "Visual Field" },
   { href: "/neglect", label: "Neglect" },
+  { href: "/aphasia", label: "Aphasia" },
   { href: "/grid-cell", label: "Grid Cell" },
   { href: "/ecg", label: "ECG" },
   { href: "/eeg", label: "EEG" },
@@ -69,6 +70,14 @@ export const moduleCards: ModuleCard[] = [
       "Separate viewer-centered neglect, extinction, object-centered truncation, and motor-intentional bias with an attention map, bedside-task readouts, and field-cut differentials.",
     badge: "Attention",
     href: "/neglect",
+  },
+  {
+    slug: "aphasia",
+    title: "Aphasia Syndrome Localizer",
+    description:
+      "Compare Broca, Wernicke, conduction, global, and transcortical aphasias through bedside language-profile splits, dominant-hemisphere network mapping, and task-level dissociations.",
+    badge: "Language",
+    href: "/aphasia",
   },
   {
     slug: "plasticity",

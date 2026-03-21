@@ -711,6 +711,20 @@ export const askPromptKits: AskPromptKit[] = [
       "Use this after Neglect when you want the tutor to separate attention-network failure from primary visual loss or sensory deficits.",
   },
   {
+    id: "aphasia-syndrome",
+    moduleSlug: "aphasia",
+    moduleTitle: "Aphasia",
+    title: "Language profile to dominant-hemisphere localization",
+    topic: "cognitive-neurology",
+    topicLabel: "Cognitive Neurology",
+    level: "consult-rounds",
+    levelLabel: "Consult rounds",
+    question:
+      "A patient has effortful nonfluent speech, relatively preserved comprehension, very poor repetition, and impaired naming after a dominant-hemisphere stroke. Build the syndrome, rank the localization hierarchy, explain why dysarthria alone is weaker, and name the one finding that would most move you toward a transcortical motor pattern instead.",
+    whyUse:
+      "Use this after Aphasia when you want the tutor to reason from bedside language dissociations into dominant frontal, posterior temporal, arcuate, or watershed language networks.",
+  },
+  {
     id: "gait-grammar",
     moduleSlug: "gait",
     moduleTitle: "Gait",

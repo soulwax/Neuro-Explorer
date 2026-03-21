@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.34.0] - 2026-03-21
+
+### Added
+
+- Added a new `/aphasia` module with dense bedside language-profile teaching for Broca, Wernicke, conduction, global, transcortical motor, and transcortical sensory aphasia, including dominant-hemisphere network mapping, repetition splits, and task-level dissociations.
+- Added an Aphasia tutor prompt kit so `/ask` can hand off directly into dominant-hemisphere language-localization reasoning.
+
 ## [0.33.0] - 2026-03-21
 
 ### Added
