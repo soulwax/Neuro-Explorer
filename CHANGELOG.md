@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.32.1] - 2026-03-21
+
+### Fixed
+
+- Reworked the `/ecg` lead-constellation replay so each lead axis now shows a live instantaneous projection marker, highlights the dominant responder, and lists the strongest leads beneath the SVG instead of reading like a mostly static vector backdrop.
+
 ## [0.32.0] - 2026-03-20
 
 ### Added

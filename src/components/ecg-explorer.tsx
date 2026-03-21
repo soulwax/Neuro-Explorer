@@ -182,6 +182,13 @@ function project3D(
   };
 }
 
+function projectLeadAxis(
+  vector: { x: number; y: number; z: number },
+  axis: { x: number; y: number; z: number },
+) {
+  return vector.x * axis.x + vector.y * axis.y + vector.z * axis.z;
+}
+
 function lerpColor(
   from: readonly number[],
   to: readonly number[],
@@ -1485,6 +1492,20 @@ export function ECGExplorer() {
   const activeFrame = result?.activation.frames[frameIndex] ?? null;
   const activationFrames = result?.activation.frames ?? [];
   const leadAxes = result?.activation.leadAxes ?? [];
+  const leadProjectionCeiling = Math.max(
+    0.24,
+    ...activationFrames.flatMap((frame) =>
+      leadAxes.map((axis) => Math.abs(projectLeadAxis(frame.vector, axis))),
+    ),
+  );
+  const activeLeadResponses = activeFrame
+    ? leadAxes
+        .map((axis) => ({
+          ...axis,
+          projection: projectLeadAxis(activeFrame.vector, axis),
+        }))
+        .sort((left, right) => Math.abs(right.projection) - Math.abs(left.projection))
+    : [];
   const paperDuration = getVisibleDuration(
     result?.params.duration ?? params.duration,
     display.paperSpeed,
@@ -2272,31 +2293,75 @@ export function ECGExplorer() {
                       })
                       .join(" ")}
                     fill="none"
-                    stroke="rgba(0,230,118,0.34)"
+                    stroke="rgba(103,211,255,0.24)"
                     strokeWidth="1.4"
                   />
                 ) : null}
                 {leadAxes.map((axis) => {
                   const point = project3D(axis, 182, 146, 86);
+                  const mirrorPoint = project3D(
+                    { x: -axis.x, y: -axis.y, z: -axis.z },
+                    182,
+                    146,
+                    86,
+                  );
+                  const axisDx = point.x - 182;
+                  const axisDy = point.y - 146;
+                  const axisLength = Math.hypot(axisDx, axisDy) || 1;
+                  const projection = activeFrame
+                    ? projectLeadAxis(activeFrame.vector, axis)
+                    : 0;
+                  const normalizedProjection = clamp(
+                    projection / leadProjectionCeiling,
+                    -1,
+                    1,
+                  );
+                  const markerX = 182 + (axisDx / axisLength) * normalizedProjection * 74;
+                  const markerY = 146 + (axisDy / axisLength) * normalizedProjection * 74;
+                  const isDominant = activeFrame?.dominantLead === axis.name;
                   const stroke =
                     axis.group === "limb" ? "#4fc3f7" : "#ff8a65";
                   return (
                     <g key={axis.name}>
                       <line
-                        x1="182"
-                        y1="146"
+                        x1={mirrorPoint.x}
+                        y1={mirrorPoint.y}
                         x2={point.x}
                         y2={point.y}
                         stroke={stroke}
                         strokeWidth="1.2"
-                        opacity="0.75"
+                        strokeDasharray="4 5"
+                        opacity="0.22"
                       />
-                      <circle cx={point.x} cy={point.y} r="4" fill={stroke} />
+                      {activeFrame ? (
+                        <line
+                          x1="182"
+                          y1="146"
+                          x2={markerX}
+                          y2={markerY}
+                          stroke={isDominant ? "#ffd166" : stroke}
+                          strokeWidth={isDominant ? "3.2" : "2.2"}
+                          strokeLinecap="round"
+                          opacity={isDominant ? "0.96" : "0.72"}
+                        />
+                      ) : null}
+                      <circle cx={point.x} cy={point.y} r="4" fill={stroke} opacity="0.88" />
+                      {activeFrame ? (
+                        <circle
+                          cx={markerX}
+                          cy={markerY}
+                          r={isDominant ? "5.5" : "4.4"}
+                          fill={isDominant ? "#ffd166" : stroke}
+                          stroke="#0d1424"
+                          strokeWidth="1.2"
+                        />
+                      ) : null}
                       <text
                         x={point.x + 7}
                         y={point.y - 5}
-                        fill="#c8d6e5"
+                        fill={isDominant ? "#fff2c4" : "#c8d6e5"}
                         fontSize="10"
+                        fontWeight={isDominant ? "700" : "500"}
                       >
                         {axis.name}
                       </text>
@@ -2331,6 +2396,9 @@ export function ECGExplorer() {
                       Chest leads: orange
                     </text>
                     <text x="24" y="60" fill="#6b7f99" fontSize="11">
+                      Filled beads = instantaneous lead projection
+                    </text>
+                    <text x="24" y="76" fill="#6b7f99" fontSize="11">
                       Projection on {activeFrame.dominantLead}:{" "}
                       {activeFrame.dominantProjection.toFixed(3)}
                     </text>
@@ -2349,6 +2417,38 @@ export function ECGExplorer() {
               </text>
             )}
           </svg>
+          {activeLeadResponses.length ? (
+            <div className="mt-4 grid gap-3 sm:grid-cols-3">
+              {activeLeadResponses.slice(0, 3).map((axis, index) => {
+                const isDominant = activeFrame?.dominantLead === axis.name;
+                const tone = axis.group === "limb" ? "cyan" : "orange";
+                return (
+                  <div
+                    key={axis.name}
+                    className="rounded-[18px] border border-white/8 bg-slate-950/35 px-4 py-3"
+                  >
+                    <p className="text-[10px] uppercase tracking-[0.24em] text-slate-500">
+                      {index === 0 ? "strongest lead" : `responder ${index + 1}`}
+                    </p>
+                    <div className="mt-2 flex items-center justify-between gap-3">
+                      <div>
+                        <p className="text-base font-semibold text-white">
+                          {axis.name}
+                        </p>
+                        <p className="text-xs text-slate-400">
+                          {tone} axis {isDominant ? "owning" : "tracking"} the beat
+                        </p>
+                      </div>
+                      <p className="text-sm font-semibold text-slate-200">
+                        {axis.projection >= 0 ? "+" : ""}
+                        {axis.projection.toFixed(2)}
+                      </p>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          ) : null}
         </div>
       </section>
 
