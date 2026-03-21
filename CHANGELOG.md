@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.32.2] - 2026-03-21
+
+### Added
+
+- Expanded the `/plasticity` STDP and weight-evolution cards with companion teaching visuals for mirrored timing comparison, delay sensitivity, realized pair-by-pair updates, and trajectory checkpoints so those panels explain the learning rule instead of leaving large empty blocks under the main charts.
+
 ## [0.32.1] - 2026-03-21
 
 ### Fixed

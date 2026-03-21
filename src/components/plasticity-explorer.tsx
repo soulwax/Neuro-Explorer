@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useMemo, useState, type ReactNode } from "react";
 import { ModuleHandoffBanner } from "~/components/module-handoff-banner";
 import { getCurriculumModule } from "~/lib/curriculum";
 import {
@@ -8,6 +8,7 @@ import {
   plasticityParamDefinitions,
   plasticityPresets,
   simulatePlasticity,
+  stdpWindow,
   type PlasticityParams,
 } from "~/lib/plasticity";
 
@@ -17,6 +18,10 @@ const CURVE_PAD = 40;
 const WEIGHT_WIDTH = 420;
 const WEIGHT_HEIGHT = 250;
 const WEIGHT_PAD = 40;
+const DETAIL_WIDTH = 198;
+const DETAIL_HEIGHT = 126;
+const DETAIL_PAD_X = 16;
+const DETAIL_PAD_Y = 16;
 const CUSTOM_PRESET_ID = "custom";
 const DEFAULT_PRESET_ID = plasticityPresets[0]!.id;
 
@@ -45,6 +50,42 @@ function SummaryCard({
       <p className="mt-3 text-sm leading-6 text-slate-300">{detail}</p>
     </div>
   );
+}
+
+function InsightInset({
+  eyebrow,
+  title,
+  detail,
+  children,
+}: Readonly<{
+  eyebrow: string;
+  title: string;
+  detail: string;
+  children: ReactNode;
+}>) {
+  return (
+    <div className="rounded-[22px] border border-white/8 bg-slate-950/35 p-4">
+      <p className="text-[10px] uppercase tracking-[0.22em] text-slate-500">
+        {eyebrow}
+      </p>
+      <h3 className="mt-2 text-sm font-semibold text-white">{title}</h3>
+      <div className="mt-3">{children}</div>
+      <p className="mt-3 text-xs leading-6 text-slate-400">{detail}</p>
+    </div>
+  );
+}
+
+function buildLinePath<T>(
+  points: readonly T[],
+  getX: (point: T) => number,
+  getY: (point: T) => number,
+) {
+  return points
+    .map(
+      (point, index) =>
+        `${index === 0 ? "M" : "L"}${getX(point).toFixed(1)} ${getY(point).toFixed(1)}`,
+    )
+    .join(" ");
 }
 
 export function PlasticityExplorer() {
@@ -92,6 +133,50 @@ export function PlasticityExplorer() {
   const highlightedX =
     CURVE_PAD + ((highlightedPoint?.dt ?? 0) + 50) * curveXScale;
   const highlightedY = curveMidY - (highlightedPoint?.dw ?? 0) * curveYScale;
+  const mirroredPoint =
+    result.stdpCurve.find((point) => point.dt === -(highlightedPoint?.dt ?? 0)) ??
+    highlightedPoint;
+  const selectedTimingPair = [
+    {
+      label:
+        (highlightedPoint?.dt ?? 0) > 0
+          ? `+${highlightedPoint?.dt ?? 0} ms`
+          : `${highlightedPoint?.dt ?? 0} ms`,
+      tone: (highlightedPoint?.dw ?? 0) >= 0 ? "#44d39a" : "#ff7c76",
+      value: highlightedPoint?.dw ?? 0,
+    },
+    {
+      label:
+        (mirroredPoint?.dt ?? 0) > 0
+          ? `+${mirroredPoint?.dt ?? 0} ms`
+          : `${mirroredPoint?.dt ?? 0} ms`,
+      tone: (mirroredPoint?.dw ?? 0) >= 0 ? "#44d39a" : "#ff7c76",
+      value: mirroredPoint?.dw ?? 0,
+    },
+  ];
+  const selectedTimingMax = Math.max(
+    0.001,
+    ...selectedTimingPair.map((entry) => Math.abs(entry.value)),
+  );
+  const latencySamples = [5, 10, 20, 30, 40].map((latency) => ({
+    latency,
+    causal: Math.max(0, stdpWindow(latency, result.params)),
+    antiCausal: Math.abs(Math.min(0, stdpWindow(-latency, result.params))),
+  }));
+  const latencyMagnitudeMax = Math.max(
+    0.001,
+    ...latencySamples.flatMap((sample) => [sample.causal, sample.antiCausal]),
+  );
+  const nearestLatency =
+    latencySamples.reduce((closest, sample) => {
+      if (!closest) {
+        return sample;
+      }
+      return Math.abs(sample.latency - Math.abs(result.params.deltaT)) <
+        Math.abs(closest.latency - Math.abs(result.params.deltaT))
+        ? sample
+        : closest;
+    }, latencySamples[0]) ?? latencySamples[0];
 
   const weights = result.weightHistory.map((point) => point.weight);
   const minWeight = Math.max(0, Math.min(...weights) - 0.08);
@@ -113,6 +198,52 @@ export function PlasticityExplorer() {
       return `${index === 0 ? "M" : "L"}${x.toFixed(1)} ${y.toFixed(1)}`;
     })
     .join(" ");
+  const effectiveDeltaHistory = result.weightHistory.map((point, index) => {
+    const previousWeight =
+      index === 0
+        ? result.params.initialWeight
+        : result.weightHistory[index - 1]!.weight;
+    return {
+      pair: point.pair,
+      delta: Number((point.weight - previousWeight).toFixed(6)),
+    };
+  });
+  const effectiveDeltaMax = Math.max(
+    0.0005,
+    ...effectiveDeltaHistory.map((point) => Math.abs(point.delta)),
+  );
+  const deltaMidY = DETAIL_PAD_Y + (DETAIL_HEIGHT - DETAIL_PAD_Y * 2) / 2;
+  const deltaXScale =
+    (DETAIL_WIDTH - DETAIL_PAD_X * 2) /
+    Math.max(effectiveDeltaHistory.length - 1, 1);
+  const deltaYScale =
+    ((DETAIL_HEIGHT - DETAIL_PAD_Y * 2) / 2) / effectiveDeltaMax;
+  const effectiveDeltaPath = buildLinePath(
+    effectiveDeltaHistory,
+    (point) => DETAIL_PAD_X + (point.pair - 1) * deltaXScale,
+    (point) => deltaMidY - point.delta * deltaYScale,
+  );
+  const weightCheckpoints = [0.25, 0.5, 0.75, 1].map((fraction) => {
+    const pair = Math.max(1, Math.round(result.weightHistory.length * fraction));
+    const point =
+      result.weightHistory[pair - 1] ??
+      result.weightHistory[result.weightHistory.length - 1]!;
+    return {
+      label: `${Math.round(fraction * 100)}%`,
+      pair: point.pair,
+      weight: point.weight,
+      delta: Number((point.weight - result.params.initialWeight).toFixed(4)),
+    };
+  });
+  const firstBoundPair =
+    result.weightHistory.find(
+      (point) => point.weight <= 0.000001 || point.weight >= 0.999999,
+    )?.pair ?? null;
+  const clippedUpdatePair =
+    result.weightHistory.find((point, index) => {
+      const realizedDelta = effectiveDeltaHistory[index]!.delta;
+      return Math.abs(realizedDelta - point.deltaW) > 0.000001;
+    })?.pair ?? null;
 
   const regimeColor =
     result.direction === "LTP"
@@ -332,6 +463,152 @@ export function PlasticityExplorer() {
                 LTD
               </text>
             </svg>
+            <div className="mt-4 grid gap-3 sm:grid-cols-2">
+              <InsightInset
+                eyebrow="Delay sensitivity"
+                title="Equal delays, opposite order"
+                detail={`At ${nearestLatency?.latency ?? 0} ms, the same absolute delay can still favor strengthening or weakening depending on spike order and window asymmetry.`}
+              >
+                <svg
+                  viewBox={`0 0 ${DETAIL_WIDTH} ${DETAIL_HEIGHT}`}
+                  className="w-full rounded-[18px] border border-white/6 bg-slate-950/45"
+                >
+                  <line
+                    x1={DETAIL_PAD_X}
+                    y1={DETAIL_HEIGHT - DETAIL_PAD_Y}
+                    x2={DETAIL_WIDTH - DETAIL_PAD_X}
+                    y2={DETAIL_HEIGHT - DETAIL_PAD_Y}
+                    stroke="#1e2d4a"
+                  />
+                  {latencySamples.map((sample, index) => {
+                    const groupWidth = 24;
+                    const gap = 7;
+                    const startX =
+                      DETAIL_PAD_X + 8 + index * (groupWidth + gap);
+                    const causalHeight =
+                      (sample.causal / latencyMagnitudeMax) *
+                      (DETAIL_HEIGHT - DETAIL_PAD_Y * 2 - 16);
+                    const antiCausalHeight =
+                      (sample.antiCausal / latencyMagnitudeMax) *
+                      (DETAIL_HEIGHT - DETAIL_PAD_Y * 2 - 16);
+                    const isNearest = sample.latency === nearestLatency?.latency;
+
+                    return (
+                      <g key={sample.latency}>
+                        <rect
+                          x={startX}
+                          y={DETAIL_HEIGHT - DETAIL_PAD_Y - causalHeight}
+                          width="10"
+                          height={causalHeight}
+                          rx="3"
+                          fill={isNearest ? "#7de8bb" : "#44d39a"}
+                        />
+                        <rect
+                          x={startX + 13}
+                          y={DETAIL_HEIGHT - DETAIL_PAD_Y - antiCausalHeight}
+                          width="10"
+                          height={antiCausalHeight}
+                          rx="3"
+                          fill={isNearest ? "#ff9b95" : "#ff7c76"}
+                        />
+                        <text
+                          x={startX + 11.5}
+                          y={DETAIL_HEIGHT - 4}
+                          textAnchor="middle"
+                          fill="#7f95ad"
+                          fontSize="8"
+                        >
+                          {sample.latency}
+                        </text>
+                      </g>
+                    );
+                  })}
+                  <text x="16" y="14" fill="#44d39a" fontSize="8">
+                    causal
+                  </text>
+                  <text x="58" y="14" fill="#ff7c76" fontSize="8">
+                    anti-causal
+                  </text>
+                </svg>
+              </InsightInset>
+
+              <InsightInset
+                eyebrow="Selected timing"
+                title="Current vs mirrored pairing"
+                detail={
+                  Math.abs(selectedTimingPair[0]!.value) >=
+                  Math.abs(selectedTimingPair[1]!.value)
+                    ? "The currently selected ordering expresses the stronger update at this exact delay."
+                    : "The mirrored ordering would actually dominate at this delay because the LTD side is broader or stronger."
+                }
+              >
+                <svg
+                  viewBox={`0 0 ${DETAIL_WIDTH} ${DETAIL_HEIGHT}`}
+                  className="w-full rounded-[18px] border border-white/6 bg-slate-950/45"
+                >
+                  <line
+                    x1={DETAIL_WIDTH / 2}
+                    y1={DETAIL_PAD_Y - 2}
+                    x2={DETAIL_WIDTH / 2}
+                    y2={DETAIL_HEIGHT - DETAIL_PAD_Y + 2}
+                    stroke="#1e2d4a"
+                    strokeDasharray="4 4"
+                  />
+                  {selectedTimingPair.map((entry, index) => {
+                    const barWidth =
+                      (Math.abs(entry.value) / selectedTimingMax) *
+                      (DETAIL_WIDTH / 2 - DETAIL_PAD_X - 12);
+                    const y = DETAIL_PAD_Y + 18 + index * 38;
+                    const isPositive = entry.value >= 0;
+                    const x = isPositive
+                      ? DETAIL_WIDTH / 2
+                      : DETAIL_WIDTH / 2 - barWidth;
+
+                    return (
+                      <g key={entry.label}>
+                        <rect
+                          x={x}
+                          y={y}
+                          width={barWidth}
+                          height="16"
+                          rx="8"
+                          fill={entry.tone}
+                        />
+                        <text
+                          x={DETAIL_WIDTH / 2 - 10}
+                          y={y + 11}
+                          textAnchor="end"
+                          fill="#c8d6e5"
+                          fontSize="9"
+                        >
+                          {entry.label}
+                        </text>
+                        <text
+                          x={
+                            isPositive ? x + barWidth + 8 : x - 8
+                          }
+                          y={y + 11}
+                          textAnchor={isPositive ? "start" : "end"}
+                          fill="#e2e8f0"
+                          fontSize="9"
+                        >
+                          {formatSigned(entry.value)}
+                        </text>
+                      </g>
+                    );
+                  })}
+                  <text
+                    x={DETAIL_WIDTH / 2}
+                    y={DETAIL_HEIGHT - 6}
+                    textAnchor="middle"
+                    fill="#7f95ad"
+                    fontSize="8"
+                  >
+                    zero update
+                  </text>
+                </svg>
+              </InsightInset>
+            </div>
           </div>
 
           <div className="app-surface">
@@ -398,6 +675,141 @@ export function PlasticityExplorer() {
                 Spike pair
               </text>
             </svg>
+            <div className="mt-4 grid gap-3 sm:grid-cols-2">
+              <InsightInset
+                eyebrow="Realized update"
+                title="What each pairing actually changed"
+                detail={
+                  clippedUpdatePair
+                    ? `By about pair ${clippedUpdatePair}, the bound starts absorbing the requested update, so extra pairings teach less than the rule would suggest.`
+                    : "Because the weight stays away from floor and ceiling, each pairing keeps expressing a real update instead of being clipped away."
+                }
+              >
+                <svg
+                  viewBox={`0 0 ${DETAIL_WIDTH} ${DETAIL_HEIGHT}`}
+                  className="w-full rounded-[18px] border border-white/6 bg-slate-950/45"
+                >
+                  <line
+                    x1={DETAIL_PAD_X}
+                    y1={deltaMidY}
+                    x2={DETAIL_WIDTH - DETAIL_PAD_X}
+                    y2={deltaMidY}
+                    stroke="#1e2d4a"
+                  />
+                  <path
+                    d={effectiveDeltaPath}
+                    fill="none"
+                    stroke={
+                      result.direction === "LTP"
+                        ? "#44d39a"
+                        : result.direction === "LTD"
+                          ? "#ff7c76"
+                          : "#67d3ff"
+                    }
+                    strokeWidth="2"
+                  />
+                  <text x="16" y="14" fill="#7f95ad" fontSize="8">
+                    +delta
+                  </text>
+                  <text
+                    x="16"
+                    y={DETAIL_HEIGHT - 8}
+                    fill="#7f95ad"
+                    fontSize="8"
+                  >
+                    -delta
+                  </text>
+                  <text
+                    x={DETAIL_WIDTH / 2}
+                    y={DETAIL_HEIGHT - 6}
+                    textAnchor="middle"
+                    fill="#7f95ad"
+                    fontSize="8"
+                  >
+                    pair index
+                  </text>
+                </svg>
+              </InsightInset>
+
+              <InsightInset
+                eyebrow="Trajectory checkpoints"
+                title="How fast the rule moves the synapse"
+                detail={
+                  firstBoundPair
+                    ? `The weight reaches a hard bound by pair ${firstBoundPair}, which is why later changes mostly flatten into saturation.`
+                    : "Checkpoint bars stay in midrange, so the rule remains teachable rather than collapsing into floor or ceiling."
+                }
+              >
+                <svg
+                  viewBox={`0 0 ${DETAIL_WIDTH} ${DETAIL_HEIGHT}`}
+                  className="w-full rounded-[18px] border border-white/6 bg-slate-950/45"
+                >
+                  <line
+                    x1={DETAIL_PAD_X}
+                    y1={DETAIL_HEIGHT - DETAIL_PAD_Y}
+                    x2={DETAIL_WIDTH - DETAIL_PAD_X}
+                    y2={DETAIL_HEIGHT - DETAIL_PAD_Y}
+                    stroke="#1e2d4a"
+                  />
+                  {weightCheckpoints.map((checkpoint, index) => {
+                    const barWidth = 22;
+                    const gap = 17;
+                    const x = DETAIL_PAD_X + 14 + index * (barWidth + gap);
+                    const fullHeight = DETAIL_HEIGHT - DETAIL_PAD_Y * 2 - 10;
+                    const barHeight = checkpoint.weight * fullHeight;
+                    const y = DETAIL_HEIGHT - DETAIL_PAD_Y - barHeight;
+                    const isFinal = index === weightCheckpoints.length - 1;
+
+                    return (
+                      <g key={checkpoint.label}>
+                        <rect
+                          x={x}
+                          y={DETAIL_PAD_Y + 4}
+                          width={barWidth}
+                          height={fullHeight}
+                          rx="8"
+                          fill="rgba(255,255,255,0.04)"
+                        />
+                        <rect
+                          x={x}
+                          y={y}
+                          width={barWidth}
+                          height={barHeight}
+                          rx="8"
+                          fill={
+                            isFinal
+                              ? "#67d3ff"
+                              : result.direction === "LTP"
+                                ? "#44d39a"
+                                : result.direction === "LTD"
+                                  ? "#ff7c76"
+                                  : "#94a3b8"
+                          }
+                        />
+                        <text
+                          x={x + barWidth / 2}
+                          y={DETAIL_HEIGHT - 4}
+                          textAnchor="middle"
+                          fill="#7f95ad"
+                          fontSize="8"
+                        >
+                          {checkpoint.label}
+                        </text>
+                        <text
+                          x={x + barWidth / 2}
+                          y={y - 4}
+                          textAnchor="middle"
+                          fill="#c8d6e5"
+                          fontSize="8"
+                        >
+                          {checkpoint.weight.toFixed(2)}
+                        </text>
+                      </g>
+                    );
+                  })}
+                </svg>
+              </InsightInset>
+            </div>
           </div>
         </div>
 
