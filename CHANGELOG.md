@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.35.1] - 2026-03-21
+
+### Changed
+
+- Mounted the site-wide `@vercel/analytics` React component in the root App Router layout so analytics collection now loads across the full application shell.
+
 ## [0.35.0] - 2026-03-21
 
 ### Added

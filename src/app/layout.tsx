@@ -1,5 +1,6 @@
 import "~/styles/globals.css";
 
+import { Analytics } from "@vercel/analytics/next";
 import { type Metadata } from "next";
 import { Geist } from "next/font/google";
 import { AppShell } from "~/components/app-shell";
@@ -23,6 +24,7 @@ export default function RootLayout({
     <html lang="en" className={`${geist.variable}`}>
       <body>
         <AppShell>{children}</AppShell>
+        <Analytics />
       </body>
     </html>
   );
