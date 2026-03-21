@@ -12,6 +12,7 @@ export const navItems = [
   { href: "/neuron", label: "Neuron" },
   { href: "/retina", label: "Retina" },
   { href: "/visual-field", label: "Visual Field" },
+  { href: "/neglect", label: "Neglect" },
   { href: "/grid-cell", label: "Grid Cell" },
   { href: "/ecg", label: "ECG" },
   { href: "/eeg", label: "EEG" },
@@ -20,6 +21,7 @@ export const navItems = [
   { href: "/vision", label: "Vision" },
   { href: "/action-potential", label: "Action Potential" },
   { href: "/motor-pathway", label: "Motor Pathway" },
+  { href: "/gait", label: "Gait" },
   { href: "/cranial-nerves", label: "Cranial Nerves" },
   { href: "/stroke", label: "Stroke" },
   { href: "/dermatome", label: "Dermatomes" },
@@ -59,6 +61,14 @@ export const moduleCards: ModuleCard[] = [
       "Work through monocular, chiasmal, retrochiasmal, and neglect-like patterns with compare mode and consult-level cases.",
     badge: "Localization",
     href: "/visual-field",
+  },
+  {
+    slug: "neglect",
+    title: "Neglect Localizer",
+    description:
+      "Separate viewer-centered neglect, extinction, object-centered truncation, and motor-intentional bias with an attention map, bedside-task readouts, and field-cut differentials.",
+    badge: "Attention",
+    href: "/neglect",
   },
   {
     slug: "plasticity",
@@ -131,6 +141,14 @@ export const moduleCards: ModuleCard[] = [
       "Corticospinal tract from cortex to muscle. Select a lesion level to see UMN vs LMN signs, brainstem crossed findings, and clinical vignettes.",
     badge: "Motor System",
     href: "/motor-pathway",
+  },
+  {
+    slug: "gait",
+    title: "Gait Pattern Localizer",
+    description:
+      "Compare parkinsonian, cerebellar, sensory, hemiparetic, and frontal gait phenotypes using footprint geometry, turning burden, and bedside discriminators.",
+    badge: "Bedside Exam",
+    href: "/gait",
   },
   {
     slug: "cranial-nerves",

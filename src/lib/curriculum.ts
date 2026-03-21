@@ -93,6 +93,28 @@ export const curriculumModules: CurriculumModule[] = [
     ],
   },
   {
+    slug: "neglect",
+    title: "Neglect Localizer",
+    trainingStage: "Consult-level spatial-attention localization",
+    learningGoals: [
+      "Separate hemispatial neglect from homonymous field loss and primary sensory deficits",
+      "Recognize extinction, viewer-centered neglect, object-centered neglect, and motor-intentional bias as different failure modes",
+      "Use cancellation, bisection, copying, and bilateral stimulation as localization tools",
+    ],
+    advancedObjectives: [
+      "Localize neglect to right-lateralized attention networks before naming stroke, tumor, or degenerative etiologies.",
+      "Explain why bilateral competition unmasks extinction better than single-item testing alone.",
+      "Separate egocentric from allocentric neglect by asking whether errors track body-centered or object-centered coordinates.",
+    ],
+    prerequisites: ["Brain Atlas module", "Visual field logic"],
+    linkedModules: ["visual-field", "vision", "brain-atlas", "stroke", "ask"],
+    commonMisconceptions: [
+      "Neglect is just a visual field cut with a different name.",
+      "Any left-sided miss localizes to occipital cortex.",
+      "A normal single-item confrontation test excludes neglect.",
+    ],
+  },
+  {
     slug: "plasticity",
     title: "Synaptic Plasticity",
     trainingStage: "Mechanistic learning theory",
@@ -281,6 +303,28 @@ export const curriculumModules: CurriculumModule[] = [
       "UMN always means spastic — acute UMN lesions are initially flaccid.",
       "Fasciculations always mean ALS — benign fasciculations are common.",
       "Forehead involvement in facial weakness is a minor detail — it is the key UMN vs. LMN distinction.",
+    ],
+  },
+  {
+    slug: "gait",
+    title: "Gait Pattern Localizer",
+    trainingStage: "Bedside gait localization",
+    learningGoals: [
+      "Recognize parkinsonian, cerebellar, sensory, hemiparetic, and frontal gait phenotypes",
+      "Use step geometry, turning burden, and cue response to rank localization",
+      "Connect gait pattern to motor, sensory, basal ganglia, cerebellar, and frontal networks",
+    ],
+    advancedObjectives: [
+      "Separate gait-scaling failure from weakness, balance calibration failure, and proprioceptive dependence.",
+      "Explain why turning, dual-tasking, and eye closure are high-yield stress tests rather than generic add-ons.",
+      "Use associated bedside findings such as arm swing, Romberg, pyramidal signs, or frontal release features to re-rank the gait differential quickly.",
+    ],
+    prerequisites: ["Motor Pathway module", "Brain Atlas module"],
+    linkedModules: ["motor-pathway", "brain-atlas", "stroke", "dopamine", "ask"],
+    commonMisconceptions: [
+      "All shuffling gait is Parkinson disease.",
+      "Wide-based gait always means cerebellum.",
+      "If leg strength is full seated, gait cannot localize to the brain.",
     ],
   },
   {

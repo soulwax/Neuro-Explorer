@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.33.0] - 2026-03-21
+
+### Added
+
+- Added a new `/neglect` module with dense teaching surfaces for viewer-centered neglect, extinction-dominant neglect, object-centered neglect, and motor-intentional neglect, including attention-map visuals, cancellation behavior, bisection shift, bedside-task readouts, and field-cut differentials.
+- Added a new `/gait` module with footprint-lane visuals and bedside localization framing for parkinsonian, cerebellar, sensory, hemiparetic, and frontal gait phenotypes using stride geometry, turning burden, and stressor profiles.
+- Added tutor prompt kits for the new Neglect and Gait modules so `/ask` can hand off directly into spatial-attention and gait-pattern reasoning.
+
 ## [0.32.2] - 2026-03-21
 
 ### Added

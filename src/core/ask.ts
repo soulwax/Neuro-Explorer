@@ -697,6 +697,34 @@ export const askPromptKits: AskPromptKit[] = [
       "Use this after Brain Atlas when you want the tutor to connect bedside signs back into network anatomy.",
   },
   {
+    id: "neglect-localization",
+    moduleSlug: "neglect",
+    moduleTitle: "Neglect",
+    title: "Neglect versus field loss",
+    topic: "cognitive-neurology",
+    topicLabel: "Cognitive Neurology",
+    level: "consult-rounds",
+    levelLabel: "Consult rounds",
+    question:
+      "A patient leaves food on the left side of the plate, extinguishes left touch on double simultaneous stimulation, and bisects horizontal lines too far to the right. Build the syndrome, rank the localization hierarchy, explain why a pure hemianopia is weaker, and name the one finding that would most change your mind.",
+    whyUse:
+      "Use this after Neglect when you want the tutor to separate attention-network failure from primary visual loss or sensory deficits.",
+  },
+  {
+    id: "gait-grammar",
+    moduleSlug: "gait",
+    moduleTitle: "Gait",
+    title: "Pattern to circuit in gait",
+    topic: "movement-disorders",
+    topicLabel: "Movement Disorders",
+    level: "consult-rounds",
+    levelLabel: "Consult rounds",
+    question:
+      "How do you separate parkinsonian freezing, frontal gait apraxia, sensory ataxia, and hemiparetic circumduction by stride pattern, turning behavior, eye-closure stress, associated bedside signs, and the one additional finding that would most re-rank the differential?",
+    whyUse:
+      "Use this after Gait when you want the tutor to reason from pattern grammar into basal ganglia, frontal, sensory, cerebellar, and corticospinal circuits.",
+  },
+  {
     id: "ecg-neurocritical",
     moduleSlug: "ecg",
     moduleTitle: "ECG",
