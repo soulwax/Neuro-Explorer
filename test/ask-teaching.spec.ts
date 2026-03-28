@@ -21,7 +21,7 @@ describe('ask teaching layer', () => {
 		]);
 		expect(askReasoningRubric.every((criterion) => criterion.signals.length >= 3)).toBe(true);
 		expect(askPromptKits.map((kit) => kit.moduleSlug)).toEqual(
-			expect.arrayContaining(['retina', 'visual-field', 'vision', 'brain-atlas', 'ecg'])
+			expect.arrayContaining(['retina', 'visual-field', 'vision', 'brain-atlas', 'basal-ganglia', 'ecg'])
 		);
 		expect(askPromptKits.every((kit) => kit.question.length > 30)).toBe(true);
 		expect(askPromptKits.every((kit) => kit.whyUse.length > 20)).toBe(true);

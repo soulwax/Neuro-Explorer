@@ -1,5 +1,16 @@
 # Changelog
 
+## [0.36.0] - 2026-03-28
+
+### Added
+
+- Added a new `/basal-ganglia` module with deterministic loop teaching for balanced selection, Parkinson off, medication-on rescue, freezing-prone hyperdirect overbraking, peak-dose dyskinesia, and indirect-pathway collapse, including a circuit map, baseline comparison bars, and bedside movement-phenomenology framing.
+- Added a Basal Ganglia tutor prompt kit so `/ask` can hand off directly into direct-versus-indirect-versus-hyperdirect movement-disorders reasoning.
+
+### Changed
+
+- Expanded dopamine handoff wiring so the dopamine module now links directly into the new basal ganglia circuit module as part of the movement-disorders teaching sequence.
+
 ## [0.35.1] - 2026-03-21
 
 ### Changed

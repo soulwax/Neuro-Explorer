@@ -739,6 +739,20 @@ export const askPromptKits: AskPromptKit[] = [
       "Use this after Gait when you want the tutor to reason from pattern grammar into basal ganglia, frontal, sensory, cerebellar, and corticospinal circuits.",
   },
   {
+    id: "basal-ganglia-loops",
+    moduleSlug: "basal-ganglia",
+    moduleTitle: "Basal Ganglia",
+    title: "Loop balance in movement disorders",
+    topic: "movement-disorders",
+    topicLabel: "Movement Disorders",
+    level: "consult-rounds",
+    levelLabel: "Consult rounds",
+    question:
+      "How do you separate dopamine-depleted parkinsonism, freezing-prone hyperdirect overbraking, indirect-pathway under-suppression, and peak-dose dyskinesia by movement phenomenology, cue response, medication timing, and the one finding that would most change your mind?",
+    whyUse:
+      "Use this after Basal Ganglia when you want the tutor to reason from bradykinesia, freezing, chorea, and dyskinesia back into direct, indirect, and hyperdirect loop balance instead of naming Parkinson disease too early.",
+  },
+  {
     id: "vertigo-hints",
     moduleSlug: "vertigo",
     moduleTitle: "Vertigo",

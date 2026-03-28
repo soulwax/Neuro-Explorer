@@ -273,7 +273,7 @@ export function DopamineExplorer() {
 
   const activePreset =
     dopaminePresets.find((preset) => preset.id === activePresetId) ?? null;
-  const handoffModules = ["brain-atlas", "plasticity", "ask"]
+  const handoffModules = ["brain-atlas", "basal-ganglia", "plasticity", "ask"]
     .map((slug) => getCurriculumModule(slug))
     .filter(
       (

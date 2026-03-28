@@ -171,11 +171,33 @@ export const curriculumModules: CurriculumModule[] = [
       "Relate reinforcement-learning abstractions to basal ganglia loops and movement-disorder phenomenology.",
     ],
     prerequisites: ["Basic reinforcement learning concepts"],
-    linkedModules: ["plasticity", "brain-atlas", "ask"],
+    linkedModules: ["plasticity", "basal-ganglia", "brain-atlas", "ask"],
     commonMisconceptions: [
       "Dopamine only means pleasure.",
       "Prediction error and reward size are identical.",
       "A larger cue response proves a patient is feeling more pleasure rather than learning stronger prediction.",
+    ],
+  },
+  {
+    slug: "basal-ganglia",
+    title: "Basal Ganglia Loop Explorer",
+    trainingStage: "Movement-disorders circuitry",
+    learningGoals: [
+      "Relate bradykinesia, freezing, chorea, and dyskinesia to direct, indirect, and hyperdirect loop balance",
+      "Explain why movement phenomenology localizes better to gating and suppression failures than to vague disease labels",
+      "Connect dopamine state, cue dependence, and medication response to thalamocortical release",
+    ],
+    advancedObjectives: [
+      "Separate useful dopaminergic rescue from dyskinetic overshoot by tracking suppression failure as well as movement vigor.",
+      "Use freezing, cue responsiveness, and task-conflict sensitivity to distinguish hyperdirect overbraking from pure weakness or frontal gait release failure.",
+      "Explain hyperkinetic movement as failed suppression of competing programs, not merely as 'extra movement.'",
+    ],
+    prerequisites: ["Basic neuroanatomy", "Dopamine module"],
+    linkedModules: ["dopamine", "gait", "motor-pathway", "brain-atlas", "ask"],
+    commonMisconceptions: [
+      "Basal ganglia only turn movement on or off.",
+      "All hyperkinetic movement is just excess dopamine.",
+      "Bradykinesia is the same thing as weakness.",
     ],
   },
   {
@@ -342,7 +364,14 @@ export const curriculumModules: CurriculumModule[] = [
       "Use associated bedside findings such as arm swing, Romberg, pyramidal signs, or frontal release features to re-rank the gait differential quickly.",
     ],
     prerequisites: ["Motor Pathway module", "Brain Atlas module"],
-    linkedModules: ["motor-pathway", "brain-atlas", "stroke", "dopamine", "ask"],
+    linkedModules: [
+      "motor-pathway",
+      "brain-atlas",
+      "stroke",
+      "dopamine",
+      "basal-ganglia",
+      "ask",
+    ],
     commonMisconceptions: [
       "All shuffling gait is Parkinson disease.",
       "Wide-based gait always means cerebellum.",

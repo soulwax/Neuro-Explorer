@@ -19,6 +19,7 @@ export const navItems = [
   { href: "/eeg", label: "EEG" },
   { href: "/plasticity", label: "Plasticity" },
   { href: "/dopamine", label: "Dopamine" },
+  { href: "/basal-ganglia", label: "Basal Ganglia" },
   { href: "/vision", label: "Vision" },
   { href: "/action-potential", label: "Action Potential" },
   { href: "/motor-pathway", label: "Motor Pathway" },
@@ -95,6 +96,14 @@ export const moduleCards: ModuleCard[] = [
       "Compare canonical transfer, cue capture, blunted transfer, and omission-sensitive phenotypes as prediction errors shift from reward delivery toward the predictive cue.",
     badge: "Reinforcement",
     href: "/dopamine",
+  },
+  {
+    slug: "basal-ganglia",
+    title: "Basal Ganglia Loop Explorer",
+    description:
+      "Compare balanced selection, Parkinson off, medication-on rescue, freezing-prone overbraking, dyskinetic overshoot, and indirect-pathway collapse through direct, indirect, and hyperdirect loop balance.",
+    badge: "Movement Disorders",
+    href: "/basal-ganglia",
   },
   {
     slug: "vision",
