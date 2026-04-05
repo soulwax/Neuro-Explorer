@@ -9,6 +9,8 @@ import {
   plasticityPresets,
   simulatePlasticity,
   stdpWindow,
+  type PlasticityAnchor,
+  type PlasticityExample,
   type PlasticityParams,
 } from "~/lib/plasticity";
 
@@ -71,6 +73,27 @@ function InsightInset({
       <h3 className="mt-2 text-sm font-semibold text-white">{title}</h3>
       <div className="mt-3">{children}</div>
       <p className="mt-3 text-xs leading-6 text-slate-400">{detail}</p>
+    </div>
+  );
+}
+
+function ExampleCard({
+  item,
+}: Readonly<{
+  item: PlasticityExample | PlasticityAnchor;
+}>) {
+  const description = "scenario" in item ? item.scenario : item.finding;
+  return (
+    <div className="rounded-[24px] border border-white/10 bg-slate-950/35 p-4">
+      <p className="text-xs uppercase tracking-[0.18em] text-cyan-100">
+        {item.title}
+      </p>
+      <p className="mt-3 text-sm font-medium leading-6 text-white">
+        {description}
+      </p>
+      <p className="mt-3 text-sm leading-7 text-slate-300">
+        {item.implication}
+      </p>
     </div>
   );
 }
@@ -918,6 +941,56 @@ export function PlasticityExplorer() {
               </li>
             ))}
           </ul>
+        </div>
+      </section>
+
+      <section className="grid gap-6 xl:grid-cols-[minmax(0,1.05fr)_340px]">
+        <div className="app-surface">
+          <p className="text-xs uppercase tracking-[0.24em] text-slate-400">
+            Examples
+          </p>
+          <h2 className="mt-1 text-xl font-semibold text-white">
+            Where this plasticity phenotype shows up
+          </h2>
+          <p className="mt-4 text-sm leading-7 text-slate-300">
+            These are teaching examples, not claims that one whole disease
+            reduces to one synapse. The point is to give students memorable
+            places where this pattern of strengthening, weakening, or restraint
+            is a useful explanatory frame.
+          </p>
+          <div className="mt-5 grid gap-4 lg:grid-cols-3">
+            {result.interpretation.exampleCases.map((item) => (
+              <ExampleCard key={item.title} item={item} />
+            ))}
+          </div>
+        </div>
+
+        <div className="app-page-stack">
+          <div className="app-surface">
+            <p className="text-xs uppercase tracking-[0.24em] text-slate-400">
+              Classic anchors
+            </p>
+            <h2 className="mt-1 text-xl font-semibold text-white">
+              Landmark examples to teach alongside the rule
+            </h2>
+            <div className="mt-4 space-y-3">
+              {result.explanation.landmarkAnchors.map((item) => (
+                <ExampleCard key={item.title} item={item} />
+              ))}
+            </div>
+          </div>
+
+          <div className="app-surface">
+            <p className="text-xs uppercase tracking-[0.24em] text-slate-400">
+              Plain-language rule
+            </p>
+            <h2 className="mt-1 text-xl font-semibold text-white">
+              The shortest phrasing worth remembering
+            </h2>
+            <div className="mt-4 rounded-[24px] border border-cyan-300/15 bg-cyan-300/8 p-4 text-sm leading-7 text-slate-100">
+              {result.explanation.hebbianRule}
+            </div>
+          </div>
         </div>
       </section>
 

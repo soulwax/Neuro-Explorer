@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.36.1] - 2026-04-05
+
+### Added
+
+- Expanded the `/plasticity` teaching surface with phenotype-matched example scenarios and landmark experimental anchors so students can connect the active STDP regime to rehabilitation, addiction, chronic pain, developmental pruning, and classic timing-dependent plasticity studies.
+
 ## [0.36.0] - 2026-03-28
 
 ### Added
