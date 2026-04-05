@@ -171,6 +171,186 @@ export const plasticityPresets: PlasticityPreset[] = [
       initialWeight: 0.7,
     },
   },
+  {
+    id: "synchronous-neutrality",
+    label: "Synchronous neutrality",
+    description:
+      "Near-synchronous firing with balanced amplitudes keeps the synapse close to baseline instead of clearly committing to growth or pruning.",
+    clinicalLens:
+      "Helpful when teaching that co-activation alone is not enough; the network still needs useful timing asymmetry to turn repetition into real learning.",
+    caution:
+      "This is a weak-instruction regime, not proof that the circuit is biologically inert.",
+    params: {
+      ...defaultPlasticityParams,
+      deltaT: 0,
+      pairCount: 90,
+      initialWeight: 0.55,
+      aPlus: 0.0075,
+      aMinus: 0.0075,
+      tauPlus: 18,
+      tauMinus: 18,
+    },
+  },
+  {
+    id: "narrow-coincidence-detector",
+    label: "Narrow coincidence detector",
+    description:
+      "A short timing window rewards only very tight causal pairing, so the synapse behaves like a precision detector rather than a broad associative bridge.",
+    clinicalLens:
+      "Useful for teaching pathways where small timing errors matter and only closely aligned activity earns strengthening.",
+    caution:
+      "Do not overread this as one specific receptor system; it is a timing-selective phenotype.",
+    params: {
+      ...defaultPlasticityParams,
+      deltaT: 4,
+      pairCount: 70,
+      initialWeight: 0.48,
+      aPlus: 0.009,
+      aMinus: 0.0085,
+      tauPlus: 10,
+      tauMinus: 10,
+    },
+  },
+  {
+    id: "broad-association-window",
+    label: "Broad association window",
+    description:
+      "Longer time constants let the synapse keep rewarding causal structure even when the presynaptic and postsynaptic events are separated by a wider delay.",
+    clinicalLens:
+      "Helpful when you want to contrast precise coincidence detection with more forgiving temporal credit assignment.",
+    caution:
+      "A broad window does not mean the neuron is smarter; it means the rule accepts a longer causal lag before updates decay away.",
+    params: {
+      ...defaultPlasticityParams,
+      deltaT: 18,
+      pairCount: 90,
+      initialWeight: 0.4,
+      aPlus: 0.0085,
+      aMinus: 0.0075,
+      tauPlus: 34,
+      tauMinus: 30,
+    },
+  },
+  {
+    id: "slow-consolidation",
+    label: "Slow consolidation",
+    description:
+      "Causal timing still strengthens the synapse, but the gain is gentler and spread across many pairings, so the rule teaches accumulation rather than quick saturation.",
+    clinicalLens:
+      "Useful for rehabilitation or skill-learning examples where repeated practice matters because each pairing nudges the pathway only a little.",
+    caution:
+      "Slow gain should not be mistaken for weak biology; the key lesson is that some useful plasticity regimes require many repetitions before the trajectory becomes obvious.",
+    params: {
+      ...defaultPlasticityParams,
+      deltaT: 12,
+      pairCount: 160,
+      initialWeight: 0.35,
+      aPlus: 0.0065,
+      aMinus: 0.006,
+      tauPlus: 28,
+      tauMinus: 24,
+    },
+  },
+  {
+    id: "low-gain-trainer",
+    label: "Low-gain trainer",
+    description:
+      "The rule technically favors causal strengthening, but the amplitudes are so small that the synapse moves only modestly even after repeated pairing.",
+    clinicalLens:
+      "Helpful for showing students the difference between a permissive learning rule and one that actually drives large behavioral change.",
+    caution:
+      "A small update should not be confused with a missing mechanism; it may simply mean the pathway is in a conservative learning state.",
+    params: {
+      ...defaultPlasticityParams,
+      deltaT: 15,
+      pairCount: 40,
+      initialWeight: 0.52,
+      aPlus: 0.001,
+      aMinus: 0.001,
+      tauPlus: 10,
+      tauMinus: 10,
+    },
+  },
+  {
+    id: "reversal-ready-depression",
+    label: "Reversal-ready depression",
+    description:
+      "A mild anti-causal bias pulls the weight downward without slamming it to floor, preserving room for the same synapse to be rescued later by causal retraining.",
+    clinicalLens:
+      "Useful for extinction, devaluation, or error-correction examples where weakening matters, but the system should still remain reversible.",
+    caution:
+      "This is selective reweighting, not permanent deletion of the pathway.",
+    params: {
+      ...defaultPlasticityParams,
+      deltaT: -6,
+      pairCount: 70,
+      initialWeight: 0.62,
+      aPlus: 0.008,
+      aMinus: 0.009,
+      tauPlus: 18,
+      tauMinus: 22,
+    },
+  },
+  {
+    id: "homeostatic-pullback",
+    label: "Homeostatic pullback",
+    description:
+      "Causal timing is present, but the depression side is intentionally stronger and longer-lived, so the rule keeps dragging the synapse back toward a safer middle range.",
+    clinicalLens:
+      "Helpful when teaching why real circuits often need a strong braking force to avoid escalating every correlated event into persistent over-weighting.",
+    caution:
+      "This is only a local approximation of homeostatic logic, not a full synaptic-scaling or intrinsic-excitability model.",
+    params: {
+      ...defaultPlasticityParams,
+      deltaT: 5,
+      pairCount: 80,
+      initialWeight: 0.72,
+      aPlus: 0.0055,
+      aMinus: 0.011,
+      tauPlus: 14,
+      tauMinus: 30,
+    },
+  },
+  {
+    id: "eligibility-tail",
+    label: "Eligibility tail",
+    description:
+      "A long positive time constant lets delayed causal signals still earn strengthening, as if the synapse is holding an extended eligibility trace before deciding to update.",
+    clinicalLens:
+      "Useful for explaining why some learning problems tolerate longer sensory-motor or cue-outcome gaps than a narrow coincidence detector would allow.",
+    caution:
+      "This is still a timing-window abstraction, not a full reinforcement-learning eligibility trace implementation.",
+    params: {
+      ...defaultPlasticityParams,
+      deltaT: 26,
+      pairCount: 75,
+      initialWeight: 0.38,
+      aPlus: 0.008,
+      aMinus: 0.0065,
+      tauPlus: 42,
+      tauMinus: 32,
+    },
+  },
+  {
+    id: "precision-pruning",
+    label: "Precision pruning",
+    description:
+      "Large anti-causal offsets and stronger LTD selectively cut back the synapse when the timing is repeatedly wrong, making the rule behave like a sharp mismatch detector.",
+    clinicalLens:
+      "Helpful for developmental refinement, maladaptive habit suppression, or any teaching case where the wrong contributor should be pruned faster than it can recover.",
+    caution:
+      "This phenotype exaggerates the pruning side of the rule to make the mismatch logic easy to see.",
+    params: {
+      ...defaultPlasticityParams,
+      deltaT: -24,
+      pairCount: 90,
+      initialWeight: 0.66,
+      aPlus: 0.0045,
+      aMinus: 0.01,
+      tauPlus: 12,
+      tauMinus: 18,
+    },
+  },
 ];
 
 export const plasticityParamDefinitions: PlasticityParamDefinition[] = [
@@ -284,6 +464,20 @@ function buildInterpretation(
           implication:
             "Students learn that a neutral local outcome does not prove the whole network is incapable of plasticity.",
         },
+        {
+          title: "Low-salience home exercise",
+          scenario:
+            "A patient performs the right exercise volume at home, but the task offers weak error signals and inconsistent reward timing, so the circuit sees repetition without a strong instructive pattern.",
+          implication:
+            "This gives students a practical reason why therapy dosage and therapy quality are not interchangeable.",
+        },
+        {
+          title: "Background sensory coincidence",
+          scenario:
+            "Two sensory streams are repeatedly present together during everyday behavior, but neither reliably predicts the other closely enough to produce a durable update.",
+          implication:
+            "The teaching pearl is that common co-occurrence can leave a pathway surprisingly unchanged if the timing structure is vague.",
+        },
       ],
       behaviorSignals: [
         "Weight stays close to baseline even after repeated pairing.",
@@ -330,6 +524,20 @@ function buildInterpretation(
             "After injury, one movement solution is repeated so aggressively that the system saturates that compensation before more flexible recovery strategies emerge.",
           implication:
             "This is a good rehab example of why more strengthening is not always better strengthening.",
+        },
+        {
+          title: "Compulsive cue capture",
+          scenario:
+            "A narrow set of cues repeatedly wins the competition for behavioral selection, so the circuit keeps overweighting the same trigger-response pathway while alternatives lose influence.",
+          implication:
+            "Students can see how excessive causal gain may reduce flexibility long before it produces any obvious tissue pathology.",
+        },
+        {
+          title: "Rigid skill overlearning",
+          scenario:
+            "A performer drills one sequence so intensely that the dominant mapping becomes highly efficient but increasingly resistant to context-dependent adjustment.",
+          implication:
+            "This helps separate high performance from adaptable performance, which is a useful distinction in both rehab and expertise.",
         },
       ],
       behaviorSignals: [
@@ -378,6 +586,20 @@ function buildInterpretation(
           implication:
             "Students can link floor-seeking depression to refinement logic rather than only to pathology.",
         },
+        {
+          title: "Immobilization-related disuse",
+          scenario:
+            "A motor pathway is rarely recruited in successful behavior for a prolonged period, and when it does fire it tends to be poorly aligned with productive output.",
+          implication:
+            "This gives learners a clinically familiar picture of how loss of meaningful use can drive a pathway toward functional irrelevance.",
+        },
+        {
+          title: "Amblyopia-style competition loss",
+          scenario:
+            "One input stream repeatedly loses the timing competition for downstream influence, so its synapses are weakened while stronger competitors keep winning the same postsynaptic target.",
+          implication:
+            "The key point is competitive elimination: floor-seeking depression often teaches who is being pushed out of the circuit, not just who is becoming inactive.",
+        },
       ],
       behaviorSignals: [
         "Weight decays steadily instead of oscillating around a stable middle range.",
@@ -424,6 +646,20 @@ function buildInterpretation(
             "One stream begins to dominate, but slower counter-rules keep the overall system from permanently saturating after short-lived imbalance.",
           implication:
             "The point is not exact visual-cortex fidelity, but the principle that stabilizing rules preserve teachable midrange weights.",
+        },
+        {
+          title: "Sleep-supported renormalization",
+          scenario:
+            "Wakeful learning leaves some pathways biased toward strengthening, but broader stabilizing processes keep the network from carrying every daytime gain forward at full amplitude.",
+          implication:
+            "This helps students connect metaplastic restraint to the idea that useful brains must both learn and re-normalize.",
+        },
+        {
+          title: "Adaptation without lock-in",
+          scenario:
+            "A patient improves with prism or gait adaptation, yet the system retains enough counterpressure that the learned shift can still be revised when the environment changes again.",
+          implication:
+            "It is a good example of why stable midrange weights are often what make flexible relearning possible.",
         },
       ],
       behaviorSignals: [
@@ -472,6 +708,20 @@ function buildInterpretation(
           implication:
             "Students can connect LTD-led remodeling to error-based learning rather than only to forgetting.",
         },
+        {
+          title: "Vestibulo-ocular recalibration analogy",
+          scenario:
+            "Visual slip repeatedly signals that the present gain is wrong, and the circuit weakens the mismatched contribution enough to support a better calibration.",
+          implication:
+            "This gives students a concrete sensorimotor example where weakening is part of adaptive tuning rather than a sign of failure.",
+        },
+        {
+          title: "Reward devaluation after contingency switch",
+          scenario:
+            "A cue keeps arriving, but the expected payoff is reduced or mistimed, so the pathway is actively deemphasized rather than simply ignored.",
+          implication:
+            "The lesson is that LTD can teach the system to stop trusting the wrong predictor while leaving room for a better one to take over.",
+        },
       ],
       behaviorSignals: [
         "Weight falls, but the synapse still remains available for later recovery.",
@@ -517,7 +767,21 @@ function buildInterpretation(
           "Task-oriented therapy pairs intended movement and reinforcing feedback closely enough that the engaged synapses strengthen while still leaving room for further shaping.",
         implication:
           "It is a strong teaching example because it shows beneficial plasticity without the distortion of runaway saturation.",
-        },
+      },
+      {
+        title: "Constraint-induced recovery practice",
+        scenario:
+          "A weaker limb is recruited in tightly contingent tasks, and successful movements are followed by feedback that repeatedly rewards the same productive pathway.",
+        implication:
+          "This helps students visualize why focused practice can bias circuits toward helpful strengthening without automatically implying saturation.",
+      },
+      {
+        title: "Perceptual discrimination learning",
+        scenario:
+          "A learner repeatedly distinguishes similar sensory patterns, and the pathways that best predict the correct interpretation are reinforced through consistent timing.",
+        implication:
+          "It is a useful non-motor example showing that causal potentiation supports finer perception as well as stronger action mapping.",
+      },
     ],
     behaviorSignals: [
       "Weight rises steadily across pairings rather than jumping to ceiling immediately.",

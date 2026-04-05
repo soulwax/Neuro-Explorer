@@ -352,9 +352,10 @@ export function PlasticityExplorer() {
             </h2>
           </div>
           <p className="max-w-2xl text-sm leading-7 text-slate-300">
-            Each preset tells a different synaptic story: clean causal gain,
-            non-causal weakening, restrained metaplastic balance, or floor and
-            ceiling saturation.
+            Choose from fourteen phenotypes that span near-neutral coincidence,
+            narrow and broad association windows, slow consolidation,
+            reversible depression, homeostatic pullback, precision pruning, and
+            full floor-or-ceiling saturation.
           </p>
         </div>
 
@@ -954,9 +955,10 @@ export function PlasticityExplorer() {
           </h2>
           <p className="mt-4 text-sm leading-7 text-slate-300">
             These are teaching examples, not claims that one whole disease
-            reduces to one synapse. The point is to give students memorable
-            places where this pattern of strengthening, weakening, or restraint
-            is a useful explanatory frame.
+            reduces to one synapse. The point is to give students multiple
+            clinical, rehabilitation, developmental, and learning-science
+            settings where this pattern of strengthening, weakening, or
+            restraint is a useful explanatory frame.
           </p>
           <div className="mt-5 grid gap-4 lg:grid-cols-3">
             {result.interpretation.exampleCases.map((item) => (

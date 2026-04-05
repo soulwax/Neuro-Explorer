@@ -1,5 +1,17 @@
 # Changelog
 
+## [0.37.1] - 2026-04-05
+
+### Added
+
+- Expanded the `/plasticity` example bank under “Where this plasticity phenotype shows up” with a broader spread of rehabilitation, sensory-learning, developmental, extinction, adaptation, and maladaptive-learning analogies so each teaching phenotype now carries a denser set of memorable clinical frames.
+
+## [0.37.0] - 2026-04-05
+
+### Added
+
+- Expanded the `/plasticity` phenotype chooser from a small preset set into a broader teaching library with fourteen learning-rule phenotypes, including synchronous neutrality, narrow coincidence detection, broad association windows, slow consolidation, low-gain training, reversal-ready depression, homeostatic pullback, eligibility-tail learning, and precision pruning.
+
 ## [0.36.1] - 2026-04-05
 
 ### Added
