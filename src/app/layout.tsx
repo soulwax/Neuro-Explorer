@@ -8,7 +8,7 @@ import { AppShell } from "~/components/app-shell";
 export const metadata: Metadata = {
   title: "Neuro Explorer",
   description:
-    "Interactive neuroscience simulations and AI-backed learning tools built on Next.js.",
+    "Interactive neuroscience simulations and learning tools built on Next.js.",
   icons: [{ rel: "icon", url: "/favicon.ico" }],
 };
 
