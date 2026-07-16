@@ -329,6 +329,23 @@ function beatWindows(landmarks: ECGBeatLandmarks) {
   ] as const;
 }
 
+function visibleBeatWindows(
+  landmarks: ECGBeatLandmarks,
+  paperDuration: number,
+  width: number,
+) {
+  return beatWindows(landmarks).flatMap((window) => {
+    const start = clamp(window.start, 0, paperDuration);
+    const end = clamp(window.end, 0, paperDuration);
+    if (end <= start) {
+      return [];
+    }
+    const x = timeToX(start, 0, paperDuration, width);
+    const boxWidth = timeToX(end, 0, paperDuration, width) - x;
+    return [{ ...window, x, width: boxWidth }];
+  });
+}
+
 function formatSigned(value: number, fractionDigits = 2) {
   const rounded = value.toFixed(fractionDigits);
   return value > 0 ? `+${rounded}` : rounded;
@@ -430,8 +447,9 @@ function LeadSpotlight({
   );
   const baselineY = mvToY(0, FOCUS_HEIGHT);
   const metrics = summarizeLead(leadPoints);
-  const beatBoxes =
-    display.beatAnnotations ? beatWindows(result.beat.landmarks) : [];
+  const beatBoxes = display.beatAnnotations
+    ? visibleBeatWindows(result.beat.landmarks, paperDuration, FOCUS_WIDTH)
+    : [];
   const selectedLeadView = describeLeadView(selectedLead);
   const vectorComment =
     activeFrame?.dominantLead === selectedLead
@@ -494,7 +512,7 @@ function LeadSpotlight({
 
           <svg
             viewBox={`0 0 ${FOCUS_WIDTH} ${FOCUS_HEIGHT}`}
-            className="mt-4 w-full overflow-visible rounded-[22px] border border-[#d88ca1]/20 bg-[linear-gradient(180deg,#fffafb_0%,#fff3f6_100%)]"
+            className="mt-4 w-full rounded-[22px] border border-[#d88ca1]/20 bg-[linear-gradient(180deg,#fffafb_0%,#fff3f6_100%)]"
           >
             <rect
               x="0"
@@ -541,34 +559,29 @@ function LeadSpotlight({
               stroke={ECG_BASELINE}
               strokeWidth="0.85"
             />
-            {beatBoxes.map((window) => {
-              const x = timeToX(window.start, 0, paperDuration, FOCUS_WIDTH);
-              const width =
-                timeToX(window.end, 0, paperDuration, FOCUS_WIDTH) - x;
-              return (
-                <g key={`lead-focus-${window.key}`}>
-                  <rect
-                    x={x}
-                    y={18}
-                    width={width}
-                    height={FOCUS_HEIGHT - 36}
-                    fill={window.fill}
-                    stroke={window.stroke}
-                    strokeDasharray="6 5"
-                  />
-                  <text
-                    x={x + width / 2}
-                    y="34"
-                    textAnchor="middle"
-                    fill={window.stroke}
-                    fontSize="11"
-                    fontWeight="600"
-                  >
-                    {window.label}
-                  </text>
-                </g>
-              );
-            })}
+            {beatBoxes.map((window) => (
+              <g key={`lead-focus-${window.key}`}>
+                <rect
+                  x={window.x}
+                  y={18}
+                  width={window.width}
+                  height={FOCUS_HEIGHT - 36}
+                  fill={window.fill}
+                  stroke={window.stroke}
+                  strokeDasharray="6 5"
+                />
+                <text
+                  x={window.x + window.width / 2}
+                  y="34"
+                  textAnchor="middle"
+                  fill={window.stroke}
+                  fontSize="11"
+                  fontWeight="600"
+                >
+                  {window.label}
+                </text>
+              </g>
+            ))}
             {display.calibrationPulse ? (
               <path
                 d={calibrationPulsePath(FOCUS_WIDTH, FOCUS_HEIGHT)}
@@ -1064,39 +1077,33 @@ function SurfaceDesk({
                   strokeWidth="0.8"
                 />
                 {display.beatAnnotations
-                  ? beatWindows(result.beat.landmarks).map((window) => {
-                      const x = timeToX(
-                        window.start,
-                        0,
-                        paperDuration,
-                        RHYTHM_WIDTH,
-                      );
-                      const width =
-                        timeToX(window.end, 0, paperDuration, RHYTHM_WIDTH) - x;
-                      return (
-                        <g key={window.key}>
-                          <rect
-                            x={x}
-                            y={18}
-                            width={width}
-                            height={RHYTHM_HEIGHT - 36}
-                            fill={window.fill}
-                            stroke={window.stroke}
-                            strokeDasharray="5 4"
-                          />
-                          <text
-                            x={x + width / 2}
-                            y="34"
-                            textAnchor="middle"
-                            fill={window.stroke}
-                            fontSize="11"
-                            fontWeight="600"
-                          >
-                            {window.label}
-                          </text>
-                        </g>
-                      );
-                    })
+                  ? visibleBeatWindows(
+                      result.beat.landmarks,
+                      paperDuration,
+                      RHYTHM_WIDTH,
+                    ).map((window) => (
+                      <g key={window.key}>
+                        <rect
+                          x={window.x}
+                          y={18}
+                          width={window.width}
+                          height={RHYTHM_HEIGHT - 36}
+                          fill={window.fill}
+                          stroke={window.stroke}
+                          strokeDasharray="5 4"
+                        />
+                        <text
+                          x={window.x + window.width / 2}
+                          y="34"
+                          textAnchor="middle"
+                          fill={window.stroke}
+                          fontSize="11"
+                          fontWeight="600"
+                        >
+                          {window.label}
+                        </text>
+                      </g>
+                    ))
                   : null}
                 {display.calibrationPulse ? (
                   <path

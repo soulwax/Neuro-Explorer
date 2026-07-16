@@ -98,6 +98,7 @@ body::after {
 
 .app-page-stack {
   display: grid;
+  grid-template-columns: minmax(0, 1fr);
   gap: clamp(1rem, 1.8vw, 1.25rem);
 }
 
