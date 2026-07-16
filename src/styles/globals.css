@@ -8,14 +8,11 @@
 :root {
   color-scheme: dark;
   --surface-shell: oklch(0.24 0.024 246 / 0.72);
-  --surface-panel: oklch(0.27 0.02 244 / 0.74);
-  --surface-panel-hero: oklch(0.29 0.024 242 / 0.82);
   --surface-panel-subtle: oklch(0.25 0.018 244 / 0.62);
   --surface-border: oklch(0.76 0.03 228 / 0.16);
   --surface-border-strong: oklch(0.83 0.036 220 / 0.24);
   --surface-ink: oklch(0.96 0.008 250);
   --surface-ink-muted: oklch(0.8 0.02 240);
-  --surface-shadow: 0 16px 40px rgba(2, 8, 18, 0.18);
   --surface-frame-glow-vertical: linear-gradient(
     180deg,
     oklch(0.95 0.01 235 / 0.03) 0%,
