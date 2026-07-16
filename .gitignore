@@ -175,3 +175,6 @@ AGENTS.md
 
 .vercel
 .env*.local
+
+# Superpowers brainstorming companion sessions
+.superpowers/

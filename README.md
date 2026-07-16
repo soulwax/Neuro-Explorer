@@ -1,6 +1,6 @@
 # Neuro Explorer
 
-Interactive neuroscience labs and AI-assisted study tools built as a single Next.js application.
+Interactive neuroscience labs and intelligent study tools built as a single Next.js application.
 
 ## Architecture
 
