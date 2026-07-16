@@ -318,7 +318,7 @@
 ### Added
 
 - Added root App Router pages for `Grid Cell Navigator` and `12-Lead ECG Explorer`, completing the full module set inside the primary Next.js application.
-- Added root server adapters under `src/server/*` so the internal `/api/*` contract now handles deterministic labs and Cloudflare AI-backed routes from the same app boundary.
+- Added root server adapters under `src/server/*` so the internal `/api/*` contract now handles deterministic labs and Cloudflare Worker routes from the same app boundary.
 
 ### Changed
 

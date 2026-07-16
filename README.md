@@ -34,7 +34,7 @@ npm install
 npm run dev
 ```
 
-For AI-backed routes in local Next.js dev or Vercel, set one of these credential pairs:
+For intelligent routes in local Next.js dev or Vercel, set one of these credential pairs:
 
 ```bash
 CLOUDFLARE_ACCOUNT_ID=...
