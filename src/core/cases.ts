@@ -74,3 +74,8 @@ export interface DermatomeClinicalCase extends InstructionCase {
   expectedLesionId: string;
   startingLesionId: string;
 }
+
+export interface HeadacheClinicalCase extends InstructionCase {
+  expectedPresetId: string;
+  startingPresetId: string;
+}
