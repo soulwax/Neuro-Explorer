@@ -245,6 +245,9 @@ export function HeadacheExplorer() {
             <h3 className="mt-2 text-lg font-semibold text-white">
               {selectedPreset.label}
             </h3>
+            <p className="mt-2 text-sm font-medium leading-6 text-cyan-100">
+              {selectedPreset.frame}
+            </p>
             <p className="mt-4 text-sm leading-7 text-slate-300">
               {selectedPreset.summary}
             </p>
