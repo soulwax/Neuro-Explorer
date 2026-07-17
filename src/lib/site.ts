@@ -29,6 +29,7 @@ export const navItems = [
   { href: "/stroke", label: "Stroke" },
   { href: "/dermatome", label: "Dermatomes" },
   { href: "/sleep", label: "Sleep" },
+  { href: "/headache", label: "Headache" },
   { href: "/ask", label: "Ask" },
 ] as const;
 
@@ -208,5 +209,13 @@ export const moduleCards: ModuleCard[] = [
       "Hypnogram generation with realistic stage cycling, EEG characteristics per stage, and clinical sleep disorder presets from narcolepsy to RBD.",
     badge: "Sleep Medicine",
     href: "/sleep",
+  },
+  {
+    slug: "headache",
+    title: "Headache & Migraine Localizer",
+    description:
+      "Differentiate migraine, tension-type, and cluster headache through bedside history patterns, then practice recognizing the thunderclap red flags that mandate urgent secondary-headache workup.",
+    badge: "Primary Headache",
+    href: "/headache",
   },
 ];

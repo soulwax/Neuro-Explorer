@@ -489,6 +489,28 @@ export const curriculumModules: CurriculumModule[] = [
       "Dissociated sensory loss is rare — it is common and highly localizing (cord, brainstem).",
     ],
   },
+  {
+    slug: "headache",
+    title: "Headache & Migraine Localizer",
+    trainingStage: "Primary headache and red-flag recognition",
+    learningGoals: [
+      "Differentiate migraine, tension-type, and cluster headache using history and associated features",
+      "Recognize thunderclap onset and other red flags that mandate urgent secondary-headache workup",
+      "Use the timing, quality, and associated-symptom pattern of a headache to build a differential before naming a diagnosis",
+    ],
+    advancedObjectives: [
+      "Distinguish migraine aura from TIA using onset speed, symptom polarity (positive vs negative), and full reversibility.",
+      "Recognize the ipsilateral autonomic signs and restless behavior that separate cluster headache from migraine.",
+      "Treat time-to-maximal-intensity, not pain severity alone, as the decisive discriminator for thunderclap headache.",
+    ],
+    prerequisites: ["Basic neuroanatomy"],
+    linkedModules: ["ask", "brain-atlas", "vertigo", "sleep"],
+    commonMisconceptions: [
+      "All severe headaches are migraines — cluster headache and secondary causes can be just as severe or more severe.",
+      "A normal neurologic exam excludes subarachnoid hemorrhage — the onset pattern alone can mandate urgent imaging.",
+      "Migraine aura is always visual — sensory and speech auras occur too, and the defining features are the gradual march, positive phenomena, and full reversibility, not the modality.",
+    ],
+  },
 ];
 
 export function getCurriculumModule(slug: string) {
