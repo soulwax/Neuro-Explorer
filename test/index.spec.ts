@@ -54,7 +54,7 @@ describe('Neuro Explorer API', () => {
 		expect(data.usage).toContain('/api/vision');
 		expect(data.ventral_stream.length).toBe(6);
 		expect(data.ventral_stream[0]?.corticalArea).toContain('V1');
-		expect(data.sample_image_url).toContain('wikimedia.org');
+		expect(data.sample_image_url).toBe('https://example.com/cat-knife.gif');
 	});
 
 	it('serves bootstrap data through /api/ask', async () => {

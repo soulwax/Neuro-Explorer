@@ -42,8 +42,7 @@ export interface VisionSyndromePreset {
   comparePresetId: string;
 }
 
-export const visionDefaultImageUrl =
-  "https://upload.wikimedia.org/wikipedia/commons/3/3a/Cat03.jpg";
+export const visionDefaultImageUrl = "/cat-knife.gif";
 
 export const visionStages: VisionStage[] = [
   {

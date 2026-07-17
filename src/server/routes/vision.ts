@@ -33,14 +33,16 @@ export async function handleVision(request: Request, ai: AiClient): Promise<Resp
 			ventral_stream: visionStages,
 			skip_connections: visionSkipConnections,
 			key_insight: visionKeyInsight,
-			sample_image_url: visionDefaultImageUrl,
+			sample_image_url: new URL(visionDefaultImageUrl, request.url).toString(),
 		});
 	}
 
-	// Validate URL scheme — only allow http/https
+	// Validate URL scheme — only allow http/https. A base is supplied so the
+	// app's own relative sample image (visionDefaultImageUrl) resolves against
+	// this request's origin; absolute URLs are unaffected by the base.
 	let parsedUrl: URL;
 	try {
-		parsedUrl = new URL(imageUrl);
+		parsedUrl = new URL(imageUrl, request.url);
 	} catch {
 		return jsonResponse(
 			{
@@ -68,7 +70,7 @@ export async function handleVision(request: Request, ai: AiClient): Promise<Resp
 	const timeoutId = setTimeout(() => controller.abort(), 10000); // 10 second timeout
 
 	try {
-		const imageResponse = await fetch(imageUrl, {
+		const imageResponse = await fetch(parsedUrl.toString(), {
 			signal: controller.signal,
 		});
 		clearTimeout(timeoutId);
