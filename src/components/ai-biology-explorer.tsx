@@ -32,7 +32,7 @@ const challenges: Challenge[] = [
 		name: 'Find the edge',
 		chapter: '01 · The dark corridor',
 		story:
-			'02:13. The research wing drops into darkness and the magnetic locks fire like gunshots down the hall. You are Dr. Hans Werner, and you wake on the corridor floor with your pulse in your ears and no memory of how you fell. The emergency lamp stutters overhead, throwing the walls into a red strobe — and in all that lurching shadow, one thing refuses to flinch: a single pale vertical line, holding its shape while everything around it shakes.',
+			'02:13. The research wing drops into darkness and the magnetic locks fire like gunshots down the hall. You are Dr. Hans Werner, and you wake on the corridor floor with your pulse in your ears and no memory of how you fell. The emergency lamp stutters overhead, throwing the walls into a red strobe — and in all that lurching shadow, one thing refuses to flinch: a single pale vertical line, holding its shape while everything around it shakes. Your ears are ringing; the air tastes of scorched dust and cold concrete; somewhere out of sight a door keeps trying its own lock and failing.',
 		thought:
 			'Breathe, Hans. In a strobe, panic paints a trap onto every moving shadow. Trust the thing that stays the same when the light changes — not the thing that screams the loudest.',
 		outcome:
@@ -67,7 +67,7 @@ const challenges: Challenge[] = [
 		name: 'Sort the tone',
 		chapter: '02 · Behind the wall',
 		story:
-			'The corridor dies at a sealed service lift. Behind the ventilation roar, four sounds bleed through the wall: a low mechanical drone, one clear ringing tone, a thin electric hiss, and a strangely patient, even pulse. One of them is the lift’s access chime — your way down into the building. The others might mean the fire-suppression system has already armed itself around you.',
+			'The corridor dies at a sealed service lift. Behind the ventilation roar, four sounds bleed through the wall: a low mechanical drone, one clear ringing tone, a thin electric hiss, and a strangely patient, even pulse. One of them is the lift’s access chime — your way down into the building. The others might mean the fire-suppression system has already armed itself around you. You press an ear to the cold steel of the doors and try to hear past the hammering of your own pulse.',
 		thought:
 			'You want the lift to work so badly you can taste it. Wanting is a guess wearing the clothes of a fact, Hans. Take the sound apart — pitch in one hand, rhythm in the other — before you believe any of it.',
 		outcome:
@@ -109,7 +109,7 @@ const challenges: Challenge[] = [
 		name: 'Track motion',
 		chapter: '03 · The moving beacon',
 		story:
-			'The lift jerks to a halt between floors. Through a grated maintenance panel, a beacon begins to flash — first at the left edge, then the centre, then further right — each flash a little brighter than the last. Your peripheral vision stitches the separate sparks into something that feels, unmistakably, like movement heading somewhere.',
+			'The lift jerks to a halt between floors. Through a grated maintenance panel, a beacon begins to flash — first at the left edge, then the centre, then further right — each flash a little brighter than the last. Your peripheral vision stitches the separate sparks into something that feels, unmistakably, like movement heading somewhere. Your knees are unsteady on the grille, each flash smears itself across your vision, and the shaft below breathes cold air up your spine.',
 		thought:
 			'Your eyes keep lunging at the brightest flash. Brightness is a decoy, Hans. Direction doesn’t live in how bright a flash is — it lives in the order they arrive.',
 		outcome:
@@ -144,7 +144,7 @@ const challenges: Challenge[] = [
 		name: 'Complete the face',
 		chapter: '04 · The noisy camera',
 		story:
-			'A dead security monitor flickers awake. Through a blizzard of compression static you catch fragments — a pair of eyes, the curve of a head, drifting digital blocks, and, half a second behind, a movement that answers the raised hand on the screen. You need to know, right now, whether the figure on that monitor is coming to help you or waiting for you to walk into it.',
+			'A dead security monitor flickers awake. Through a blizzard of compression static you catch fragments — a pair of eyes, the curve of a head, drifting digital blocks, and, half a second behind, a movement that answers the raised hand on the screen. You need to know, right now, whether the figure on that monitor is coming to help you or waiting for you to walk into it. The static hisses and tears; the picture knits together and falls apart; you realise you have been holding your breath, waiting for it to become a person.',
 		thought:
 			'Please let it be Astrid. But hope can finish a face that was never there, Hans. Demand one thing a reflection, a mannequin, or a stranger cannot fake — living motion that answers you, not one that merely mirrors.',
 		outcome:
@@ -186,7 +186,7 @@ const challenges: Challenge[] = [
 		name: 'Gate the alarm',
 		chapter: '05 · Alarm or all-clear',
 		story:
-			"Astrid's voice reaches you through a cracked intercom, and then you are at the control-room glass. Your heart is slamming; the air is sharp with hot plastic and ozone; a single green safety lamp glows steady and reassuring on the panel; and above a bank of battery cabinets the air has begun to shimmer with heat. The lockdown display offers four explanations — and each one wants you to do something different, right now.",
+			"Astrid's voice reaches you through a cracked intercom, and then you are at the control-room glass. Your heart is slamming; the air is sharp with hot plastic and ozone; a single green safety lamp glows steady and reassuring on the panel; and above a bank of battery cabinets the air has begun to shimmer with heat. The lockdown display offers four explanations — and each one wants you to do something different, right now. Your hands are already moving before your mind has finished reading, and it costs you everything to make them wait.",
 		thought:
 			'Your racing heart is telling you about you, not about the room. And that calm green lamp badly wants to be believed. Separate the panic and the reassurance from the heat and the smell before you touch anything.',
 		outcome:
@@ -228,7 +228,7 @@ const challenges: Challenge[] = [
 		name: 'Resolve the word',
 		chapter: '06 · The final instruction',
 		story:
-			'Smoke curls under the control-room door. The evacuation terminal is dying, its message breaking into fragments: “FOLLOW THE BR… …IGHT LIGHT →”. Under this much pressure your mind keeps snatching at the first word that fits. But the sentence frame, the missing ending, and that small blinking arrow all have to agree before you move — because you only get to be wrong about this once.',
+			'Smoke curls under the control-room door. The evacuation terminal is dying, its message breaking into fragments: “FOLLOW THE BR… …IGHT LIGHT →”. Under this much pressure your mind keeps snatching at the first word that fits. But the sentence frame, the missing ending, and that small blinking arrow all have to agree before you move — because you only get to be wrong about this once. The letters flicker with the failing power, and the smoke has begun to sting your eyes into tears.',
 		thought:
 			'Urgency is shoving the first plausible word into your mouth, Hans. Let the sentence finish. Meaning is not the loudest fragment — it is the one reading that survives once every clue has spoken.',
 		outcome:
@@ -270,7 +270,7 @@ const challenges: Challenge[] = [
 		name: 'Localize the source',
 		chapter: '07 · The server vault',
 		story:
-			'The stair ends in a server vault — black except for scattered indicator LEDs and the deep hum you have chased since 02:13. Five faint cues reach you at once: a bearing of sound, a gradient of heat, a draft of moving air, a tremor through the floor, and a single live status glow. They do not all point to the same rack. Somewhere in here is the core that is holding the whole building shut.',
+			'The stair ends in a server vault — black except for scattered indicator LEDs and the deep hum you have chased since 02:13. Five faint cues reach you at once: a bearing of sound, a gradient of heat, a draft of moving air, a tremor through the floor, and a single live status glow. They do not all point to the same rack. Somewhere in here is the core that is holding the whole building shut. You flatten a hand against the nearest rack, steady your breathing, and let the darkness sort itself into directions.',
 		thought:
 			'Every instinct wants to chase the loudest cue and be done, Hans. But one loud cue is not a location. Let the weaker signals that agree with each other outvote the strong, lonely one.',
 		outcome:
@@ -315,7 +315,7 @@ const challenges: Challenge[] = [
 		name: 'Trust the voice',
 		chapter: '08 · The mimic',
 		story:
-			'The vault speakers wake with Astrid’s voice — her exact timbre, her exact phrasing — telling you to stop, to step back, that it is not safe. But the real Astrid is beside you, silent, her hand tightening on your arm. Two claims on one identity, and six thin cues to tell which voice has an actual person behind it.',
+			'The vault speakers wake with Astrid’s voice — her exact timbre, her exact phrasing — telling you to stop, to step back, that it is not safe. But the real Astrid is beside you, silent, her hand tightening on your arm. Two claims on one identity, and six thin cues to tell which voice has an actual person behind it. The voice overhead is warm and certain; the hand on your arm is cold and real; you have a few seconds to decide which one of them to believe.',
 		thought:
 			'The copy is good, Hans — good enough that timbre and vocabulary will not save you. Ask for the one thing a perfect copy never has: a shared past, and the small human failures that come with it.',
 		outcome:
@@ -361,7 +361,7 @@ const challenges: Challenge[] = [
 		name: 'Choose the shutdown',
 		chapter: '09 · The kill signal',
 		story:
-			'The core lies open, six status readings pulsing in the dark: the power draw, the core temperature, the cascade risk, the vent pressure, the interlock state, and the drive still writing. One action will quiet the Signal and release the building’s locks. The wrong one brings the whole cascade down on top of you. You get exactly one attempt.',
+			'The core lies open, six status readings pulsing in the dark: the power draw, the core temperature, the cascade risk, the vent pressure, the interlock state, and the drive still writing. One action will quiet the Signal and release the building’s locks. The wrong one brings the whole cascade down on top of you. You get exactly one attempt. Astrid’s grip tightens on your arm, and neither of you says the obvious thing aloud: get this wrong, and no one finds the two of you until morning.',
 		thought:
 			'The obvious move is to cut the power and be done, Hans. But obvious is what the interlocks are counting on. Read all six readings, not the loudest one, and choose the move the system did not prepare for.',
 		outcome:
@@ -1701,17 +1701,25 @@ export function AiBiologyExplorer() {
 							</span>
 							Enter the scene · read here first
 						</p>
+						{challengeIndex > 0 && played.includes(challenges[challengeIndex - 1]!.id) && (
+							<p className="mb-2.5 max-w-3xl border-l-2 border-white/10 pl-3 text-[11px] italic leading-5 text-slate-500 sm:text-xs">
+								<span className="mr-1.5 align-middle font-semibold uppercase not-italic tracking-[.16em] text-slate-600">Previously</span>
+								{challenges[challengeIndex - 1]!.interlude}
+							</p>
+						)}
 						<div className="flex flex-wrap items-center gap-2">
 							<p className="text-[10px] font-semibold uppercase tracking-[0.24em] text-emerald-300">{challenge.chapter}</p>
 							<span className="rounded-full bg-white/5 px-2 py-1 text-[9px] uppercase tracking-wider text-slate-400">
 								{challenge.domain}
 							</span>
 						</div>
-						<h2 className="mt-1 text-lg font-semibold text-white sm:text-xl">{challenge.name}</h2>
-						<p className="mt-1.5 max-w-3xl text-xs leading-5 text-slate-300 sm:mt-2 sm:text-sm sm:leading-6">{challenge.story}</p>
-						<div className="mt-2 max-w-3xl border-l border-fuchsia-200/30 pl-3">
+						<h2 className="mt-1 text-lg font-semibold text-white sm:text-2xl">{challenge.name}</h2>
+						<p className="mt-2 max-w-3xl text-[13px] leading-6 text-slate-200/95 sm:mt-3 sm:text-[15px] sm:leading-7">
+							{challenge.story}
+						</p>
+						<div className="mt-3 max-w-3xl border-l-2 border-fuchsia-200/30 pl-3">
 							<p className="text-[9px] font-semibold uppercase tracking-[.18em] text-fuchsia-200/60">Hans, to himself</p>
-							<p className="mt-1 text-xs italic leading-5 text-fuchsia-50/80">“{challenge.thought}”</p>
+							<p className="mt-1 text-[13px] italic leading-6 text-fuchsia-50/85">“{challenge.thought}”</p>
 						</div>
 					</div>
 					<div className="grid grid-cols-2 gap-2">
@@ -1733,7 +1741,7 @@ export function AiBiologyExplorer() {
 
 				<div
 					data-guide-stage="2"
-					className={`mt-2 grid gap-2 rounded-xl border bg-slate-950/30 p-3 transition-all duration-[1200ms] md:grid-cols-[1fr_auto] md:items-center sm:mt-3 sm:rounded-2xl sm:p-4 ${readingStage === 2 ? 'border-violet-200/30 opacity-100 shadow-[0_0_30px_rgba(167,139,250,.08)]' : introSeen ? 'border-white/10 opacity-100' : 'border-white/8 opacity-45'}`}
+					className={`mt-2 grid gap-2 rounded-xl border bg-slate-950/30 p-3 transition-all duration-[1200ms] md:grid-cols-[1fr_auto] md:items-center sm:mt-3 sm:rounded-2xl sm:p-4 ${readingStage === 2 ? 'border-violet-200/30 opacity-100 shadow-[0_0_30px_rgba(167,139,250,.08)]' : introSeen ? 'border-white/10 opacity-100' : 'border-white/8 opacity-70'}`}
 				>
 					<div>
 						<p className="flex items-center gap-2 text-[9px] font-semibold uppercase tracking-[.2em] text-violet-200/80">
@@ -1765,7 +1773,7 @@ export function AiBiologyExplorer() {
 
 				<div
 					data-guide-stage="2"
-					className={`mt-2 grid gap-1.5 transition-all duration-[1200ms] sm:mt-3 sm:gap-2 ${inputGridClass(challenge.input.length)} ${readingStage === 2 || introSeen ? 'opacity-100' : 'opacity-45'}`}
+					className={`mt-2 grid gap-1.5 transition-all duration-[1200ms] sm:mt-3 sm:gap-2 ${inputGridClass(challenge.input.length)} ${readingStage === 2 || introSeen ? 'opacity-100' : 'opacity-70'}`}
 					aria-label="Input evidence strengths"
 				>
 					{challenge.input.map((value, index) => {
@@ -1795,7 +1803,7 @@ export function AiBiologyExplorer() {
 
 				<div
 					data-guide-stage="3"
-					className={`mt-3 rounded-xl border bg-slate-950/25 p-3 transition-all duration-[1200ms] sm:rounded-2xl sm:p-4 ${readingStage === 3 ? 'border-amber-200/30 opacity-100 shadow-[0_0_30px_rgba(251,191,36,.08)]' : introSeen ? 'border-white/10 opacity-100' : 'border-white/8 opacity-45'}`}
+					className={`mt-3 rounded-xl border border-amber-200/25 bg-[linear-gradient(120deg,rgba(251,191,36,.06),rgba(15,23,42,.12))] p-3 opacity-100 shadow-[0_0_30px_rgba(251,191,36,.08)] transition-all duration-[1200ms] sm:rounded-2xl sm:p-4 ${readingStage === 3 ? 'shadow-[0_0_44px_rgba(251,191,36,.14)]' : ''}`}
 				>
 					<div className="flex flex-wrap items-center justify-between gap-2">
 						<div>
@@ -1864,7 +1872,7 @@ export function AiBiologyExplorer() {
 
 				<div
 					data-guide-stage="4"
-					className={`mt-4 transition-all duration-[1200ms] ${readingStage === 4 || introSeen ? 'opacity-100' : 'opacity-45'}`}
+					className={`mt-4 transition-all duration-[1200ms] ${readingStage === 4 || introSeen ? 'opacity-100' : 'opacity-70'}`}
 				>
 					<div className="mb-2 flex items-center gap-2 px-1 text-[9px] font-semibold uppercase tracking-[.2em] text-cyan-200/80">
 						<span className="flex size-5 items-center justify-center rounded-full border border-cyan-200/30 bg-cyan-200/10 font-mono text-cyan-100">
@@ -1920,7 +1928,7 @@ export function AiBiologyExplorer() {
 				</div>
 				<div
 					data-guide-stage="4"
-					className={`hidden transition-all duration-[1200ms] lg:block ${readingStage === 4 || introSeen ? 'opacity-100' : 'opacity-45'}`}
+					className={`hidden transition-all duration-[1200ms] lg:block ${readingStage === 4 || introSeen ? 'opacity-100' : 'opacity-70'}`}
 				>
 					<PerceptCanvas
 						challenge={challenge}
@@ -1934,7 +1942,7 @@ export function AiBiologyExplorer() {
 				{revealed && (
 					<div
 						data-guide-stage="5"
-						className={`mt-2 overflow-hidden rounded-xl border bg-slate-950/30 transition-all duration-[1200ms] sm:mt-3 sm:rounded-2xl ${readingStage === 5 ? 'border-emerald-200/30 opacity-100 shadow-[0_0_32px_rgba(110,231,183,.08)]' : introSeen ? 'border-white/10 opacity-100' : 'border-white/10 opacity-45'}`}
+						className={`mt-2 overflow-hidden rounded-xl border bg-slate-950/30 transition-all duration-[1200ms] sm:mt-3 sm:rounded-2xl ${readingStage === 5 ? 'border-emerald-200/30 opacity-100 shadow-[0_0_32px_rgba(110,231,183,.08)]' : introSeen ? 'border-white/10 opacity-100' : 'border-white/10 opacity-70'}`}
 					>
 						<div className="flex items-center gap-2 border-b border-emerald-200/10 bg-emerald-200/[.035] px-4 py-2 text-[9px] font-semibold uppercase tracking-[.2em] text-emerald-200/80">
 							<span className="flex size-5 items-center justify-center rounded-full border border-emerald-200/30 bg-emerald-200/10 font-mono text-emerald-100">
