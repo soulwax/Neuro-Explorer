@@ -3,6 +3,17 @@
 
 
 
+
+## [v0.38.3] - 2026-07-20
+
+Release type: PATCH
+
+### Added
+
+- Enriched every `/ai-biology` mission with descriptions of what each candidate listens for, signal-by-signal animation narration, and a post-round contribution ledger that shows how evidence and connection strength produce support or suppression.
+- Added mission-specific biology bridges covering receptive fields, tonotopy, motion coding, recurrent visual processing, distributed salience systems, and contextual language processing while clearly marking the limits of each toy model.
+- Added a practical FAQ on inhibition, inference versus learning, spike codes, global objectives, and what representational similarity can—and cannot—establish about shared mechanism.
+
 ## [v0.38.2] - 2026-07-20
 
 Release type: PATCH
