@@ -1,6 +1,16 @@
 # Changelog
 
 
+
+## [v0.38.1] - 2026-07-20
+
+Release type: PATCH
+
+### Added
+
+- Expanded `/ai-biology` with mechanism-focused fact cards, a multi-scale timing comparison, practical guidance for using and dropping the neural-network analogy, an expandable terminology glossary, and a linked evidence trail of landmark papers and reviews.
+- Added explicit scientific qualifiers around dendritic computation, dynamic synaptic efficacy, memory reconsolidation, signaling energy, and the open problem of biological credit assignment.
+
 ## [v0.38.0] - 2026-07-20
 
 Release type: MINOR

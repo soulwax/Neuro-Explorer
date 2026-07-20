@@ -212,6 +212,74 @@ const differences = [
   },
 ];
 
+const factCards = [
+  {
+    tag: "The unit",
+    title: "A neuron is already a network",
+    fact: "Dendritic branches can combine inputs linearly or nonlinearly, so treating one cell as a single weighted sum discards computation happening before the soma.",
+    use: "Useful when someone says an artificial node is a faithful model of a biological neuron.",
+  },
+  {
+    tag: "The connection",
+    title: "A synapse is not one stored number",
+    fact: "Its effective strength depends on transmitter release, receptor state, recent spikes, location on the dendrite, and the receiving cell’s current state.",
+    use: "The same presynaptic spike can have a different effect a moment later.",
+  },
+  {
+    tag: "The clock",
+    title: "Recent history changes the present",
+    fact: "Short-term synaptic plasticity can alter effective connection strength over milliseconds to seconds through processes such as facilitation and vesicle depletion.",
+    use: "Biological inference and biological learning are not cleanly separated phases.",
+  },
+  {
+    tag: "The memory",
+    title: "Recall can become an update",
+    fact: "Under the right conditions, reactivation can make a consolidated memory temporarily labile before it is restabilized—a process called reconsolidation.",
+    use: "Retrieval is not always a read-only database query, but reactivation alone is not always sufficient.",
+  },
+  {
+    tag: "The budget",
+    title: "Communication is expensive",
+    fact: "Biophysical energy budgets attribute much of gray-matter signaling cost to action potentials and postsynaptic currents, favoring sparse and efficient codes.",
+    use: "Compare whole systems and workloads; never turn this into a simplistic brain-watts versus GPU-watts claim.",
+  },
+  {
+    tag: "The unknown",
+    title: "Brain credit assignment is open",
+    fact: "Backpropagation solves credit assignment in artificial networks. Whether cortical circuits approximate parts of it—and by what mechanisms—remains an active research question.",
+    use: "“The brain definitely backprops” and “the brain could never use error signals” are both stronger than the evidence.",
+  },
+] as const;
+
+const timeScales = [
+  { scale: "milliseconds", machine: "One scheduled operation or layer transition", biology: "Spikes, synaptic delay, coincidence, refractoriness", anchor: "Classic cultured-neuron STDP changed sign around pre/post order within roughly ±20 ms." },
+  { scale: "seconds", machine: "A sequence window, recurrent state, or generated token stream", biology: "Short-term facilitation/depression, working state, neuromodulation", anchor: "A biological connection’s effective gain can drift during the computation itself." },
+  { scale: "minutes → hours", machine: "Training steps, checkpointing, evaluation", biology: "Plasticity induction, consolidation cascades, protein-dependent changes", anchor: "A lasting change is a biochemical process, not merely assignment to a variable." },
+  { scale: "days → years", machine: "Further training, fine-tuning, model replacement", biology: "Systems consolidation, skill learning, development, homeostatic adaptation", anchor: "Brains must learn while keeping an organism functioning and older knowledge usable." },
+] as const;
+
+const glossary = [
+  ["Activation", "The numerical output of an artificial unit after its weighted input is transformed."],
+  ["Action potential", "A regenerative electrical spike that travels along a neuron’s axon; its timing often carries more information than its size."],
+  ["Weight", "A trainable parameter that scales a signal in an artificial network."],
+  ["Synaptic efficacy", "The context-dependent influence one biological neuron has on another—not a literal scalar stored at the junction."],
+  ["Gradient", "A collection of derivatives indicating how parameter changes would alter an objective or loss."],
+  ["Credit assignment", "The problem of deciding which internal changes deserve credit or blame for an outcome."],
+  ["LTP / LTD", "Families of processes that produce persistent increases or decreases in synaptic efficacy."],
+  ["Neuromodulator", "A chemical signal, such as dopamine or acetylcholine, that can change excitability, plasticity, and circuit state."],
+] as const;
+
+const references = [
+  { label: "Rumelhart, Hinton & Williams (1986)", detail: "Back-propagating errors", href: "https://www.nature.com/articles/323533a0" },
+  { label: "Bliss & Lømo (1973)", detail: "Long-lasting hippocampal potentiation", href: "https://pubmed.ncbi.nlm.nih.gov/4727084/" },
+  { label: "Bi & Poo (1998)", detail: "Spike timing and synaptic modification", href: "https://pubmed.ncbi.nlm.nih.gov/9852584/" },
+  { label: "London & Häusser (2005)", detail: "Dendritic computation", href: "https://pubmed.ncbi.nlm.nih.gov/16033324/" },
+  { label: "Attwell & Laughlin (2001)", detail: "Gray-matter signaling energy budget", href: "https://pubmed.ncbi.nlm.nih.gov/11598490/" },
+  { label: "Lillicrap et al. (2020)", detail: "Backpropagation and the brain", href: "https://www.nature.com/articles/s41583-020-0277-3" },
+  { label: "Sevenster, Beckers & Kindt (2012)", detail: "Boundary conditions for reconsolidation", href: "https://pubmed.ncbi.nlm.nih.gov/22406658/" },
+  { label: "Ghanbari et al. (2017)", detail: "Short-term synaptic plasticity time scales", href: "https://pubmed.ncbi.nlm.nih.gov/28873406/" },
+] as const;
+
 export function AiBiologyExplorer() {
   const [challengeIndex, setChallengeIndex] = useState(0);
   const [guess, setGuess] = useState<number | null>(null);
@@ -372,6 +440,26 @@ export function AiBiologyExplorer() {
         <p className="mt-4 px-2 text-xs leading-5 text-slate-500">Teaching simplification: firing rate stands in for a biological population response. Real neural circuits are recurrent, time-varying, and vastly more complex.</p>
       </section>
 
+      <section className="app-surface">
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+          <div>
+            <p className="text-xs font-semibold uppercase tracking-[.25em] text-cyan-200">Six facts the game hides</p>
+            <h2 className="mt-3 text-2xl font-semibold tracking-tight text-white sm:text-3xl">The simplification is the lesson—and the trap.</h2>
+          </div>
+          <p className="max-w-sm text-xs leading-5 text-slate-400">Each card names a place where the visual analogy becomes scientifically incomplete.</p>
+        </div>
+        <div className="mt-6 grid gap-3 md:grid-cols-2 xl:grid-cols-3">
+          {factCards.map((item, index) => (
+            <article key={item.title} className="group rounded-2xl border border-white/10 bg-slate-950/35 p-5 transition hover:-translate-y-0.5 hover:border-white/20 hover:bg-white/[.045]">
+              <div className="flex items-center justify-between"><p className="text-[10px] font-semibold uppercase tracking-[.2em] text-slate-500">{item.tag}</p><span className="font-mono text-[10px] text-slate-600">0{index + 1}</span></div>
+              <h3 className="mt-3 text-base font-semibold text-white">{item.title}</h3>
+              <p className="mt-3 text-sm leading-6 text-slate-300">{item.fact}</p>
+              <div className="mt-4 border-t border-white/8 pt-3"><p className="text-[10px] uppercase tracking-wider text-slate-500">Why it matters</p><p className="mt-1 text-xs leading-5 text-slate-400">{item.use}</p></div>
+            </article>
+          ))}
+        </div>
+      </section>
+
       <section className="py-12 sm:py-20">
         <div className="mx-auto max-w-3xl text-center">
           <p className="text-xs font-semibold uppercase tracking-[0.3em] text-slate-500">Scroll past the metaphor</p>
@@ -403,6 +491,23 @@ export function AiBiologyExplorer() {
         </section>
       ))}
 
+      <section className="app-surface overflow-hidden p-0">
+        <div className="border-b border-white/8 p-6 sm:p-8">
+          <p className="text-xs font-semibold uppercase tracking-[.25em] text-violet-200">A map of time</p>
+          <h2 className="mt-3 text-2xl font-semibold text-white sm:text-3xl">“Fast” and “slow” mean different things.</h2>
+          <p className="mt-3 max-w-3xl text-sm leading-6 text-slate-400">Wall-clock benchmarks rarely teach mechanism. This ladder compares the kinds of events that occupy each scale, not which system “wins.”</p>
+        </div>
+        <div className="divide-y divide-white/8">
+          {timeScales.map((item, index) => (
+            <div key={item.scale} className="grid gap-4 p-5 sm:grid-cols-[110px_1fr_1fr] sm:p-7">
+              <div><span className="font-mono text-[10px] text-slate-600">T{index + 1}</span><p className="mt-1 text-sm font-semibold text-white">{item.scale}</p></div>
+              <div><p className="text-[10px] font-semibold uppercase tracking-[.18em] text-cyan-300">Machine frame</p><p className="mt-2 text-sm leading-6 text-slate-300">{item.machine}</p></div>
+              <div><p className="text-[10px] font-semibold uppercase tracking-[.18em] text-amber-300">Biological frame</p><p className="mt-2 text-sm leading-6 text-slate-300">{item.biology}</p><p className="mt-2 text-xs leading-5 text-slate-500">{item.anchor}</p></div>
+            </div>
+          ))}
+        </div>
+      </section>
+
       <section className="app-surface">
         <p className="text-xs font-semibold uppercase tracking-[0.25em] text-rose-200">Metal vs brain — the field guide</p>
         <div className="mt-5 grid gap-px overflow-hidden rounded-2xl border border-white/10 bg-white/10 sm:grid-cols-2 lg:grid-cols-4">
@@ -418,6 +523,61 @@ export function AiBiologyExplorer() {
           ].map(([label, machine, biology]) => <div key={label} className="bg-[#0d151d] p-4"><p className="text-[10px] uppercase tracking-[.18em] text-slate-500">{label}</p><p className="mt-3 text-sm text-cyan-100">{machine}</p><p className="mt-1 text-sm text-amber-100">{biology}</p></div>)}
         </div>
         <p className="mt-4 text-xs leading-5 text-slate-500">Energy comparisons depend heavily on system boundaries, hardware, workload, and whether training, cooling, and embodiment are counted; simple “watts versus watts” claims are usually misleading.</p>
+      </section>
+
+      <section className="grid gap-4 lg:grid-cols-2">
+        <div className="app-surface">
+          <p className="text-xs font-semibold uppercase tracking-[.22em] text-emerald-200">Use the analogy when…</p>
+          <div className="mt-5 grid gap-3">
+            {[
+              "Explaining how many weak inputs can combine into a strong response.",
+              "Showing how excitation, inhibition, and competition shape an output.",
+              "Introducing distributed representations: a pattern can live across many units.",
+              "Asking how changing connections changes future behavior.",
+            ].map((item) => <div key={item} className="flex gap-3 rounded-xl border border-emerald-300/10 bg-emerald-300/5 p-3"><span className="text-emerald-300">✓</span><p className="text-sm leading-6 text-slate-300">{item}</p></div>)}
+          </div>
+        </div>
+        <div className="app-surface">
+          <p className="text-xs font-semibold uppercase tracking-[.22em] text-rose-200">Drop the analogy when…</p>
+          <div className="mt-5 grid gap-3">
+            {[
+              "A diagram implies every neuron is interchangeable or has one fixed activation rule.",
+              "A weight update is described as if it were receptor trafficking or synaptic growth.",
+              "A trained model is said to remember, understand, forget, or sleep in the biological sense.",
+              "Similar behavior is treated as proof of identical internal mechanism or subjective experience.",
+            ].map((item) => <div key={item} className="flex gap-3 rounded-xl border border-rose-300/10 bg-rose-300/5 p-3"><span className="text-rose-300">×</span><p className="text-sm leading-6 text-slate-300">{item}</p></div>)}
+          </div>
+        </div>
+      </section>
+
+      <section className="app-surface">
+        <div className="grid gap-8 lg:grid-cols-[1.1fr_.9fr]">
+          <div>
+            <p className="text-xs font-semibold uppercase tracking-[.24em] text-sky-200">Pocket glossary</p>
+            <h2 className="mt-3 text-2xl font-semibold text-white">Words that sound equivalent—but are not.</h2>
+            <div className="mt-5 grid gap-2">
+              {glossary.map(([term, definition]) => (
+                <details key={term} className="group rounded-xl border border-white/8 bg-slate-950/30 px-4 py-3 open:bg-white/[.035]">
+                  <summary className="cursor-pointer list-none text-sm font-medium text-white marker:hidden">{term}<span className="float-right text-slate-600 transition group-open:rotate-45">+</span></summary>
+                  <p className="mt-3 border-t border-white/8 pt-3 text-xs leading-5 text-slate-400">{definition}</p>
+                </details>
+              ))}
+            </div>
+          </div>
+          <aside className="rounded-2xl border border-white/10 bg-slate-950/35 p-5 sm:p-6">
+            <p className="text-xs font-semibold uppercase tracking-[.24em] text-slate-400">Evidence trail</p>
+            <p className="mt-3 text-sm leading-6 text-slate-400">Landmark experiments and reviews behind the claims on this page. Open a source to follow the method, organism, and boundary conditions.</p>
+            <div className="mt-5 divide-y divide-white/8 border-y border-white/8">
+              {references.map((item, index) => (
+                <a key={item.href} href={item.href} target="_blank" rel="noreferrer" className="group flex items-start gap-3 py-3 transition hover:text-white">
+                  <span className="mt-0.5 font-mono text-[9px] text-slate-600">{String(index + 1).padStart(2, "0")}</span>
+                  <span><span className="block text-xs font-medium text-slate-200 group-hover:text-white">{item.label} ↗</span><span className="mt-1 block text-[11px] leading-4 text-slate-500">{item.detail}</span></span>
+                </a>
+              ))}
+            </div>
+            <p className="mt-4 text-[10px] leading-4 text-slate-600">A model is a tool for a question. Always check whether a claim comes from a simulation, cultured cells, an animal preparation, or human behavior before generalizing it.</p>
+          </aside>
+        </div>
       </section>
 
       <section className="app-surface app-surface--hero text-center">
