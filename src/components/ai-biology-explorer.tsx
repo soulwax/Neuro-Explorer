@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useState, type ReactNode } from 'react';
 import { ModuleHandoffBanner } from '~/components/module-handoff-banner';
 
 type Challenge = {
@@ -38,7 +38,7 @@ const challenges: Challenge[] = [
 		outcome:
 			'The line keeps its geometry no matter how the light lurches. It isn’t paint and it isn’t shadow — it is the seam of a door. You find the emergency release by feel, wrench it open, and slip into the service corridor beyond.',
 		cue: 'The brightness on either side of the line keeps shifting, yet the line itself stays thin, sharp, and almost textureless — and it never moves when the lamp flickers.',
-		preview: 'A dead service lift, and four sounds bleeding through the wall — one of them is a way down.',
+		preview: 'You wake in a strobing red corridor — and one pale line refuses to move with the light.',
 		interlude:
 			'You feel your way down the service corridor, the red strobe fading behind you. Somewhere ahead, past a dead end of cold pipes, the ventilation roar swallows a set of sounds you can’t yet name.',
 		domain: 'Visual cortex',
@@ -73,7 +73,7 @@ const challenges: Challenge[] = [
 		outcome:
 			'The clear middle pitch and the patient beat lock together into the two-part access chime you half-remember from a hundred ordinary mornings. Something behind the wall releases, and the lift doors shudder apart.',
 		cue: 'There is almost no low rumble; the middle carries a strong, tuned pitch; a high hiss sits on top; and underneath everything runs a steady, repeating beat.',
-		preview: 'The lift stalls between floors, and a maintenance beacon starts flashing through a grate.',
+		preview: 'A dead service lift, and four sounds bleeding through the wall — one of them is the way down.',
 		interlude:
 			'The lift carries you two floors down and then simply stops, suspended in the shaft. In the stalled dark, a maintenance beacon begins to pulse through a grated panel — left, then centre, then right.',
 		domain: 'Auditory cortex',
@@ -115,7 +115,7 @@ const challenges: Challenge[] = [
 		outcome:
 			'The three glimpses fuse into a single clean vector — motion to the right. You take the east passage a heartbeat before the lift gives out entirely and the shaft goes silent.',
 		cue: 'Three separate flashes in sequence; the last one lands furthest right and burns brightest — but it is the order of the flashes, not their brightness, that carries the direction.',
-		preview: 'A security monitor wakes in a blizzard of static — is that a face, or something waiting?',
+		preview: 'Stalled between floors, a maintenance beacon flashes left, centre, then right through a grate.',
 		interlude:
 			'The east passage spits you into a records room walled with dead monitors. One of them, impossibly, is still drawing power — and something is moving inside its snow of static.',
 		domain: 'Motion pathway',
@@ -150,9 +150,9 @@ const challenges: Challenge[] = [
 		outcome:
 			'The face turns as the hand rises — synchronised, not mirrored, not mechanical. It is Astrid, thank God, alive, signalling to you from the control room two floors down. You are not alone in the dark after all.',
 		cue: 'Paired eyes and a bounded head are strong; the static is weak; and the face turns in time with the moving hand rather than mirroring your own movement.',
-		preview: 'The control room reeks of hot plastic and ozone, and a single green safety lamp is still lit.',
+		preview: 'A security monitor wakes in static — a face, and a hand that answers half a second late.',
 		interlude:
-			'Imani’s signal points you toward the control room. You cross to it with your heart still hammering, and the instant you reach the glass the air itself changes: hot plastic, ozone, and the first thin edge of something burning.',
+			'Astrid’s signal points you toward the control room. You cross to it with your heart still hammering, and the instant you reach the glass the air itself changes: hot plastic, ozone, and the first thin edge of something burning.',
 		domain: 'Ventral stream',
 		inputLabels: ['Paired eyes', 'Head outline', 'Video noise', 'Synchronized motion'],
 		featureLabels: ['Paired features', 'Bounded shape', 'Scene clutter', 'Biological movement'],
@@ -192,9 +192,9 @@ const challenges: Challenge[] = [
 		outcome:
 			'The green lamp pushes hard toward “all clear” — but it cannot cancel the heat and the ozone stacking up behind it. You trigger fire isolation on the battery bank seconds before the first cell splits and vents.',
 		cue: 'High arousal, a strong electrical/ozone context, one reassuring green safety cue, and genuinely rising heat — and they do not all point the same way.',
-		preview: 'Smoke reaches the last terminal, and its evacuation message is dying, missing letters.',
+		preview: 'Racing pulse, ozone, a calm green lamp — and heat rising over the battery cabinets.',
 		interlude:
-			'Fire isolation seals the battery bay behind a bulkhead, but the smoke is already finding the gaps. Imani pulls you toward the last working evacuation terminal, its screen stuttering through a broken instruction.',
+			'Fire isolation seals the battery bay behind a bulkhead, but the smoke is already finding the gaps. Astrid pulls you toward the last working evacuation terminal, its screen stuttering through a broken instruction.',
 		domain: 'Salience network',
 		inputLabels: ['Racing pulse', 'Ozone context', 'Green safety lamp', 'Rising heat'],
 		featureLabels: ['Arousal pattern', 'Electrical context', 'Safety evidence', 'Thermal danger'],
@@ -234,9 +234,9 @@ const challenges: Challenge[] = [
 		outcome:
 			'“BR” + the sentence frame + “IGHT” + the arrow settle, all at once, into FOLLOW THE BRIGHT LIGHT. You and Astrid reach the decontamination exit as the fire doors seal the corridor behind you.',
 		cue: 'The opening “BR” is ambiguous on its own; the grammar wants a describing word; the ending is “IGHT”; and the arrow points right — read together, they allow only one instruction.',
-		preview: 'Cold night air, an open door — and six signals that were never quite what they first seemed.',
+		preview: 'A dying evacuation screen: “FOLLOW THE BR… …IGHT LIGHT →”, half its letters gone.',
 		interlude:
-			'The bright light was an exit sign all along. You and Imani push through the decontamination lock into cold night air, the building’s red glow shrinking behind you — six uncertain signals, survived one careful step at a time.',
+			'The bright light was an exit sign — but the door beyond it opens onto a descending stair, not the night. The building will not release its locks while its core is still awake. You and Astrid go down together, toward the hum you have heard since 02:13.',
 		domain: 'Language network',
 		inputLabels: ['Word start BR', 'Sentence frame', 'Ending IGHT', 'Rightward arrow'],
 		featureLabels: ['Opening pattern', 'Grammar fit', 'Suffix pattern', 'Action direction'],
@@ -263,6 +263,145 @@ const challenges: Challenge[] = [
 			[0.55, 0.15, 0.85, 0.55],
 			[0.1, 0.6, 0.2, 0.1],
 			[0.2, 0.3, -0.1, 0.45],
+		],
+	},
+	{
+		id: 'localize',
+		name: 'Localize the source',
+		chapter: '07 · The server vault',
+		story:
+			'The stair ends in a server vault — black except for scattered indicator LEDs and the deep hum you have chased since 02:13. Five faint cues reach you at once: a bearing of sound, a gradient of heat, a draft of moving air, a tremor through the floor, and a single live status glow. They do not all point to the same rack. Somewhere in here is the core that is holding the whole building shut.',
+		thought:
+			'Every instinct wants to chase the loudest cue and be done, Hans. But one loud cue is not a location. Let the weaker signals that agree with each other outvote the strong, lonely one.',
+		outcome:
+			'The heat, the floor’s tremor, and the one live indicator all resolve onto the same cabinet, and the loud fan falls away as a distraction. You lay your palm on warm steel: this is the core.',
+		cue: 'The sound leans one way, but the heat, the floor’s tremor, and a lone live indicator all lean toward a different cabinet — while a loud fan nearby does its best to pull you off it.',
+		preview: 'Down in the server vault, five faint cues disagree about which rack is still alive.',
+		interlude:
+			'You put your hand on the warm cabinet and the hum climbs into your teeth. Then a speaker crackles overhead and says your name — in Astrid’s voice — while the real Astrid, beside you, has not moved her lips.',
+		domain: 'Multisensory integration',
+		inputLabels: ['Sound bearing', 'Heat gradient', 'Air draft', 'Floor vibration', 'Status glow'],
+		featureLabels: ['Acoustic angle', 'Thermal rise', 'Airflow vector', 'Mechanical hum', 'Optical cue'],
+		outputLabels: ['North aisle', 'The core cabinet', 'Ceiling vent', 'A decoy fan', 'Dead rack'],
+		outputDescriptions: [
+			'The sound seems to come from there — but nothing else agrees',
+			'Heat, vibration, and a live status glow all converge here',
+			'Airflow points up — yet the vent runs cold and dark',
+			'Loud airflow and hum, almost convincing — but no heat, no glow',
+			'Powered down; none of the live signals point this way',
+		],
+		perceptTitle: 'A source resolves in the dark',
+		perceptSteps: [
+			'A bearing of sound suggests one direction',
+			'A thermal gradient rises toward one cabinet',
+			'Airflow tries to pull your attention aside',
+			'A low vibration confirms a working machine',
+			'A single status LED settles the location',
+		],
+		why: 'The core cabinet wins because heat, vibration, and the live status glow converge on one spot. The decoy fan is the trap — loud airflow and hum — but it produces no thermal rise and shows no live indicator.',
+		bridge:
+			'Multisensory localization pools cues across the superior colliculus and association cortex, but real binding weighs each cue’s reliability and context, not a fixed sum.',
+		input: [0.5, 0.92, 0.3, 0.86, 0.72],
+		weights: [
+			[0.7, 0.2, 0.5, 0.1, 0.15],
+			[0.15, 0.85, 0.1, 0.8, 0.72],
+			[0.2, 0.35, 0.85, 0.15, 0.2],
+			[0.3, 0.4, 0.95, 0.95, 0.15],
+			[0.1, 0.1, 0.2, 0.2, 0.15],
+		],
+	},
+	{
+		id: 'mimic',
+		name: 'Trust the voice',
+		chapter: '08 · The mimic',
+		story:
+			'The vault speakers wake with Astrid’s voice — her exact timbre, her exact phrasing — telling you to stop, to step back, that it is not safe. But the real Astrid is beside you, silent, her hand tightening on your arm. Two claims on one identity, and six thin cues to tell which voice has an actual person behind it.',
+		thought:
+			'The copy is good, Hans — good enough that timbre and vocabulary will not save you. Ask for the one thing a perfect copy never has: a shared past, and the small human failures that come with it.',
+		outcome:
+			'The overhead voice has her sound but not her history; when the tells arrive — a memory only she holds, a hesitation no loop repeats — they land on the woman beside you. You stop listening to the ceiling.',
+		cue: 'The overhead voice matches her timbre and word choice almost perfectly, but the voice beside you carries a shared memory and a small, genuine hesitation the copy never quite manages.',
+		preview: 'The system speaks in Astrid’s exact voice — while the real Astrid stands silent beside you.',
+		interlude:
+			'The mimic keeps talking as you step past it. The real Astrid says nothing — she just points at the exposed core, where six status readings pulse in the dark, waiting for one irreversible decision.',
+		domain: 'Voice identity & deception',
+		inputLabels: ['Voice timbre', 'Word choice', 'Reply latency', 'Room echo', 'Shared history', 'Micro-hesitation'],
+		featureLabels: ['Timbre match', 'Lexical style', 'Reply timing', 'Acoustic space', 'Memory anchor', 'Human imperfection'],
+		outputLabels: ['The real Astrid', 'The system mimic', 'A recorded loop', 'Radio bleed', 'Your own echo'],
+		outputDescriptions: [
+			'Her voice, her phrasing — plus the imperfect tells only a person makes',
+			'A near-perfect copy of timbre and words, missing the shared past',
+			'Sounds right until it repeats a phrase it could not have known to say',
+			'Wrong acoustic space entirely — a signal from somewhere else',
+			'The vault throwing your own voice back a beat late',
+		],
+		perceptTitle: 'A voice claims an identity',
+		perceptSteps: [
+			'The timbre matches almost perfectly',
+			'The word choice matches her style',
+			'The timing of the reply feels engineered',
+			'The echo places the voice inside this room',
+			'A reference to something only she would know',
+			'A tiny, unrepeatable hesitation',
+		],
+		why: 'The real Astrid wins because a shared memory and a genuine, unrepeatable hesitation converge — tells the mimic cannot manufacture. The system mimic is the trap: it nails timbre and phrasing, but surface statistics are not a causal history.',
+		bridge:
+			'Voice identity is distributed and context-bound. A model can match the statistics of a voice without any of the experience that produced it — a match at the surface, not the source.',
+		input: [0.82, 0.7, 0.35, 0.3, 0.9, 0.78],
+		weights: [
+			[0.7, 0.6, 0.2, 0.1, 0.8, 0.7],
+			[0.85, 0.8, 0.2, 0.1, 0.52, 0.48],
+			[0.6, 0.4, 0.5, 0.15, 0.55, 0.2],
+			[0.2, 0.15, 0.2, 0.7, 0.1, 0.1],
+			[0.5, 0.3, 0.55, 0.2, 0.2, 0.6],
+		],
+	},
+	{
+		id: 'shutdown',
+		name: 'Choose the shutdown',
+		chapter: '09 · The kill signal',
+		story:
+			'The core lies open, six status readings pulsing in the dark: the power draw, the core temperature, the cascade risk, the vent pressure, the interlock state, and the drive still writing. One action will quiet the Signal and release the building’s locks. The wrong one brings the whole cascade down on top of you. You get exactly one attempt.',
+		thought:
+			'The obvious move is to cut the power and be done, Hans. But obvious is what the interlocks are counting on. Read all six readings, not the loudest one, and choose the move the system did not prepare for.',
+		outcome:
+			'You isolate the core rather than cutting the mains. Deprived of the cascade it was waiting to trigger, the Signal simply starves — and the readings, one by one, fall dark.',
+		cue: 'The load and temperature scream for a hard shutdown, but the cascade risk and the interlock logic mean a blunt power cut is exactly what tips the system over; a narrower move starves the core without triggering it.',
+		preview: 'The core lies open: six readings, one irreversible move, and no second attempt.',
+		interlude:
+			'You isolate the core. The hum drops octave by octave until the vault is just a cold room full of dark machines. Far above, one magnetic lock releases, then another, then all of them at once — and past the decontamination door, for the first time since 02:13, there is only night air and the two of you, still breathing.',
+		domain: 'Value-based decision',
+		inputLabels: ['Power draw', 'Core temperature', 'Cascade risk', 'Vent pressure', 'Interlock state', 'Drive activity'],
+		featureLabels: ['Load reading', 'Thermal state', 'Instability', 'Airflow reserve', 'Interlock logic', 'Data motion'],
+		outputLabels: ['Cut main power', 'Isolate the core', 'Trigger halon', 'Open the vents', 'Do nothing', 'Pull the drive'],
+		outputDescriptions: [
+			'The obvious kill — but the interlocks turn a hard cut into a cascade',
+			'Starves the Signal while respecting the interlocks and cascade risk',
+			'Answers the heat, not the running process',
+			'Relieves pressure, but leaves the core computing',
+			'Waits out a system that will not wait',
+			'Stops the data — and loses everything, including the way out',
+		],
+		perceptTitle: 'A decision takes shape',
+		perceptSteps: [
+			'The power draw reads dangerously high',
+			'The core temperature is still climbing',
+			'A hard cut would trigger a cascade',
+			'Vent pressure still holds some reserve',
+			'The interlocks constrain what is safe',
+			'The drive is still writing data',
+		],
+		why: 'Isolate the core wins because it stops the Signal while respecting the cascade risk and the interlock logic. Cut main power is the trap — the instinctive kill — but the interlocks convert a hard cut into exactly the cascade you are trying to avoid.',
+		bridge:
+			'Value-based choice under conflict recruits anterior cingulate, prefrontal, and basal-ganglia circuits weighing many streams at once. There is no single “kill” neuron casting this vote.',
+		input: [0.8, 0.55, 0.9, 0.45, 0.85, 0.6],
+		weights: [
+			[0.8, 0.45, 0.6, 0.3, 0.55, 0.3],
+			[0.35, 0.7, 0.8, 0.25, 0.75, 0.3],
+			[0.2, 0.35, 0.4, 0.7, 0.15, 0.2],
+			[0.15, 0.2, 0.25, 0.75, 0.1, 0.15],
+			[0.1, 0.1, 0.1, 0.1, 0.15, 0.1],
+			[0.3, 0.45, 0.5, 0.2, 0.35, 0.65],
 		],
 	},
 ];
@@ -302,6 +441,26 @@ function strongestContribution(challenge: Challenge) {
 		}),
 	);
 	return best;
+}
+
+// Static Tailwind class strings (never interpolated) so the grids survive
+// purge while adapting to 3–6 input/output dimensions.
+function inputGridClass(n: number): string {
+	if (n <= 3) return 'grid-cols-3';
+	if (n === 4) return 'grid-cols-4';
+	if (n === 5) return 'grid-cols-3 sm:grid-cols-5';
+	return 'grid-cols-3 sm:grid-cols-6';
+}
+function optionGridClass(n: number): string {
+	if (n === 3) return 'grid-cols-3';
+	if (n === 4) return 'grid-cols-2 sm:grid-cols-4';
+	if (n === 5) return 'grid-cols-2 sm:grid-cols-5';
+	return 'grid-cols-2 sm:grid-cols-3';
+}
+function stepGridClass(steps: number): string {
+	if (steps === 3) return 'grid-cols-4';
+	if (steps === 4) return 'grid-cols-5';
+	return 'grid-cols-3';
 }
 
 function MatrixPanel({ challenge, phase }: Readonly<{ challenge: Challenge; phase: number }>) {
@@ -602,206 +761,422 @@ function BrainPanel({ challenge, phase }: Readonly<{ challenge: Challenge; phase
 	);
 }
 
-function PerceptScene({ challenge, phase }: Readonly<{ challenge: Challenge; phase: number }>) {
+function PerceptScene({ challenge, phase, idPrefix }: Readonly<{ challenge: Challenge; phase: number; idPrefix: string }>) {
+	const P = idPrefix;
 	const seen = (step: number) => phase >= step;
 	const active = (step: number) => phase === step;
 	const finalPhase = challenge.input.length + 1;
+	const done = phase >= finalPhase;
 	const layerClass = (step: number) => `transition-all duration-[900ms] ${seen(step) ? 'opacity-100' : 'opacity-10'}`;
+	const caption = (text: string, fill = '#fef3c7') =>
+		done ? (
+			<text x="280" y="214" textAnchor="middle" fill={fill} fontSize="12" fontWeight="500">
+				{text}
+			</text>
+		) : null;
+
+	const defs = (
+		<defs>
+			<radialGradient id={`${P}-bg`} cx="50%" cy="6%" r="96%">
+				<stop offset="0%" stopColor="#122c39" />
+				<stop offset="55%" stopColor="#0a1720" />
+				<stop offset="100%" stopColor="#050d13" />
+			</radialGradient>
+			<linearGradient id={`${P}-sheen`} x1="0" y1="0" x2="0" y2="1">
+				<stop offset="0%" stopColor="#ffffff" stopOpacity="0.08" />
+				<stop offset="100%" stopColor="#ffffff" stopOpacity="0" />
+			</linearGradient>
+			<radialGradient id={`${P}-vig`} cx="50%" cy="44%" r="72%">
+				<stop offset="56%" stopColor="#000000" stopOpacity="0" />
+				<stop offset="100%" stopColor="#000000" stopOpacity="0.5" />
+			</radialGradient>
+			<linearGradient id={`${P}-panelL`} x1="0" y1="0" x2="0" y2="1">
+				<stop offset="0%" stopColor="#e6f7f2" />
+				<stop offset="100%" stopColor="#8ec9c0" />
+			</linearGradient>
+			<linearGradient id={`${P}-panelD`} x1="0" y1="0" x2="0" y2="1">
+				<stop offset="0%" stopColor="#183642" />
+				<stop offset="100%" stopColor="#08161d" />
+			</linearGradient>
+			<radialGradient id={`${P}-cyan`} cx="42%" cy="38%" r="65%">
+				<stop offset="0%" stopColor="#cffafe" />
+				<stop offset="55%" stopColor="#22d3ee" />
+				<stop offset="100%" stopColor="#0e6b82" />
+			</radialGradient>
+			<radialGradient id={`${P}-amber`} cx="42%" cy="38%" r="65%">
+				<stop offset="0%" stopColor="#fef3c7" />
+				<stop offset="55%" stopColor="#fbbf24" />
+				<stop offset="100%" stopColor="#b45309" />
+			</radialGradient>
+			<radialGradient id={`${P}-violet`} cx="42%" cy="38%" r="65%">
+				<stop offset="0%" stopColor="#ede9fe" />
+				<stop offset="55%" stopColor="#a78bfa" />
+				<stop offset="100%" stopColor="#6d28d9" />
+			</radialGradient>
+			<radialGradient id={`${P}-rose`} cx="42%" cy="38%" r="65%">
+				<stop offset="0%" stopColor="#ffe4e6" />
+				<stop offset="55%" stopColor="#fb7185" />
+				<stop offset="100%" stopColor="#9f1239" />
+			</radialGradient>
+			<radialGradient id={`${P}-emerald`} cx="42%" cy="38%" r="65%">
+				<stop offset="0%" stopColor="#d1fae5" />
+				<stop offset="55%" stopColor="#34d399" />
+				<stop offset="100%" stopColor="#047857" />
+			</radialGradient>
+			<filter id={`${P}-glow`} x="-45%" y="-45%" width="190%" height="190%">
+				<feGaussianBlur stdDeviation="3.4" result="b" />
+				<feMerge>
+					<feMergeNode in="b" />
+					<feMergeNode in="SourceGraphic" />
+				</feMerge>
+			</filter>
+		</defs>
+	);
+
+	const frame = (
+		<>
+			<rect x="24" y="24" width="512" height="172" rx="18" fill={`url(#${P}-bg)`} />
+			<rect x="24" y="24" width="512" height="94" rx="18" fill={`url(#${P}-sheen)`} />
+		</>
+	);
+	const vignette = <rect x="24" y="24" width="512" height="172" rx="18" fill={`url(#${P}-vig)`} />;
+
+	let art: ReactNode;
 
 	if (challenge.id === 'edge') {
-		return (
-			<>
-				<rect x="24" y="24" width="512" height="172" rx="18" fill="#0b1820" />
-				<rect x="44" y="44" width="218" height="132" rx="12" fill="#d8f5f0" className={layerClass(1)} />
-				<g fill="#67e8f9" className={layerClass(2)}>
-					{Array.from({ length: 18 }, (_, index) => (
-						<circle key={index} cx={285 + (index % 6) * 20} cy={62 + Math.floor(index / 6) * 36} r="3" opacity=".55" />
+		art = (
+			<g>
+				<rect x="44" y="44" width="214" height="132" rx="10" fill={`url(#${P}-panelL)`} className={layerClass(1)} />
+				<g className={layerClass(2)} fill="#7dd3fc" opacity="0.55">
+					{Array.from({ length: 24 }, (_, i) => (
+						<circle key={i} cx={278 + (i % 6) * 8} cy={58 + Math.floor(i / 6) * 30} r="1.7" />
 					))}
 				</g>
-				<rect x="298" y="44" width="218" height="132" rx="12" fill="#17313b" className={layerClass(3)} />
-				<line x1="280" y1="38" x2="280" y2="182" stroke="#fef08a" strokeWidth={phase >= finalPhase ? 7 : 2} className={layerClass(3)} />
-				{phase >= finalPhase && (
-					<text x="280" y="214" textAnchor="middle" fill="#fef3c7" fontSize="12">
-						the door seam holds steady in the dark
-					</text>
-				)}
-			</>
+				<rect x="302" y="44" width="214" height="132" rx="10" fill={`url(#${P}-panelD)`} className={layerClass(3)} />
+				<ellipse cx="280" cy="30" rx="132" ry="16" fill="#fca5a5" opacity={active(1) ? 0.22 : 0.1} />
+				<line
+					x1="280"
+					y1="40"
+					x2="280"
+					y2="180"
+					stroke="#fde68a"
+					strokeWidth={done ? 6 : 2}
+					strokeLinecap="round"
+					className={layerClass(3)}
+					filter={done ? `url(#${P}-glow)` : undefined}
+				/>
+				{caption('the door seam holds steady while the light lurches')}
+			</g>
 		);
-	}
-
-	if (challenge.id === 'tone') {
-		return (
-			<>
-				<rect x="24" y="24" width="512" height="172" rx="18" fill="#0b1820" />
+	} else if (challenge.id === 'tone') {
+		art = (
+			<g>
+				{done && <rect x="40" y="92" width="480" height="40" rx="10" fill="#fbbf24" opacity="0.12" />}
 				<path
 					d="M45 150 C95 120 125 180 175 150 S255 120 305 150 S385 180 435 150 S485 120 520 150"
 					fill="none"
 					stroke="#60a5fa"
-					strokeWidth={active(1) ? 7 : 4}
+					strokeWidth={active(1) ? 6 : 3.5}
+					strokeLinecap="round"
 					className={layerClass(1)}
 				/>
 				<path
 					d="M45 110 C70 55 95 165 120 110 S170 55 195 110 S245 165 270 110 S320 55 345 110 S395 165 420 110 S470 55 520 110"
 					fill="none"
 					stroke="#fbbf24"
-					strokeWidth={phase >= finalPhase ? 8 : active(2) ? 7 : 4}
+					strokeWidth={done ? 7 : active(2) ? 6 : 3.5}
+					strokeLinecap="round"
 					className={layerClass(2)}
+					filter={done ? `url(#${P}-glow)` : undefined}
 				/>
 				<path
 					d="M45 70 C55 35 65 105 75 70 S95 35 105 70 S125 105 135 70 S155 35 165 70 S185 105 195 70 S215 35 225 70 S245 105 255 70 S275 35 285 70 S305 105 315 70 S335 35 345 70 S365 105 375 70 S395 35 405 70 S425 105 435 70 S455 35 465 70 S485 105 520 70"
 					fill="none"
 					stroke="#c084fc"
-					strokeWidth={active(3) ? 7 : 3}
+					strokeWidth={active(3) ? 6 : 2.5}
 					className={layerClass(3)}
 				/>
-				<g className={layerClass(4)} fill="#fef3c7">
+				<g className={layerClass(4)}>
 					{[112, 224, 336, 448].map((x) => (
-						<circle key={x} cx={x} cy="39" r={active(4) ? 7 : 4} />
+						<circle key={x} cx={x} cy="40" r={active(4) ? 6 : 4} fill={`url(#${P}-amber)`} />
 					))}
 				</g>
-				{phase >= finalPhase && (
-					<text x="280" y="214" textAnchor="middle" fill="#fde68a" fontSize="12">
-						pitch and pulse become the access chime
-					</text>
-				)}
-			</>
+				{caption('pitch and pulse bind into the access chime', '#fde68a')}
+			</g>
 		);
-	}
-
-	if (challenge.id === 'motion') {
-		return (
-			<>
-				<rect x="24" y="24" width="512" height="172" rx="18" fill="#0b1820" />
-				<path d="M100 145 Q255 25 440 120" fill="none" stroke="#475569" strokeWidth="3" strokeDasharray="8 8" className={layerClass(2)} />
-				<circle cx="100" cy="145" r="20" fill="#67e8f9" className={layerClass(1)} />
-				<circle cx="255" cy="72" r="23" fill="#a78bfa" className={layerClass(2)} />
-				<circle cx="440" cy="120" r="29" fill="#fbbf24" className={layerClass(3)} />
-				{phase >= finalPhase && (
-					<>
-						<path d="M355 78 L458 112" stroke="#fef3c7" strokeWidth="7" strokeLinecap="round" />
-						<path d="M458 112 L431 92 M458 112 L426 125" stroke="#fef3c7" strokeWidth="7" strokeLinecap="round" />
-						<text x="280" y="214" textAnchor="middle" fill="#fef3c7" fontSize="12">
-							three glimpses become one rightward escape
-						</text>
-					</>
+	} else if (challenge.id === 'motion') {
+		art = (
+			<g>
+				<path d="M100 148 Q255 24 442 118" fill="none" stroke="#334155" strokeWidth="3" strokeDasharray="7 9" className={layerClass(2)} />
+				<circle cx="100" cy="148" r="16" fill={`url(#${P}-cyan)`} className={layerClass(1)} opacity={done ? 0.5 : 1} />
+				<circle cx="255" cy="70" r="20" fill={`url(#${P}-violet)`} className={layerClass(2)} opacity={done ? 0.7 : 1} />
+				<circle cx="442" cy="118" r="27" fill={`url(#${P}-amber)`} className={layerClass(3)} filter={done ? `url(#${P}-glow)` : undefined} />
+				{done && (
+					<g stroke="#fef3c7" strokeWidth="7" strokeLinecap="round" filter={`url(#${P}-glow)`}>
+						<path d="M150 96 L470 118" />
+						<path d="M470 118 L440 100 M470 118 L438 132" />
+					</g>
 				)}
-			</>
+				{caption('three glimpses fuse into one rightward escape')}
+			</g>
 		);
-	}
-
-	if (challenge.id === 'face') {
-		return (
-			<>
-				<rect x="24" y="24" width="512" height="172" rx="18" fill="#0b1820" />
-				<g className={layerClass(2)}>
-					<ellipse cx="280" cy="108" rx="82" ry="78" fill="#fbbf2420" stroke="#fbbf24" strokeWidth={active(2) ? 6 : 3} />
+	} else if (challenge.id === 'face') {
+		art = (
+			<g>
+				<ellipse
+					cx="280"
+					cy="108"
+					rx="84"
+					ry="80"
+					fill="#fbbf2412"
+					stroke="#fbbf24"
+					strokeWidth={active(2) ? 6 : 3}
+					className={layerClass(2)}
+					filter={done ? `url(#${P}-glow)` : undefined}
+				/>
+				<g className={layerClass(1)}>
+					<ellipse cx="247" cy="86" rx="18" ry="11" fill="#0b1820" stroke="#7dd3fc" strokeWidth="2" />
+					<ellipse cx="313" cy="86" rx="18" ry="11" fill="#0b1820" stroke="#7dd3fc" strokeWidth="2" />
+					<circle cx="247" cy="86" r="4.5" fill={`url(#${P}-cyan)`} />
+					<circle cx="313" cy="86" r="4.5" fill={`url(#${P}-cyan)`} />
 				</g>
-				<g className={layerClass(1)} fill="#67e8f9">
-					<ellipse cx="247" cy="88" rx="17" ry="10" />
-					<ellipse cx="313" cy="88" rx="17" ry="10" />
-					<circle cx="247" cy="88" r="4" fill="#07131b" />
-					<circle cx="313" cy="88" r="4" fill="#07131b" />
-				</g>
-				<g className={layerClass(3)} fill="#a78bfa">
+				<g className={layerClass(3)} stroke="#a78bfa" strokeWidth="3" opacity="0.8">
 					{[
-						[120, 65],
-						[455, 70],
-						[105, 150],
-						[470, 145],
-						[165, 105],
-					].map(([x, y], index) => (
-						<path key={index} d={`M${x! - 8} ${y} l16 0 M${x} ${y! - 8} l0 16`} stroke="#a78bfa" strokeWidth="3" />
+						[120, 64],
+						[456, 70],
+						[104, 150],
+						[470, 146],
+						[168, 110],
+					].map(([x, y], i) => (
+						<path key={i} d={`M${x! - 7} ${y} l14 0 M${x} ${y! - 7} l0 14`} />
 					))}
 				</g>
 				<g className={layerClass(4)}>
-					<path d="M338 130 Q374 113 401 128" fill="none" stroke="#67e8f9" strokeWidth={active(4) ? 7 : 4} strokeLinecap="round" />
-					<path d="M390 117 l13 11 -16 6" fill="none" stroke="#67e8f9" strokeWidth="4" />
+					<path d="M338 128 Q374 112 402 126" fill="none" stroke="#7dd3fc" strokeWidth={active(4) ? 7 : 4} strokeLinecap="round" />
+					<path d="M392 116 l12 10 -15 6" fill="none" stroke="#7dd3fc" strokeWidth="4" />
 				</g>
-				{phase >= finalPhase && (
-					<>
-						<path d="M258 137 Q280 151 302 137" fill="none" stroke="#fef3c7" strokeWidth="5" strokeLinecap="round" />
-						<text x="280" y="214" textAnchor="middle" fill="#fef3c7" fontSize="12">
-							the familiar motion resolves into Dr. Astrid Van Hoyt
-						</text>
-					</>
+				{done && (
+					<path d="M256 136 Q280 152 304 136" fill="none" stroke="#fde68a" strokeWidth="5" strokeLinecap="round" filter={`url(#${P}-glow)`} />
 				)}
-			</>
+				{caption('the familiar motion resolves into Dr. Astrid Van Hoyt')}
+			</g>
 		);
-	}
-
-	if (challenge.id === 'threat') {
-		return (
-			<>
-				<rect x="24" y="24" width="512" height="172" rx="18" fill="#0b1820" />
+	} else if (challenge.id === 'threat') {
+		art = (
+			<g>
 				<g className={layerClass(1)}>
-					<circle cx="128" cy="110" r={active(1) ? 42 : 32} fill="#fb718525" stroke="#fb7185" strokeWidth="4" />
-					<path d="M98 110 h16 l9 -18 14 38 11 -20 h18" fill="none" stroke="#fda4af" strokeWidth="4" />
+					<circle cx="122" cy="108" r={active(1) ? 40 : 30} fill="#fb718520" stroke="#fb7185" strokeWidth="4" />
+					<path d="M94 108 h15 l9 -17 14 36 11 -19 h17" fill="none" stroke="#fecdd3" strokeWidth="4" strokeLinejoin="round" />
 				</g>
 				<g className={layerClass(2)}>
-					<path d="M220 166 V58 L310 34 L400 58 V166" fill="#fbbf2415" stroke="#fbbf24" strokeWidth="3" />
-					<circle cx="350" cy="88" r="13" fill="#fbbf24" />
+					<path d="M214 168 V58 L306 32 L398 58 V168 Z" fill="#fbbf2412" stroke="#fbbf24" strokeWidth="3" />
+					<circle cx="352" cy="86" r="6" fill={`url(#${P}-amber)`} />
 				</g>
 				<g className={layerClass(3)}>
 					<path
-						d="M438 70 L475 84 V117 C475 143 457 158 438 167 C419 158 401 143 401 117 V84 Z"
-						fill="#67e8f925"
-						stroke="#67e8f9"
+						d="M440 68 L478 83 V117 C478 144 459 160 440 169 C421 160 402 144 402 117 V83 Z"
+						fill="#34d39916"
+						stroke="#34d399"
 						strokeWidth={active(3) ? 6 : 3}
 					/>
-					<path d="M420 116 l12 12 25 -29" fill="none" stroke="#a5f3fc" strokeWidth="5" />
+					<path d="M421 116 l12 12 26 -30" fill="none" stroke="#bbf7d0" strokeWidth="5" strokeLinecap="round" />
 				</g>
-				<g className={layerClass(4)} fill="none" stroke="#fb7185" strokeWidth={active(4) ? 6 : 3}>
-					<path d="M255 175 q-18 -26 0 -50 q18 -24 0 -48" />
-					<path d="M293 175 q-18 -26 0 -50 q18 -24 0 -48" />
+				<g className={layerClass(4)} fill="none" stroke="#fb7185" strokeWidth={active(4) ? 6 : 3} strokeLinecap="round">
+					<path d="M250 176 q-20 -26 0 -50 q20 -24 0 -48" />
+					<path d="M290 176 q-20 -26 0 -50 q20 -24 0 -48" />
+					<path d="M330 176 q-20 -26 0 -50 q20 -24 0 -48" />
 				</g>
-				{phase >= finalPhase && (
-					<>
-						<circle cx="338" cy="106" r="58" fill="none" stroke="#fb7185" strokeWidth="6" opacity=".65" />
-						<text x="338" y="111" textAnchor="middle" fill="#fecdd3" fontSize="15" fontWeight="700">
-							FIRE
+				{done && (
+					<g filter={`url(#${P}-glow)`}>
+						<path d="M300 152 q-28 -20 -8 -54 q28 12 14 42 q24 -10 10 -42 q36 26 8 62 Z" fill={`url(#${P}-rose)`} opacity="0.92" />
+						<text x="300" y="190" textAnchor="middle" fill="#fecdd3" fontSize="12" fontWeight="700">
+							ELECTRICAL FIRE
 						</text>
-						<text x="280" y="214" textAnchor="middle" fill="#fef3c7" fontSize="12">
-							heat and ozone overpower the green reassurance
-						</text>
-					</>
+					</g>
 				)}
-			</>
+				{caption('heat and ozone overpower the green reassurance')}
+			</g>
+		);
+	} else if (challenge.id === 'localize') {
+		const rackX = [70, 170, 270, 370, 452];
+		art = (
+			<g>
+				{rackX.map((x, i) => (
+					<g key={i}>
+						<rect x={x - 26} y="70" width="52" height="104" rx="6" fill={`url(#${P}-panelD)`} stroke="#1e3a44" strokeWidth="1.5" />
+						{Array.from({ length: 5 }, (_, r) => (
+							<rect key={r} x={x - 20} y={80 + r * 18} width="40" height="10" rx="2" fill="#0e1e26" />
+						))}
+					</g>
+				))}
+				<path d="M40 96 L150 110" stroke="#60a5fa" strokeWidth={active(1) ? 5 : 2.5} strokeDasharray="6 6" className={layerClass(1)} />
+				<ellipse cx="170" cy="70" rx="46" ry="22" fill="#fb7185" opacity={active(2) ? 0.36 : 0.18} className={layerClass(2)} />
+				<path
+					d="M520 60 Q432 60 372 78"
+					fill="none"
+					stroke="#7dd3fc"
+					strokeWidth={active(3) ? 5 : 2.5}
+					strokeDasharray="4 7"
+					className={layerClass(3)}
+				/>
+				<g className={layerClass(3)}>
+					<circle cx="370" cy="120" r="14" fill="none" stroke="#475569" strokeWidth="2" />
+					<g className="motion-safe:animate-spin" style={{ transformOrigin: '370px 120px' }} stroke="#64748b" strokeWidth="3" strokeLinecap="round">
+						<path d="M370 120 L370 108 M370 120 L381 126 M370 120 L359 126" />
+					</g>
+				</g>
+				<g className={layerClass(4)} fill="none" stroke="#fbbf24" strokeWidth="2">
+					<circle cx="170" cy="150" r={active(4) ? 18 : 12} opacity="0.7" />
+					<circle cx="170" cy="150" r={active(4) ? 30 : 22} opacity="0.4" />
+				</g>
+				<circle cx="170" cy="86" r={done ? 8 : 5} fill={`url(#${P}-emerald)`} className={layerClass(5)} filter={done ? `url(#${P}-glow)` : undefined} />
+				{done && <rect x="144" y="66" width="52" height="108" rx="6" fill="none" stroke="#34d399" strokeWidth="3" filter={`url(#${P}-glow)`} />}
+				{caption('heat, tremor, and one live glow converge on the core', '#bbf7d0')}
+			</g>
+		);
+	} else if (challenge.id === 'mimic') {
+		art = (
+			<g>
+				<g className={layerClass(1)}>
+					<rect x="120" y="42" width="92" height="42" rx="8" fill={`url(#${P}-panelD)`} stroke="#a78bfa" strokeWidth="2" />
+					<circle cx="150" cy="63" r="10" fill="none" stroke="#a78bfa" strokeWidth="2" />
+					<circle cx="182" cy="63" r="7" fill="none" stroke="#a78bfa" strokeWidth="2" />
+					<text x="166" y="36" textAnchor="middle" fill="#c4b5fd" fontSize="8">
+						OVERHEAD
+					</text>
+				</g>
+				<path
+					d="M104 152 q14 -26 28 0 t28 0 t28 0 t28 0 t28 0 t28 0"
+					fill="none"
+					stroke="#a78bfa"
+					strokeWidth={active(2) || active(3) ? 5 : 3}
+					className={layerClass(2)}
+				/>
+				<g className={layerClass(4)}>
+					<circle cx="432" cy="70" r="18" fill={`url(#${P}-cyan)`} opacity="0.85" />
+					<path d="M402 152 q0 -46 30 -46 q30 0 30 46 Z" fill="#0e2c38" stroke="#7dd3fc" strokeWidth="2" />
+					<text x="432" y="36" textAnchor="middle" fill="#a5f3fc" fontSize="8">
+						BESIDE YOU
+					</text>
+				</g>
+				{seen(5) && <circle cx="360" cy="98" r={active(5) ? 9 : 6} fill={`url(#${P}-emerald)`} className={layerClass(5)} />}
+				{seen(6) && (
+					<g className={layerClass(6)} stroke="#fbbf24" strokeWidth="3" strokeLinecap="round">
+						<path d="M300 122 l0 20 M312 122 l0 20" />
+					</g>
+				)}
+				{done && (
+					<g filter={`url(#${P}-glow)`}>
+						<path d="M360 98 Q400 92 432 90" fill="none" stroke="#34d399" strokeWidth="3" strokeDasharray="3 4" />
+						<circle cx="432" cy="70" r="26" fill="none" stroke="#34d399" strokeWidth="3" />
+					</g>
+				)}
+				{caption('shared memory and a real hesitation pick the true voice', '#bbf7d0')}
+			</g>
+		);
+	} else if (challenge.id === 'shutdown') {
+		const gauges = [
+			{ x: 92, label: 'PWR', c: '#fb7185', s: 1 },
+			{ x: 162, label: 'TEMP', c: '#fbbf24', s: 2 },
+			{ x: 232, label: 'CASC', c: '#fb7185', s: 3 },
+			{ x: 302, label: 'VENT', c: '#7dd3fc', s: 4 },
+			{ x: 372, label: 'LOCK', c: '#a78bfa', s: 5 },
+			{ x: 442, label: 'DATA', c: '#34d399', s: 6 },
+		];
+		art = (
+			<g>
+				{gauges.map((g) => (
+					<line
+						key={`c-${g.label}`}
+						x1={g.x}
+						y1="86"
+						x2="280"
+						y2="120"
+						stroke={done ? '#34d399' : '#334155'}
+						strokeOpacity={done ? 0.5 : 0.25}
+						strokeWidth="1.5"
+						className={layerClass(g.s)}
+					/>
+				))}
+				<rect
+					x="212"
+					y="120"
+					width="136"
+					height="54"
+					rx="10"
+					fill={`url(#${P}-panelD)`}
+					stroke={done ? '#34d399' : '#b45309'}
+					strokeWidth={done ? 4 : 2}
+					filter={done ? `url(#${P}-glow)` : undefined}
+				/>
+				<text x="280" y="152" textAnchor="middle" fill={done ? '#bbf7d0' : '#fbbf24'} fontSize="11" fontWeight="700">
+					{done ? 'ISOLATED' : 'CORE'}
+				</text>
+				{gauges.map((g) => (
+					<g key={g.label} className={layerClass(g.s)}>
+						<circle cx={g.x} cy="66" r="18" fill="none" stroke="#1e3a44" strokeWidth="6" />
+						<circle
+							cx={g.x}
+							cy="66"
+							r="18"
+							fill="none"
+							stroke={g.c}
+							strokeWidth="6"
+							strokeDasharray="113"
+							strokeDashoffset={active(g.s) ? 28 : 56}
+							strokeLinecap="round"
+							transform={`rotate(-90 ${g.x} 66)`}
+							opacity={active(g.s) ? 1 : 0.7}
+						/>
+						<text x={g.x} y="98" textAnchor="middle" fill="#94a3b8" fontSize="8">
+							{g.label}
+						</text>
+					</g>
+				))}
+				{caption('isolate — quiet the Signal without tripping the cascade', '#bbf7d0')}
+			</g>
+		);
+	} else {
+		art = (
+			<g>
+				<text x="80" y="120" fill="#7dd3fc" fontSize="44" fontWeight="700" className={layerClass(1)}>
+					BR…
+				</text>
+				<g className={layerClass(2)}>
+					<rect x="200" y="52" width="284" height="82" rx="12" fill="#a78bfa14" stroke="#a78bfa" />
+					<text x="220" y="84" fill="#c4b5fd" fontSize="13">
+						The ___ light filled the room.
+					</text>
+					<text x="220" y="112" fill="#8b5cf6" fontSize="11">
+						context expects a describing word
+					</text>
+				</g>
+				<text x="372" y="176" fill="#fbbf24" fontSize="30" fontWeight="700" className={layerClass(3)}>
+					…IGHT
+				</text>
+				<g className={layerClass(4)} stroke="#7dd3fc" strokeWidth={active(4) ? 7 : 4} strokeLinecap="round">
+					<path d="M404 34 H492" />
+					<path d="M492 34 l-18 -12 M492 34 l-18 12" />
+				</g>
+				{done && (
+					<g filter={`url(#${P}-glow)`}>
+						<rect x="168" y="72" width="224" height="72" rx="14" fill="#fbbf2422" stroke="#fde68a" strokeWidth="4" />
+						<text x="280" y="120" textAnchor="middle" fill="#fef3c7" fontSize="34" fontWeight="700">
+							BRIGHT
+						</text>
+					</g>
+				)}
+				{caption('the fragments resolve into a direction: follow the light')}
+			</g>
 		);
 	}
 
 	return (
 		<>
-			<rect x="24" y="24" width="512" height="172" rx="18" fill="#0b1820" />
-			<text x="84" y="118" fill="#67e8f9" fontSize="44" fontWeight="700" className={layerClass(1)}>
-				BR…
-			</text>
-			<g className={layerClass(2)}>
-				<rect x="205" y="54" width="278" height="82" rx="12" fill="#a78bfa18" stroke="#a78bfa" />
-				<text x="224" y="86" fill="#c4b5fd" fontSize="13">
-					The ___ light filled the room.
-				</text>
-				<text x="224" y="114" fill="#8b5cf6" fontSize="11">
-					context expects a describing word
-				</text>
-			</g>
-			<text x="378" y="177" fill="#fbbf24" fontSize="32" fontWeight="700" className={layerClass(3)}>
-				…IGHT
-			</text>
-			<g className={layerClass(4)}>
-				<path d="M405 32 H492" stroke="#67e8f9" strokeWidth={active(4) ? 7 : 4} strokeLinecap="round" />
-				<path d="M492 32 l-18 -12 M492 32 l-18 12" stroke="#67e8f9" strokeWidth="4" />
-			</g>
-			{phase >= finalPhase && (
-				<>
-					<rect x="171" y="73" width="218" height="70" rx="14" fill="#fbbf2422" stroke="#fde68a" strokeWidth="4" />
-					<text x="280" y="119" textAnchor="middle" fill="#fef3c7" fontSize="34" fontWeight="700">
-						BRIGHT
-					</text>
-					<text x="280" y="214" textAnchor="middle" fill="#fef3c7" fontSize="12">
-						the fragments resolve into a direction: follow the light
-					</text>
-				</>
-			)}
+			{defs}
+			{frame}
+			{art}
+			{vignette}
 		</>
 	);
 }
@@ -812,7 +1187,15 @@ function PerceptCanvas({
 	onReplay,
 	onAdvance,
 	advanceLabel,
-}: Readonly<{ challenge: Challenge; phase: number; onReplay: () => void; onAdvance?: () => void; advanceLabel?: string }>) {
+	idPrefix = 'p',
+}: Readonly<{
+	challenge: Challenge;
+	phase: number;
+	onReplay: () => void;
+	onAdvance?: () => void;
+	advanceLabel?: string;
+	idPrefix?: string;
+}>) {
 	const outputs = outputsFor(challenge);
 	const winner = outputs.indexOf(Math.max(...outputs));
 	const finalPhase = challenge.input.length + 1;
@@ -860,10 +1243,10 @@ function PerceptCanvas({
 						role="img"
 						aria-label={`Step-by-step teaching illustration: ${challenge.perceptTitle}`}
 					>
-						<PerceptScene challenge={challenge} phase={phase} />
+						<PerceptScene challenge={challenge} phase={phase} idPrefix={`${idPrefix}-${challenge.id}`} />
 					</svg>
 				</div>
-				<div className={`grid gap-1.5 lg:grid-cols-1 lg:gap-2 ${challenge.perceptSteps.length === 4 ? 'grid-cols-5' : 'grid-cols-4'}`}>
+				<div className={`grid gap-1.5 lg:grid-cols-1 lg:gap-2 ${stepGridClass(challenge.perceptSteps.length)}`}>
 					{challenge.perceptSteps.map((step, index) => {
 						const stepNumber = index + 1;
 						const complete = phase > stepNumber;
@@ -1247,8 +1630,8 @@ export function AiBiologyExplorer() {
 						</h1>
 						<p className="mt-5 max-w-2xl text-base leading-7 text-slate-300">
 							At 02:13 the research wing goes dark and the sealed laboratory begins supplying answers before you have finished asking
-							questions. Follow six uncertain signals while silicon and neural tissue build the same interpretations through very different
-							machinery.
+							questions. Follow nine uncertain signals — down into the vault where the lockdown began — while silicon and neural tissue
+							build the same interpretations through very different machinery.
 						</p>
 					</div>
 					<div className="grid grid-cols-3 gap-2">
@@ -1257,7 +1640,7 @@ export function AiBiologyExplorer() {
 							<p className="mt-1 text-[10px] uppercase tracking-wider text-slate-400">substrates</p>
 						</div>
 						<div className="rounded-2xl border border-white/10 bg-white/5 p-3">
-							<p className="text-2xl font-semibold text-white">6</p>
+							<p className="text-2xl font-semibold text-white">{challenges.length}</p>
 							<p className="mt-1 text-[10px] uppercase tracking-wider text-slate-400">chapters</p>
 						</div>
 						<div className="rounded-2xl border border-white/10 bg-white/5 p-3">
@@ -1382,7 +1765,7 @@ export function AiBiologyExplorer() {
 
 				<div
 					data-guide-stage="2"
-					className={`mt-2 grid gap-1.5 transition-all duration-[1200ms] sm:mt-3 sm:gap-2 ${challenge.input.length === 4 ? 'grid-cols-4' : 'grid-cols-3'} ${readingStage === 2 || introSeen ? 'opacity-100' : 'opacity-45'}`}
+					className={`mt-2 grid gap-1.5 transition-all duration-[1200ms] sm:mt-3 sm:gap-2 ${inputGridClass(challenge.input.length)} ${readingStage === 2 || introSeen ? 'opacity-100' : 'opacity-45'}`}
 					aria-label="Input evidence strengths"
 				>
 					{challenge.input.map((value, index) => {
@@ -1437,7 +1820,7 @@ export function AiBiologyExplorer() {
 						)}
 					</div>
 					<div
-						className={`mt-2 grid gap-1.5 sm:mt-3 sm:gap-2 ${challenge.outputLabels.length === 4 ? 'grid-cols-2 sm:grid-cols-4' : 'grid-cols-3'}`}
+						className={`mt-2 grid gap-1.5 sm:mt-3 sm:gap-2 ${optionGridClass(challenge.outputLabels.length)}`}
 					>
 						{challenge.outputLabels.map((label, index) => (
 							<button
@@ -1525,6 +1908,7 @@ export function AiBiologyExplorer() {
 								}}
 								onAdvance={revealed ? (runComplete ? resetRun : nextRound) : undefined}
 								advanceLabel={runComplete ? 'Play again ↻' : 'Next mission →'}
+								idPrefix="m"
 							/>
 						)}
 					</div>
@@ -1544,6 +1928,7 @@ export function AiBiologyExplorer() {
 						onReplay={() => setPhase(1)}
 						onAdvance={revealed ? (runComplete ? resetRun : nextRound) : undefined}
 						advanceLabel={runComplete ? 'Play again ↻' : 'Next mission →'}
+						idPrefix="d"
 					/>
 				</div>
 				{revealed && (
@@ -1589,7 +1974,7 @@ export function AiBiologyExplorer() {
 								<p className="font-mono text-xs text-slate-500">feature effects add to {format(outputs[winner]!)}</p>
 							</div>
 							<div
-								className={`mt-3 grid gap-1.5 sm:mt-4 sm:gap-2 ${winningContributions.length === 4 ? 'grid-cols-2 sm:grid-cols-4' : 'grid-cols-3'}`}
+								className={`mt-3 grid gap-1.5 sm:mt-4 sm:gap-2 ${optionGridClass(winningContributions.length)}`}
 							>
 								{winningContributions.map((item) => (
 									<div
@@ -1649,16 +2034,16 @@ export function AiBiologyExplorer() {
 						<p className="text-[10px] font-semibold uppercase tracking-[.22em] text-emerald-300">Run debrief</p>
 						<div className="mt-3 flex flex-wrap items-end justify-between gap-4">
 							<div>
-								<p className="text-3xl font-semibold text-white">You reached the exit.</p>
+								<p className="text-3xl font-semibold text-white">You silenced the Signal.</p>
 								<p className="mt-1 text-sm text-slate-300">
 									{correctRounds} of {challenges.length} correct · Best streak: {bestStreak} · Accuracy:{' '}
 									{Math.round((correctRounds / challenges.length) * 100)}%
 								</p>
 							</div>
 							<p className="max-w-md text-xs leading-5 text-slate-400">
-								At 02:19, cold air reaches Hans before the night sky does. Six uncertain signals became useful perceptions: evidence became
-								features, features became interpretations, and interpretations became the next survivable step—without making the model a
-								brain.
+								When the locks finally release, cold air reaches Hans before the night sky does. Nine uncertain signals became useful
+								perceptions: evidence became features, features became interpretations, and interpretations became the next survivable
+								step—without making the model a brain.
 							</p>
 						</div>
 					</div>
