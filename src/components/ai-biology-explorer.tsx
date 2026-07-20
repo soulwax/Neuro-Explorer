@@ -806,7 +806,13 @@ function PerceptScene({ challenge, phase }: Readonly<{ challenge: Challenge; pha
 	);
 }
 
-function PerceptCanvas({ challenge, phase, onReplay }: Readonly<{ challenge: Challenge; phase: number; onReplay: () => void }>) {
+function PerceptCanvas({
+	challenge,
+	phase,
+	onReplay,
+	onAdvance,
+	advanceLabel,
+}: Readonly<{ challenge: Challenge; phase: number; onReplay: () => void; onAdvance?: () => void; advanceLabel?: string }>) {
 	const outputs = outputsFor(challenge);
 	const winner = outputs.indexOf(Math.max(...outputs));
 	const finalPhase = challenge.input.length + 1;
@@ -827,9 +833,16 @@ function PerceptCanvas({ challenge, phase, onReplay }: Readonly<{ challenge: Cha
 					<p className="mt-1 text-xs text-slate-400">{status}</p>
 				</div>
 				{phase >= finalPhase && (
-					<button type="button" onClick={onReplay} className="glass-btn glass-btn--secondary justify-center">
-						Replay each step
-					</button>
+					<div className="flex flex-wrap gap-2">
+						<button type="button" onClick={onReplay} className="glass-btn glass-btn--secondary justify-center">
+							Replay each step
+						</button>
+						{onAdvance && (
+							<button type="button" onClick={onAdvance} className="glass-btn glass-btn--primary justify-center">
+								{advanceLabel ?? 'Next mission →'}
+							</button>
+						)}
+					</div>
 				)}
 			</div>
 			<div className="grid gap-2 p-3 lg:grid-cols-[1.35fr_.65fr] lg:items-center lg:gap-4 sm:p-5">
@@ -1517,6 +1530,8 @@ export function AiBiologyExplorer() {
 									setPhase(1);
 									setMobileView('percept');
 								}}
+								onAdvance={revealed ? (runComplete ? resetRun : nextRound) : undefined}
+								advanceLabel={runComplete ? 'Play again ↻' : 'Next mission →'}
 							/>
 						)}
 					</div>
@@ -1530,7 +1545,13 @@ export function AiBiologyExplorer() {
 					data-guide-stage="4"
 					className={`hidden transition-all duration-[1200ms] lg:block ${readingStage === 4 || introSeen ? 'opacity-100' : 'opacity-45'}`}
 				>
-					<PerceptCanvas challenge={challenge} phase={phase} onReplay={() => setPhase(1)} />
+					<PerceptCanvas
+						challenge={challenge}
+						phase={phase}
+						onReplay={() => setPhase(1)}
+						onAdvance={revealed ? (runComplete ? resetRun : nextRound) : undefined}
+						advanceLabel={runComplete ? 'Play again ↻' : 'Next mission →'}
+					/>
 				</div>
 				{revealed && (
 					<div
