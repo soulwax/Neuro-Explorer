@@ -6,10 +6,13 @@ import { ModuleHandoffBanner } from "~/components/module-handoff-banner";
 type Challenge = {
   id: string;
   name: string;
+  chapter: string;
+  story: string;
+  outcome: string;
   cue: string;
   domain: string;
-  flavor: string;
   inputLabels: [string, string, string];
+  featureLabels: [string, string, string];
   outputLabels: [string, string, string];
   outputDescriptions: [string, string, string];
   perceptTitle: string;
@@ -24,10 +27,13 @@ const challenges: Challenge[] = [
   {
     id: "edge",
     name: "Find the edge",
+    chapter: "01 · The dark corridor",
+    story: "02:13. The research wing loses power. In the emergency glow, a pale seam might be a doorway—or only a shadow on the wall. Your first percept decides whether the route forward is real.",
+    outcome: "The pale seam locks into a border. A hidden door separates from the wall and slides open.",
     cue: "A strong contrast enters channels 1 and 3.",
     domain: "Visual cortex",
-    flavor: "Separate a contour from background noise before it disappears.",
     inputLabels: ["Left contrast", "Center detail", "Right contrast"],
+    featureLabels: ["Broad contrast", "Fine detail", "Rightward gradient"],
     outputLabels: ["Border", "Texture", "Shadow"],
     outputDescriptions: ["Matches contrast on both sides", "Prefers detail in the center", "Prefers a right-heavy gradient"],
     perceptTitle: "A contour emerges",
@@ -40,10 +46,13 @@ const challenges: Challenge[] = [
   {
     id: "tone",
     name: "Sort the tone",
+    chapter: "02 · Behind the wall",
+    story: "Beyond the door, three tones overlap in the ventilation hum. Only the lab’s middle-frequency access chime will unlock the service lift.",
+    outcome: "The middle band separates from the hum. The lift recognizes its access chime and wakes.",
     cue: "The middle frequency carries most of the evidence.",
     domain: "Auditory cortex",
-    flavor: "Route a fleeting tone to the population tuned for its frequency.",
     inputLabels: ["Low frequency", "Middle frequency", "High frequency"],
+    featureLabels: ["Low-band energy", "Tuned middle band", "High-band energy"],
     outputLabels: ["Low tone", "Middle tone", "High tone"],
     outputDescriptions: ["Listens mostly to low frequencies", "Listens mostly to middle frequencies", "Listens mostly to high frequencies"],
     perceptTitle: "A pitch profile takes shape",
@@ -56,10 +65,13 @@ const challenges: Challenge[] = [
   {
     id: "motion",
     name: "Track motion",
+    chapter: "03 · The moving beacon",
+    story: "Inside the lift, a damaged direction display flashes at three positions. If the light is moving right, the safe exit is on the east side; if it is stationary, the display is merely failing.",
+    outcome: "The separate flashes bind into rightward motion. You take the east passage before the lift stalls.",
     cue: "A late signal dominates the three-step sequence.",
     domain: "Motion pathway",
-    flavor: "Predict which direction-selective population captures the trajectory.",
     inputLabels: ["Early position", "Middle position", "Late position"],
+    featureLabels: ["Early trace", "Sequence continuity", "Late trace"],
     outputLabels: ["Moves left", "Stays still", "Moves right"],
     outputDescriptions: ["Prefers an early-weighted sequence", "Combines the middle and late positions", "Prefers a strong late-position signal"],
     perceptTitle: "Positions become a trajectory",
@@ -72,10 +84,13 @@ const challenges: Challenge[] = [
   {
     id: "face",
     name: "Complete the face",
+    chapter: "04 · The noisy camera",
+    story: "A security feed flickers on. An eye pattern, a partial outline, and compression noise compete for meaning. Is someone waiting in the control room—or is the camera inventing a face?",
+    outcome: "The eye and outline cohere while the noise is discounted. It is Dr. Imani, signaling from the control room.",
     cue: "Two compatible features arrive; one weak feature conflicts.",
     domain: "Ventral stream",
-    flavor: "Resolve a partial pattern before the percept is lost in the crowd.",
     inputLabels: ["Eye pattern", "Face outline", "Object noise"],
+    featureLabels: ["Paired features", "Bounded shape", "Scene clutter"],
     outputLabels: ["Face", "Object", "Background"],
     outputDescriptions: ["Combines eye and outline evidence", "Relies strongly on the outline", "Accepts several weak scene cues"],
     perceptTitle: "Features settle into a face",
@@ -88,10 +103,13 @@ const challenges: Challenge[] = [
   {
     id: "threat",
     name: "Gate the alarm",
+    chapter: "05 · Alarm or all-clear",
+    story: "Imani points to a warning panel. Your pulse is elevated, the room context looks dangerous, yet one safety indicator remains lit. The system must decide whether to orient, sound the alarm, or ignore it.",
+    outcome: "The safety cue applies a brake, but context still wins. You treat the alarm as real instead of dismissing it.",
     cue: "Context is loud, but one channel actively suppresses a response.",
     domain: "Salience network",
-    flavor: "Choose the population that survives both excitation and inhibition.",
     inputLabels: ["Body cue", "Context cue", "Safety cue"],
+    featureLabels: ["Arousal pattern", "Threat context", "Safety evidence"],
     outputLabels: ["Orient", "Alarm", "Ignore"],
     outputDescriptions: ["Samples all cues cautiously", "Prioritizes context but hears safety", "Needs safety and suppresses body alarm"],
     perceptTitle: "A scene gains emotional meaning",
@@ -104,10 +122,13 @@ const challenges: Challenge[] = [
   {
     id: "language",
     name: "Resolve the word",
+    chapter: "06 · The final instruction",
+    story: "The evacuation terminal has lost several letters: “Follow the BR… …IGHT light.” The opening fits many words; the sentence and ending must resolve what the message is asking you to do.",
+    outcome: "BR + context + IGHT settle into BRIGHT: an adjective. You follow the bright guide light to the safe exit.",
     cue: "The final feature is strong enough to overturn an early guess.",
     domain: "Language network",
-    flavor: "Let accumulating evidence settle a three-way lexical competition.",
     inputLabels: ["Word start", "Sentence context", "Word ending"],
+    featureLabels: ["Opening pattern", "Context fit", "Suffix pattern"],
     outputLabels: ["Noun", "Verb", "Adjective"],
     outputDescriptions: ["Leans on the opening pattern", "Leans on sentence context", "Combines context with the ending"],
     perceptTitle: "Fragments become a word",
@@ -119,9 +140,22 @@ const challenges: Challenge[] = [
   },
 ];
 
+const featureWeights = [
+  [0.8, 0.2, 0],
+  [0.15, 0.75, 0.15],
+  [0, 0.2, 0.8],
+] as const;
+
+function featuresFor(challenge: Challenge, columns = 3) {
+  return featureWeights.map((row) =>
+    row.reduce<number>((sum, weight, index) => index < columns ? sum + weight * challenge.input[index]! : sum, 0),
+  );
+}
+
 function outputsFor(challenge: Challenge) {
+  const features = featuresFor(challenge);
   return challenge.weights.map((row) =>
-    row.reduce((sum, weight, index) => sum + weight * challenge.input[index]!, 0),
+    row.reduce((sum, weight, index) => sum + weight * features[index]!, 0),
   );
 }
 
@@ -130,9 +164,10 @@ function format(value: number) {
 }
 
 function strongestContribution(challenge: Challenge) {
+  const features = featuresFor(challenge);
   let best = { output: 0, input: 0, value: Number.NEGATIVE_INFINITY };
   challenge.weights.forEach((row, output) => row.forEach((weight, input) => {
-    const value = weight * challenge.input[input]!;
+    const value = weight * features[input]!;
     if (value > best.value) best = { output, input, value };
   }));
   return best;
@@ -140,20 +175,22 @@ function strongestContribution(challenge: Challenge) {
 
 function MatrixPanel({ challenge, phase }: Readonly<{ challenge: Challenge; phase: number }>) {
   const outputs = outputsFor(challenge);
+  const visibleColumns = phase === 0 ? 0 : Math.min(phase, 3);
+  const features = featuresFor(challenge, visibleColumns);
   return (
     <div className="relative overflow-hidden rounded-[28px] border border-cyan-300/15 bg-[#07131b]/85 p-5 sm:p-6">
       <div className="flex items-center justify-between">
         <div>
           <p className="text-[10px] font-semibold uppercase tracking-[0.24em] text-cyan-300">Silicon side</p>
-          <h3 className="mt-2 text-lg font-semibold text-white">Score each interpretation</h3>
-          <p className="mt-1 text-xs text-slate-500">Evidence × connection strength → total score</p>
+          <h3 className="mt-2 text-lg font-semibold text-white">Transform, then interpret</h3>
+          <p className="mt-1 text-xs text-slate-500">Layer 1 builds features · Layer 2 scores meanings</p>
         </div>
         <span className="rounded-full border border-cyan-300/20 bg-cyan-300/10 px-3 py-1 font-mono text-[10px] text-cyan-100">GPU / ANN</span>
       </div>
 
       <div className="mt-8 flex items-center justify-center gap-2 font-mono text-xs sm:gap-4 sm:text-sm" aria-label="Weight matrix multiplied by input vector">
         <div className="grid grid-cols-3 gap-1 border-x border-cyan-300/35 px-2 py-2 sm:gap-2 sm:px-3">
-          {challenge.weights.flatMap((row, rowIndex) => row.map((value, columnIndex) => (
+          {featureWeights.flatMap((row, rowIndex) => row.map((value, columnIndex) => (
             <span
               key={`${rowIndex}-${columnIndex}`}
               className={`flex size-9 items-center justify-center rounded-md transition duration-300 sm:size-10 ${phase === columnIndex + 1 ? "bg-cyan-300/25 text-white shadow-[0_0_18px_rgba(34,211,238,.24)]" : "bg-white/5 text-slate-400"}`}
@@ -170,72 +207,79 @@ function MatrixPanel({ challenge, phase }: Readonly<{ challenge: Challenge; phas
         </div>
         <span className="text-slate-500">=</span>
         <div className="grid gap-1 border-x border-emerald-300/35 px-2 py-2 sm:gap-2">
-          {outputs.map((value, index) => (
-            <span key={index} title={challenge.outputLabels[index]} className={`flex size-9 items-center justify-center rounded-md transition sm:size-10 ${phase >= 4 ? "bg-emerald-300/20 text-emerald-100" : "bg-white/5 text-slate-600"}`}>{phase >= 4 ? format(value) : index + 1}</span>
+          {features.map((value, index) => (
+            <span key={index} title={challenge.featureLabels[index]} className={`flex size-9 items-center justify-center rounded-md transition sm:size-10 ${phase > 0 ? "bg-emerald-300/20 text-emerald-100" : "bg-white/5 text-slate-600"}`}>{phase > 0 ? format(value) : "—"}</span>
           ))}
         </div>
       </div>
       <div className="mt-6 flex items-center gap-3 text-xs text-slate-400">
         <span className={`size-2 rounded-full ${phase > 0 && phase < 4 ? "animate-pulse bg-cyan-300" : "bg-slate-700"}`} />
-        {phase === 0 ? "Ready to compare all three possibilities" : phase < 4 ? `Adding “${challenge.inputLabels[phase - 1]}” to every score` : "All evidence combined; highest score selected"}
+        {phase === 0 ? "Layer 1 is waiting for sensory evidence" : phase < 4 ? `Adding “${challenge.inputLabels[phase - 1]}” to each feature` : "Layer 1 complete; Layer 2 selects an interpretation"}
       </div>
       <div className="mt-4 grid grid-cols-3 gap-2">
-        {challenge.outputLabels.map((label, index) => <div key={label} className="rounded-lg bg-white/[.035] px-2 py-2 text-center text-[10px] text-slate-400"><span className="mr-1 font-mono text-slate-600">{index + 1}</span>{label}</div>)}
+        {challenge.featureLabels.map((label, index) => <div key={label} className="rounded-lg bg-white/[.035] px-2 py-2 text-center text-[10px] text-slate-400"><span className="mr-1 font-mono text-slate-600">F{index + 1}</span>{label}</div>)}
       </div>
+      <div className={`mt-3 rounded-xl border p-3 transition ${phase >= 4 ? "border-cyan-300/20 bg-cyan-300/8" : "border-white/8 bg-white/[.02] opacity-45"}`}><p className="text-[9px] uppercase tracking-[.18em] text-slate-500">Layer 2 · feature vector × interpretation weights</p><div className="mt-2 grid grid-cols-3 gap-2">{outputs.map((value, index) => <div key={challenge.outputLabels[index]} className={`rounded-lg px-2 py-2 text-center ${phase >= 4 ? "bg-cyan-300/10" : "bg-white/[.025]"}`}><p className="truncate text-[10px] text-slate-400">{challenge.outputLabels[index]}</p><p className={`mt-1 font-mono text-xs ${phase >= 4 ? "text-cyan-100" : "text-slate-600"}`}>{phase >= 4 ? format(value) : "—"}</p></div>)}</div></div>
     </div>
   );
 }
 
 function BrainPanel({ challenge, phase }: Readonly<{ challenge: Challenge; phase: number }>) {
   const outputs = outputsFor(challenge);
+  const visibleColumns = phase === 0 ? 0 : Math.min(phase, 3);
+  const features = featuresFor(challenge, visibleColumns);
   const max = Math.max(...outputs);
   return (
     <div className="relative overflow-hidden rounded-[28px] border border-amber-300/15 bg-[#171008]/85 p-5 sm:p-6">
       <div className="flex items-center justify-between">
         <div>
           <p className="text-[10px] font-semibold uppercase tracking-[0.24em] text-amber-300">Biology side</p>
-          <h3 className="mt-2 text-lg font-semibold text-white">Populations compete</h3>
-          <p className="mt-1 text-xs text-slate-500">Excitation and inhibition change firing rates</p>
+          <h3 className="mt-2 text-lg font-semibold text-white">A feature layer intervenes</h3>
+          <p className="mt-1 text-xs text-slate-500">Sensory cells → feature populations → meanings</p>
         </div>
         <span className="rounded-full border border-amber-300/20 bg-amber-300/10 px-3 py-1 font-mono text-[10px] text-amber-100">Cortex / spikes</span>
       </div>
-      <svg viewBox="0 0 420 190" className="mt-3 w-full" role="img" aria-label="Three input neurons connected to three output neurons">
-        {challenge.weights.flatMap((row, outputIndex) => row.map((weight, inputIndex) => (
+      <svg viewBox="0 0 520 210" className="mt-3 w-full" role="img" aria-label="Sensory neurons connected through a feature layer to interpretation populations">
+        <text x="55" y="14" textAnchor="middle" fill="#64748b" fontSize="9">SENSORY</text><text x="255" y="14" textAnchor="middle" fill="#64748b" fontSize="9">FEATURES</text><text x="447" y="14" textAnchor="middle" fill="#64748b" fontSize="9">MEANING</text>
+        {featureWeights.flatMap((row, featureIndex) => row.map((weight, inputIndex) => (
           <line
-            key={`${outputIndex}-${inputIndex}`}
-            x1="72" y1={40 + inputIndex * 55} x2="344" y2={40 + outputIndex * 55}
-            stroke={weight >= 0 ? "#fbbf24" : "#a78bfa"}
-            strokeOpacity={phase === inputIndex + 1 || phase >= 4 ? Math.min(0.8, Math.abs(weight) + 0.15) : 0.12}
+            key={`input-feature-${featureIndex}-${inputIndex}`}
+            x1="74" y1={45 + inputIndex * 60} x2="235" y2={45 + featureIndex * 60}
+            stroke="#67e8f9"
+            strokeOpacity={phase === inputIndex + 1 || phase > inputIndex + 1 ? Math.min(0.8, Math.abs(weight) + 0.12) : 0.08}
             strokeWidth={1 + Math.abs(weight) * 3}
             className="transition-all duration-300"
           />
         )))}
+        {challenge.weights.flatMap((row, outputIndex) => row.map((weight, featureIndex) => (
+          <line key={`feature-output-${outputIndex}-${featureIndex}`} x1="275" y1={45 + featureIndex * 60} x2="425" y2={45 + outputIndex * 60} stroke={weight >= 0 ? "#fbbf24" : "#a78bfa"} strokeOpacity={phase >= 4 ? Math.min(0.8, Math.abs(weight) + 0.15) : 0.08} strokeWidth={1 + Math.abs(weight) * 3} className="transition-all duration-300" />
+        )))}
         {challenge.input.map((value, index) => (
           <g key={`input-${index}`}>
-            <circle cx="58" cy={40 + index * 55} r={15 + value * 5} fill="#22180b" stroke="#fbbf24" strokeWidth="2" />
-            <circle cx="58" cy={40 + index * 55} r="6" fill={phase === index + 1 ? "#fef3c7" : "#f59e0b"} className={phase === index + 1 ? "animate-pulse" : ""} />
-            <text x="22" y={44 + index * 55} fill="#94a3b8" fontSize="11">{value.toFixed(1)}</text>
+            <circle cx="58" cy={45 + index * 60} r={13 + value * 4} fill="#0c2730" stroke="#67e8f9" strokeWidth="2" />
+            <circle cx="58" cy={45 + index * 60} r="5" fill={phase === index + 1 ? "#ecfeff" : "#22d3ee"} className={phase === index + 1 ? "animate-pulse" : ""} />
+            <text x="20" y={49 + index * 60} fill="#94a3b8" fontSize="10">{value.toFixed(1)}</text>
           </g>
         ))}
+        {features.map((value, index) => <g key={`feature-${index}`}><circle cx="255" cy={45 + index * 60} r={16 + Math.max(0, value) * 5} fill="#241b08" stroke="#fbbf24" strokeWidth={phase > 0 ? 3 : 2} className="transition-all duration-500" /><text x="248" y={49 + index * 60} fill="white" fontSize="11" fontWeight="700">F{index + 1}</text>{phase > 0 && <text x="278" y={49 + index * 60} fill="#fde68a" fontSize="9">{format(value)}</text>}</g>)}
         {outputs.map((value, index) => {
           const winner = value === max && phase >= 4;
           return (
             <g key={`output-${index}`}>
-              <circle cx="360" cy={40 + index * 55} r="22" fill={winner ? "#78350f" : "#20150a"} stroke={winner ? "#fde68a" : "#b45309"} strokeWidth={winner ? 4 : 2} className="transition-all duration-300" />
-              {winner && <circle cx="360" cy={40 + index * 55} r="30" fill="none" stroke="#fbbf24" opacity=".65" className="animate-ping" />}
-              <text x="356" y={45 + index * 55} fill="white" fontSize="14" fontWeight="700">{index + 1}</text>
-              <text x="390" y={44 + index * 55} fill={phase >= 4 ? "#fde68a" : "#64748b"} fontSize="11">{phase >= 4 ? `${Math.round(Math.max(0, value) * 38)} Hz` : "—"}</text>
+              <circle cx="447" cy={45 + index * 60} r="20" fill={winner ? "#78350f" : "#20150a"} stroke={winner ? "#fde68a" : "#b45309"} strokeWidth={winner ? 4 : 2} className="transition-all duration-300" />
+              {winner && <circle cx="447" cy={45 + index * 60} r="28" fill="none" stroke="#fbbf24" opacity=".65" className="animate-ping" />}
+              <text x="443" y={50 + index * 60} fill="white" fontSize="13" fontWeight="700">{index + 1}</text>
+              <text x="475" y={49 + index * 60} fill={phase >= 4 ? "#fde68a" : "#64748b"} fontSize="10">{phase >= 4 ? `${Math.round(Math.max(0, value) * 38)} Hz` : "—"}</text>
             </g>
           );
         })}
       </svg>
       <div className="flex items-center gap-3 text-xs text-slate-400">
         <span className={`size-2 rounded-full ${phase > 0 && phase < 4 ? "animate-pulse bg-amber-300" : "bg-slate-700"}`} />
-        {phase === 0 ? "Populations are ready for the same evidence" : phase < 4 ? `“${challenge.inputLabels[phase - 1]}” changes each population’s activity` : "All pushes and pulls combined; highest-rate population wins"}
+        {phase === 0 ? "Sensory populations are waiting" : phase < 4 ? `“${challenge.inputLabels[phase - 1]}” reshapes the feature layer` : "Feature populations drive competing interpretations"}
       </div>
-      <div className="mt-4 grid grid-cols-3 gap-2">
-        {challenge.outputLabels.map((label, index) => <div key={label} className="rounded-lg bg-white/[.035] px-2 py-2 text-center text-[10px] text-slate-400"><span className="mr-1 font-mono text-slate-600">{index + 1}</span>{label}</div>)}
-      </div>
+      <div className="mt-4 grid grid-cols-3 gap-2">{challenge.featureLabels.map((label, index) => <div key={label} className="rounded-lg border border-amber-300/8 bg-amber-300/[.035] px-2 py-2 text-center text-[10px] text-slate-400"><span className="mr-1 font-mono text-amber-200/40">F{index + 1}</span>{label}</div>)}</div>
+      <div className="mt-2 grid grid-cols-3 gap-2">{challenge.outputLabels.map((label, index) => <div key={label} className="rounded-lg bg-white/[.035] px-2 py-2 text-center text-[10px] text-slate-400"><span className="mr-1 font-mono text-slate-600">{index + 1}</span>{label}</div>)}</div>
     </div>
   );
 }
@@ -470,6 +514,7 @@ export function AiBiologyExplorer() {
   const [played, setPlayed] = useState<string[]>([]);
   const [learningMode, setLearningMode] = useState<"before" | "after">("before");
   const challenge = challenges[challengeIndex]!;
+  const features = useMemo(() => featuresFor(challenge), [challenge]);
   const outputs = useMemo(() => outputsFor(challenge), [challenge]);
   const winner = outputs.indexOf(Math.max(...outputs));
   const revealed = phase >= 4;
@@ -477,11 +522,11 @@ export function AiBiologyExplorer() {
   const probe = strongestContribution(challenge);
   const sortedOutputs = [...outputs].sort((a, b) => b - a);
   const decisionMargin = sortedOutputs[0]! - sortedOutputs[1]!;
-  const winningContributions = challenge.input.map((input, index) => ({
-    label: challenge.inputLabels[index],
-    input,
+  const winningContributions = features.map((feature, index) => ({
+    label: challenge.featureLabels[index],
+    input: feature,
     weight: challenge.weights[winner]![index]!,
-    effect: input * challenge.weights[winner]![index]!,
+    effect: feature * challenge.weights[winner]![index]!,
   }));
 
   useEffect(() => {
@@ -529,23 +574,24 @@ export function AiBiologyExplorer() {
         <div className="relative grid gap-8 lg:grid-cols-[1.25fr_.75fr] lg:items-end">
           <div>
             <p className="text-xs font-semibold uppercase tracking-[0.28em] text-cyan-200/80">Machines × minds</p>
-            <h1 className="mt-4 max-w-4xl text-4xl font-semibold tracking-[-0.04em] text-white sm:text-6xl">Same answer.<br /><span className="text-slate-400">Alien machinery.</span></h1>
-            <p className="mt-5 max-w-2xl text-base leading-7 text-slate-300">Artificial networks borrowed the language of neurons. Put both sides through the same tiny recognition task—then scroll beneath the metaphor.</p>
+            <h1 className="mt-4 max-w-4xl text-4xl font-semibold tracking-[-0.04em] text-white sm:text-6xl">The Night Signal.<br /><span className="text-slate-400">Two ways to perceive.</span></h1>
+            <p className="mt-5 max-w-2xl text-base leading-7 text-slate-300">At 02:13 the research wing goes dark. Six uncertain signals stand between you and the exit. Follow one continuous story while silicon and neural tissue build the same interpretations through very different machinery.</p>
           </div>
           <div className="grid grid-cols-3 gap-2">
             <div className="rounded-2xl border border-white/10 bg-white/5 p-3"><p className="text-2xl font-semibold text-white">2</p><p className="mt-1 text-[10px] uppercase tracking-wider text-slate-400">substrates</p></div>
-            <div className="rounded-2xl border border-white/10 bg-white/5 p-3"><p className="text-2xl font-semibold text-white">1</p><p className="mt-1 text-[10px] uppercase tracking-wider text-slate-400">task</p></div>
-            <div className="rounded-2xl border border-white/10 bg-white/5 p-3"><p className="text-2xl font-semibold text-white">≠</p><p className="mt-1 text-[10px] uppercase tracking-wider text-slate-400">equivalent</p></div>
+            <div className="rounded-2xl border border-white/10 bg-white/5 p-3"><p className="text-2xl font-semibold text-white">6</p><p className="mt-1 text-[10px] uppercase tracking-wider text-slate-400">chapters</p></div>
+            <div className="rounded-2xl border border-white/10 bg-white/5 p-3"><p className="text-2xl font-semibold text-white">3</p><p className="mt-1 text-[10px] uppercase tracking-wider text-slate-400">neural layers</p></div>
           </div>
         </div>
       </section>
 
       <section className="app-surface p-3 sm:p-5">
-        <div className="mb-5 grid gap-px overflow-hidden rounded-2xl border border-white/10 bg-white/10 sm:grid-cols-3">
+        <div className="mb-5 grid gap-px overflow-hidden rounded-2xl border border-white/10 bg-white/10 sm:grid-cols-2 lg:grid-cols-4">
           {[
             ["1", "Read the evidence", "Three labeled input signals arrive with different strengths."],
-            ["2", "Choose an interpretation", "Each candidate listens to those signals through a different mix of connections."],
-            ["3", "Watch both compute", "The highest weighted total becomes the matrix score and the winning firing population."],
+            ["2", "Build features", "A middle layer recombines raw signals into more useful patterns."],
+            ["3", "Choose a meaning", "Interpretation populations listen to different mixtures of those features."],
+            ["4", "See the percept", "The winning meaning organizes fragments into something usable for action."],
           ].map(([step, title, detail]) => <div key={step} className="bg-[#0b151d] p-4"><div className="flex items-center gap-3"><span className="flex size-7 items-center justify-center rounded-full bg-white/8 font-mono text-xs text-white">{step}</span><p className="text-sm font-semibold text-white">{title}</p></div><p className="mt-2 pl-10 text-xs leading-5 text-slate-400">{detail}</p></div>)}
         </div>
         <div className="mb-4 flex gap-1.5 px-2" aria-label={`${played.length} of ${challenges.length} missions complete`}>
@@ -556,11 +602,11 @@ export function AiBiologyExplorer() {
         <div className="flex flex-col gap-4 px-2 py-2 sm:flex-row sm:items-center sm:justify-between">
           <div>
             <div className="flex flex-wrap items-center gap-2">
-              <p className="text-[10px] font-semibold uppercase tracking-[0.24em] text-emerald-300">Mission {challengeIndex + 1} / {challenges.length}</p>
+              <p className="text-[10px] font-semibold uppercase tracking-[0.24em] text-emerald-300">{challenge.chapter}</p>
               <span className="rounded-full bg-white/5 px-2 py-1 text-[9px] uppercase tracking-wider text-slate-400">{challenge.domain}</span>
             </div>
             <h2 className="mt-1 text-xl font-semibold text-white">{challenge.name}</h2>
-            <p className="mt-1 text-sm text-slate-400">{challenge.flavor}</p>
+            <p className="mt-2 max-w-3xl text-sm leading-6 text-slate-300">{challenge.story}</p>
           </div>
           <div className="grid grid-cols-2 gap-2">
             <div className="rounded-xl border border-white/10 bg-slate-950/35 px-4 py-2 text-center"><p className="text-[9px] uppercase tracking-wider text-slate-500">Correct</p><p className="mt-1 font-mono text-sm font-semibold text-emerald-200">{correctRounds} / {played.length}</p></div>
@@ -572,7 +618,7 @@ export function AiBiologyExplorer() {
           <div>
             <p className="text-[10px] font-semibold uppercase tracking-[.2em] text-slate-500">Incoming signal</p>
             <p className="mt-1 text-sm text-slate-200">{challenge.cue} <strong className="text-white">Which output wins?</strong></p>
-            {probeUsed && <p className="mt-2 text-xs text-violet-200">Clue: <strong>{challenge.inputLabels[probe.input]}</strong> gives <strong>{challenge.outputLabels[probe.output]}</strong> the strongest single excitatory push. Other signals can still change the winner.</p>}
+            {probeUsed && <p className="mt-2 text-xs text-violet-200">Clue: the middle-layer feature <strong>{challenge.featureLabels[probe.input]}</strong> gives <strong>{challenge.outputLabels[probe.output]}</strong> the strongest single push. Other features can still change the winner.</p>}
           </div>
           <button type="button" disabled={probeUsed || phase > 0} onClick={() => setProbeUsed(true)} className="glass-btn glass-btn--secondary justify-center">Show one clue</button>
         </div>
@@ -601,18 +647,19 @@ export function AiBiologyExplorer() {
         <PerceptCanvas challenge={challenge} phase={phase} onReplay={() => setPhase(1)} />
         {revealed && (
           <div className="mt-3 overflow-hidden rounded-2xl border border-white/10 bg-slate-950/30">
+            <div className="border-b border-fuchsia-300/12 bg-fuchsia-300/6 px-4 py-3"><p className="text-[9px] font-semibold uppercase tracking-[.18em] text-fuchsia-200/70">The story moves</p><p className="mt-1 text-sm leading-6 text-slate-200">{challenge.outcome}</p></div>
             <div className="grid gap-3 border-b border-white/8 p-4 sm:grid-cols-[1fr_1fr_1.5fr]">
               <div><p className="text-[9px] uppercase tracking-wider text-slate-500">Winning interpretation</p><p className="mt-1 text-base font-semibold text-white">{challenge.outputLabels[winner]}</p><p className="mt-1 font-mono text-xs text-slate-500">total {format(outputs[winner]!)}</p></div>
               <div><p className="text-[9px] uppercase tracking-wider text-slate-500">Lead over runner-up</p><p className="mt-1 font-mono text-lg text-white">+{format(decisionMargin)}</p><p className="mt-1 text-[10px] text-slate-500">A smaller lead means a closer call.</p></div>
               <div className="rounded-xl border border-emerald-300/12 bg-emerald-300/5 p-3"><p className="text-[9px] uppercase tracking-wider text-emerald-200/70">Why it won</p><p className="mt-1 text-xs leading-5 text-slate-300">{challenge.why}</p></div>
             </div>
             <div className="p-4">
-              <div className="flex flex-col gap-1 sm:flex-row sm:items-end sm:justify-between"><div><p className="text-[10px] font-semibold uppercase tracking-[.18em] text-slate-500">Open the winning total</p><p className="mt-1 text-xs text-slate-400">Each input is multiplied by this interpretation’s connection. Positive effects support it; negative effects suppress it.</p></div><p className="font-mono text-xs text-slate-500">effects add to {format(outputs[winner]!)}</p></div>
+              <div className="flex flex-col gap-1 sm:flex-row sm:items-end sm:justify-between"><div><p className="text-[10px] font-semibold uppercase tracking-[.18em] text-slate-500">Open the second layer</p><p className="mt-1 text-xs text-slate-400">Each learned feature is multiplied by its connection to the interpretation. Positive effects support it; negative effects suppress it.</p></div><p className="font-mono text-xs text-slate-500">feature effects add to {format(outputs[winner]!)}</p></div>
               <div className="mt-4 grid gap-2 sm:grid-cols-3">
                 {winningContributions.map((item) => (
                   <div key={item.label} className={`rounded-xl border p-3 ${item.effect >= 0 ? "border-emerald-300/12 bg-emerald-300/5" : "border-violet-300/12 bg-violet-300/5"}`}>
                     <div className="flex items-center justify-between gap-2"><p className="text-xs font-medium text-white">{item.label}</p><span className={`font-mono text-sm font-semibold ${item.effect >= 0 ? "text-emerald-200" : "text-violet-200"}`}>{item.effect >= 0 ? "+" : ""}{format(item.effect)}</span></div>
-                    <p className="mt-2 font-mono text-[10px] text-slate-500">{format(item.input)} evidence × {format(item.weight)} connection</p>
+                    <p className="mt-2 font-mono text-[10px] text-slate-500">{format(item.input)} feature × {format(item.weight)} connection</p>
                     <p className="mt-1 text-[10px] text-slate-400">{item.effect >= 0 ? "supports the winner" : "suppresses the winner"}</p>
                   </div>
                 ))}
@@ -624,7 +671,7 @@ export function AiBiologyExplorer() {
         {runComplete && (
           <div className="mt-3 overflow-hidden rounded-2xl border border-emerald-300/20 bg-emerald-300/8 p-5">
             <p className="text-[10px] font-semibold uppercase tracking-[.22em] text-emerald-300">Run debrief</p>
-            <div className="mt-3 flex flex-wrap items-end justify-between gap-4"><div><p className="text-3xl font-semibold text-white">{correctRounds} of {challenges.length} correct</p><p className="mt-1 text-sm text-slate-300">Best streak: {bestStreak} · Accuracy: {Math.round((correctRounds / challenges.length) * 100)}%</p></div><p className="max-w-md text-xs leading-5 text-slate-400">You learned to read the shared weighted-sum abstraction. The rest of this page explains why matching winners do not imply matching machinery.</p></div>
+            <div className="mt-3 flex flex-wrap items-end justify-between gap-4"><div><p className="text-3xl font-semibold text-white">You reached the exit.</p><p className="mt-1 text-sm text-slate-300">{correctRounds} of {challenges.length} correct · Best streak: {bestStreak} · Accuracy: {Math.round((correctRounds / challenges.length) * 100)}%</p></div><p className="max-w-md text-xs leading-5 text-slate-400">Six uncertain signals became useful perceptions. You saw sensory evidence become features, features become interpretations, and interpretations guide the next action—without mistaking the model for the brain itself.</p></div>
           </div>
         )}
         <p className="mt-4 px-2 text-xs leading-5 text-slate-500">Teaching simplification: firing rate stands in for a biological population response. Real neural circuits are recurrent, time-varying, and vastly more complex.</p>

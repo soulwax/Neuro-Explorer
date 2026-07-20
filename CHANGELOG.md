@@ -5,6 +5,22 @@
 
 
 
+
+## [v0.40.0] - 2026-07-20
+
+Release type: MINOR
+
+### Added
+
+- Reframed the six `/ai-biology` missions as one continuous “Night Signal” narrative in which each successful percept advances an after-hours research-wing escape from blackout to final evacuation.
+- Added chapter-specific setup and consequence text so contour detection, pitch recognition, motion tracking, face completion, threat appraisal, and language resolution each have an understandable purpose in the story.
+- Added a functional intermediate feature layer between sensory evidence and interpretations on both sides of the comparison, with named feature populations and two-stage connection diagrams.
+
+### Changed
+
+- Updated the deterministic model from direct input-to-output scoring to a two-layer computation in which sensory inputs first form features and those features then drive competing meanings.
+- Updated the result ledger and clues to explain second-layer feature contributions rather than collapsing the full process into one abstract weighted sum.
+
 ## [v0.39.0] - 2026-07-20
 
 Release type: MINOR
