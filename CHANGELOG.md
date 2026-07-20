@@ -7,6 +7,22 @@
 
 
 
+
+## [v0.41.0] - 2026-07-20
+
+Release type: MINOR
+
+### Added
+
+- Recast “The Night Signal” through Dr. Hans Werner’s subjective viewpoint, with an escalating laboratory-lockdown story, inner monologue, sensory detail, and chapter outcomes that carry one continuous escape narrative.
+- Expanded three chapters to four evidence cues and four interpretations, with matrices, vectors, biological populations, percept steps, and reveal timing that adapt to each scene’s changing dimensionality.
+
+### Changed
+
+- Replaced abstract answer labels with concrete hypotheses and subtle descriptive clues, including contradictory evidence that lets players reason toward the result without giving it away.
+- Extended every percept animation so each new clue visibly changes the emerging scene before the final interpretation binds it into an actionable result.
+- Kept candidate explanations visible in the compact mobile layout and added a more atmospheric final debrief.
+
 ## [v0.40.1] - 2026-07-20
 
 Release type: PATCH
