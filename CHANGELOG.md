@@ -9,6 +9,17 @@
 
 
 
+
+## [v0.41.2] - 2026-07-20
+
+Release type: PATCH
+
+### Changed
+
+- Halved the per-clue playback delay from 1.1 seconds to 550 milliseconds so three- and four-step computations resolve without unnecessary waiting.
+- Lengthened cue and section fades so attention moves smoothly even as the underlying sequence advances faster.
+- Kept the story scene permanently illuminated at full opacity, making Hans’s subjective experience the stable anchor for the surrounding explanation.
+
 ## [v0.41.1] - 2026-07-20
 
 Release type: PATCH
