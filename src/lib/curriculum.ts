@@ -11,6 +11,28 @@ export interface CurriculumModule {
 
 export const curriculumModules: CurriculumModule[] = [
   {
+    slug: "ai-biology",
+    title: "AI vs Biological Processing",
+    trainingStage: "Comparative computational neuroscience",
+    learningGoals: [
+      "Recognize weighted integration as a useful shared abstraction",
+      "Distinguish artificial activations from biological spikes and membrane dynamics",
+      "Compare backpropagation with LTP, LTD, and local synaptic plasticity",
+    ],
+    advancedObjectives: [
+      "Explain why mathematical similarity does not imply mechanistic equivalence.",
+      "Contrast global gradient-based credit assignment with local, state-dependent plasticity rules.",
+      "Compare substrate, timing, memory, precision, repair, and embodiment without relying on misleading one-number claims.",
+    ],
+    prerequisites: ["Basic neuron physiology", "Basic neural network concepts"],
+    linkedModules: ["neuron", "plasticity", "action-potential", "dopamine", "ask"],
+    commonMisconceptions: [
+      "Artificial neurons are simplified biological neurons in a literal mechanistic sense.",
+      "Backpropagation is the machine equivalent of long-term potentiation.",
+      "Similar output behavior proves that two systems compute in the same way.",
+    ],
+  },
+  {
     slug: "brain-atlas",
     title: "Brain Atlas",
     trainingStage: "Post-clinical anatomical convergence",

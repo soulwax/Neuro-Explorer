@@ -18,6 +18,7 @@ export const navItems = [
   { href: "/ecg", label: "ECG" },
   { href: "/eeg", label: "EEG" },
   { href: "/plasticity", label: "Plasticity" },
+  { href: "/ai-biology", label: "AI vs Biology" },
   { href: "/dopamine", label: "Dopamine" },
   { href: "/basal-ganglia", label: "Basal Ganglia" },
   { href: "/vision", label: "Vision" },
@@ -34,6 +35,14 @@ export const navItems = [
 ] as const;
 
 export const moduleCards: ModuleCard[] = [
+  {
+    slug: "ai-biology",
+    title: "AI vs Biological Processing",
+    description:
+      "Race a matrix multiplication against a firing neural circuit, then follow the analogy down to where backpropagation, synaptic plasticity, time, memory, and embodiment fundamentally diverge.",
+    badge: "Comparative Computing",
+    href: "/ai-biology",
+  },
   {
     slug: "brain-atlas",
     title: "Brain Atlas",
