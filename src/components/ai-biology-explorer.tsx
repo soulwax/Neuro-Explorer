@@ -12,6 +12,7 @@ type Challenge = {
 	outcome: string;
 	cue: string;
 	preview: string;
+	interlude: string;
 	domain: string;
 	inputLabels: string[];
 	featureLabels: string[];
@@ -38,6 +39,8 @@ const challenges: Challenge[] = [
 			'The line keeps its geometry no matter how the light lurches. It isn’t paint and it isn’t shadow — it is the seam of a door. You find the emergency release by feel, wrench it open, and slip into the service corridor beyond.',
 		cue: 'The brightness on either side of the line keeps shifting, yet the line itself stays thin, sharp, and almost textureless — and it never moves when the lamp flickers.',
 		preview: 'A dead service lift, and four sounds bleeding through the wall — one of them is a way down.',
+		interlude:
+			'You feel your way down the service corridor, the red strobe fading behind you. Somewhere ahead, past a dead end of cold pipes, the ventilation roar swallows a set of sounds you can’t yet name.',
 		domain: 'Visual cortex',
 		inputLabels: ['Left contrast', 'Center detail', 'Right contrast'],
 		featureLabels: ['Broad contrast', 'Fine detail', 'Rightward gradient'],
@@ -71,6 +74,8 @@ const challenges: Challenge[] = [
 			'The clear middle pitch and the patient beat lock together into the two-part access chime you half-remember from a hundred ordinary mornings. Something behind the wall releases, and the lift doors shudder apart.',
 		cue: 'There is almost no low rumble; the middle carries a strong, tuned pitch; a high hiss sits on top; and underneath everything runs a steady, repeating beat.',
 		preview: 'The lift stalls between floors, and a maintenance beacon starts flashing through a grate.',
+		interlude:
+			'The lift carries you two floors down and then simply stops, suspended in the shaft. In the stalled dark, a maintenance beacon begins to pulse through a grated panel — left, then centre, then right.',
 		domain: 'Auditory cortex',
 		inputLabels: ['Low rumble', 'Clear middle tone', 'High hiss', 'Even pulse'],
 		featureLabels: ['Low-band drone', 'Tuned pitch', 'High-band edge', 'Regular rhythm'],
@@ -111,6 +116,8 @@ const challenges: Challenge[] = [
 			'The three glimpses fuse into a single clean vector — motion to the right. You take the east passage a heartbeat before the lift gives out entirely and the shaft goes silent.',
 		cue: 'Three separate flashes in sequence; the last one lands furthest right and burns brightest — but it is the order of the flashes, not their brightness, that carries the direction.',
 		preview: 'A security monitor wakes in a blizzard of static — is that a face, or something waiting?',
+		interlude:
+			'The east passage spits you into a records room walled with dead monitors. One of them, impossibly, is still drawing power — and something is moving inside its snow of static.',
 		domain: 'Motion pathway',
 		inputLabels: ['Early position', 'Middle position', 'Late position'],
 		featureLabels: ['Early trace', 'Sequence continuity', 'Late trace'],
@@ -139,15 +146,17 @@ const challenges: Challenge[] = [
 		story:
 			'A dead security monitor flickers awake. Through a blizzard of compression static you catch fragments — a pair of eyes, the curve of a head, drifting digital blocks, and, half a second behind, a movement that answers the raised hand on the screen. You need to know, right now, whether the figure on that monitor is coming to help you or waiting for you to walk into it.',
 		thought:
-			'Please let it be Imani. But hope can finish a face that was never there, Hans. Demand one thing a reflection, a mannequin, or a stranger cannot fake — living motion that answers you, not one that merely mirrors.',
+			'Please let it be Astrid. But hope can finish a face that was never there, Hans. Demand one thing a reflection, a mannequin, or a stranger cannot fake — living motion that answers you, not one that merely mirrors.',
 		outcome:
-			'The face turns as the hand rises — synchronised, not mirrored, not mechanical. It is Dr. Imani, alive, signalling to you from the control room two floors down. You are not alone in the dark after all.',
+			'The face turns as the hand rises — synchronised, not mirrored, not mechanical. It is Astrid, thank God, alive, signalling to you from the control room two floors down. You are not alone in the dark after all.',
 		cue: 'Paired eyes and a bounded head are strong; the static is weak; and the face turns in time with the moving hand rather than mirroring your own movement.',
 		preview: 'The control room reeks of hot plastic and ozone, and a single green safety lamp is still lit.',
+		interlude:
+			'Imani’s signal points you toward the control room. You cross to it with your heart still hammering, and the instant you reach the glass the air itself changes: hot plastic, ozone, and the first thin edge of something burning.',
 		domain: 'Ventral stream',
 		inputLabels: ['Paired eyes', 'Head outline', 'Video noise', 'Synchronized motion'],
 		featureLabels: ['Paired features', 'Bounded shape', 'Scene clutter', 'Biological movement'],
-		outputLabels: ['Dr. Imani', 'Your reflection', 'A mannequin', 'An intruder'],
+		outputLabels: ['Dr. Astrid Van Hoyt', 'Your reflection', 'A mannequin', 'An intruder'],
 		outputDescriptions: [
 			'Real face structure plus motion that answers the signal',
 			'Would mirror your own movement — and this does not',
@@ -161,7 +170,7 @@ const challenges: Challenge[] = [
 			'Compression blocks test false completion',
 			'Synchronized movement identifies a living person',
 		],
-		why: 'Dr. Imani wins because real face structure and synchronised, living motion converge while the static is discounted. “An intruder” is the trap — a plausible face — but its motion never locks to the signal the way a familiar, responsive person’s does.',
+		why: 'Dr. Astrid Van Hoyt wins because real face structure and synchronised, living motion converge while the static is discounted. “An intruder” is the trap — a plausible face — but its motion never locks to the signal the way a familiar, responsive person’s does.',
 		bridge:
 			'Face perception is distributed across recurrent visual networks. No single biological ‘face neuron’ is taking this neat, fixed ballot.',
 		input: [0.8, 0.75, 0.3, 0.7],
@@ -177,13 +186,15 @@ const challenges: Challenge[] = [
 		name: 'Gate the alarm',
 		chapter: '05 · Alarm or all-clear',
 		story:
-			'Imani’s voice reaches you through a cracked intercom, and then you are at the control-room glass. Your heart is slamming; the air is sharp with hot plastic and ozone; a single green safety lamp glows steady and reassuring on the panel; and above a bank of battery cabinets the air has begun to shimmer with heat. The lockdown display offers four explanations — and each one wants you to do something different, right now.',
+			"Astrid's voice reaches you through a cracked intercom, and then you are at the control-room glass. Your heart is slamming; the air is sharp with hot plastic and ozone; a single green safety lamp glows steady and reassuring on the panel; and above a bank of battery cabinets the air has begun to shimmer with heat. The lockdown display offers four explanations — and each one wants you to do something different, right now.",
 		thought:
 			'Your racing heart is telling you about you, not about the room. And that calm green lamp badly wants to be believed. Separate the panic and the reassurance from the heat and the smell before you touch anything.',
 		outcome:
 			'The green lamp pushes hard toward “all clear” — but it cannot cancel the heat and the ozone stacking up behind it. You trigger fire isolation on the battery bank seconds before the first cell splits and vents.',
 		cue: 'High arousal, a strong electrical/ozone context, one reassuring green safety cue, and genuinely rising heat — and they do not all point the same way.',
 		preview: 'Smoke reaches the last terminal, and its evacuation message is dying, missing letters.',
+		interlude:
+			'Fire isolation seals the battery bay behind a bulkhead, but the smoke is already finding the gaps. Imani pulls you toward the last working evacuation terminal, its screen stuttering through a broken instruction.',
 		domain: 'Salience network',
 		inputLabels: ['Racing pulse', 'Ozone context', 'Green safety lamp', 'Rising heat'],
 		featureLabels: ['Arousal pattern', 'Electrical context', 'Safety evidence', 'Thermal danger'],
@@ -221,9 +232,11 @@ const challenges: Challenge[] = [
 		thought:
 			'Urgency is shoving the first plausible word into your mouth, Hans. Let the sentence finish. Meaning is not the loudest fragment — it is the one reading that survives once every clue has spoken.',
 		outcome:
-			'“BR” + the sentence frame + “IGHT” + the arrow settle, all at once, into FOLLOW THE BRIGHT LIGHT. You and Imani reach the decontamination exit as the fire doors seal the corridor behind you.',
+			'“BR” + the sentence frame + “IGHT” + the arrow settle, all at once, into FOLLOW THE BRIGHT LIGHT. You and Astrid reach the decontamination exit as the fire doors seal the corridor behind you.',
 		cue: 'The opening “BR” is ambiguous on its own; the grammar wants a describing word; the ending is “IGHT”; and the arrow points right — read together, they allow only one instruction.',
 		preview: 'Cold night air, an open door — and six signals that were never quite what they first seemed.',
+		interlude:
+			'The bright light was an exit sign all along. You and Imani push through the decontamination lock into cold night air, the building’s red glow shrinking behind you — six uncertain signals, survived one careful step at a time.',
 		domain: 'Language network',
 		inputLabels: ['Word start BR', 'Sentence frame', 'Ending IGHT', 'Rightward arrow'],
 		featureLabels: ['Opening pattern', 'Grammar fit', 'Suffix pattern', 'Action direction'],
@@ -708,7 +721,7 @@ function PerceptScene({ challenge, phase }: Readonly<{ challenge: Challenge; pha
 					<>
 						<path d="M258 137 Q280 151 302 137" fill="none" stroke="#fef3c7" strokeWidth="5" strokeLinecap="round" />
 						<text x="280" y="214" textAnchor="middle" fill="#fef3c7" fontSize="12">
-							the familiar motion resolves into Dr. Imani
+							the familiar motion resolves into Dr. Astrid Van Hoyt
 						</text>
 					</>
 				)}
@@ -1089,23 +1102,17 @@ function DeepNetDiagram() {
 			role="img"
 			aria-label="A deep feedforward network stacking several weight matrices from pixels to meaning"
 		>
-			{nodes.slice(0, -1).flatMap((layer, i) =>
-				layer.flatMap((a, ai) =>
-					nodes[i + 1]!.map((b, bi) => (
-						<line key={`e-${i}-${ai}-${bi}`} x1={a.x} y1={a.y} x2={b.x} y2={b.y} stroke="#67e8f9" strokeOpacity={0.1} strokeWidth={0.8} />
-					)),
-				),
-			)}
+			{nodes
+				.slice(0, -1)
+				.flatMap((layer, i) =>
+					layer.flatMap((a, ai) =>
+						nodes[i + 1]!.map((b, bi) => (
+							<line key={`e-${i}-${ai}-${bi}`} x1={a.x} y1={a.y} x2={b.x} y2={b.y} stroke="#67e8f9" strokeOpacity={0.1} strokeWidth={0.8} />
+						)),
+					),
+				)}
 			{layers.slice(0, -1).map((_, i) => (
-				<text
-					key={`w-${i}`}
-					x={(xFor(i) + xFor(i + 1)) / 2}
-					y={24}
-					textAnchor="middle"
-					fill="#64748b"
-					fontSize="10"
-					fontFamily="monospace"
-				>
+				<text key={`w-${i}`} x={(xFor(i) + xFor(i + 1)) / 2} y={24} textAnchor="middle" fill="#64748b" fontSize="10" fontFamily="monospace">
 					W{i + 1}
 				</text>
 			))}
@@ -1466,7 +1473,10 @@ export function AiBiologyExplorer() {
 					)}
 				</div>
 
-				<div data-guide-stage="4" className={`mt-4 transition-all duration-[1200ms] ${readingStage === 4 || introSeen ? 'opacity-100' : 'opacity-45'}`}>
+				<div
+					data-guide-stage="4"
+					className={`mt-4 transition-all duration-[1200ms] ${readingStage === 4 || introSeen ? 'opacity-100' : 'opacity-45'}`}
+				>
 					<div className="mb-2 flex items-center gap-2 px-1 text-[9px] font-semibold uppercase tracking-[.2em] text-cyan-200/80">
 						<span className="flex size-5 items-center justify-center rounded-full border border-cyan-200/30 bg-cyan-200/10 font-mono text-cyan-100">
 							4
@@ -1920,8 +1930,8 @@ export function AiBiologyExplorer() {
 					<p className="mt-3 max-w-3xl text-sm leading-6 text-slate-400">
 						Every mission above used two layers: sensory evidence became features, features became meaning. Real systems—silicon and
 						biological alike—stack many such transforms, and the interesting behaviour lives in the stacking. Early layers hold simple,
-						local patterns; deeper layers compose them into abstract, invariant concepts. This is the higher-level view the game only
-						hinted at.
+						local patterns; deeper layers compose them into abstract, invariant concepts. This is the higher-level view the game only hinted
+						at.
 					</p>
 				</div>
 				<div className="grid lg:grid-cols-2">
