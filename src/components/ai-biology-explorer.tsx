@@ -12,6 +12,8 @@ type Challenge = {
   inputLabels: [string, string, string];
   outputLabels: [string, string, string];
   outputDescriptions: [string, string, string];
+  perceptTitle: string;
+  perceptSteps: [string, string, string];
   why: string;
   bridge: string;
   input: [number, number, number];
@@ -28,6 +30,8 @@ const challenges: Challenge[] = [
     inputLabels: ["Left contrast", "Center detail", "Right contrast"],
     outputLabels: ["Border", "Texture", "Shadow"],
     outputDescriptions: ["Matches contrast on both sides", "Prefers detail in the center", "Prefers a right-heavy gradient"],
+    perceptTitle: "A contour emerges",
+    perceptSteps: ["Left contrast establishes one side", "Center detail tests texture", "Right contrast closes the border"],
     why: "Border wins because strong contrast arrives on both sides, matching its excitatory connections while center detail contributes little.",
     bridge: "Real edge-selective responses emerge across retinal and cortical circuits with spatial receptive fields. This three-number version captures selectivity, not the anatomy.",
     input: [0.9, 0.2, 0.8],
@@ -42,6 +46,8 @@ const challenges: Challenge[] = [
     inputLabels: ["Low frequency", "Middle frequency", "High frequency"],
     outputLabels: ["Low tone", "Middle tone", "High tone"],
     outputDescriptions: ["Listens mostly to low frequencies", "Listens mostly to middle frequencies", "Listens mostly to high frequencies"],
+    perceptTitle: "A pitch profile takes shape",
+    perceptSteps: ["Low-frequency energy sets the floor", "Middle energy forms the dominant band", "High energy adds the upper edge"],
     why: "Middle tone wins because the strongest evidence is in the middle-frequency channel, where that population has its strongest connection.",
     bridge: "Auditory pathways preserve frequency maps called tonotopy, but real sound coding also depends on timing, intensity, harmonics, and context.",
     input: [0.2, 1, 0.35],
@@ -56,6 +62,8 @@ const challenges: Challenge[] = [
     inputLabels: ["Early position", "Middle position", "Late position"],
     outputLabels: ["Moves left", "Stays still", "Moves right"],
     outputDescriptions: ["Prefers an early-weighted sequence", "Combines the middle and late positions", "Prefers a strong late-position signal"],
+    perceptTitle: "Positions become a trajectory",
+    perceptSteps: ["The object appears early", "A second sample suggests direction", "The late sample completes rightward motion"],
     why: "Moves right wins because the late-position signal is strongest and the right-motion population listens to it most strongly.",
     bridge: "Biological motion selectivity depends on ordered activity across space and time. A static vector here stands in for that temporal sequence.",
     input: [0.15, 0.45, 1],
@@ -70,6 +78,8 @@ const challenges: Challenge[] = [
     inputLabels: ["Eye pattern", "Face outline", "Object noise"],
     outputLabels: ["Face", "Object", "Background"],
     outputDescriptions: ["Combines eye and outline evidence", "Relies strongly on the outline", "Accepts several weak scene cues"],
+    perceptTitle: "Features settle into a face",
+    perceptSteps: ["An eye-like pattern appears", "The outline binds features together", "Object noise is tested and discounted"],
     why: "Face wins because eye and outline evidence both support it, while the weak object-noise signal subtracts only a little.",
     bridge: "Face perception is distributed across recurrent visual networks. No single biological ‘face neuron’ is taking this exact three-item vote.",
     input: [0.75, 0.85, 0.25],
@@ -84,6 +94,8 @@ const challenges: Challenge[] = [
     inputLabels: ["Body cue", "Context cue", "Safety cue"],
     outputLabels: ["Orient", "Alarm", "Ignore"],
     outputDescriptions: ["Samples all cues cautiously", "Prioritizes context but hears safety", "Needs safety and suppresses body alarm"],
+    perceptTitle: "A scene gains emotional meaning",
+    perceptSteps: ["The body registers arousal", "Context raises the alarm hypothesis", "Safety information applies a brake"],
     why: "Alarm wins because the strong context cue drives it more than the safety cue inhibits it. Inhibition reduces the score without automatically deciding the outcome.",
     bridge: "Salience and threat involve interacting cortical, amygdala, hippocampal, autonomic, and neuromodulatory systems—not one alarm unit.",
     input: [0.55, 0.9, 0.65],
@@ -98,6 +110,8 @@ const challenges: Challenge[] = [
     inputLabels: ["Word start", "Sentence context", "Word ending"],
     outputLabels: ["Noun", "Verb", "Adjective"],
     outputDescriptions: ["Leans on the opening pattern", "Leans on sentence context", "Combines context with the ending"],
+    perceptTitle: "Fragments become a word",
+    perceptSteps: ["The opening activates several candidates", "Sentence context narrows the meaning", "The ending resolves the word class"],
     why: "Adjective wins because the word ending provides strong support and sentence context adds more, outweighing weak opposition from the word start.",
     bridge: "Language interpretation is recurrent and context-sensitive across distributed networks. These candidates illustrate evidence accumulation, not a literal grammar circuit.",
     input: [0.3, 0.65, 0.95],
@@ -222,6 +236,105 @@ function BrainPanel({ challenge, phase }: Readonly<{ challenge: Challenge; phase
       <div className="mt-4 grid grid-cols-3 gap-2">
         {challenge.outputLabels.map((label, index) => <div key={label} className="rounded-lg bg-white/[.035] px-2 py-2 text-center text-[10px] text-slate-400"><span className="mr-1 font-mono text-slate-600">{index + 1}</span>{label}</div>)}
       </div>
+    </div>
+  );
+}
+
+function PerceptScene({ challenge, phase }: Readonly<{ challenge: Challenge; phase: number }>) {
+  const seen = (step: number) => phase >= step;
+  const active = (step: number) => phase === step;
+  const layerClass = (step: number) => `transition-all duration-700 ${seen(step) ? "opacity-100" : "opacity-10"}`;
+
+  if (challenge.id === "edge") {
+    return <>
+      <rect x="24" y="24" width="512" height="172" rx="18" fill="#0b1820" />
+      <rect x="44" y="44" width="218" height="132" rx="12" fill="#d8f5f0" className={layerClass(1)} />
+      <g fill="#67e8f9" className={layerClass(2)}>{Array.from({ length: 18 }, (_, index) => <circle key={index} cx={285 + (index % 6) * 20} cy={62 + Math.floor(index / 6) * 36} r="3" opacity=".55" />)}</g>
+      <rect x="298" y="44" width="218" height="132" rx="12" fill="#17313b" className={layerClass(3)} />
+      <line x1="280" y1="38" x2="280" y2="182" stroke="#fef08a" strokeWidth={phase >= 4 ? 7 : 2} className={layerClass(3)} />
+      {phase >= 4 && <text x="280" y="214" textAnchor="middle" fill="#fef3c7" fontSize="12">border stabilized</text>}
+    </>;
+  }
+
+  if (challenge.id === "tone") {
+    return <>
+      <rect x="24" y="24" width="512" height="172" rx="18" fill="#0b1820" />
+      <path d="M45 150 C95 120 125 180 175 150 S255 120 305 150 S385 180 435 150 S485 120 520 150" fill="none" stroke="#60a5fa" strokeWidth={active(1) ? 7 : 4} className={layerClass(1)} />
+      <path d="M45 110 C70 55 95 165 120 110 S170 55 195 110 S245 165 270 110 S320 55 345 110 S395 165 420 110 S470 55 520 110" fill="none" stroke="#fbbf24" strokeWidth={phase >= 4 ? 8 : active(2) ? 7 : 4} className={layerClass(2)} />
+      <path d="M45 70 C55 35 65 105 75 70 S95 35 105 70 S125 105 135 70 S155 35 165 70 S185 105 195 70 S215 35 225 70 S245 105 255 70 S275 35 285 70 S305 105 315 70 S335 35 345 70 S365 105 375 70 S395 35 405 70 S425 105 435 70 S455 35 465 70 S485 105 520 70" fill="none" stroke="#c084fc" strokeWidth={active(3) ? 7 : 3} className={layerClass(3)} />
+      {phase >= 4 && <text x="280" y="214" textAnchor="middle" fill="#fde68a" fontSize="12">middle-frequency band dominates</text>}
+    </>;
+  }
+
+  if (challenge.id === "motion") {
+    return <>
+      <rect x="24" y="24" width="512" height="172" rx="18" fill="#0b1820" />
+      <path d="M100 145 Q255 25 440 120" fill="none" stroke="#475569" strokeWidth="3" strokeDasharray="8 8" className={layerClass(2)} />
+      <circle cx="100" cy="145" r="20" fill="#67e8f9" className={layerClass(1)} />
+      <circle cx="255" cy="72" r="23" fill="#a78bfa" className={layerClass(2)} />
+      <circle cx="440" cy="120" r="29" fill="#fbbf24" className={layerClass(3)} />
+      {phase >= 4 && <><path d="M355 78 L458 112" stroke="#fef3c7" strokeWidth="7" strokeLinecap="round" /><path d="M458 112 L431 92 M458 112 L426 125" stroke="#fef3c7" strokeWidth="7" strokeLinecap="round" /><text x="280" y="214" textAnchor="middle" fill="#fef3c7" fontSize="12">samples bind into rightward motion</text></>}
+    </>;
+  }
+
+  if (challenge.id === "face") {
+    return <>
+      <rect x="24" y="24" width="512" height="172" rx="18" fill="#0b1820" />
+      <g className={layerClass(2)}><ellipse cx="280" cy="108" rx="82" ry="78" fill="#fbbf2420" stroke="#fbbf24" strokeWidth={active(2) ? 6 : 3} /></g>
+      <g className={layerClass(1)} fill="#67e8f9"><ellipse cx="247" cy="88" rx="17" ry="10" /><ellipse cx="313" cy="88" rx="17" ry="10" /><circle cx="247" cy="88" r="4" fill="#07131b" /><circle cx="313" cy="88" r="4" fill="#07131b" /></g>
+      <g className={layerClass(3)} fill="#a78bfa">{[[120,65],[455,70],[105,150],[470,145],[165,105]].map(([x,y], index) => <path key={index} d={`M${x! - 8} ${y} l16 0 M${x} ${y! - 8} l0 16`} stroke="#a78bfa" strokeWidth="3" />)}</g>
+      <path d="M258 137 Q280 151 302 137" fill="none" stroke="#fef3c7" strokeWidth="5" strokeLinecap="round" className={layerClass(4)} />
+      {phase >= 4 && <text x="280" y="214" textAnchor="middle" fill="#fef3c7" fontSize="12">features bind into a face percept</text>}
+    </>;
+  }
+
+  if (challenge.id === "threat") {
+    return <>
+      <rect x="24" y="24" width="512" height="172" rx="18" fill="#0b1820" />
+      <g className={layerClass(1)}><circle cx="128" cy="110" r={active(1) ? 42 : 32} fill="#fb718525" stroke="#fb7185" strokeWidth="4" /><path d="M98 110 h16 l9 -18 14 38 11 -20 h18" fill="none" stroke="#fda4af" strokeWidth="4" /></g>
+      <g className={layerClass(2)}><path d="M220 166 V58 L310 34 L400 58 V166" fill="#fbbf2415" stroke="#fbbf24" strokeWidth="3" /><circle cx="350" cy="88" r="13" fill="#fbbf24" /></g>
+      <g className={layerClass(3)}><path d="M438 70 L475 84 V117 C475 143 457 158 438 167 C419 158 401 143 401 117 V84 Z" fill="#67e8f925" stroke="#67e8f9" strokeWidth={active(3) ? 6 : 3} /><path d="M420 116 l12 12 25 -29" fill="none" stroke="#a5f3fc" strokeWidth="5" /></g>
+      {phase >= 4 && <><circle cx="310" cy="106" r="58" fill="none" stroke="#fb7185" strokeWidth="6" opacity=".65" /><text x="310" y="111" textAnchor="middle" fill="#fecdd3" fontSize="15" fontWeight="700">ALARM</text><text x="280" y="214" textAnchor="middle" fill="#fef3c7" fontSize="12">context outweighs the safety brake</text></>}
+    </>;
+  }
+
+  return <>
+    <rect x="24" y="24" width="512" height="172" rx="18" fill="#0b1820" />
+    <text x="84" y="118" fill="#67e8f9" fontSize="44" fontWeight="700" className={layerClass(1)}>BR…</text>
+    <g className={layerClass(2)}><rect x="205" y="54" width="278" height="82" rx="12" fill="#a78bfa18" stroke="#a78bfa" /><text x="224" y="86" fill="#c4b5fd" fontSize="13">The ___ light filled the room.</text><text x="224" y="114" fill="#8b5cf6" fontSize="11">context expects a describing word</text></g>
+    <text x="378" y="177" fill="#fbbf24" fontSize="32" fontWeight="700" className={layerClass(3)}>…IGHT</text>
+    {phase >= 4 && <><rect x="171" y="73" width="218" height="70" rx="14" fill="#fbbf2422" stroke="#fde68a" strokeWidth="4" /><text x="280" y="119" textAnchor="middle" fill="#fef3c7" fontSize="34" fontWeight="700">BRIGHT</text><text x="280" y="214" textAnchor="middle" fill="#fef3c7" fontSize="12">context + ending resolve “adjective”</text></>}
+  </>;
+}
+
+function PerceptCanvas({ challenge, phase, onReplay }: Readonly<{ challenge: Challenge; phase: number; onReplay: () => void }>) {
+  const outputs = outputsFor(challenge);
+  const winner = outputs.indexOf(Math.max(...outputs));
+  const status = phase === 0
+    ? "Start the comparison to build the percept cue by cue."
+    : phase < 4
+      ? `Step ${phase}: ${challenge.perceptSteps[phase - 1]}`
+      : `Result: the evidence settles on “${challenge.outputLabels[winner]}”.`;
+
+  return (
+    <div className="mt-3 overflow-hidden rounded-[28px] border border-white/10 bg-[radial-gradient(circle_at_50%_10%,rgba(103,232,249,.08),transparent_40%),#071017]">
+      <div className="flex flex-col gap-3 border-b border-white/8 px-5 py-4 sm:flex-row sm:items-center sm:justify-between">
+        <div><p className="text-[10px] font-semibold uppercase tracking-[.22em] text-fuchsia-200">Emerging percept</p><h3 className="mt-1 text-lg font-semibold text-white">{challenge.perceptTitle}</h3><p className="mt-1 text-xs text-slate-400">{status}</p></div>
+        {phase >= 4 && <button type="button" onClick={onReplay} className="glass-btn glass-btn--secondary justify-center">Replay each step</button>}
+      </div>
+      <div className="grid gap-4 p-4 lg:grid-cols-[1.35fr_.65fr] lg:items-center sm:p-5">
+        <svg viewBox="0 0 560 225" className="w-full" role="img" aria-label={`Step-by-step teaching illustration: ${challenge.perceptTitle}`}><PerceptScene challenge={challenge} phase={phase} /></svg>
+        <div className="grid gap-2">
+          {challenge.perceptSteps.map((step, index) => {
+            const stepNumber = index + 1;
+            const complete = phase > stepNumber;
+            const isActive = phase === stepNumber;
+            return <div key={step} className={`rounded-xl border p-3 transition ${isActive ? "border-fuchsia-300/35 bg-fuchsia-300/12" : complete ? "border-emerald-300/15 bg-emerald-300/5" : "border-white/8 bg-white/[.025]"}`}><div className="flex gap-3"><span className={`flex size-6 shrink-0 items-center justify-center rounded-full font-mono text-[10px] ${isActive ? "bg-fuchsia-200 text-slate-950" : complete ? "bg-emerald-300/20 text-emerald-200" : "bg-white/5 text-slate-600"}`}>{complete ? "✓" : stepNumber}</span><div><p className={`text-xs font-medium ${isActive ? "text-white" : "text-slate-400"}`}>{challenge.inputLabels[index]}</p><p className="mt-1 text-[10px] leading-4 text-slate-500">{step}</p></div></div></div>;
+          })}
+          <div className={`rounded-xl border p-3 transition ${phase >= 4 ? "border-amber-300/30 bg-amber-300/10" : "border-white/8 bg-white/[.025]"}`}><div className="flex gap-3"><span className={`flex size-6 shrink-0 items-center justify-center rounded-full text-[10px] ${phase >= 4 ? "bg-amber-200 text-slate-950" : "bg-white/5 text-slate-600"}`}>◎</span><div><p className={`text-xs font-medium ${phase >= 4 ? "text-white" : "text-slate-400"}`}>Organized result</p><p className="mt-1 text-[10px] leading-4 text-slate-500">The strongest interpretation binds the cues into a usable percept.</p></div></div></div>
+        </div>
+      </div>
+      <p className="border-t border-white/8 px-5 py-3 text-[10px] leading-4 text-slate-500"><strong className="text-slate-400">Important:</strong> this is an explanatory visualization. Brains do not assemble a picture on an inner screen; perception is distributed activity that supports recognition and action.</p>
     </div>
   );
 }
@@ -373,7 +486,7 @@ export function AiBiologyExplorer() {
 
   useEffect(() => {
     if (phase < 1 || phase >= 4) return;
-    const timer = window.setTimeout(() => setPhase((value) => value + 1), 520);
+    const timer = window.setTimeout(() => setPhase((value) => value + 1), 1100);
     return () => window.clearTimeout(timer);
   }, [phase]);
 
@@ -485,6 +598,7 @@ export function AiBiologyExplorer() {
             {revealed ? <button type="button" onClick={runComplete ? resetRun : nextRound} className="glass-btn glass-btn--primary">{runComplete ? "Play again ↻" : "Next mission →"}</button> : <button type="button" onClick={runRound} disabled={guess === null || phase > 0} className="glass-btn glass-btn--primary">Run comparison</button>}
           </div>
         </div>
+        <PerceptCanvas challenge={challenge} phase={phase} onReplay={() => setPhase(1)} />
         {revealed && (
           <div className="mt-3 overflow-hidden rounded-2xl border border-white/10 bg-slate-950/30">
             <div className="grid gap-3 border-b border-white/8 p-4 sm:grid-cols-[1fr_1fr_1.5fr]">

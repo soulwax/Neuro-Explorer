@@ -4,6 +4,21 @@
 
 
 
+
+## [v0.39.0] - 2026-07-20
+
+Release type: MINOR
+
+### Added
+
+- Added a mission-specific emerging-percept canvas to `/ai-biology` that visibly accumulates each input cue during the comparison and then reorganizes the layers into the winning interpretation.
+- Added distinct stepwise scenes for contour detection, pitch coding, motion sampling, face completion, threat appraisal, and contextual word resolution, with persistent completed layers and an active-step guide.
+- Added a replay control for watching percept construction again without replaying or rescoring the mission, plus an explicit caveat that perception is distributed neural activity rather than a literal picture on an inner screen.
+
+### Changed
+
+- Slowed each integration step so learners can follow the matrix, firing populations, active cue, and emerging percept together.
+
 ## [v0.38.3] - 2026-07-20
 
 Release type: PATCH
