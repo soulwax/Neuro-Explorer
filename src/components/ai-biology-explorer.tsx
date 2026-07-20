@@ -11,6 +11,7 @@ type Challenge = {
 	thought: string;
 	outcome: string;
 	cue: string;
+	preview: string;
 	domain: string;
 	inputLabels: string[];
 	featureLabels: string[];
@@ -30,25 +31,31 @@ const challenges: Challenge[] = [
 		name: 'Find the edge',
 		chapter: '01 · The dark corridor',
 		story:
-			'At 02:13 the research wing goes dark. You are Dr. Hans Werner, and magnetic locks slam shut around you as red emergency light floods the corridor. You come to on the floor with your pulse hammering. Across the corridor, a pale vertical line stays unnervingly straight while the lamp above it flickers.',
-		thought: 'Breathe, Hans. Panic wants every dark shape to be a trap. Watch what remains stable when the light changes.',
+			'02:13. The research wing drops into darkness and the magnetic locks fire like gunshots down the hall. You are Dr. Hans Werner, and you wake on the corridor floor with your pulse in your ears and no memory of how you fell. The emergency lamp stutters overhead, throwing the walls into a red strobe — and in all that lurching shadow, one thing refuses to flinch: a single pale vertical line, holding its shape while everything around it shakes.',
+		thought:
+			'Breathe, Hans. In a strobe, panic paints a trap onto every moving shadow. Trust the thing that stays the same when the light changes — not the thing that screams the loudest.',
 		outcome:
-			'The line holds its geometry as the illumination shifts. It resolves into a door seam; you wrench the emergency release and enter the service corridor.',
-		cue: 'Brightness changes on both sides of the line, while its center stays narrow and almost textureless.',
+			'The line keeps its geometry no matter how the light lurches. It isn’t paint and it isn’t shadow — it is the seam of a door. You find the emergency release by feel, wrench it open, and slip into the service corridor beyond.',
+		cue: 'The brightness on either side of the line keeps shifting, yet the line itself stays thin, sharp, and almost textureless — and it never moves when the lamp flickers.',
+		preview: 'A dead service lift, and four sounds bleeding through the wall — one of them is a way down.',
 		domain: 'Visual cortex',
 		inputLabels: ['Left contrast', 'Center detail', 'Right contrast'],
 		featureLabels: ['Broad contrast', 'Fine detail', 'Rightward gradient'],
 		outputLabels: ['Door seam', 'Painted stripe', 'Cast shadow'],
-		outputDescriptions: ['Stable, narrow contrast boundary', 'Would carry surface texture', 'Should move with the flickering lamp'],
+		outputDescriptions: [
+			'A stable, narrow contrast boundary that ignores the light',
+			'A crisp line too — but paint should carry faint surface grain',
+			'Also a dark band — yet a shadow would drift as the lamp flickers',
+		],
 		perceptTitle: 'A contour emerges',
 		perceptSteps: ['Left contrast establishes one side', 'Center detail tests texture', 'Right contrast closes the border'],
-		why: 'Door seam wins because strong contrast converges on a narrow, texture-poor boundary that remains stable despite changing illumination.',
+		why: 'Door seam wins because a strong, stable contrast boundary converges on a narrow, texture-free edge that survives the changing light. Paint would carry surface grain; a shadow would slide with the lamp.',
 		bridge:
 			'Real edge-selective responses emerge across retinal and cortical circuits with spatial receptive fields. This three-number version captures selectivity, not the anatomy.',
 		input: [0.9, 0.2, 0.8],
 		weights: [
 			[0.8, -0.3, 0.5],
-			[0.2, 0.9, -0.1],
+			[0.3, 0.85, 0.05],
 			[-0.4, 0.3, 0.9],
 		],
 	},
@@ -57,19 +64,22 @@ const challenges: Challenge[] = [
 		name: 'Sort the tone',
 		chapter: '02 · Behind the wall',
 		story:
-			'The corridor ends at a dead service lift. Through the ventilation roar you hear a repeating sound: a low drone, one clear tone, a thin hiss, and a strangely even pulse. One pattern belongs to the lift’s access chime. The others could mean the fire system is already active.',
-		thought: 'You desperately want the lift to work. Wanting is a prior, not evidence. Listen for pitch and rhythm separately.',
-		outcome: 'The clear middle band and regular pulse bind into the lift’s two-part access chime. The doors shudder open.',
-		cue: 'The sound has little low rumble, a strong middle pitch, some high hiss, and a regular repeating pulse.',
+			'The corridor dies at a sealed service lift. Behind the ventilation roar, four sounds bleed through the wall: a low mechanical drone, one clear ringing tone, a thin electric hiss, and a strangely patient, even pulse. One of them is the lift’s access chime — your way down into the building. The others might mean the fire-suppression system has already armed itself around you.',
+		thought:
+			'You want the lift to work so badly you can taste it. Wanting is a guess wearing the clothes of a fact, Hans. Take the sound apart — pitch in one hand, rhythm in the other — before you believe any of it.',
+		outcome:
+			'The clear middle pitch and the patient beat lock together into the two-part access chime you half-remember from a hundred ordinary mornings. Something behind the wall releases, and the lift doors shudder apart.',
+		cue: 'There is almost no low rumble; the middle carries a strong, tuned pitch; a high hiss sits on top; and underneath everything runs a steady, repeating beat.',
+		preview: 'The lift stalls between floors, and a maintenance beacon starts flashing through a grate.',
 		domain: 'Auditory cortex',
 		inputLabels: ['Low rumble', 'Clear middle tone', 'High hiss', 'Even pulse'],
 		featureLabels: ['Low-band drone', 'Tuned pitch', 'High-band edge', 'Regular rhythm'],
 		outputLabels: ['Access chime', 'Ventilation fan', 'Fire alarm', 'Phone vibration'],
 		outputDescriptions: [
-			'Clear pitch plus regular rhythm',
-			'Mostly low continuous energy',
-			'High energy with urgent rhythm',
-			'Rhythm without a dominant pitch',
+			'A clear pitch riding on a steady, learned rhythm',
+			'Mostly low, continuous energy — but the middle is louder than a fan',
+			'High energy with an urgent beat — the hiss and pulse almost fit',
+			'A rhythm with no real pitch — close, if you ignore the tone',
 		],
 		perceptTitle: 'A pitch profile takes shape',
 		perceptSteps: [
@@ -78,14 +88,14 @@ const challenges: Challenge[] = [
 			'High hiss adds uncertainty',
 			'Regular timing reveals a learned chime',
 		],
-		why: 'Access chime wins because a strong tuned pitch coincides with a regular rhythm; neither the low drone nor the high hiss explains both features together.',
+		why: 'Access chime wins because a strong tuned pitch and a regular rhythm arrive together. The low drone explains only the background; the high hiss explains only the noise; neither one accounts for both features at once.',
 		bridge:
 			'Auditory pathways preserve frequency maps called tonotopy, but real sound coding also depends on timing, intensity, harmonics, and context.',
 		input: [0.25, 0.95, 0.35, 0.8],
 		weights: [
 			[0, 0.9, 0.1, 0.75],
 			[0.8, 0.1, 0.1, 0.15],
-			[0.1, 0.35, 0.75, 0.4],
+			[0.1, 0.35, 0.9, 0.5],
 			[0.2, 0.2, 0.1, 0.85],
 		],
 	},
@@ -94,28 +104,31 @@ const challenges: Challenge[] = [
 		name: 'Track motion',
 		chapter: '03 · The moving beacon',
 		story:
-			'The lift stops between floors. A maintenance beacon flashes through a grated panel—first left, then center, then farther right. Your peripheral vision turns the separate flashes into something that feels like motion.',
-		thought: 'Your eyes keep jumping toward the brightest flash. Ignore brightness, Hans. Direction lives in the order.',
-		outcome: 'The separate flashes bind into rightward motion. You take the east passage before the lift stalls.',
-		cue: 'A late signal dominates the three-step sequence.',
+			'The lift jerks to a halt between floors. Through a grated maintenance panel, a beacon begins to flash — first at the left edge, then the centre, then further right — each flash a little brighter than the last. Your peripheral vision stitches the separate sparks into something that feels, unmistakably, like movement heading somewhere.',
+		thought:
+			'Your eyes keep lunging at the brightest flash. Brightness is a decoy, Hans. Direction doesn’t live in how bright a flash is — it lives in the order they arrive.',
+		outcome:
+			'The three glimpses fuse into a single clean vector — motion to the right. You take the east passage a heartbeat before the lift gives out entirely and the shaft goes silent.',
+		cue: 'Three separate flashes in sequence; the last one lands furthest right and burns brightest — but it is the order of the flashes, not their brightness, that carries the direction.',
+		preview: 'A security monitor wakes in a blizzard of static — is that a face, or something waiting?',
 		domain: 'Motion pathway',
 		inputLabels: ['Early position', 'Middle position', 'Late position'],
 		featureLabels: ['Early trace', 'Sequence continuity', 'Late trace'],
 		outputLabels: ['Moves left', 'Stays still', 'Moves right'],
 		outputDescriptions: [
-			'Prefers an early-weighted sequence',
-			'Combines the middle and late positions',
-			'Prefers a strong late-position signal',
+			'Would need an early-weighted sequence — but the early flash is weakest',
+			'Pools the middle and late flashes without ever choosing a direction',
+			'Reads the ordered sequence as travel toward the strong late flash',
 		],
 		perceptTitle: 'Positions become a trajectory',
 		perceptSteps: ['The object appears early', 'A second sample suggests direction', 'The late sample completes rightward motion'],
-		why: 'Moves right wins because the late-position signal is strongest and the right-motion population listens to it most strongly.',
+		why: 'Moves right wins because the population tuned to rightward motion listens most strongly to the late-position sample, and that sample is the strongest. “Stays still” is tempting — it pools the middle and late flashes — but it never commits to a direction.',
 		bridge:
 			'Biological motion selectivity depends on ordered activity across space and time. A static vector here stands in for that temporal sequence.',
 		input: [0.15, 0.45, 1],
 		weights: [
 			[0.8, 0.2, -0.2],
-			[0.25, 0.7, 0.3],
+			[0.25, 0.75, 0.4],
 			[-0.15, 0.35, 0.95],
 		],
 	},
@@ -124,21 +137,22 @@ const challenges: Challenge[] = [
 		name: 'Complete the face',
 		chapter: '04 · The noisy camera',
 		story:
-			'A security monitor wakes. In the snow you glimpse paired eyes, a head-shaped outline, drifting compression blocks, and—half a second later—a movement that matches the raised hand on screen. You need to know whether someone is helping or waiting to ambush you.',
+			'A dead security monitor flickers awake. Through a blizzard of compression static you catch fragments — a pair of eyes, the curve of a head, drifting digital blocks, and, half a second behind, a movement that answers the raised hand on the screen. You need to know, right now, whether the figure on that monitor is coming to help you or waiting for you to walk into it.',
 		thought:
-			'Please let it be Imani. Familiarity can complete a face that is not there. Demand one cue that a reflection or mannequin cannot produce.',
+			'Please let it be Imani. But hope can finish a face that was never there, Hans. Demand one thing a reflection, a mannequin, or a stranger cannot fake — living motion that answers you, not one that merely mirrors.',
 		outcome:
-			'The face turns as the hand moves; the motion is synchronized rather than mirrored. It is Dr. Imani, alive, signaling from the control room.',
-		cue: 'Paired features and a bounded outline are strong; noise is weak; the face and hand move together rather than as a reflection.',
+			'The face turns as the hand rises — synchronised, not mirrored, not mechanical. It is Dr. Imani, alive, signalling to you from the control room two floors down. You are not alone in the dark after all.',
+		cue: 'Paired eyes and a bounded head are strong; the static is weak; and the face turns in time with the moving hand rather than mirroring your own movement.',
+		preview: 'The control room reeks of hot plastic and ozone, and a single green safety lamp is still lit.',
 		domain: 'Ventral stream',
 		inputLabels: ['Paired eyes', 'Head outline', 'Video noise', 'Synchronized motion'],
 		featureLabels: ['Paired features', 'Bounded shape', 'Scene clutter', 'Biological movement'],
 		outputLabels: ['Dr. Imani', 'Your reflection', 'A mannequin', 'An intruder'],
 		outputDescriptions: [
-			'Face structure plus natural motion',
-			'Should mirror your own movement',
-			'Face-like shape without living motion',
-			'Plausible face with unfamiliar action',
+			'Real face structure plus motion that answers the signal',
+			'Would mirror your own movement — and this does not',
+			'A face-shaped outline, but nothing alive is moving it',
+			'A genuine face too — the question is whether that motion belongs to it',
 		],
 		perceptTitle: 'Features settle into a face',
 		perceptSteps: [
@@ -147,7 +161,7 @@ const challenges: Challenge[] = [
 			'Compression blocks test false completion',
 			'Synchronized movement identifies a living person',
 		],
-		why: 'Dr. Imani wins because face structure and synchronized biological movement converge; noise is discounted, and the motion is inconsistent with a reflection or mannequin.',
+		why: 'Dr. Imani wins because real face structure and synchronised, living motion converge while the static is discounted. “An intruder” is the trap — a plausible face — but its motion never locks to the signal the way a familiar, responsive person’s does.',
 		bridge:
 			'Face perception is distributed across recurrent visual networks. No single biological ‘face neuron’ is taking this neat, fixed ballot.',
 		input: [0.8, 0.75, 0.3, 0.7],
@@ -155,7 +169,7 @@ const challenges: Challenge[] = [
 			[0.8, 0.7, -0.15, 0.65],
 			[0.7, 0.5, -0.2, -0.35],
 			[0.55, 0.65, 0.1, -0.4],
-			[0.35, 0.55, 0.15, 0.5],
+			[0.6, 0.7, 0.15, 0.35],
 		],
 	},
 	{
@@ -163,20 +177,22 @@ const challenges: Challenge[] = [
 		name: 'Gate the alarm',
 		chapter: '05 · Alarm or all-clear',
 		story:
-			'Imani points through the glass. Your pulse is racing; hot plastic and ozone hang in the room; a green safety lamp is still lit; heat ripples above a battery cabinet. The lockdown display offers four explanations, each demanding a different action.',
-		thought: 'Your heart is evidence about you, not proof about the room. Separate panic from heat, smell, and context before you act.',
+			'Imani’s voice reaches you through a cracked intercom, and then you are at the control-room glass. Your heart is slamming; the air is sharp with hot plastic and ozone; a single green safety lamp glows steady and reassuring on the panel; and above a bank of battery cabinets the air has begun to shimmer with heat. The lockdown display offers four explanations — and each one wants you to do something different, right now.',
+		thought:
+			'Your racing heart is telling you about you, not about the room. And that calm green lamp badly wants to be believed. Separate the panic and the reassurance from the heat and the smell before you touch anything.',
 		outcome:
-			'The green lamp suppresses the alarm hypothesis but cannot cancel the heat and electrical context. You trigger fire isolation before the battery cabinet vents.',
-		cue: 'Arousal, electrical context, one safety cue, and rising heat do not all point in the same direction.',
+			'The green lamp pushes hard toward “all clear” — but it cannot cancel the heat and the ozone stacking up behind it. You trigger fire isolation on the battery bank seconds before the first cell splits and vents.',
+		cue: 'High arousal, a strong electrical/ozone context, one reassuring green safety cue, and genuinely rising heat — and they do not all point the same way.',
+		preview: 'Smoke reaches the last terminal, and its evacuation message is dying, missing letters.',
 		domain: 'Salience network',
 		inputLabels: ['Racing pulse', 'Ozone context', 'Green safety lamp', 'Rising heat'],
 		featureLabels: ['Arousal pattern', 'Electrical context', 'Safety evidence', 'Thermal danger'],
 		outputLabels: ['False alarm', 'Electrical fire', 'Security breach', 'Sensor fault'],
 		outputDescriptions: [
-			'Panic with reassuring environment',
-			'Heat and electrical context despite inhibition',
-			'Threat context without thermal signature',
-			'Conflicting panel signals without physical danger',
+			'Panic plus a reassuring green lamp — the most comforting read, and nearly the strongest',
+			'Heat and ozone converge despite the safety lamp',
+			'Threat in the air, but no heat signature to back it',
+			'Could explain the mixed panel — if the heat were not real',
 		],
 		perceptTitle: 'A scene gains emotional meaning',
 		perceptSteps: [
@@ -185,12 +201,12 @@ const challenges: Challenge[] = [
 			'The green lamp applies inhibition',
 			'Heat provides independent physical evidence',
 		],
-		why: 'Electrical fire wins because heat and electrical context converge. The green lamp inhibits that interpretation, but inhibition is one weighted cue—not an automatic veto.',
+		why: 'Electrical fire wins because thermal danger and electrical context converge on it. The green lamp genuinely lowers that estimate — “false alarm” comes dangerously close — but inhibition here is one weighted vote against the fire, not an automatic veto over it.',
 		bridge:
 			'Salience and threat involve interacting cortical, amygdala, hippocampal, autonomic, and neuromodulatory systems—not one alarm unit.',
 		input: [0.75, 0.9, 0.55, 0.85],
 		weights: [
-			[0.5, 0.25, 0.7, -0.25],
+			[0.65, 0.3, 0.85, -0.2],
 			[0.3, 0.85, -0.25, 0.8],
 			[0.25, 0.45, -0.15, 0.25],
 			[-0.1, 0.2, 0.6, -0.2],
@@ -201,20 +217,22 @@ const challenges: Challenge[] = [
 		name: 'Resolve the word',
 		chapter: '06 · The final instruction',
 		story:
-			'Smoke reaches the control room. The evacuation terminal is missing letters: “FOLLOW THE BR… …IGHT LIGHT →”. Under pressure, fragments suggest several commands. The sentence frame, ending, and arrow must settle what you actually do next.',
-		thought: 'Urgency is forcing the first word that fits. Let the sentence finish, Hans. Meaning is constraint accumulated over time.',
+			'Smoke curls under the control-room door. The evacuation terminal is dying, its message breaking into fragments: “FOLLOW THE BR… …IGHT LIGHT →”. Under this much pressure your mind keeps snatching at the first word that fits. But the sentence frame, the missing ending, and that small blinking arrow all have to agree before you move — because you only get to be wrong about this once.',
+		thought:
+			'Urgency is shoving the first plausible word into your mouth, Hans. Let the sentence finish. Meaning is not the loudest fragment — it is the one reading that survives once every clue has spoken.',
 		outcome:
-			'BR + sentence context + IGHT + the directional arrow settle into FOLLOW THE BRIGHT LIGHT. You and Imani reach the decontamination exit as the fire doors close behind you.',
-		cue: 'The opening is ambiguous; grammar, the ending, and a directional arrow progressively constrain the instruction.',
+			'“BR” + the sentence frame + “IGHT” + the arrow settle, all at once, into FOLLOW THE BRIGHT LIGHT. You and Imani reach the decontamination exit as the fire doors seal the corridor behind you.',
+		cue: 'The opening “BR” is ambiguous on its own; the grammar wants a describing word; the ending is “IGHT”; and the arrow points right — read together, they allow only one instruction.',
+		preview: 'Cold night air, an open door — and six signals that were never quite what they first seemed.',
 		domain: 'Language network',
 		inputLabels: ['Word start BR', 'Sentence frame', 'Ending IGHT', 'Rightward arrow'],
 		featureLabels: ['Opening pattern', 'Grammar fit', 'Suffix pattern', 'Action direction'],
 		outputLabels: ['Follow bright light', 'Fight the light', 'Report a fault', 'Wait by terminal'],
 		outputDescriptions: [
-			'All linguistic and directional cues agree',
-			'Shares letters but violates context',
-			'Fits laboratory context, not the fragments',
-			'Uses the arrow but ignores the sentence',
+			'Letters, grammar, suffix, and arrow all agree',
+			'Steals BR, IGHT, and even the arrow — but breaks the sentence’s grammar',
+			'Fits a laboratory’s habits, not these fragments',
+			'Obeys the arrow, ignores the sentence',
 		],
 		perceptTitle: 'Fragments become a word',
 		perceptSteps: [
@@ -223,13 +241,13 @@ const challenges: Challenge[] = [
 			'IGHT resolves BRIGHT',
 			'The arrow turns recognition into an action',
 		],
-		why: 'Follow bright light wins because orthography, grammar, suffix, and directional context agree. The alternatives match isolated fragments but not the full constraint pattern.',
+		why: 'Follow bright light wins because orthography, grammar, suffix, and direction all agree. “Fight the light” is the real trap — it borrows the BR, the IGHT, and even the arrow — but it violates the grammar the sentence frame demands.',
 		bridge:
 			'Language interpretation is recurrent and context-sensitive across distributed networks. These candidates illustrate evidence accumulation, not a literal grammar circuit.',
 		input: [0.3, 0.65, 0.95, 0.85],
 		weights: [
 			[0.1, 0.55, 0.8, 0.75],
-			[0.45, 0.1, 0.65, -0.2],
+			[0.55, 0.15, 0.85, 0.55],
 			[0.1, 0.6, 0.2, 0.1],
 			[0.2, 0.3, -0.1, 0.45],
 		],
@@ -1042,6 +1060,67 @@ const references = [
 	},
 ] as const;
 
+const cortexStages = [
+	{ area: 'V1', role: 'Oriented edges', detail: 'Small receptive fields tuned to local orientation and contrast.' },
+	{ area: 'V2', role: 'Contours & textures', detail: 'Combinations of edges: corners, borders, simple texture.' },
+	{ area: 'V4', role: 'Shapes & colour', detail: 'Curvature and mid-level form over a wider slice of the scene.' },
+	{ area: 'IT', role: 'Objects & faces', detail: 'Large, invariant responses to whole objects and identities.' },
+] as const;
+
+// A static, higher-level view: several weight matrices stacked into a deep
+// feedforward network. Early layers hold local patterns; later layers compose
+// them into abstract features — the depth the two-layer game only hinted at.
+function DeepNetDiagram() {
+	const layers = [4, 6, 6, 4, 3];
+	const width = 480;
+	const height = 232;
+	const xFor = (i: number) => 48 + (i * (width - 96)) / (layers.length - 1);
+	const yFor = (count: number, j: number) => {
+		const gap = 30;
+		const top = height / 2 - ((count - 1) * gap) / 2;
+		return 30 + top + j * gap;
+	};
+	const nodes = layers.map((count, i) => Array.from({ length: count }, (_, j) => ({ x: xFor(i), y: yFor(count, j) })));
+	const captions = ['pixels', 'edges', 'textures', 'parts', 'meaning'];
+	return (
+		<svg
+			viewBox={`0 0 ${width} ${height + 62}`}
+			className="w-full"
+			role="img"
+			aria-label="A deep feedforward network stacking several weight matrices from pixels to meaning"
+		>
+			{nodes.slice(0, -1).flatMap((layer, i) =>
+				layer.flatMap((a, ai) =>
+					nodes[i + 1]!.map((b, bi) => (
+						<line key={`e-${i}-${ai}-${bi}`} x1={a.x} y1={a.y} x2={b.x} y2={b.y} stroke="#67e8f9" strokeOpacity={0.1} strokeWidth={0.8} />
+					)),
+				),
+			)}
+			{layers.slice(0, -1).map((_, i) => (
+				<text
+					key={`w-${i}`}
+					x={(xFor(i) + xFor(i + 1)) / 2}
+					y={24}
+					textAnchor="middle"
+					fill="#64748b"
+					fontSize="10"
+					fontFamily="monospace"
+				>
+					W{i + 1}
+				</text>
+			))}
+			{nodes.flatMap((layer, i) =>
+				layer.map((n, j) => <circle key={`n-${i}-${j}`} cx={n.x} cy={n.y} r={7} fill="#0c2730" stroke="#67e8f9" strokeWidth={1.5} />),
+			)}
+			{layers.map((_, i) => (
+				<text key={`c-${i}`} x={xFor(i)} y={height + 48} textAnchor="middle" fill="#64748b" fontSize="9">
+					{captions[i]}
+				</text>
+			))}
+		</svg>
+	);
+}
+
 export function AiBiologyExplorer() {
 	const [challengeIndex, setChallengeIndex] = useState(0);
 	const [guess, setGuess] = useState<number | null>(null);
@@ -1061,6 +1140,11 @@ export function AiBiologyExplorer() {
 	const finalPhase = challenge.input.length + 1;
 	const revealed = phase >= finalPhase;
 	const runComplete = revealed && played.length === challenges.length;
+	// Once the opening scene has been read (the reader has scrolled on, or
+	// engaged at all), stop spotlighting one step and simply light everything up.
+	const introSeen = readingStage >= 2 || guess !== null || phase > 0;
+	const answerNeeded = guess === null && phase === 0;
+	const nextChallenge = challenges[(challengeIndex + 1) % challenges.length]!;
 	const probe = strongestContribution(challenge);
 	const sortedOutputs = [...outputs].sort((a, b) => b - a);
 	const decisionMargin = sortedOutputs[0]! - sortedOutputs[1]!;
@@ -1185,12 +1269,23 @@ export function AiBiologyExplorer() {
 					))}
 				</div>
 				<div className="mb-4 flex gap-1.5 px-2" aria-label={`${played.length} of ${challenges.length} missions complete`}>
-					{challenges.map((item, index) => (
-						<span
-							key={item.id}
-							className={`h-1.5 flex-1 rounded-full transition-all duration-500 ${played.includes(item.id) ? 'bg-emerald-300' : index === challengeIndex ? 'bg-white/40' : 'bg-white/10'}`}
-						/>
-					))}
+					{challenges.map((item, index) => {
+						const known = index <= challengeIndex + 1 || played.includes(item.id);
+						return (
+							<div key={item.id} className="group relative flex-1">
+								<span
+									className={`block h-1.5 w-full rounded-full transition-all duration-500 ${played.includes(item.id) ? 'bg-emerald-300' : index === challengeIndex ? 'bg-white/40' : 'bg-white/10'}`}
+								/>
+								<span className="pointer-events-none absolute left-1/2 top-4 z-30 hidden w-48 -translate-x-1/2 rounded-lg border border-white/10 bg-slate-950/95 px-2.5 py-2 text-left shadow-[0_10px_30px_rgba(0,0,0,.5)] group-hover:block">
+									<span className="block text-[8px] font-semibold uppercase tracking-[.16em] text-emerald-300">{item.chapter}</span>
+									<span className="mt-0.5 block text-[10px] font-semibold text-white">{known ? item.name : 'Signal locked'}</span>
+									<span className="mt-1 block text-[9px] leading-4 text-slate-400">
+										{known ? item.preview : 'You have not reached this signal yet.'}
+									</span>
+								</span>
+							</div>
+						);
+					})}
 				</div>
 				<div
 					data-guide-stage="1"
@@ -1235,7 +1330,7 @@ export function AiBiologyExplorer() {
 
 				<div
 					data-guide-stage="2"
-					className={`mt-2 grid gap-2 rounded-xl border bg-slate-950/30 p-3 transition-all duration-[1200ms] md:grid-cols-[1fr_auto] md:items-center sm:mt-3 sm:rounded-2xl sm:p-4 ${readingStage === 2 ? 'border-violet-200/30 opacity-100 shadow-[0_0_30px_rgba(167,139,250,.08)]' : 'border-white/8 opacity-45'}`}
+					className={`mt-2 grid gap-2 rounded-xl border bg-slate-950/30 p-3 transition-all duration-[1200ms] md:grid-cols-[1fr_auto] md:items-center sm:mt-3 sm:rounded-2xl sm:p-4 ${readingStage === 2 ? 'border-violet-200/30 opacity-100 shadow-[0_0_30px_rgba(167,139,250,.08)]' : introSeen ? 'border-white/10 opacity-100' : 'border-white/8 opacity-45'}`}
 				>
 					<div>
 						<p className="flex items-center gap-2 text-[9px] font-semibold uppercase tracking-[.2em] text-violet-200/80">
@@ -1267,7 +1362,7 @@ export function AiBiologyExplorer() {
 
 				<div
 					data-guide-stage="2"
-					className={`mt-2 grid gap-1.5 transition-all duration-[1200ms] sm:mt-3 sm:gap-2 ${challenge.input.length === 4 ? 'grid-cols-4' : 'grid-cols-3'} ${readingStage === 2 ? 'opacity-100' : 'opacity-45'}`}
+					className={`mt-2 grid gap-1.5 transition-all duration-[1200ms] sm:mt-3 sm:gap-2 ${challenge.input.length === 4 ? 'grid-cols-4' : 'grid-cols-3'} ${readingStage === 2 || introSeen ? 'opacity-100' : 'opacity-45'}`}
 					aria-label="Input evidence strengths"
 				>
 					{challenge.input.map((value, index) => {
@@ -1297,7 +1392,7 @@ export function AiBiologyExplorer() {
 
 				<div
 					data-guide-stage="3"
-					className={`mt-3 rounded-xl border bg-slate-950/25 p-3 transition-all duration-[1200ms] sm:rounded-2xl sm:p-4 ${readingStage === 3 ? 'border-amber-200/30 opacity-100 shadow-[0_0_30px_rgba(251,191,36,.08)]' : 'border-white/8 opacity-45'}`}
+					className={`mt-3 rounded-xl border bg-slate-950/25 p-3 transition-all duration-[1200ms] sm:rounded-2xl sm:p-4 ${readingStage === 3 ? 'border-amber-200/30 opacity-100 shadow-[0_0_30px_rgba(251,191,36,.08)]' : introSeen ? 'border-white/10 opacity-100' : 'border-white/8 opacity-45'}`}
 				>
 					<div className="flex flex-wrap items-center justify-between gap-2">
 						<div>
@@ -1311,7 +1406,15 @@ export function AiBiologyExplorer() {
 								Choose the interpretation that explains the whole pattern, then run the comparison.
 							</p>
 						</div>
-						{phase === 0 && <span className="text-[10px] text-amber-100/65">Your choice →</span>}
+						{answerNeeded && (
+							<span className="flex items-center gap-1.5 text-[10px] font-medium text-emerald-200/85">
+								<span className="relative flex size-2" aria-hidden>
+									<span className="absolute inline-flex size-full rounded-full bg-emerald-300/70 opacity-70 motion-safe:animate-ping" />
+									<span className="relative inline-flex size-2 rounded-full bg-emerald-300 shadow-[0_0_10px_rgba(110,231,183,.85)]" />
+								</span>
+								Your answer →
+							</span>
+						)}
 					</div>
 					<div
 						className={`mt-2 grid gap-1.5 sm:mt-3 sm:gap-2 ${challenge.outputLabels.length === 4 ? 'grid-cols-2 sm:grid-cols-4' : 'grid-cols-3'}`}
@@ -1354,9 +1457,16 @@ export function AiBiologyExplorer() {
 							</button>
 						)}
 					</div>
+					{revealed && !runComplete && (
+						<div className="mt-3 flex flex-wrap items-center gap-x-2 gap-y-1 rounded-lg border border-white/8 bg-white/[.02] px-3 py-2">
+							<span className="text-[8px] font-semibold uppercase tracking-[.18em] text-emerald-300/70">Up next</span>
+							<span className="text-[10px] font-medium text-slate-200">{nextChallenge.chapter}</span>
+							<span className="text-[10px] italic leading-4 text-slate-400">{nextChallenge.preview}</span>
+						</div>
+					)}
 				</div>
 
-				<div data-guide-stage="4" className={`mt-4 transition-all duration-[1200ms] ${readingStage === 4 ? 'opacity-100' : 'opacity-45'}`}>
+				<div data-guide-stage="4" className={`mt-4 transition-all duration-[1200ms] ${readingStage === 4 || introSeen ? 'opacity-100' : 'opacity-45'}`}>
 					<div className="mb-2 flex items-center gap-2 px-1 text-[9px] font-semibold uppercase tracking-[.2em] text-cyan-200/80">
 						<span className="flex size-5 items-center justify-center rounded-full border border-cyan-200/30 bg-cyan-200/10 font-mono text-cyan-100">
 							4
@@ -1408,14 +1518,14 @@ export function AiBiologyExplorer() {
 				</div>
 				<div
 					data-guide-stage="4"
-					className={`hidden transition-all duration-[1200ms] lg:block ${readingStage === 4 ? 'opacity-100' : 'opacity-45'}`}
+					className={`hidden transition-all duration-[1200ms] lg:block ${readingStage === 4 || introSeen ? 'opacity-100' : 'opacity-45'}`}
 				>
 					<PerceptCanvas challenge={challenge} phase={phase} onReplay={() => setPhase(1)} />
 				</div>
 				{revealed && (
 					<div
 						data-guide-stage="5"
-						className={`mt-2 overflow-hidden rounded-xl border bg-slate-950/30 transition-all duration-[1200ms] sm:mt-3 sm:rounded-2xl ${readingStage === 5 ? 'border-emerald-200/30 opacity-100 shadow-[0_0_32px_rgba(110,231,183,.08)]' : 'border-white/10 opacity-45'}`}
+						className={`mt-2 overflow-hidden rounded-xl border bg-slate-950/30 transition-all duration-[1200ms] sm:mt-3 sm:rounded-2xl ${readingStage === 5 ? 'border-emerald-200/30 opacity-100 shadow-[0_0_32px_rgba(110,231,183,.08)]' : introSeen ? 'border-white/10 opacity-100' : 'border-white/10 opacity-45'}`}
 					>
 						<div className="flex items-center gap-2 border-b border-emerald-200/10 bg-emerald-200/[.035] px-4 py-2 text-[9px] font-semibold uppercase tracking-[.2em] text-emerald-200/80">
 							<span className="flex size-5 items-center justify-center rounded-full border border-emerald-200/30 bg-emerald-200/10 font-mono text-emerald-100">
@@ -1800,6 +1910,75 @@ export function AiBiologyExplorer() {
 							or human behavior before generalizing it.
 						</p>
 					</aside>
+				</div>
+			</section>
+
+			<section className="app-surface overflow-hidden p-0">
+				<div className="border-b border-white/8 p-6 sm:p-8">
+					<p className="text-xs font-semibold uppercase tracking-[.25em] text-sky-200">Stack the layers</p>
+					<h2 className="mt-3 text-2xl font-semibold text-white sm:text-3xl">One matrix was the toy. Depth is the real thing.</h2>
+					<p className="mt-3 max-w-3xl text-sm leading-6 text-slate-400">
+						Every mission above used two layers: sensory evidence became features, features became meaning. Real systems—silicon and
+						biological alike—stack many such transforms, and the interesting behaviour lives in the stacking. Early layers hold simple,
+						local patterns; deeper layers compose them into abstract, invariant concepts. This is the higher-level view the game only
+						hinted at.
+					</p>
+				</div>
+				<div className="grid lg:grid-cols-2">
+					<div className="border-b border-white/8 p-6 sm:border-r sm:border-b-0 sm:p-8">
+						<div className="flex items-center justify-between">
+							<p className="text-[10px] font-semibold uppercase tracking-[0.24em] text-cyan-300">Silicon side · a deep network</p>
+							<span className="rounded-full border border-cyan-300/20 bg-cyan-300/10 px-3 py-1 font-mono text-[10px] text-cyan-100">
+								stacked matrices
+							</span>
+						</div>
+						<p className="mt-3 text-sm leading-6 text-slate-400">
+							A deep network is just the two-layer step, repeated: multiply by a weight matrix, apply a nonlinearity, pass it on. Each
+							matrix re-describes the input at a higher level of abstraction.
+						</p>
+						<div className="mt-4 rounded-2xl border border-cyan-300/12 bg-[#07131b]/70 p-3 sm:p-4">
+							<DeepNetDiagram />
+						</div>
+						<p className="mt-3 overflow-x-auto rounded-lg border border-white/8 bg-slate-950/40 px-3 py-2 text-center font-mono text-[11px] text-cyan-100">
+							ŷ = σ(W₄ · σ(W₃ · σ(W₂ · σ(W₁ · x))))
+						</p>
+						<p className="mt-3 text-xs leading-5 text-slate-500">
+							The nonlinearity σ is what makes depth matter—without it, stacked matrices collapse back into a single matrix and buy you
+							nothing.
+						</p>
+					</div>
+					<div className="p-6 sm:p-8">
+						<div className="flex items-center justify-between">
+							<p className="text-[10px] font-semibold uppercase tracking-[0.24em] text-amber-300">Biology side · a cortical hierarchy</p>
+							<span className="rounded-full border border-amber-300/20 bg-amber-300/10 px-3 py-1 font-mono text-[10px] text-amber-100">
+								ventral stream
+							</span>
+						</div>
+						<p className="mt-3 text-sm leading-6 text-slate-400">
+							The ventral visual stream is often read the same way: successive areas represent the world at rising levels of abstraction,
+							from local edges to whole objects. The staging rhymes with a deep network—loosely.
+						</p>
+						<div className="mt-4 space-y-2">
+							{cortexStages.map((stage, index) => (
+								<div key={stage.area} className="flex items-center gap-3">
+									<div className="flex-1 rounded-xl border border-amber-300/12 bg-amber-300/[.04] px-3 py-2.5">
+										<div className="flex items-baseline justify-between gap-2">
+											<span className="font-mono text-xs font-semibold text-amber-100">{stage.area}</span>
+											<span className="text-[11px] font-medium text-white">{stage.role}</span>
+										</div>
+										<p className="mt-1 text-[11px] leading-4 text-slate-500">{stage.detail}</p>
+									</div>
+									{index < cortexStages.length - 1 && <span className="shrink-0 text-amber-300/40">↓</span>}
+								</div>
+							))}
+						</div>
+					</div>
+				</div>
+				<div className="border-t border-white/8 bg-white/[.025] px-6 py-4 text-sm text-slate-400 sm:px-8">
+					<span className="mr-3 text-white">→</span>
+					Depth explains why both systems build high-level features from low-level ones. But cortex is not a clean feedforward stack: it is
+					massively recurrent, feedback runs top-down as strongly as bottom-up, and no biological area waits for a global gradient to tell
+					it how to change. The hierarchy is a useful sketch, not a wiring diagram.
 				</div>
 			</section>
 
