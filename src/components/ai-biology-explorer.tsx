@@ -1477,13 +1477,6 @@ export function AiBiologyExplorer() {
 							</button>
 						)}
 					</div>
-					{revealed && !runComplete && (
-						<div className="mt-3 flex flex-wrap items-center gap-x-2 gap-y-1 rounded-lg border border-white/8 bg-white/[.02] px-3 py-2">
-							<span className="text-[8px] font-semibold uppercase tracking-[.18em] text-emerald-300/70">Up next</span>
-							<span className="text-[10px] font-medium text-slate-200">{nextChallenge.chapter}</span>
-							<span className="text-[10px] italic leading-4 text-slate-400">{nextChallenge.preview}</span>
-						</div>
-					)}
 				</div>
 
 				<div
@@ -1623,6 +1616,31 @@ export function AiBiologyExplorer() {
 								<p className="text-[9px] font-semibold uppercase tracking-[.18em] text-amber-200/70">Biology bridge</p>
 								<p className="mt-1 text-xs leading-5 text-slate-300">{challenge.bridge}</p>
 							</div>
+						</div>
+					</div>
+				)}
+				{revealed && (
+					<div className="mt-2 overflow-hidden rounded-xl border border-fuchsia-300/15 bg-[linear-gradient(120deg,rgba(232,121,249,.06),rgba(15,23,42,.15))] sm:mt-3 sm:rounded-2xl">
+						<div className="flex flex-col gap-3 p-4 sm:flex-row sm:items-center sm:justify-between sm:p-5">
+							<div className="max-w-2xl">
+								<p className="text-[9px] font-semibold uppercase tracking-[.2em] text-fuchsia-200/70">
+									{runComplete
+										? 'The way out'
+										: `Between chapters · ${challenge.chapter.split(' · ')[0]} → ${nextChallenge.chapter.split(' · ')[0]}`}
+								</p>
+								<p className="mt-2 text-sm leading-6 text-slate-200">{challenge.interlude}</p>
+								{!runComplete && (
+									<p className="mt-2 text-xs leading-5 text-slate-500">
+										<span className="font-semibold uppercase tracking-[.16em] text-emerald-300/70">Up next</span> {nextChallenge.chapter} —{' '}
+										<span className="italic">{nextChallenge.preview}</span>
+									</p>
+								)}
+							</div>
+							{!runComplete && (
+								<button type="button" onClick={nextRound} className="glass-btn glass-btn--primary shrink-0 justify-center">
+									Next mission →
+								</button>
+							)}
 						</div>
 					</div>
 				)}
