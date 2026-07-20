@@ -1,5 +1,19 @@
 # Changelog
 
+
+## [v0.38.0] - 2026-07-20
+
+Release type: MINOR
+
+### Added
+
+- Added the `/ai-biology` comparative computing module, where learners can watch an artificial matrix operation and a simplified biological firing-rate circuit solve the same recognition task before exploring their mechanistic differences.
+- Expanded the signal-duel game to six neuroscience-themed missions with confidence multipliers, optional diagnostic probes, speed bonuses, streaks, decision-margin feedback, and a final performance debrief.
+
+### Changed
+
+- Extended the teaching sequence from the shared weighted-integration abstraction into substrate, timing, memory, embodiment, and credit-assignment differences, including an interactive backpropagation versus LTP/LTD comparison.
+
 ## [0.37.1] - 2026-04-05
 
 ### Added
