@@ -1,6 +1,6 @@
 {
 	"name": "neuro-explorer",
-	"version": "0.40.0",
+	"version": "0.40.1",
 	"type": "module",
 	"private": true,
 	"scripts": {

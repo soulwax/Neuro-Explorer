@@ -6,6 +6,17 @@
 
 
 
+
+## [v0.40.1] - 2026-07-20
+
+Release type: PATCH
+
+### Changed
+
+- Reworked the `/ai-biology` playable area into a compact phone layout with tabs for the AI matrix, biological network, and emerging percept instead of stacking all three visualizations vertically.
+- Automatically switches mobile playback to the percept view while preserving manual access to both computation views throughout the sequence.
+- Tightened the story setup, instruction strip, evidence strengths, answer choices, percept stepper, and result ledger for small screens while retaining the desktop side-by-side presentation.
+
 ## [v0.40.0] - 2026-07-20
 
 Release type: MINOR

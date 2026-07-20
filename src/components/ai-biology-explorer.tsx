@@ -178,7 +178,7 @@ function MatrixPanel({ challenge, phase }: Readonly<{ challenge: Challenge; phas
   const visibleColumns = phase === 0 ? 0 : Math.min(phase, 3);
   const features = featuresFor(challenge, visibleColumns);
   return (
-    <div className="relative overflow-hidden rounded-[28px] border border-cyan-300/15 bg-[#07131b]/85 p-5 sm:p-6">
+    <div className="relative overflow-hidden rounded-2xl border border-cyan-300/15 bg-[#07131b]/85 p-3 sm:rounded-[28px] sm:p-6">
       <div className="flex items-center justify-between">
         <div>
           <p className="text-[10px] font-semibold uppercase tracking-[0.24em] text-cyan-300">Silicon side</p>
@@ -188,12 +188,12 @@ function MatrixPanel({ challenge, phase }: Readonly<{ challenge: Challenge; phas
         <span className="rounded-full border border-cyan-300/20 bg-cyan-300/10 px-3 py-1 font-mono text-[10px] text-cyan-100">GPU / ANN</span>
       </div>
 
-      <div className="mt-8 flex items-center justify-center gap-2 font-mono text-xs sm:gap-4 sm:text-sm" aria-label="Weight matrix multiplied by input vector">
+      <div className="mt-4 flex items-center justify-center gap-1.5 font-mono text-[10px] sm:mt-8 sm:gap-4 sm:text-sm" aria-label="Weight matrix multiplied by input vector">
         <div className="grid grid-cols-3 gap-1 border-x border-cyan-300/35 px-2 py-2 sm:gap-2 sm:px-3">
           {featureWeights.flatMap((row, rowIndex) => row.map((value, columnIndex) => (
             <span
               key={`${rowIndex}-${columnIndex}`}
-              className={`flex size-9 items-center justify-center rounded-md transition duration-300 sm:size-10 ${phase === columnIndex + 1 ? "bg-cyan-300/25 text-white shadow-[0_0_18px_rgba(34,211,238,.24)]" : "bg-white/5 text-slate-400"}`}
+              className={`flex size-8 items-center justify-center rounded-md transition duration-300 sm:size-10 ${phase === columnIndex + 1 ? "bg-cyan-300/25 text-white shadow-[0_0_18px_rgba(34,211,238,.24)]" : "bg-white/5 text-slate-400"}`}
             >
               {value.toFixed(1)}
             </span>
@@ -202,13 +202,13 @@ function MatrixPanel({ challenge, phase }: Readonly<{ challenge: Challenge; phas
         <span className="text-slate-500">×</span>
         <div className="grid gap-1 border-x border-violet-300/35 px-2 py-2 sm:gap-2">
           {challenge.input.map((value, index) => (
-            <span key={index} className={`flex size-9 items-center justify-center rounded-md sm:size-10 ${phase === index + 1 ? "bg-violet-300/25 text-white" : "bg-white/5 text-violet-200"}`}>{value.toFixed(1)}</span>
+            <span key={index} className={`flex size-8 items-center justify-center rounded-md sm:size-10 ${phase === index + 1 ? "bg-violet-300/25 text-white" : "bg-white/5 text-violet-200"}`}>{value.toFixed(1)}</span>
           ))}
         </div>
         <span className="text-slate-500">=</span>
         <div className="grid gap-1 border-x border-emerald-300/35 px-2 py-2 sm:gap-2">
           {features.map((value, index) => (
-            <span key={index} title={challenge.featureLabels[index]} className={`flex size-9 items-center justify-center rounded-md transition sm:size-10 ${phase > 0 ? "bg-emerald-300/20 text-emerald-100" : "bg-white/5 text-slate-600"}`}>{phase > 0 ? format(value) : "—"}</span>
+            <span key={index} title={challenge.featureLabels[index]} className={`flex size-8 items-center justify-center rounded-md transition sm:size-10 ${phase > 0 ? "bg-emerald-300/20 text-emerald-100" : "bg-white/5 text-slate-600"}`}>{phase > 0 ? format(value) : "—"}</span>
           ))}
         </div>
       </div>
@@ -230,7 +230,7 @@ function BrainPanel({ challenge, phase }: Readonly<{ challenge: Challenge; phase
   const features = featuresFor(challenge, visibleColumns);
   const max = Math.max(...outputs);
   return (
-    <div className="relative overflow-hidden rounded-[28px] border border-amber-300/15 bg-[#171008]/85 p-5 sm:p-6">
+    <div className="relative overflow-hidden rounded-2xl border border-amber-300/15 bg-[#171008]/85 p-3 sm:rounded-[28px] sm:p-6">
       <div className="flex items-center justify-between">
         <div>
           <p className="text-[10px] font-semibold uppercase tracking-[0.24em] text-amber-300">Biology side</p>
@@ -361,24 +361,24 @@ function PerceptCanvas({ challenge, phase, onReplay }: Readonly<{ challenge: Cha
       : `Result: the evidence settles on “${challenge.outputLabels[winner]}”.`;
 
   return (
-    <div className="mt-3 overflow-hidden rounded-[28px] border border-white/10 bg-[radial-gradient(circle_at_50%_10%,rgba(103,232,249,.08),transparent_40%),#071017]">
-      <div className="flex flex-col gap-3 border-b border-white/8 px-5 py-4 sm:flex-row sm:items-center sm:justify-between">
+    <div className="mt-2 overflow-hidden rounded-2xl border border-white/10 bg-[radial-gradient(circle_at_50%_10%,rgba(103,232,249,.08),transparent_40%),#071017] sm:mt-3 sm:rounded-[28px]">
+      <div className="flex flex-col gap-2 border-b border-white/8 px-3 py-3 sm:flex-row sm:items-center sm:justify-between sm:px-5 sm:py-4">
         <div><p className="text-[10px] font-semibold uppercase tracking-[.22em] text-fuchsia-200">Emerging percept</p><h3 className="mt-1 text-lg font-semibold text-white">{challenge.perceptTitle}</h3><p className="mt-1 text-xs text-slate-400">{status}</p></div>
         {phase >= 4 && <button type="button" onClick={onReplay} className="glass-btn glass-btn--secondary justify-center">Replay each step</button>}
       </div>
-      <div className="grid gap-4 p-4 lg:grid-cols-[1.35fr_.65fr] lg:items-center sm:p-5">
+      <div className="grid gap-2 p-3 lg:grid-cols-[1.35fr_.65fr] lg:items-center lg:gap-4 sm:p-5">
         <svg viewBox="0 0 560 225" className="w-full" role="img" aria-label={`Step-by-step teaching illustration: ${challenge.perceptTitle}`}><PerceptScene challenge={challenge} phase={phase} /></svg>
-        <div className="grid gap-2">
+        <div className="grid grid-cols-4 gap-1.5 lg:grid-cols-1 lg:gap-2">
           {challenge.perceptSteps.map((step, index) => {
             const stepNumber = index + 1;
             const complete = phase > stepNumber;
             const isActive = phase === stepNumber;
-            return <div key={step} className={`rounded-xl border p-3 transition ${isActive ? "border-fuchsia-300/35 bg-fuchsia-300/12" : complete ? "border-emerald-300/15 bg-emerald-300/5" : "border-white/8 bg-white/[.025]"}`}><div className="flex gap-3"><span className={`flex size-6 shrink-0 items-center justify-center rounded-full font-mono text-[10px] ${isActive ? "bg-fuchsia-200 text-slate-950" : complete ? "bg-emerald-300/20 text-emerald-200" : "bg-white/5 text-slate-600"}`}>{complete ? "✓" : stepNumber}</span><div><p className={`text-xs font-medium ${isActive ? "text-white" : "text-slate-400"}`}>{challenge.inputLabels[index]}</p><p className="mt-1 text-[10px] leading-4 text-slate-500">{step}</p></div></div></div>;
+            return <div key={step} className={`rounded-lg border p-2 transition lg:rounded-xl lg:p-3 ${isActive ? "border-fuchsia-300/35 bg-fuchsia-300/12" : complete ? "border-emerald-300/15 bg-emerald-300/5" : "border-white/8 bg-white/[.025]"}`}><div className="flex flex-col items-center gap-1.5 text-center lg:flex-row lg:items-start lg:gap-3 lg:text-left"><span className={`flex size-5 shrink-0 items-center justify-center rounded-full font-mono text-[9px] lg:size-6 lg:text-[10px] ${isActive ? "bg-fuchsia-200 text-slate-950" : complete ? "bg-emerald-300/20 text-emerald-200" : "bg-white/5 text-slate-600"}`}>{complete ? "✓" : stepNumber}</span><div className="min-w-0"><p className={`truncate text-[9px] font-medium lg:text-xs ${isActive ? "text-white" : "text-slate-400"}`}>{challenge.inputLabels[index]}</p><p className="mt-1 hidden text-[10px] leading-4 text-slate-500 lg:block">{step}</p></div></div></div>;
           })}
-          <div className={`rounded-xl border p-3 transition ${phase >= 4 ? "border-amber-300/30 bg-amber-300/10" : "border-white/8 bg-white/[.025]"}`}><div className="flex gap-3"><span className={`flex size-6 shrink-0 items-center justify-center rounded-full text-[10px] ${phase >= 4 ? "bg-amber-200 text-slate-950" : "bg-white/5 text-slate-600"}`}>◎</span><div><p className={`text-xs font-medium ${phase >= 4 ? "text-white" : "text-slate-400"}`}>Organized result</p><p className="mt-1 text-[10px] leading-4 text-slate-500">The strongest interpretation binds the cues into a usable percept.</p></div></div></div>
+          <div className={`rounded-lg border p-2 transition lg:rounded-xl lg:p-3 ${phase >= 4 ? "border-amber-300/30 bg-amber-300/10" : "border-white/8 bg-white/[.025]"}`}><div className="flex flex-col items-center gap-1.5 text-center lg:flex-row lg:items-start lg:gap-3 lg:text-left"><span className={`flex size-5 shrink-0 items-center justify-center rounded-full text-[9px] lg:size-6 lg:text-[10px] ${phase >= 4 ? "bg-amber-200 text-slate-950" : "bg-white/5 text-slate-600"}`}>◎</span><div><p className={`text-[9px] font-medium lg:text-xs ${phase >= 4 ? "text-white" : "text-slate-400"}`}>Result</p><p className="mt-1 hidden text-[10px] leading-4 text-slate-500 lg:block">The strongest interpretation binds the cues into a usable percept.</p></div></div></div>
         </div>
       </div>
-      <p className="border-t border-white/8 px-5 py-3 text-[10px] leading-4 text-slate-500"><strong className="text-slate-400">Important:</strong> this is an explanatory visualization. Brains do not assemble a picture on an inner screen; perception is distributed activity that supports recognition and action.</p>
+      <p className="border-t border-white/8 px-3 py-2 text-[9px] leading-4 text-slate-500 sm:px-5 sm:py-3 sm:text-[10px]"><strong className="text-slate-400">Important:</strong> this is an explanatory visualization. Brains do not assemble a picture on an inner screen; perception is distributed activity that supports recognition and action.</p>
     </div>
   );
 }
@@ -512,6 +512,7 @@ export function AiBiologyExplorer() {
   const [bestStreak, setBestStreak] = useState(0);
   const [probeUsed, setProbeUsed] = useState(false);
   const [played, setPlayed] = useState<string[]>([]);
+  const [mobileView, setMobileView] = useState<"machine" | "brain" | "percept">("machine");
   const [learningMode, setLearningMode] = useState<"before" | "after">("before");
   const challenge = challenges[challengeIndex]!;
   const features = useMemo(() => featuresFor(challenge), [challenge]);
@@ -538,6 +539,7 @@ export function AiBiologyExplorer() {
   function runRound() {
     if (guess === null || phase > 0) return;
     setPhase(1);
+    setMobileView("percept");
     if (!played.includes(challenge.id)) {
       const correct = guess === winner;
       const nextStreak = correct ? streak + 1 : 0;
@@ -553,6 +555,7 @@ export function AiBiologyExplorer() {
     setGuess(null);
     setPhase(0);
     setProbeUsed(false);
+    setMobileView("machine");
   }
 
   function resetRun() {
@@ -564,6 +567,7 @@ export function AiBiologyExplorer() {
     setBestStreak(0);
     setProbeUsed(false);
     setPlayed([]);
+    setMobileView("machine");
   }
 
   return (
@@ -586,27 +590,27 @@ export function AiBiologyExplorer() {
       </section>
 
       <section className="app-surface p-3 sm:p-5">
-        <div className="mb-5 grid gap-px overflow-hidden rounded-2xl border border-white/10 bg-white/10 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="mb-3 grid grid-cols-2 gap-px overflow-hidden rounded-xl border border-white/10 bg-white/10 sm:mb-5 lg:grid-cols-4">
           {[
             ["1", "Read the evidence", "Three labeled input signals arrive with different strengths."],
             ["2", "Build features", "A middle layer recombines raw signals into more useful patterns."],
             ["3", "Choose a meaning", "Interpretation populations listen to different mixtures of those features."],
             ["4", "See the percept", "The winning meaning organizes fragments into something usable for action."],
-          ].map(([step, title, detail]) => <div key={step} className="bg-[#0b151d] p-4"><div className="flex items-center gap-3"><span className="flex size-7 items-center justify-center rounded-full bg-white/8 font-mono text-xs text-white">{step}</span><p className="text-sm font-semibold text-white">{title}</p></div><p className="mt-2 pl-10 text-xs leading-5 text-slate-400">{detail}</p></div>)}
+          ].map(([step, title, detail]) => <div key={step} className="bg-[#0b151d] p-2.5 sm:p-4"><div className="flex items-center gap-2 sm:gap-3"><span className="flex size-6 shrink-0 items-center justify-center rounded-full bg-white/8 font-mono text-[10px] text-white sm:size-7 sm:text-xs">{step}</span><p className="text-[11px] font-semibold text-white sm:text-sm">{title}</p></div><p className="mt-2 hidden pl-10 text-xs leading-5 text-slate-400 sm:block">{detail}</p></div>)}
         </div>
         <div className="mb-4 flex gap-1.5 px-2" aria-label={`${played.length} of ${challenges.length} missions complete`}>
           {challenges.map((item, index) => (
             <span key={item.id} className={`h-1.5 flex-1 rounded-full transition-all duration-500 ${played.includes(item.id) ? "bg-emerald-300" : index === challengeIndex ? "bg-white/40" : "bg-white/10"}`} />
           ))}
         </div>
-        <div className="flex flex-col gap-4 px-2 py-2 sm:flex-row sm:items-center sm:justify-between">
+        <div className="flex flex-col gap-3 px-1 py-1 sm:flex-row sm:items-center sm:justify-between sm:px-2 sm:py-2">
           <div>
             <div className="flex flex-wrap items-center gap-2">
               <p className="text-[10px] font-semibold uppercase tracking-[0.24em] text-emerald-300">{challenge.chapter}</p>
               <span className="rounded-full bg-white/5 px-2 py-1 text-[9px] uppercase tracking-wider text-slate-400">{challenge.domain}</span>
             </div>
-            <h2 className="mt-1 text-xl font-semibold text-white">{challenge.name}</h2>
-            <p className="mt-2 max-w-3xl text-sm leading-6 text-slate-300">{challenge.story}</p>
+            <h2 className="mt-1 text-lg font-semibold text-white sm:text-xl">{challenge.name}</h2>
+            <p className="mt-1.5 line-clamp-3 max-w-3xl text-xs leading-5 text-slate-300 sm:mt-2 sm:line-clamp-none sm:text-sm sm:leading-6">{challenge.story}</p>
           </div>
           <div className="grid grid-cols-2 gap-2">
             <div className="rounded-xl border border-white/10 bg-slate-950/35 px-4 py-2 text-center"><p className="text-[9px] uppercase tracking-wider text-slate-500">Correct</p><p className="mt-1 font-mono text-sm font-semibold text-emerald-200">{correctRounds} / {played.length}</p></div>
@@ -614,7 +618,7 @@ export function AiBiologyExplorer() {
           </div>
         </div>
 
-        <div className="mt-3 grid gap-3 rounded-2xl border border-white/8 bg-slate-950/30 p-4 md:grid-cols-[1fr_auto] md:items-center">
+        <div className="mt-2 grid gap-2 rounded-xl border border-white/8 bg-slate-950/30 p-3 md:grid-cols-[1fr_auto] md:items-center sm:mt-3 sm:rounded-2xl sm:p-4">
           <div>
             <p className="text-[10px] font-semibold uppercase tracking-[.2em] text-slate-500">Incoming signal</p>
             <p className="mt-1 text-sm text-slate-200">{challenge.cue} <strong className="text-white">Which output wins?</strong></p>
@@ -623,20 +627,29 @@ export function AiBiologyExplorer() {
           <button type="button" disabled={probeUsed || phase > 0} onClick={() => setProbeUsed(true)} className="glass-btn glass-btn--secondary justify-center">Show one clue</button>
         </div>
 
-        <div className="mt-3 grid gap-2 sm:grid-cols-3" aria-label="Input evidence strengths">
-          {challenge.input.map((value, index) => <div key={challenge.inputLabels[index]} className="rounded-xl border border-violet-300/10 bg-violet-300/5 p-3"><div className="flex items-center justify-between gap-3"><p className="text-xs font-medium text-violet-100">{challenge.inputLabels[index]}</p><span className="font-mono text-[10px] text-violet-200">{Math.round(value * 100)}%</span></div><div className="mt-2 h-1.5 overflow-hidden rounded-full bg-slate-950/60"><div className="h-full rounded-full bg-violet-300/70" style={{width: `${value * 100}%`}} /></div></div>)}
+        <div className="mt-2 grid grid-cols-3 gap-1.5 sm:mt-3 sm:gap-2" aria-label="Input evidence strengths">
+          {challenge.input.map((value, index) => <div key={challenge.inputLabels[index]} className="min-w-0 rounded-lg border border-violet-300/10 bg-violet-300/5 p-2 sm:rounded-xl sm:p-3"><div className="flex flex-col gap-0.5 sm:flex-row sm:items-center sm:justify-between sm:gap-3"><p className="truncate text-[9px] font-medium text-violet-100 sm:text-xs">{challenge.inputLabels[index]}</p><span className="font-mono text-[9px] text-violet-200 sm:text-[10px]">{Math.round(value * 100)}%</span></div><div className="mt-1.5 h-1 overflow-hidden rounded-full bg-slate-950/60 sm:mt-2 sm:h-1.5"><div className="h-full rounded-full bg-violet-300/70" style={{width: `${value * 100}%`}} /></div></div>)}
         </div>
 
-        <div className="mt-3 grid gap-3 lg:grid-cols-2">
+        <div className="mt-2 lg:hidden">
+          <div className="grid grid-cols-3 gap-1 rounded-lg border border-white/8 bg-slate-950/35 p-1">
+            {(["machine", "brain", "percept"] as const).map((view) => <button key={view} type="button" onClick={() => setMobileView(view)} className={`rounded-md px-2 py-2 text-[10px] font-semibold uppercase tracking-wider transition ${mobileView === view ? "bg-white/12 text-white" : "text-slate-500"}`}>{view === "machine" ? "AI matrix" : view === "brain" ? "Brain" : "Percept"}</button>)}
+          </div>
+          {mobileView === "machine" && <div className="mt-1.5"><MatrixPanel challenge={challenge} phase={phase} /></div>}
+          {mobileView === "brain" && <div className="mt-1.5"><BrainPanel challenge={challenge} phase={phase} /></div>}
+          {mobileView === "percept" && <PerceptCanvas challenge={challenge} phase={phase} onReplay={() => { setPhase(1); setMobileView("percept"); }} />}
+        </div>
+
+        <div className="mt-3 hidden gap-3 lg:grid lg:grid-cols-2">
           <MatrixPanel challenge={challenge} phase={phase} />
           <BrainPanel challenge={challenge} phase={phase} />
         </div>
 
-        <div className="mt-3 rounded-2xl border border-white/8 bg-slate-950/25 p-4">
+        <div className="mt-2 rounded-xl border border-white/8 bg-slate-950/25 p-3 sm:mt-3 sm:rounded-2xl sm:p-4">
           <p className="text-xs font-medium uppercase tracking-wider text-slate-500">What does the evidence represent?</p>
-          <div className="mt-3 grid gap-2 sm:grid-cols-3">
+          <div className="mt-2 grid grid-cols-3 gap-1.5 sm:mt-3 sm:gap-2">
             {challenge.outputLabels.map((label, index) => (
-              <button key={label} type="button" disabled={phase > 0} onClick={() => setGuess(index)} className={`min-h-20 rounded-xl border px-4 py-3 text-left transition ${guess === index ? "border-white/40 bg-white/15 text-white shadow-[0_0_20px_rgba(255,255,255,.06)]" : "border-white/10 bg-white/5 text-slate-400 hover:bg-white/10"}`}><span className="font-mono text-[10px] text-slate-500">{index + 1}</span><span className="ml-2 text-sm font-semibold">{label}</span><span className="mt-1.5 block text-[10px] leading-4 text-slate-500">{challenge.outputDescriptions[index]}</span></button>
+              <button key={label} type="button" disabled={phase > 0} onClick={() => setGuess(index)} className={`min-h-12 rounded-lg border px-2 py-2 text-center transition sm:min-h-20 sm:rounded-xl sm:px-4 sm:py-3 sm:text-left ${guess === index ? "border-white/40 bg-white/15 text-white shadow-[0_0_20px_rgba(255,255,255,.06)]" : "border-white/10 bg-white/5 text-slate-400 hover:bg-white/10"}`}><span className="hidden font-mono text-[10px] text-slate-500 sm:inline">{index + 1}</span><span className="text-[10px] font-semibold sm:ml-2 sm:text-sm">{label}</span><span className="mt-1.5 hidden text-[10px] leading-4 text-slate-500 sm:block">{challenge.outputDescriptions[index]}</span></button>
             ))}
           </div>
           <div className="mt-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-end">
@@ -644,23 +657,23 @@ export function AiBiologyExplorer() {
             {revealed ? <button type="button" onClick={runComplete ? resetRun : nextRound} className="glass-btn glass-btn--primary">{runComplete ? "Play again ↻" : "Next mission →"}</button> : <button type="button" onClick={runRound} disabled={guess === null || phase > 0} className="glass-btn glass-btn--primary">Run comparison</button>}
           </div>
         </div>
-        <PerceptCanvas challenge={challenge} phase={phase} onReplay={() => setPhase(1)} />
+        <div className="hidden lg:block"><PerceptCanvas challenge={challenge} phase={phase} onReplay={() => setPhase(1)} /></div>
         {revealed && (
-          <div className="mt-3 overflow-hidden rounded-2xl border border-white/10 bg-slate-950/30">
+          <div className="mt-2 overflow-hidden rounded-xl border border-white/10 bg-slate-950/30 sm:mt-3 sm:rounded-2xl">
             <div className="border-b border-fuchsia-300/12 bg-fuchsia-300/6 px-4 py-3"><p className="text-[9px] font-semibold uppercase tracking-[.18em] text-fuchsia-200/70">The story moves</p><p className="mt-1 text-sm leading-6 text-slate-200">{challenge.outcome}</p></div>
-            <div className="grid gap-3 border-b border-white/8 p-4 sm:grid-cols-[1fr_1fr_1.5fr]">
+            <div className="grid grid-cols-2 gap-2 border-b border-white/8 p-3 sm:grid-cols-[1fr_1fr_1.5fr] sm:gap-3 sm:p-4">
               <div><p className="text-[9px] uppercase tracking-wider text-slate-500">Winning interpretation</p><p className="mt-1 text-base font-semibold text-white">{challenge.outputLabels[winner]}</p><p className="mt-1 font-mono text-xs text-slate-500">total {format(outputs[winner]!)}</p></div>
               <div><p className="text-[9px] uppercase tracking-wider text-slate-500">Lead over runner-up</p><p className="mt-1 font-mono text-lg text-white">+{format(decisionMargin)}</p><p className="mt-1 text-[10px] text-slate-500">A smaller lead means a closer call.</p></div>
-              <div className="rounded-xl border border-emerald-300/12 bg-emerald-300/5 p-3"><p className="text-[9px] uppercase tracking-wider text-emerald-200/70">Why it won</p><p className="mt-1 text-xs leading-5 text-slate-300">{challenge.why}</p></div>
+              <div className="col-span-2 rounded-lg border border-emerald-300/12 bg-emerald-300/5 p-2.5 sm:col-span-1 sm:rounded-xl sm:p-3"><p className="text-[9px] uppercase tracking-wider text-emerald-200/70">Why it won</p><p className="mt-1 text-[11px] leading-5 text-slate-300 sm:text-xs">{challenge.why}</p></div>
             </div>
-            <div className="p-4">
+            <div className="p-3 sm:p-4">
               <div className="flex flex-col gap-1 sm:flex-row sm:items-end sm:justify-between"><div><p className="text-[10px] font-semibold uppercase tracking-[.18em] text-slate-500">Open the second layer</p><p className="mt-1 text-xs text-slate-400">Each learned feature is multiplied by its connection to the interpretation. Positive effects support it; negative effects suppress it.</p></div><p className="font-mono text-xs text-slate-500">feature effects add to {format(outputs[winner]!)}</p></div>
-              <div className="mt-4 grid gap-2 sm:grid-cols-3">
+              <div className="mt-3 grid grid-cols-3 gap-1.5 sm:mt-4 sm:gap-2">
                 {winningContributions.map((item) => (
-                  <div key={item.label} className={`rounded-xl border p-3 ${item.effect >= 0 ? "border-emerald-300/12 bg-emerald-300/5" : "border-violet-300/12 bg-violet-300/5"}`}>
-                    <div className="flex items-center justify-between gap-2"><p className="text-xs font-medium text-white">{item.label}</p><span className={`font-mono text-sm font-semibold ${item.effect >= 0 ? "text-emerald-200" : "text-violet-200"}`}>{item.effect >= 0 ? "+" : ""}{format(item.effect)}</span></div>
-                    <p className="mt-2 font-mono text-[10px] text-slate-500">{format(item.input)} feature × {format(item.weight)} connection</p>
-                    <p className="mt-1 text-[10px] text-slate-400">{item.effect >= 0 ? "supports the winner" : "suppresses the winner"}</p>
+                  <div key={item.label} className={`min-w-0 rounded-lg border p-2 sm:rounded-xl sm:p-3 ${item.effect >= 0 ? "border-emerald-300/12 bg-emerald-300/5" : "border-violet-300/12 bg-violet-300/5"}`}>
+                    <div className="flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between sm:gap-2"><p className="truncate text-[9px] font-medium text-white sm:text-xs">{item.label}</p><span className={`font-mono text-xs font-semibold sm:text-sm ${item.effect >= 0 ? "text-emerald-200" : "text-violet-200"}`}>{item.effect >= 0 ? "+" : ""}{format(item.effect)}</span></div>
+                    <p className="mt-1 hidden font-mono text-[10px] text-slate-500 sm:mt-2 sm:block">{format(item.input)} feature × {format(item.weight)} connection</p>
+                    <p className="mt-1 text-[9px] text-slate-400 sm:text-[10px]">{item.effect >= 0 ? "supports" : "suppresses"}</p>
                   </div>
                 ))}
               </div>
