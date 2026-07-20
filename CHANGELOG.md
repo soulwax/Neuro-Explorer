@@ -8,6 +8,17 @@
 
 
 
+
+## [v0.41.1] - 2026-07-20
+
+Release type: PATCH
+
+### Changed
+
+- Reordered each mission into a clear scroll journey: enter the scene, notice the clues, make a prediction, watch processing, and interpret the result.
+- Added viewport-aware focus transitions that bring the current section into full clarity while adjacent sections gently recede.
+- Synchronized stronger attention cues across the active evidence card, matrix column, biological pathway, mobile view tab, and emerging percept step.
+
 ## [v0.41.0] - 2026-07-20
 
 Release type: MINOR

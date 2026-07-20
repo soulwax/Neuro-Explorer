@@ -279,6 +279,9 @@ function MatrixPanel({ challenge, phase }: Readonly<{ challenge: Challenge; phas
 	const finalPhase = challenge.input.length + 1;
 	const visibleColumns = phase === 0 ? 0 : Math.min(phase, challenge.input.length);
 	const features = featuresFor(challenge, visibleColumns);
+	const activeInputIndex = phase > 0 && phase < finalPhase ? phase - 1 : -1;
+	const activeFeatureIndex = activeInputIndex;
+	const winner = outputs.indexOf(Math.max(...outputs));
 	return (
 		<div className="relative overflow-hidden rounded-2xl border border-cyan-300/15 bg-[#07131b]/85 p-3 sm:rounded-[28px] sm:p-6">
 			<div className="flex items-center justify-between">
@@ -291,6 +294,13 @@ function MatrixPanel({ challenge, phase }: Readonly<{ challenge: Challenge; phas
 					GPU / ANN
 				</span>
 			</div>
+			{activeInputIndex >= 0 && (
+				<div className="mt-3 flex items-center gap-2 rounded-lg border border-cyan-200/25 bg-cyan-200/8 px-3 py-2 text-[10px] text-cyan-50 shadow-[0_0_24px_rgba(34,211,238,.08)]">
+					<span className="size-2 shrink-0 rounded-full bg-cyan-200 motion-safe:animate-pulse" />
+					<strong className="uppercase tracking-[.16em]">Follow this cue</strong>
+					<span className="text-cyan-100/70">Violet input → cyan column → green feature</span>
+				</div>
+			)}
 
 			<div
 				className="mt-4 flex items-center justify-center gap-1.5 font-mono text-[10px] sm:mt-8 sm:gap-4 sm:text-sm"
@@ -304,7 +314,7 @@ function MatrixPanel({ challenge, phase }: Readonly<{ challenge: Challenge; phas
 						row.map((value, columnIndex) => (
 							<span
 								key={`${rowIndex}-${columnIndex}`}
-								className={`flex size-8 items-center justify-center rounded-md transition duration-300 sm:size-10 ${phase === columnIndex + 1 ? 'bg-cyan-300/25 text-white shadow-[0_0_18px_rgba(34,211,238,.24)]' : 'bg-white/5 text-slate-400'}`}
+								className={`flex size-8 items-center justify-center rounded-md transition duration-300 sm:size-10 ${phase === columnIndex + 1 ? 'bg-cyan-200/35 text-white ring-1 ring-inset ring-cyan-100/70 shadow-[0_0_24px_rgba(34,211,238,.42)] motion-safe:animate-pulse' : 'bg-white/5 text-slate-400'}`}
 							>
 								{value.toFixed(1)}
 							</span>
@@ -316,7 +326,7 @@ function MatrixPanel({ challenge, phase }: Readonly<{ challenge: Challenge; phas
 					{challenge.input.map((value, index) => (
 						<span
 							key={index}
-							className={`flex size-8 items-center justify-center rounded-md sm:size-10 ${phase === index + 1 ? 'bg-violet-300/25 text-white' : 'bg-white/5 text-violet-200'}`}
+							className={`flex size-8 items-center justify-center rounded-md transition sm:size-10 ${phase === index + 1 ? 'bg-violet-200/35 text-white ring-2 ring-violet-100/70 shadow-[0_0_22px_rgba(196,181,253,.4)] motion-safe:animate-pulse' : 'bg-white/5 text-violet-200'}`}
 						>
 							{value.toFixed(1)}
 						</span>
@@ -328,7 +338,7 @@ function MatrixPanel({ challenge, phase }: Readonly<{ challenge: Challenge; phas
 						<span
 							key={index}
 							title={challenge.featureLabels[index]}
-							className={`flex size-8 items-center justify-center rounded-md transition sm:size-10 ${phase > 0 ? 'bg-emerald-300/20 text-emerald-100' : 'bg-white/5 text-slate-600'}`}
+							className={`flex size-8 items-center justify-center rounded-md transition sm:size-10 ${phase > 0 ? 'bg-emerald-300/20 text-emerald-100' : 'bg-white/5 text-slate-600'} ${index === activeFeatureIndex ? 'ring-2 ring-emerald-100/70 shadow-[0_0_22px_rgba(110,231,183,.38)]' : ''}`}
 						>
 							{phase > 0 ? format(value) : '—'}
 						</span>
@@ -348,7 +358,10 @@ function MatrixPanel({ challenge, phase }: Readonly<{ challenge: Challenge; phas
 				style={{ gridTemplateColumns: `repeat(${challenge.featureLabels.length}, minmax(0, 1fr))` }}
 			>
 				{challenge.featureLabels.map((label, index) => (
-					<div key={label} className="rounded-lg bg-white/[.035] px-2 py-2 text-center text-[10px] text-slate-400">
+					<div
+						key={label}
+						className={`rounded-lg px-2 py-2 text-center text-[10px] transition ${index === activeFeatureIndex ? 'bg-emerald-300/15 text-emerald-100 ring-1 ring-emerald-200/35' : 'bg-white/[.035] text-slate-400'}`}
+					>
 						<span className="mr-1 font-mono text-slate-600">F{index + 1}</span>
 						{label}
 					</div>
@@ -365,7 +378,7 @@ function MatrixPanel({ challenge, phase }: Readonly<{ challenge: Challenge; phas
 					{outputs.map((value, index) => (
 						<div
 							key={challenge.outputLabels[index]}
-							className={`min-w-0 rounded-lg px-1 py-2 text-center sm:px-2 ${phase >= finalPhase ? 'bg-cyan-300/10' : 'bg-white/[.025]'}`}
+							className={`min-w-0 rounded-lg px-1 py-2 text-center transition sm:px-2 ${phase >= finalPhase ? (index === winner ? 'bg-amber-200/20 ring-2 ring-amber-100/60 shadow-[0_0_24px_rgba(251,191,36,.25)]' : 'bg-cyan-300/10 opacity-55') : 'bg-white/[.025]'}`}
 						>
 							<p className="truncate text-[8px] text-slate-400 sm:text-[10px]">{challenge.outputLabels[index]}</p>
 							<p className={`mt-1 font-mono text-[10px] sm:text-xs ${phase >= finalPhase ? 'text-cyan-100' : 'text-slate-600'}`}>
@@ -386,6 +399,7 @@ function BrainPanel({ challenge, phase }: Readonly<{ challenge: Challenge; phase
 	const visibleColumns = phase === 0 ? 0 : Math.min(phase, challenge.input.length);
 	const features = featuresFor(challenge, visibleColumns);
 	const max = Math.max(...outputs);
+	const activeInputIndex = phase > 0 && phase < finalPhase ? phase - 1 : -1;
 	const rowGap = challenge.input.length > 3 ? 48 : 60;
 	const rowY = (index: number) => 42 + index * rowGap;
 	const graphHeight = rowY(challenge.input.length - 1) + 42;
@@ -401,6 +415,13 @@ function BrainPanel({ challenge, phase }: Readonly<{ challenge: Challenge; phase
 					Cortex / spikes
 				</span>
 			</div>
+			{activeInputIndex >= 0 && (
+				<div className="mt-3 flex items-center gap-2 rounded-lg border border-amber-200/25 bg-amber-200/8 px-3 py-2 text-[10px] text-amber-50 shadow-[0_0_24px_rgba(251,191,36,.08)]">
+					<span className="size-2 shrink-0 rounded-full bg-amber-200 motion-safe:animate-pulse" />
+					<strong className="uppercase tracking-[.16em]">Same cue</strong>
+					<span className="text-amber-100/70">Sensory neuron → feature population</span>
+				</div>
+			)}
 			<svg
 				viewBox={`0 0 520 ${graphHeight}`}
 				className="mt-3 w-full"
@@ -448,6 +469,9 @@ function BrainPanel({ challenge, phase }: Readonly<{ challenge: Challenge; phase
 				)}
 				{challenge.input.map((value, index) => (
 					<g key={`input-${index}`}>
+						{index === activeInputIndex && (
+							<circle cx="58" cy={rowY(index)} r="29" fill="none" stroke="#fef3c7" strokeWidth="3" opacity=".72" className="motion-safe:animate-ping" />
+						)}
 						<circle cx="58" cy={rowY(index)} r={13 + value * 4} fill="#0c2730" stroke="#67e8f9" strokeWidth="2" />
 						<circle
 							cx="58"
@@ -463,6 +487,7 @@ function BrainPanel({ challenge, phase }: Readonly<{ challenge: Challenge; phase
 				))}
 				{features.map((value, index) => (
 					<g key={`feature-${index}`}>
+						{index === activeInputIndex && <circle cx="255" cy={rowY(index)} r="29" fill="#fbbf2418" stroke="#fde68a" strokeWidth="2" />}
 						<circle
 							cx="255"
 							cy={rowY(index)}
@@ -745,6 +770,7 @@ function PerceptCanvas({ challenge, phase, onReplay }: Readonly<{ challenge: Cha
 	const outputs = outputsFor(challenge);
 	const winner = outputs.indexOf(Math.max(...outputs));
 	const finalPhase = challenge.input.length + 1;
+	const activeCueIndex = phase > 0 && phase < finalPhase ? phase - 1 : -1;
 	const status =
 		phase === 0
 			? 'Start the comparison to build the percept cue by cue.'
@@ -767,14 +793,21 @@ function PerceptCanvas({ challenge, phase, onReplay }: Readonly<{ challenge: Cha
 				)}
 			</div>
 			<div className="grid gap-2 p-3 lg:grid-cols-[1.35fr_.65fr] lg:items-center lg:gap-4 sm:p-5">
-				<svg
-					viewBox="0 0 560 225"
-					className="w-full"
-					role="img"
-					aria-label={`Step-by-step teaching illustration: ${challenge.perceptTitle}`}
-				>
-					<PerceptScene challenge={challenge} phase={phase} />
-				</svg>
+				<div className={`relative rounded-xl transition-all duration-700 ${activeCueIndex >= 0 ? 'bg-fuchsia-200/[.035] ring-1 ring-fuchsia-200/20 shadow-[0_0_32px_rgba(232,121,249,.1)]' : ''}`}>
+					{activeCueIndex >= 0 && (
+						<span className="absolute left-2 top-2 z-10 rounded-full border border-fuchsia-100/35 bg-slate-950/80 px-2 py-1 text-[8px] font-semibold uppercase tracking-[.14em] text-fuchsia-100 motion-safe:animate-pulse">
+							Now appearing · {challenge.inputLabels[activeCueIndex]}
+						</span>
+					)}
+					<svg
+						viewBox="0 0 560 225"
+						className="w-full"
+						role="img"
+						aria-label={`Step-by-step teaching illustration: ${challenge.perceptTitle}`}
+					>
+						<PerceptScene challenge={challenge} phase={phase} />
+					</svg>
+				</div>
 				<div className={`grid gap-1.5 lg:grid-cols-1 lg:gap-2 ${challenge.perceptSteps.length === 4 ? 'grid-cols-5' : 'grid-cols-4'}`}>
 					{challenge.perceptSteps.map((step, index) => {
 						const stepNumber = index + 1;
@@ -783,7 +816,7 @@ function PerceptCanvas({ challenge, phase, onReplay }: Readonly<{ challenge: Cha
 						return (
 							<div
 								key={step}
-								className={`rounded-lg border p-2 transition lg:rounded-xl lg:p-3 ${isActive ? 'border-fuchsia-300/35 bg-fuchsia-300/12' : complete ? 'border-emerald-300/15 bg-emerald-300/5' : 'border-white/8 bg-white/[.025]'}`}
+								className={`rounded-lg border p-2 transition-all duration-500 lg:rounded-xl lg:p-3 ${isActive ? 'border-fuchsia-100/65 bg-fuchsia-300/18 opacity-100 ring-2 ring-fuchsia-200/25 shadow-[0_0_24px_rgba(232,121,249,.18)]' : complete ? 'border-emerald-300/15 bg-emerald-300/5 opacity-55' : 'border-white/8 bg-white/[.025] opacity-35'}`}
 							>
 								<div className="flex flex-col items-center gap-1.5 text-center lg:flex-row lg:items-start lg:gap-3 lg:text-left">
 									<span
@@ -1009,6 +1042,7 @@ export function AiBiologyExplorer() {
 	const [played, setPlayed] = useState<string[]>([]);
 	const [mobileView, setMobileView] = useState<'machine' | 'brain' | 'percept'>('machine');
 	const [learningMode, setLearningMode] = useState<'before' | 'after'>('before');
+	const [readingStage, setReadingStage] = useState(1);
 	const challenge = challenges[challengeIndex]!;
 	const features = useMemo(() => featuresFor(challenge), [challenge]);
 	const outputs = useMemo(() => outputsFor(challenge), [challenge]);
@@ -1032,6 +1066,21 @@ export function AiBiologyExplorer() {
 		return () => window.clearTimeout(timer);
 	}, [finalPhase, phase]);
 
+	useEffect(() => {
+		const sections = Array.from(document.querySelectorAll<HTMLElement>('#ai-biology-game [data-guide-stage]'));
+		const observer = new IntersectionObserver(
+			(entries) => {
+				const nearest = entries
+					.filter((entry) => entry.isIntersecting)
+					.sort((left, right) => right.intersectionRatio - left.intersectionRatio)[0];
+				if (nearest) setReadingStage(Number((nearest.target as HTMLElement).dataset.guideStage));
+			},
+			{ rootMargin: '-18% 0px -46% 0px', threshold: [0, 0.12, 0.3, 0.55] },
+		);
+		sections.forEach((section) => observer.observe(section));
+		return () => observer.disconnect();
+	}, [challengeIndex, revealed]);
+
 	function runRound() {
 		if (guess === null || phase > 0) return;
 		setPhase(1);
@@ -1052,6 +1101,7 @@ export function AiBiologyExplorer() {
 		setPhase(0);
 		setProbeUsed(false);
 		setMobileView('machine');
+		setReadingStage(1);
 	}
 
 	function resetRun() {
@@ -1064,6 +1114,7 @@ export function AiBiologyExplorer() {
 		setProbeUsed(false);
 		setPlayed([]);
 		setMobileView('machine');
+		setReadingStage(1);
 	}
 
 	return (
@@ -1102,13 +1153,14 @@ export function AiBiologyExplorer() {
 				</div>
 			</section>
 
-			<section className="app-surface p-3 sm:p-5">
-				<div className="mb-3 grid grid-cols-2 gap-px overflow-hidden rounded-xl border border-white/10 bg-white/10 sm:mb-5 lg:grid-cols-4">
+			<section id="ai-biology-game" className="app-surface p-3 sm:p-5">
+				<div className="mb-3 grid grid-cols-2 gap-px overflow-hidden rounded-xl border border-white/10 bg-white/10 sm:mb-5 lg:grid-cols-5">
 					{[
-						['1', 'Read the evidence', 'Labeled sensory clues arrive with different strengths.'],
-						['2', 'Build features', 'A middle layer recombines raw signals into more useful patterns.'],
-						['3', 'Choose a meaning', 'Interpretation populations listen to different mixtures of those features.'],
-						['4', 'See the percept', 'The winning meaning organizes fragments into something usable for action.'],
+						['1', 'Enter the scene', 'Read what Hans sees, hears, and fears.'],
+						['2', 'Notice the clues', 'Compare the labeled sensory evidence.'],
+						['3', 'Make a prediction', 'Choose the meaning that best explains all clues.'],
+						['4', 'Watch it travel', 'Follow one cue through silicon and biology.'],
+						['5', 'Interpret the result', 'See the percept form, then open the explanation.'],
 					].map(([step, title, detail]) => (
 						<div key={step} className="bg-[#0b151d] p-2.5 sm:p-4">
 							<div className="flex items-center gap-2 sm:gap-3">
@@ -1129,8 +1181,15 @@ export function AiBiologyExplorer() {
 						/>
 					))}
 				</div>
-				<div className="flex flex-col gap-3 px-1 py-1 sm:flex-row sm:items-center sm:justify-between sm:px-2 sm:py-2">
+				<div
+					data-guide-stage="1"
+					className={`flex flex-col gap-3 px-1 py-1 transition-all duration-700 sm:flex-row sm:items-center sm:justify-between sm:px-2 sm:py-2 ${readingStage === 1 ? 'opacity-100' : 'opacity-45'}`}
+				>
 					<div>
+						<p className="mb-2 flex items-center gap-2 text-[9px] font-semibold uppercase tracking-[.2em] text-cyan-200/70">
+							<span className="flex size-5 items-center justify-center rounded-full border border-cyan-200/30 bg-cyan-200/10 font-mono text-cyan-100">1</span>
+							Enter the scene · read here first
+						</p>
 						<div className="flex flex-wrap items-center gap-2">
 							<p className="text-[10px] font-semibold uppercase tracking-[0.24em] text-emerald-300">{challenge.chapter}</p>
 							<span className="rounded-full bg-white/5 px-2 py-1 text-[9px] uppercase tracking-wider text-slate-400">
@@ -1161,9 +1220,15 @@ export function AiBiologyExplorer() {
 					</div>
 				</div>
 
-				<div className="mt-2 grid gap-2 rounded-xl border border-white/8 bg-slate-950/30 p-3 md:grid-cols-[1fr_auto] md:items-center sm:mt-3 sm:rounded-2xl sm:p-4">
+				<div
+					data-guide-stage="2"
+					className={`mt-2 grid gap-2 rounded-xl border bg-slate-950/30 p-3 transition-all duration-700 md:grid-cols-[1fr_auto] md:items-center sm:mt-3 sm:rounded-2xl sm:p-4 ${readingStage === 2 ? 'border-violet-200/30 opacity-100 shadow-[0_0_30px_rgba(167,139,250,.08)]' : 'border-white/8 opacity-45'}`}
+				>
 					<div>
-						<p className="text-[10px] font-semibold uppercase tracking-[.2em] text-slate-500">Incoming signal</p>
+						<p className="flex items-center gap-2 text-[9px] font-semibold uppercase tracking-[.2em] text-violet-200/80">
+							<span className="flex size-5 items-center justify-center rounded-full border border-violet-200/30 bg-violet-200/10 font-mono text-violet-100">2</span>
+							Notice the clues · sensory evidence lives here
+						</p>
 						<p className="mt-1 text-sm text-slate-200">
 							{challenge.cue} <strong className="text-white">Which output wins?</strong>
 						</p>
@@ -1186,14 +1251,19 @@ export function AiBiologyExplorer() {
 				</div>
 
 				<div
-					className={`mt-2 grid gap-1.5 sm:mt-3 sm:gap-2 ${challenge.input.length === 4 ? 'grid-cols-4' : 'grid-cols-3'}`}
+					data-guide-stage="2"
+					className={`mt-2 grid gap-1.5 transition-all duration-700 sm:mt-3 sm:gap-2 ${challenge.input.length === 4 ? 'grid-cols-4' : 'grid-cols-3'} ${readingStage === 2 ? 'opacity-100' : 'opacity-45'}`}
 					aria-label="Input evidence strengths"
 				>
-					{challenge.input.map((value, index) => (
+					{challenge.input.map((value, index) => {
+						const isActiveCue = phase === index + 1;
+						const hasPassed = phase > index + 1;
+						return (
 						<div
 							key={challenge.inputLabels[index]}
-							className="min-w-0 rounded-lg border border-violet-300/10 bg-violet-300/5 p-2 sm:rounded-xl sm:p-3"
+							className={`relative min-w-0 rounded-lg border p-2 transition-all duration-500 sm:rounded-xl sm:p-3 ${isActiveCue ? 'border-violet-100/70 bg-violet-200/18 opacity-100 ring-2 ring-violet-200/35 shadow-[0_0_26px_rgba(167,139,250,.28)]' : hasPassed ? 'border-emerald-200/15 bg-emerald-200/5 opacity-65' : 'border-violet-300/10 bg-violet-300/5'}`}
 						>
+							{isActiveCue && <span className="absolute -top-2 right-1 rounded-full bg-violet-100 px-1.5 py-0.5 text-[7px] font-bold uppercase tracking-wider text-slate-950 motion-safe:animate-pulse">Look</span>}
 							<div className="flex flex-col gap-0.5 sm:flex-row sm:items-center sm:justify-between sm:gap-3">
 								<p className="truncate text-[9px] font-medium text-violet-100 sm:text-xs">{challenge.inputLabels[index]}</p>
 								<span className="font-mono text-[9px] text-violet-200 sm:text-[10px]">{Math.round(value * 100)}%</span>
@@ -1202,8 +1272,70 @@ export function AiBiologyExplorer() {
 								<div className="h-full rounded-full bg-violet-300/70" style={{ width: `${value * 100}%` }} />
 							</div>
 						</div>
-					))}
+						);
+					})}
 				</div>
+
+				<div
+					data-guide-stage="3"
+					className={`mt-3 rounded-xl border bg-slate-950/25 p-3 transition-all duration-700 sm:rounded-2xl sm:p-4 ${readingStage === 3 ? 'border-amber-200/30 opacity-100 shadow-[0_0_30px_rgba(251,191,36,.08)]' : 'border-white/8 opacity-45'}`}
+				>
+					<div className="flex flex-wrap items-center justify-between gap-2">
+						<div>
+							<p className="flex items-center gap-2 text-[9px] font-semibold uppercase tracking-[.2em] text-amber-200/80">
+								<span className="flex size-5 items-center justify-center rounded-full border border-amber-200/30 bg-amber-200/10 font-mono text-amber-100">3</span>
+								Make a prediction · answer here
+							</p>
+							<p className="mt-1.5 text-xs text-slate-400">Choose the interpretation that explains the whole pattern, then run the comparison.</p>
+						</div>
+						{phase === 0 && <span className="text-[10px] text-amber-100/65">Your choice →</span>}
+					</div>
+					<div
+						className={`mt-2 grid gap-1.5 sm:mt-3 sm:gap-2 ${challenge.outputLabels.length === 4 ? 'grid-cols-2 sm:grid-cols-4' : 'grid-cols-3'}`}
+					>
+						{challenge.outputLabels.map((label, index) => (
+							<button
+								key={label}
+								type="button"
+								disabled={phase > 0}
+								onClick={() => setGuess(index)}
+								className={`relative min-h-16 rounded-lg border px-2 py-2 text-center transition sm:min-h-20 sm:rounded-xl sm:px-4 sm:py-3 sm:text-left ${guess === index ? 'border-amber-100/65 bg-amber-100/12 text-white ring-2 ring-amber-200/30 shadow-[0_0_22px_rgba(251,191,36,.16)]' : 'border-white/10 bg-white/5 text-slate-400 hover:bg-white/10'}`}
+							>
+								{guess === index && <span className="absolute right-1.5 top-1.5 flex size-4 items-center justify-center rounded-full bg-amber-200 text-[9px] font-bold text-slate-950">✓</span>}
+								<span className="hidden font-mono text-[10px] text-slate-500 sm:inline">{index + 1}</span>
+								<span className="text-[10px] font-semibold sm:ml-2 sm:text-sm">{label}</span>
+								<span className="mt-1 block text-[8px] leading-3 text-slate-500 sm:mt-1.5 sm:text-[10px] sm:leading-4">{challenge.outputDescriptions[index]}</span>
+							</button>
+						))}
+					</div>
+					<div className="mt-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-end">
+						{revealed && (
+							<p className={`text-sm font-medium ${guess === winner ? 'text-emerald-300' : 'text-amber-200'}`}>
+								{guess === winner ? 'Correct — ' : 'Best match: '}
+								<strong>{challenge.outputLabels[winner]}</strong>
+							</p>
+						)}
+						{revealed ? (
+							<button type="button" onClick={runComplete ? resetRun : nextRound} className="glass-btn glass-btn--primary">
+								{runComplete ? 'Play again ↻' : 'Next mission →'}
+							</button>
+						) : (
+							<button type="button" onClick={runRound} disabled={guess === null || phase > 0} className="glass-btn glass-btn--primary">
+								Run comparison ↓
+							</button>
+						)}
+					</div>
+				</div>
+
+				<div
+					data-guide-stage="4"
+					className={`mt-4 transition-all duration-700 ${readingStage === 4 ? 'opacity-100' : 'opacity-45'}`}
+				>
+					<div className="mb-2 flex items-center gap-2 px-1 text-[9px] font-semibold uppercase tracking-[.2em] text-cyan-200/80">
+						<span className="flex size-5 items-center justify-center rounded-full border border-cyan-200/30 bg-cyan-200/10 font-mono text-cyan-100">4</span>
+						<span className="hidden lg:inline">Watch it travel · matrices on the left, neurons on the right</span>
+						<span className="lg:hidden">Watch it travel · switch views with the tabs</span>
+					</div>
 
 				<div className="mt-2 lg:hidden">
 					<div className="grid grid-cols-3 gap-1 rounded-lg border border-white/8 bg-slate-950/35 p-1">
@@ -1212,8 +1344,9 @@ export function AiBiologyExplorer() {
 								key={view}
 								type="button"
 								onClick={() => setMobileView(view)}
-								className={`rounded-md px-2 py-2 text-[10px] font-semibold uppercase tracking-wider transition ${mobileView === view ? 'bg-white/12 text-white' : 'text-slate-500'}`}
+								className={`flex items-center justify-center gap-1.5 rounded-md px-2 py-2 text-[10px] font-semibold uppercase tracking-wider transition ${mobileView === view ? 'bg-white/12 text-white ring-1 ring-white/15' : 'text-slate-500'}`}
 							>
+								{mobileView === view && phase > 0 && <span className="size-1.5 rounded-full bg-fuchsia-200 motion-safe:animate-pulse" />}
 								{view === 'machine' ? 'AI matrix' : view === 'brain' ? 'Brain' : 'Percept'}
 							</button>
 						))}
@@ -1244,49 +1377,22 @@ export function AiBiologyExplorer() {
 					<MatrixPanel challenge={challenge} phase={phase} />
 					<BrainPanel challenge={challenge} phase={phase} />
 				</div>
-
-				<div className="mt-2 rounded-xl border border-white/8 bg-slate-950/25 p-3 sm:mt-3 sm:rounded-2xl sm:p-4">
-					<p className="text-xs font-medium uppercase tracking-wider text-slate-500">What does the evidence represent?</p>
-					<div
-						className={`mt-2 grid gap-1.5 sm:mt-3 sm:gap-2 ${challenge.outputLabels.length === 4 ? 'grid-cols-2 sm:grid-cols-4' : 'grid-cols-3'}`}
-					>
-						{challenge.outputLabels.map((label, index) => (
-							<button
-								key={label}
-								type="button"
-								disabled={phase > 0}
-								onClick={() => setGuess(index)}
-								className={`min-h-16 rounded-lg border px-2 py-2 text-center transition sm:min-h-20 sm:rounded-xl sm:px-4 sm:py-3 sm:text-left ${guess === index ? 'border-white/40 bg-white/15 text-white shadow-[0_0_20px_rgba(255,255,255,.06)]' : 'border-white/10 bg-white/5 text-slate-400 hover:bg-white/10'}`}
-							>
-								<span className="hidden font-mono text-[10px] text-slate-500 sm:inline">{index + 1}</span>
-								<span className="text-[10px] font-semibold sm:ml-2 sm:text-sm">{label}</span>
-								<span className="mt-1 block text-[8px] leading-3 text-slate-500 sm:mt-1.5 sm:text-[10px] sm:leading-4">{challenge.outputDescriptions[index]}</span>
-							</button>
-						))}
-					</div>
-					<div className="mt-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-end">
-						{revealed && (
-							<p className={`text-sm font-medium ${guess === winner ? 'text-emerald-300' : 'text-amber-200'}`}>
-								{guess === winner ? 'Correct — ' : 'Best match: '}
-								<strong>{challenge.outputLabels[winner]}</strong>
-							</p>
-						)}
-						{revealed ? (
-							<button type="button" onClick={runComplete ? resetRun : nextRound} className="glass-btn glass-btn--primary">
-								{runComplete ? 'Play again ↻' : 'Next mission →'}
-							</button>
-						) : (
-							<button type="button" onClick={runRound} disabled={guess === null || phase > 0} className="glass-btn glass-btn--primary">
-								Run comparison
-							</button>
-						)}
-					</div>
 				</div>
-				<div className="hidden lg:block">
+				<div
+					data-guide-stage="4"
+					className={`hidden transition-all duration-700 lg:block ${readingStage === 4 ? 'opacity-100' : 'opacity-45'}`}
+				>
 					<PerceptCanvas challenge={challenge} phase={phase} onReplay={() => setPhase(1)} />
 				</div>
 				{revealed && (
-					<div className="mt-2 overflow-hidden rounded-xl border border-white/10 bg-slate-950/30 sm:mt-3 sm:rounded-2xl">
+					<div
+						data-guide-stage="5"
+						className={`mt-2 overflow-hidden rounded-xl border bg-slate-950/30 transition-all duration-700 sm:mt-3 sm:rounded-2xl ${readingStage === 5 ? 'border-emerald-200/30 opacity-100 shadow-[0_0_32px_rgba(110,231,183,.08)]' : 'border-white/10 opacity-45'}`}
+					>
+						<div className="flex items-center gap-2 border-b border-emerald-200/10 bg-emerald-200/[.035] px-4 py-2 text-[9px] font-semibold uppercase tracking-[.2em] text-emerald-200/80">
+							<span className="flex size-5 items-center justify-center rounded-full border border-emerald-200/30 bg-emerald-200/10 font-mono text-emerald-100">5</span>
+							Interpret the result · explanation and story continue here
+						</div>
 						<div className="border-b border-fuchsia-300/12 bg-fuchsia-300/6 px-4 py-3">
 							<p className="text-[9px] font-semibold uppercase tracking-[.18em] text-fuchsia-200/70">The story moves</p>
 							<p className="mt-1 text-sm leading-6 text-slate-200">{challenge.outcome}</p>
