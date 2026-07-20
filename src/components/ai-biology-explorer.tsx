@@ -9,6 +9,9 @@ type Challenge = {
   cue: string;
   domain: string;
   flavor: string;
+  inputLabels: [string, string, string];
+  outputLabels: [string, string, string];
+  why: string;
   input: [number, number, number];
   weights: [[number, number, number], [number, number, number], [number, number, number]];
 };
@@ -20,6 +23,9 @@ const challenges: Challenge[] = [
     cue: "A strong contrast enters channels 1 and 3.",
     domain: "Visual cortex",
     flavor: "Separate a contour from background noise before it disappears.",
+    inputLabels: ["Left contrast", "Center detail", "Right contrast"],
+    outputLabels: ["Border", "Texture", "Shadow"],
+    why: "Border wins because strong contrast arrives on both sides, matching its excitatory connections while center detail contributes little.",
     input: [0.9, 0.2, 0.8],
     weights: [[0.8, -0.3, 0.5], [0.2, 0.9, -0.1], [-0.4, 0.3, 0.9]],
   },
@@ -29,6 +35,9 @@ const challenges: Challenge[] = [
     cue: "The middle frequency carries most of the evidence.",
     domain: "Auditory cortex",
     flavor: "Route a fleeting tone to the population tuned for its frequency.",
+    inputLabels: ["Low frequency", "Middle frequency", "High frequency"],
+    outputLabels: ["Low tone", "Middle tone", "High tone"],
+    why: "Middle tone wins because the strongest evidence is in the middle-frequency channel, where that population has its strongest connection.",
     input: [0.2, 1, 0.35],
     weights: [[0.7, 0.1, 0.2], [-0.2, 0.95, 0.3], [0.5, -0.1, 0.6]],
   },
@@ -38,6 +47,9 @@ const challenges: Challenge[] = [
     cue: "A late signal dominates the three-step sequence.",
     domain: "Motion pathway",
     flavor: "Predict which direction-selective population captures the trajectory.",
+    inputLabels: ["Early position", "Middle position", "Late position"],
+    outputLabels: ["Moves left", "Stays still", "Moves right"],
+    why: "Moves right wins because the late-position signal is strongest and the right-motion population listens to it most strongly.",
     input: [0.15, 0.45, 1],
     weights: [[0.8, 0.2, -0.2], [0.25, 0.7, 0.3], [-0.15, 0.35, 0.95]],
   },
@@ -47,6 +59,9 @@ const challenges: Challenge[] = [
     cue: "Two compatible features arrive; one weak feature conflicts.",
     domain: "Ventral stream",
     flavor: "Resolve a partial pattern before the percept is lost in the crowd.",
+    inputLabels: ["Eye pattern", "Face outline", "Object noise"],
+    outputLabels: ["Face", "Object", "Background"],
+    why: "Face wins because eye and outline evidence both support it, while the weak object-noise signal subtracts only a little.",
     input: [0.75, 0.85, 0.25],
     weights: [[0.6, 0.4, -0.2], [-0.1, 0.8, 0.25], [0.45, 0.15, 0.3]],
   },
@@ -56,6 +71,9 @@ const challenges: Challenge[] = [
     cue: "Context is loud, but one channel actively suppresses a response.",
     domain: "Salience network",
     flavor: "Choose the population that survives both excitation and inhibition.",
+    inputLabels: ["Body cue", "Context cue", "Safety cue"],
+    outputLabels: ["Orient", "Alarm", "Ignore"],
+    why: "Alarm wins because the strong context cue drives it more than the safety cue inhibits it. Inhibition reduces the score without automatically deciding the outcome.",
     input: [0.55, 0.9, 0.65],
     weights: [[0.3, 0.2, 0.2], [0.1, 0.85, -0.25], [-0.4, 0.2, 0.8]],
   },
@@ -65,12 +83,13 @@ const challenges: Challenge[] = [
     cue: "The final feature is strong enough to overturn an early guess.",
     domain: "Language network",
     flavor: "Let accumulating evidence settle a three-way lexical competition.",
+    inputLabels: ["Word start", "Sentence context", "Word ending"],
+    outputLabels: ["Noun", "Verb", "Adjective"],
+    why: "Adjective wins because the word ending provides strong support and sentence context adds more, outweighing weak opposition from the word start.",
     input: [0.3, 0.65, 0.95],
     weights: [[0.9, -0.2, 0.1], [0.2, 0.75, -0.1], [-0.1, 0.35, 0.8]],
   },
 ];
-
-const labels = ["A", "B", "C"] as const;
 
 function outputsFor(challenge: Challenge) {
   return challenge.weights.map((row) =>
@@ -98,7 +117,8 @@ function MatrixPanel({ challenge, phase }: Readonly<{ challenge: Challenge; phas
       <div className="flex items-center justify-between">
         <div>
           <p className="text-[10px] font-semibold uppercase tracking-[0.24em] text-cyan-300">Silicon side</p>
-          <h3 className="mt-2 text-lg font-semibold text-white">Matrix multiply</h3>
+          <h3 className="mt-2 text-lg font-semibold text-white">Score each interpretation</h3>
+          <p className="mt-1 text-xs text-slate-500">Evidence × connection strength → total score</p>
         </div>
         <span className="rounded-full border border-cyan-300/20 bg-cyan-300/10 px-3 py-1 font-mono text-[10px] text-cyan-100">GPU / ANN</span>
       </div>
@@ -123,13 +143,16 @@ function MatrixPanel({ challenge, phase }: Readonly<{ challenge: Challenge; phas
         <span className="text-slate-500">=</span>
         <div className="grid gap-1 border-x border-emerald-300/35 px-2 py-2 sm:gap-2">
           {outputs.map((value, index) => (
-            <span key={index} className={`flex size-9 items-center justify-center rounded-md transition sm:size-10 ${phase >= 4 ? "bg-emerald-300/20 text-emerald-100" : "bg-white/5 text-slate-600"}`}>{phase >= 4 ? format(value) : "—"}</span>
+            <span key={index} title={challenge.outputLabels[index]} className={`flex size-9 items-center justify-center rounded-md transition sm:size-10 ${phase >= 4 ? "bg-emerald-300/20 text-emerald-100" : "bg-white/5 text-slate-600"}`}>{phase >= 4 ? format(value) : index + 1}</span>
           ))}
         </div>
       </div>
       <div className="mt-6 flex items-center gap-3 text-xs text-slate-400">
         <span className={`size-2 rounded-full ${phase > 0 && phase < 4 ? "animate-pulse bg-cyan-300" : "bg-slate-700"}`} />
         {phase === 0 ? "Awaiting input" : phase < 4 ? `Accumulating column ${phase} of 3` : "Weighted sums complete"}
+      </div>
+      <div className="mt-4 grid grid-cols-3 gap-2">
+        {challenge.outputLabels.map((label, index) => <div key={label} className="rounded-lg bg-white/[.035] px-2 py-2 text-center text-[10px] text-slate-400"><span className="mr-1 font-mono text-slate-600">{index + 1}</span>{label}</div>)}
       </div>
     </div>
   );
@@ -143,7 +166,8 @@ function BrainPanel({ challenge, phase }: Readonly<{ challenge: Challenge; phase
       <div className="flex items-center justify-between">
         <div>
           <p className="text-[10px] font-semibold uppercase tracking-[0.24em] text-amber-300">Biology side</p>
-          <h3 className="mt-2 text-lg font-semibold text-white">Neurons integrate</h3>
+          <h3 className="mt-2 text-lg font-semibold text-white">Populations compete</h3>
+          <p className="mt-1 text-xs text-slate-500">Excitation and inhibition change firing rates</p>
         </div>
         <span className="rounded-full border border-amber-300/20 bg-amber-300/10 px-3 py-1 font-mono text-[10px] text-amber-100">Cortex / spikes</span>
       </div>
@@ -171,7 +195,7 @@ function BrainPanel({ challenge, phase }: Readonly<{ challenge: Challenge; phase
             <g key={`output-${index}`}>
               <circle cx="360" cy={40 + index * 55} r="22" fill={winner ? "#78350f" : "#20150a"} stroke={winner ? "#fde68a" : "#b45309"} strokeWidth={winner ? 4 : 2} className="transition-all duration-300" />
               {winner && <circle cx="360" cy={40 + index * 55} r="30" fill="none" stroke="#fbbf24" opacity=".65" className="animate-ping" />}
-              <text x="355" y={45 + index * 55} fill="white" fontSize="14" fontWeight="700">{labels[index]}</text>
+              <text x="356" y={45 + index * 55} fill="white" fontSize="14" fontWeight="700">{index + 1}</text>
               <text x="390" y={44 + index * 55} fill={phase >= 4 ? "#fde68a" : "#64748b"} fontSize="11">{phase >= 4 ? `${Math.round(Math.max(0, value) * 38)} Hz` : "—"}</text>
             </g>
           );
@@ -180,6 +204,9 @@ function BrainPanel({ challenge, phase }: Readonly<{ challenge: Challenge; phase
       <div className="flex items-center gap-3 text-xs text-slate-400">
         <span className={`size-2 rounded-full ${phase > 0 && phase < 4 ? "animate-pulse bg-amber-300" : "bg-slate-700"}`} />
         {phase === 0 ? "Membrane near resting potential" : phase < 4 ? "Postsynaptic potentials are summing" : "Highest-rate population wins"}
+      </div>
+      <div className="mt-4 grid grid-cols-3 gap-2">
+        {challenge.outputLabels.map((label, index) => <div key={label} className="rounded-lg bg-white/[.035] px-2 py-2 text-center text-[10px] text-slate-400"><span className="mr-1 font-mono text-slate-600">{index + 1}</span>{label}</div>)}
       </div>
     </div>
   );
@@ -284,14 +311,10 @@ export function AiBiologyExplorer() {
   const [challengeIndex, setChallengeIndex] = useState(0);
   const [guess, setGuess] = useState<number | null>(null);
   const [phase, setPhase] = useState(0);
-  const [score, setScore] = useState(0);
   const [correctRounds, setCorrectRounds] = useState(0);
   const [streak, setStreak] = useState(0);
   const [bestStreak, setBestStreak] = useState(0);
-  const [wager, setWager] = useState(1);
   const [probeUsed, setProbeUsed] = useState(false);
-  const [roundStarted, setRoundStarted] = useState(() => Date.now());
-  const [lastResult, setLastResult] = useState<{ correct: boolean; points: number; quick: boolean; seconds: number } | null>(null);
   const [played, setPlayed] = useState<string[]>([]);
   const [learningMode, setLearningMode] = useState<"before" | "after">("before");
   const challenge = challenges[challengeIndex]!;
@@ -314,15 +337,10 @@ export function AiBiologyExplorer() {
     setPhase(1);
     if (!played.includes(challenge.id)) {
       const correct = guess === winner;
-      const seconds = Math.max(1, Math.round((Date.now() - roundStarted) / 1000));
-      const quick = seconds <= 12 && !probeUsed;
       const nextStreak = correct ? streak + 1 : 0;
-      const points = correct ? wager * 100 + (quick ? 50 : 0) + Math.min(100, streak * 25) : 0;
       setPlayed((current) => [...current, challenge.id]);
-      setLastResult({ correct, points, quick, seconds });
       setStreak(nextStreak);
       setBestStreak((current) => Math.max(current, nextStreak));
-      if (correct) setScore((current) => current + points);
       if (correct) setCorrectRounds((current) => current + 1);
     }
   }
@@ -331,25 +349,18 @@ export function AiBiologyExplorer() {
     setChallengeIndex((current) => (current + 1) % challenges.length);
     setGuess(null);
     setPhase(0);
-    setWager(1);
     setProbeUsed(false);
-    setLastResult(null);
-    setRoundStarted(Date.now());
   }
 
   function resetRun() {
     setChallengeIndex(0);
     setGuess(null);
     setPhase(0);
-    setScore(0);
     setCorrectRounds(0);
     setStreak(0);
     setBestStreak(0);
-    setWager(1);
     setProbeUsed(false);
-    setLastResult(null);
     setPlayed([]);
-    setRoundStarted(Date.now());
   }
 
   return (
@@ -372,6 +383,13 @@ export function AiBiologyExplorer() {
       </section>
 
       <section className="app-surface p-3 sm:p-5">
+        <div className="mb-5 grid gap-px overflow-hidden rounded-2xl border border-white/10 bg-white/10 sm:grid-cols-3">
+          {[
+            ["1", "Read the evidence", "Three labeled input signals arrive with different strengths."],
+            ["2", "Choose an interpretation", "Each candidate listens to those signals through a different mix of connections."],
+            ["3", "Watch both compute", "The highest weighted total becomes the matrix score and the winning firing population."],
+          ].map(([step, title, detail]) => <div key={step} className="bg-[#0b151d] p-4"><div className="flex items-center gap-3"><span className="flex size-7 items-center justify-center rounded-full bg-white/8 font-mono text-xs text-white">{step}</span><p className="text-sm font-semibold text-white">{title}</p></div><p className="mt-2 pl-10 text-xs leading-5 text-slate-400">{detail}</p></div>)}
+        </div>
         <div className="mb-4 flex gap-1.5 px-2" aria-label={`${played.length} of ${challenges.length} missions complete`}>
           {challenges.map((item, index) => (
             <span key={item.id} className={`h-1.5 flex-1 rounded-full transition-all duration-500 ${played.includes(item.id) ? "bg-emerald-300" : index === challengeIndex ? "bg-white/40" : "bg-white/10"}`} />
@@ -387,24 +405,22 @@ export function AiBiologyExplorer() {
             <p className="mt-1 text-sm text-slate-400">{challenge.flavor}</p>
           </div>
           <div className="grid grid-cols-2 gap-2">
-            <div className="rounded-xl border border-white/10 bg-slate-950/35 px-4 py-2 text-center"><p className="text-[9px] uppercase tracking-wider text-slate-500">Neural credits</p><p className="mt-1 font-mono text-sm font-semibold text-emerald-200">{score.toLocaleString()}</p></div>
+            <div className="rounded-xl border border-white/10 bg-slate-950/35 px-4 py-2 text-center"><p className="text-[9px] uppercase tracking-wider text-slate-500">Correct</p><p className="mt-1 font-mono text-sm font-semibold text-emerald-200">{correctRounds} / {played.length}</p></div>
             <div className="rounded-xl border border-white/10 bg-slate-950/35 px-4 py-2 text-center"><p className="text-[9px] uppercase tracking-wider text-slate-500">Streak</p><p className="mt-1 font-mono text-sm font-semibold text-amber-200">{streak > 1 ? "🔥 " : ""}{streak}</p></div>
           </div>
         </div>
 
-        <div className="mt-3 grid gap-3 rounded-2xl border border-white/8 bg-slate-950/30 p-4 md:grid-cols-[1fr_auto_auto] md:items-center">
+        <div className="mt-3 grid gap-3 rounded-2xl border border-white/8 bg-slate-950/30 p-4 md:grid-cols-[1fr_auto] md:items-center">
           <div>
             <p className="text-[10px] font-semibold uppercase tracking-[.2em] text-slate-500">Incoming signal</p>
             <p className="mt-1 text-sm text-slate-200">{challenge.cue} <strong className="text-white">Which output wins?</strong></p>
-            {probeUsed && <p className="mt-2 text-xs text-violet-200">Probe report: input {probe.input + 1} gives output {labels[probe.output]} the strongest single excitatory push ({format(probe.value)}).</p>}
+            {probeUsed && <p className="mt-2 text-xs text-violet-200">Clue: <strong>{challenge.inputLabels[probe.input]}</strong> gives <strong>{challenge.outputLabels[probe.output]}</strong> the strongest single excitatory push. Other signals can still change the winner.</p>}
           </div>
-          <div>
-            <p className="mb-2 text-[9px] uppercase tracking-wider text-slate-500">Confidence multiplier</p>
-            <div className="flex gap-1">
-              {[1, 2, 3].map((value) => <button key={value} type="button" disabled={phase > 0} onClick={() => setWager(value)} className={`h-9 rounded-lg border px-3 font-mono text-xs transition ${wager === value ? "border-emerald-300/40 bg-emerald-300/15 text-emerald-100" : "border-white/10 bg-white/5 text-slate-400"}`}>×{value}</button>)}
-            </div>
-          </div>
-          <button type="button" disabled={probeUsed || phase > 0} onClick={() => setProbeUsed(true)} className="glass-btn glass-btn--secondary justify-center">◉ Deploy probe</button>
+          <button type="button" disabled={probeUsed || phase > 0} onClick={() => setProbeUsed(true)} className="glass-btn glass-btn--secondary justify-center">Show one clue</button>
+        </div>
+
+        <div className="mt-3 grid gap-2 sm:grid-cols-3" aria-label="Input evidence strengths">
+          {challenge.input.map((value, index) => <div key={challenge.inputLabels[index]} className="rounded-xl border border-violet-300/10 bg-violet-300/5 p-3"><div className="flex items-center justify-between gap-3"><p className="text-xs font-medium text-violet-100">{challenge.inputLabels[index]}</p><span className="font-mono text-[10px] text-violet-200">{Math.round(value * 100)}%</span></div><div className="mt-2 h-1.5 overflow-hidden rounded-full bg-slate-950/60"><div className="h-full rounded-full bg-violet-300/70" style={{width: `${value * 100}%`}} /></div></div>)}
         </div>
 
         <div className="mt-3 grid gap-3 lg:grid-cols-2">
@@ -412,29 +428,29 @@ export function AiBiologyExplorer() {
           <BrainPanel challenge={challenge} phase={phase} />
         </div>
 
-        <div className="mt-3 flex flex-col gap-4 rounded-2xl border border-white/8 bg-slate-950/25 p-4 sm:flex-row sm:items-center sm:justify-between">
-          <div className="flex items-center gap-2">
-            <span className="mr-2 text-xs font-medium uppercase tracking-wider text-slate-500">Your prediction</span>
-            {labels.map((label, index) => (
-              <button key={label} type="button" disabled={phase > 0} onClick={() => setGuess(index)} className={`size-10 rounded-xl border text-sm font-semibold transition ${guess === index ? "border-white/40 bg-white/15 text-white" : "border-white/10 bg-white/5 text-slate-400 hover:bg-white/10"}`}>{label}</button>
+        <div className="mt-3 rounded-2xl border border-white/8 bg-slate-950/25 p-4">
+          <p className="text-xs font-medium uppercase tracking-wider text-slate-500">What does the evidence represent?</p>
+          <div className="mt-3 grid gap-2 sm:grid-cols-3">
+            {challenge.outputLabels.map((label, index) => (
+              <button key={label} type="button" disabled={phase > 0} onClick={() => setGuess(index)} className={`min-h-14 rounded-xl border px-4 py-3 text-left transition ${guess === index ? "border-white/40 bg-white/15 text-white shadow-[0_0_20px_rgba(255,255,255,.06)]" : "border-white/10 bg-white/5 text-slate-400 hover:bg-white/10"}`}><span className="mr-2 font-mono text-[10px] text-slate-500">{index + 1}</span><span className="text-sm font-semibold">{label}</span></button>
             ))}
           </div>
-          <div className="flex items-center gap-3">
-            {revealed && lastResult && <div className="text-right"><p className={`text-sm font-medium ${lastResult.correct ? "text-emerald-300" : "text-amber-200"}`}>{lastResult.correct ? `Locked! +${lastResult.points} credits` : `Signal escaped — ${labels[winner]} wins`}</p><p className="mt-1 text-[10px] uppercase tracking-wider text-slate-500">{lastResult.quick ? "⚡ quick-read bonus · " : ""}{lastResult.seconds}s response</p></div>}
-            {revealed ? <button type="button" onClick={runComplete ? resetRun : nextRound} className="glass-btn glass-btn--primary">{runComplete ? "Play again ↻" : "Next mission →"}</button> : <button type="button" onClick={runRound} disabled={guess === null || phase > 0} className="glass-btn glass-btn--primary">Ignite both sides</button>}
+          <div className="mt-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-end">
+            {revealed && <p className={`text-sm font-medium ${guess === winner ? "text-emerald-300" : "text-amber-200"}`}>{guess === winner ? "Correct — " : "Best match: "}<strong>{challenge.outputLabels[winner]}</strong></p>}
+            {revealed ? <button type="button" onClick={runComplete ? resetRun : nextRound} className="glass-btn glass-btn--primary">{runComplete ? "Play again ↻" : "Next mission →"}</button> : <button type="button" onClick={runRound} disabled={guess === null || phase > 0} className="glass-btn glass-btn--primary">Run comparison</button>}
           </div>
         </div>
         {revealed && (
-          <div className="mt-3 grid gap-3 sm:grid-cols-3">
-            <div className="rounded-xl border border-white/8 bg-white/[.025] p-3"><p className="text-[9px] uppercase tracking-wider text-slate-500">Winning sum</p><p className="mt-1 font-mono text-lg text-white">{labels[winner]} = {format(outputs[winner]!)}</p></div>
-            <div className="rounded-xl border border-white/8 bg-white/[.025] p-3"><p className="text-[9px] uppercase tracking-wider text-slate-500">Decision margin</p><p className="mt-1 font-mono text-lg text-white">+{format(decisionMargin)}</p></div>
-            <div className="rounded-xl border border-white/8 bg-white/[.025] p-3"><p className="text-[9px] uppercase tracking-wider text-slate-500">Shared rule</p><p className="mt-1 text-sm text-white">weighted input → competition</p></div>
+          <div className="mt-3 grid gap-3 sm:grid-cols-[1fr_1fr_1.5fr]">
+            <div className="rounded-xl border border-white/8 bg-white/[.025] p-3"><p className="text-[9px] uppercase tracking-wider text-slate-500">Winning interpretation</p><p className="mt-1 text-base font-semibold text-white">{challenge.outputLabels[winner]}</p><p className="mt-1 font-mono text-xs text-slate-500">score {format(outputs[winner]!)}</p></div>
+            <div className="rounded-xl border border-white/8 bg-white/[.025] p-3"><p className="text-[9px] uppercase tracking-wider text-slate-500">Lead over runner-up</p><p className="mt-1 font-mono text-lg text-white">+{format(decisionMargin)}</p><p className="mt-1 text-[10px] text-slate-500">A smaller lead means a closer call.</p></div>
+            <div className="rounded-xl border border-emerald-300/12 bg-emerald-300/5 p-3"><p className="text-[9px] uppercase tracking-wider text-emerald-200/70">Why it won</p><p className="mt-1 text-xs leading-5 text-slate-300">{challenge.why}</p></div>
           </div>
         )}
         {runComplete && (
           <div className="mt-3 overflow-hidden rounded-2xl border border-emerald-300/20 bg-emerald-300/8 p-5">
             <p className="text-[10px] font-semibold uppercase tracking-[.22em] text-emerald-300">Run debrief</p>
-            <div className="mt-3 flex flex-wrap items-end justify-between gap-4"><div><p className="text-3xl font-semibold text-white">{score.toLocaleString()} credits</p><p className="mt-1 text-sm text-slate-300">Best streak: {bestStreak} · Accuracy: {Math.round((correctRounds / challenges.length) * 100)}%</p></div><p className="max-w-md text-xs leading-5 text-slate-400">You learned to read the shared weighted-sum abstraction. The rest of this page explains why matching winners do not imply matching machinery.</p></div>
+            <div className="mt-3 flex flex-wrap items-end justify-between gap-4"><div><p className="text-3xl font-semibold text-white">{correctRounds} of {challenges.length} correct</p><p className="mt-1 text-sm text-slate-300">Best streak: {bestStreak} · Accuracy: {Math.round((correctRounds / challenges.length) * 100)}%</p></div><p className="max-w-md text-xs leading-5 text-slate-400">You learned to read the shared weighted-sum abstraction. The rest of this page explains why matching winners do not imply matching machinery.</p></div>
           </div>
         )}
         <p className="mt-4 px-2 text-xs leading-5 text-slate-500">Teaching simplification: firing rate stands in for a biological population response. Real neural circuits are recurrent, time-varying, and vastly more complex.</p>

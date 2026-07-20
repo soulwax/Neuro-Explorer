@@ -2,6 +2,17 @@
 
 
 
+
+## [v0.38.2] - 2026-07-20
+
+Release type: PATCH
+
+### Changed
+
+- Made the `/ai-biology` signal game easier to understand by replacing abstract A/B/C answers with mission-specific interpretations, exposing labeled input-strength bars, and adding a three-step explanation of the shared computation.
+- Removed credits, confidence multipliers, and speed bonuses so the interaction focuses on evidence, competing interpretations, correctness, and plain-language explanations of why each result wins.
+- Added consistent numbered legends to both visualizations and clarified decision margins as the winning interpretation’s lead over the runner-up.
+
 ## [v0.38.1] - 2026-07-20
 
 Release type: PATCH
