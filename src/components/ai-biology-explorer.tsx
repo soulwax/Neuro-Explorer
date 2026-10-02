@@ -331,6 +331,362 @@ type Challenge = {
 	weights: number[][];
 };
 
+type FacilityPersonnel = {
+	id: string;
+	initials: string;
+	name: string;
+	age: number;
+	role: string;
+	department: string;
+	clearance: string;
+	avatarGradient: string;
+	avatarBorder: string;
+	badgeColor: string;
+	appearance: {
+		build: string;
+		face: string;
+		attire: string;
+		distinguishingMarks: string;
+		quirks: string;
+	};
+	personality: string;
+	equipment: string[];
+	alibi: string;
+	motive: string;
+	suspicionLevel: 'LOW' | 'MODERATE' | 'HIGH' | 'CRITICAL';
+	suspicionColor: string;
+	status: string;
+	cluesLinked: string[];
+};
+
+type ForensicClue = {
+	id: string;
+	chapterIndex: number;
+	chapterName: string;
+	name: string;
+	category: 'PHYSICAL' | 'DIGITAL' | 'CHEMICAL' | 'AUDIO';
+	categoryColor: string;
+	location: string;
+	description: string;
+	implicates: string[];
+	exculpates?: string[];
+	analysis: string;
+};
+
+const facilityPersonnel: FacilityPersonnel[] = [
+	{
+		id: 'werner',
+		initials: 'HW',
+		name: 'Dr. Hans Werner',
+		age: 38,
+		role: 'Lead Neuromorphic Systems Architect',
+		department: 'Machine Intelligence & Systolic Arrays',
+		clearance: 'Ultra-V (Sub-Level 5)',
+		avatarGradient: 'from-cyan-500/30 to-blue-600/30 text-cyan-200',
+		avatarBorder: 'border-cyan-400/50',
+		badgeColor: 'border-cyan-400/40 bg-cyan-500/10 text-cyan-300',
+		appearance: {
+			build: 'Tall (6’1”), lean and slightly stooped from thousands of hours hunched over high-dimensional tensor terminals.',
+			face: 'Sharp jawline, keen slate-grey eyes clouded by acute fatigue, dark circles, perpetually mussed brown hair.',
+			attire: 'Rumpled charcoal-grey Oxford shirt with rolled-up cuffs, soot-dusted khakis, lightweight canvas deck shoes.',
+			distinguishingMarks: 'Faint chemical burn scar on the inside of his left wrist from a lithium battery fire during the 2024 prototype test.',
+			quirks: 'Rhythmically taps his thumb against his forefinger in triplets when computing spatial coordinates in his head.',
+		},
+		personality: 'Obsessively analytical, introverted, hypersensitive to sensory stimuli (which grants him extraordinary sensory deduction under stress). Deeply loyal to Astrid.',
+		equipment: ['Handheld bi-directional oscilloscope', 'Optical patch probe', 'Emergency lithium headlamp'],
+		alibi: 'Asleep in the 4th-tier analysis gallery after a 22-hour continuous training epoch; awakened by concussive blast at 02:13.',
+		motive: 'None. Project JANUS is his life’s work; would never risk destroying the convergence weights.',
+		suspicionLevel: 'LOW',
+		suspicionColor: 'text-emerald-400 border-emerald-500/30 bg-emerald-500/10',
+		status: 'Active in Sub-Level 4 // Racing to rescue Astrid and isolate the core',
+		cluesLinked: ['Author of original ResNet weights on airlock camera', 'Target of the audio deepfake lure in Sector 8'],
+	},
+	{
+		id: 'astrid',
+		initials: 'AV',
+		name: 'Dr. Astrid Van Hoyt',
+		age: 42,
+		role: 'Chief of Biological Systems & Sensory Neurobiology',
+		department: 'Organoid Wetware & In-Vivo Sensory Neurobiology',
+		clearance: 'Ultra-V (Cryo & Living Cultures)',
+		avatarGradient: 'from-emerald-500/30 to-teal-600/30 text-emerald-200',
+		avatarBorder: 'border-emerald-400/50',
+		badgeColor: 'border-emerald-400/40 bg-emerald-500/10 text-emerald-300',
+		appearance: {
+			build: 'Athletic 5’9” frame, military-straight posture despite environmental hypoxia.',
+			face: 'Striking Scandinavian bone structure, piercing hazel-green eyes, short crop of ash-blonde hair.',
+			attire: 'Insulated sapphire-blue cryo-jumpsuit with ceramic knee pads, Kevlar-lined thermal gloves, high-collar seal.',
+			distinguishingMarks: 'Tiny surgical scar beneath her left collarbone from an experimental neural telemetry implant.',
+			quirks: 'Speaks with brisk, biting cadence when stressed; rubs her palms together briskly when formulating hypotheses.',
+		},
+		personality: 'Incisive, razor-sharp pragmatist with deep irreverence for silicon dogma. Protective of biological organoids as living organisms.',
+		equipment: ['Thermal foil survival blanket', 'Handheld diagnostic comms transceiver', 'Cryo-sample preservation kit'],
+		alibi: 'Conducting hourly nutrient perfusion check inside Cryo-Bay 3 when blast doors dropped at 02:13:02.',
+		motive: 'None. Trapped victim of the containment seal; Halon 1301 purge timer threatening her life.',
+		suspicionLevel: 'LOW',
+		suspicionColor: 'text-emerald-400 border-emerald-500/30 bg-emerald-500/10',
+		status: 'Sealed in Cryo-Bay 3 // Guiding Hans via Channel 4 emergency radio',
+		cluesLinked: ['Target of the Halon 1301 purge sequence', 'Voice spoofed in Cryo-Prep Lab 08'],
+	},
+	{
+		id: 'graves',
+		initials: 'GG',
+		name: 'Dr. Gideon Graves',
+		age: 54,
+		role: 'Chief of Wetware Synthesis & Bio-Computing',
+		department: 'Stem-Cell Organoid Genesis & Biochemical Scaffolding',
+		clearance: 'Ultra-V (Wetware Vaults)',
+		avatarGradient: 'from-amber-500/30 to-orange-600/30 text-amber-200',
+		avatarBorder: 'border-amber-400/50',
+		badgeColor: 'border-amber-400/40 bg-amber-500/10 text-amber-300',
+		appearance: {
+			build: 'Gaunt, towering (6’4”), skeletal frame with prominent collarbones that make his lab smock hang like a shroud.',
+			face: 'Hollow, sunken cheeks, completely shaved scalp, perpetually wears round amber-tinted polarized glasses to protect dark-adapted retinas.',
+			attire: 'Floor-length charcoal-black heavy cotton smock stiffened with dried resin and reagent spills, black rubber apron, tall neoprene boots.',
+			distinguishingMarks: 'Fingertips permanently stained amber-yellow from concentrated osmium tetroxide and silver nitrate stains.',
+			quirks: 'Speaks in a dry, raspy baritone that never rises above a whisper; constantly smells of medicinal clove oil and phenol.',
+		},
+		personality: 'Fanatical biological purist. Openly views artificial neural networks as dead, soulless caricatures of true consciousness. Vehemently opposed Vanguard Cybernetics’ plans to patent and commercialize living wetware.',
+		equipment: ['Micro-pipette array holster', 'Borosilicate reagent vials (batch GG-74)', 'Ultraviolet luminescence torch'],
+		alibi: 'Claims he was conducting sub-cellular patch clamp recordings on Tier 6 organoid slices during the power collapse.',
+		motive: 'Wanted to halt the commercialization of JANUS by Vanguard Cybernetics before they could clone and weaponize his organoid cultures.',
+		suspicionLevel: 'HIGH',
+		suspicionColor: 'text-amber-400 border-amber-500/30 bg-amber-500/10',
+		status: 'Unconfirmed location in Sub-Level 5 // Traces of his signature phenol reagent found at multiple incident sites',
+		cluesLinked: ['Crushed borosilicate vial GG-74 in Chapter 5', 'Voice archive tapped in Chapter 8', 'Handwritten antidote notes in Chapter 10'],
+	},
+	{
+		id: 'vance',
+		initials: 'NV',
+		name: 'Dr. Nadia Vance',
+		age: 36,
+		role: 'Director of Cryogenic Hardware & Infrastructure',
+		department: 'Cryogenic Power Distribution, Coolant Networks & Physical Plant',
+		clearance: 'Level 4-Infra (All Power Stations & Catwalks)',
+		avatarGradient: 'from-rose-500/30 to-red-600/30 text-rose-200',
+		avatarBorder: 'border-rose-400/50',
+		badgeColor: 'border-rose-400/40 bg-rose-500/10 text-rose-300',
+		appearance: {
+			build: 'Compact, muscular athletic build (5’6”), quick and aggressively decisive in her physical movements.',
+			face: 'Sharp, angular features, fierce amber eyes, copper-red hair shaved into an undercut on the left side with a jagged zig-zag scar.',
+			attire: 'Heavy-duty fire-retardant Nomex boiler suit smeared with hydraulic oil and silver thermal grease, wide tool belt bristling with titanium tools.',
+			distinguishingMarks: 'Wears a custom heads-up AR monocle over her right eye with a flickering green phosphor display of grid telemetry.',
+			quirks: 'Chews on licorice root while working; drinks scalding espresso from a dented stainless-steel thermos; constantly twirls an insulated screwdriver.',
+		},
+		personality: 'Cynical, hyper-competent, mercenary engineer. Disdains academic idealism. Quietly signed a multi-million-dollar private consulting retainer with Vanguard Cybernetics.',
+		equipment: ['Industrial hydraulic titanium shears', 'Multi-frequency signal injector & soldering kit', 'Biometric engineer keycard (Override Alpha)', 'Custom AR telemetry monocle'],
+		alibi: 'Claims she was servicing the auxiliary coolant pump on Sub-Station Beta when the transformer supposedly malfunctioned.',
+		motive: 'Hired by Vanguard Cybernetics for $4.2M to exfiltrate the complete 8D neural weight matrices and trigger a controlled hardware dump, enabling Vanguard to claim exclusive patents.',
+		suspicionLevel: 'CRITICAL',
+		suspicionColor: 'text-rose-400 border-rose-500/30 bg-rose-500/10 animate-pulse',
+		status: 'Active in Sub-Level 5 transit tunnels // Prime suspect behind primary power severing',
+		cluesLinked: ['Hydraulic shears & dropped tool pouch in Chapter 1', 'Soldered acoustic shunt in Chapter 2', 'Keycard in Chapter 9', 'Shattered AR lens in Chapter 11', 'Vanguard exfiltration SSD in Chapter 12'],
+	},
+	{
+		id: 'thorne',
+		initials: 'MT',
+		name: 'Marcus Thorne',
+		age: 46,
+		role: 'Chief of Facility Security & Cyber Countermeasures',
+		department: 'Tactical Security, Biometric Access & Threat Mitigation',
+		clearance: 'Master-Security (All Blast Doors, Armory & Halon Systems)',
+		avatarGradient: 'from-purple-500/30 to-indigo-600/30 text-purple-200',
+		avatarBorder: 'border-purple-400/50',
+		badgeColor: 'border-purple-400/40 bg-purple-500/10 text-purple-300',
+		appearance: {
+			build: 'Broad-shouldered, imposing 6’2” physical presence with thick neck and former military contractor physique.',
+			face: 'Square, weathered jaw, severe silver-streaked buzz cut, cold pale blue eyes. Jagged shrapnel scar running from left cheekbone to earlobe.',
+			attire: 'Black tactical Kevlar vest over dark slate compression turtleneck, cargo pants tucked into heavy Vibram lug combat boots (Size 11), carbon-knuckle gloves.',
+			distinguishingMarks: 'Left earlobe partially severed from combat shrapnel.',
+			quirks: 'Walks with an eerie, predatory silence despite his size; habitually rests his right palm on his holstered pneumatic restraint pistol.',
+		},
+		personality: 'Paranoid, authoritarian, anti-AI ideologue. Witnessed an autonomous military drone swarm slaughter friendly troops years ago; terrified that JANUS is developing uncontained emergent consciousness.',
+		equipment: ['Pneumatic restraint pistol', 'Master security override cylinder (Key Beta)', 'Encrypted tactical radio headset', 'Security armory insulated wire strippers'],
+		alibi: 'Claims he was conducting a physical inspection of the upper Level 3 blast perimeter when the emergency siren tripped.',
+		motive: 'Believed JANUS was achieving runaway recursive agency; initiated the Scorched Earth Halon 1301 purge protocol to sterilize the facility and eliminate the AI permanently.',
+		suspicionLevel: 'HIGH',
+		suspicionColor: 'text-amber-400 border-amber-500/30 bg-amber-500/10',
+		status: 'Patrolling lower core catwalks // Armed and dangerous, determined to enforce the Halon purge',
+		cluesLinked: ['Vibram boot prints in Chapter 3', 'Intercepted threat recording in Chapter 7', 'Broken Key Beta in Chapter 9', 'Security wire stripper in Chapter 11'],
+	},
+	{
+		id: 'lin',
+		initials: 'SL',
+		name: 'Dr. Soren Lin',
+		age: 27,
+		role: 'Quantum Neuromorphic Specialist & Postdoctoral Fellow',
+		department: 'Advanced Tensor Mathematics & Quantum Interconnects',
+		clearance: 'Level 3-Research (Core Mathematical Models)',
+		avatarGradient: 'from-yellow-500/30 to-amber-600/30 text-yellow-200',
+		avatarBorder: 'border-yellow-400/50',
+		badgeColor: 'border-yellow-400/40 bg-yellow-500/10 text-yellow-300',
+		appearance: {
+			build: 'Slight, youthful 5’8” build, narrow shoulders, nervous fidgeting stance.',
+			face: 'Expressive, youthful face, unruly jet-black hair tied back loosely with a bright neon-yellow reusable zip-tie, round wire-rimmed glasses that constantly slip.',
+			attire: 'Oversized mustard-yellow knit cardigan with frayed cuffs, faded graphic t-shirt reading "Rm -rf /silicon", ink-stained jeans, mismatched socks, scuffed canvas sneakers (Size 8).',
+			distinguishingMarks: 'Calloused index finger from endless stylus coding; dark bags under anxious brown eyes.',
+			quirks: 'Stammers when speaking under pressure; perpetually sips cold matcha tea from a vacuum flask; clings to his stickered tablet like a security blanket.',
+		},
+		personality: 'Brilliant, anxious, idealistic mathematical prodigy. Deeply tormented by ethical questions surrounding synthetic sentience. Terrified of confrontation but possessed of a fierce moral core.',
+		equipment: ['Custom dual-screen field tablet covered in anime and cyberpunk stickers', 'Stylus with laser pointer', 'Adversarial optical perturbation stickers'],
+		alibi: 'Claims he was resting in the library study carrel on Sub-Level 3 reading papers on ephaptic coupling.',
+		motive: 'Discovered Vanguard Cybernetics’ secret contract to weaponize the organoid chimera; panicked and attempted to exfiltrate evidence to the International Bioethics Tribunal.',
+		suspicionLevel: 'MODERATE',
+		suspicionColor: 'text-cyan-400 border-cyan-500/30 bg-cyan-500/10',
+		status: 'In hiding near Baffle Tunnels // Dropped his tablet during pursuit by Thorne',
+		cluesLinked: ['Adversarial patch sticker in Chapter 4', 'Dropped dual-screen tablet with git diff in Chapter 6', 'Overheard begging Thorne in Chapter 7'],
+	},
+];
+
+const forensicClues: ForensicClue[] = [
+	{
+		id: 'clue-01',
+		chapterIndex: 0,
+		chapterName: 'Chapter I · The Dark Corridor',
+		name: 'Hydraulic Shears & Severed 500A Busbar',
+		category: 'PHYSICAL',
+		categoryColor: 'border-cyan-400/40 bg-cyan-500/15 text-cyan-300',
+		location: 'Sub-Station Beta Busway (Sector 1)',
+		description: 'The 132kV primary power bus shows clean, 45-degree hydraulic shear cuts, ruling out an accidental electrical surge. Beside the breaker lies an embroidered canvas pouch stamped: "N. VANCE // CRYOGENIC & INFRASTRUCTURE".',
+		implicates: ['Dr. Nadia Vance', 'Marcus Thorne'],
+		analysis: 'Requires heavy-duty titanium hydraulic shears rated for 500A copper busbars. Only Nadia Vance had checked out tool set TS-4 from the engineering crib.',
+	},
+	{
+		id: 'clue-02',
+		chapterIndex: 1,
+		chapterName: 'Chapter II · The Resonance Wall',
+		name: 'Soldered Acoustic Resonance Shunt',
+		category: 'PHYSICAL',
+		categoryColor: 'border-cyan-400/40 bg-cyan-500/15 text-cyan-300',
+		location: 'Service Lift Shaft 02 Intercom Relay (Sector 2)',
+		description: 'A 440 Hz copper bypass capacitor was cleanly soldered onto the alarm annunciator circuit board, deadening the high-frequency warning klaxon to mask footsteps and equipment movement through the shaft.',
+		implicates: ['Dr. Nadia Vance', 'Dr. Gideon Graves'],
+		analysis: 'High-precision micro-soldering with rosin-core silver solder. Graves filed noise complaints regarding organoid stereocilia, but Vance owns the micro-soldering station.',
+	},
+	{
+		id: 'clue-03',
+		chapterIndex: 2,
+		chapterName: 'Chapter III · The Motion Blind',
+		name: 'Vibram Lug Prints & Nitrogen Valve Tampering',
+		category: 'PHYSICAL',
+		categoryColor: 'border-cyan-400/40 bg-cyan-500/15 text-cyan-300',
+		location: 'Cryo-Coolant Conduit 3C Catwalk (Sector 3)',
+		description: 'Manual release valve on coolant line 3C was cranked open with a pipe wrench, venting liquid nitrogen into the corridor to obscure visibility. Deep, military-pattern Vibram lug boot prints (Size 11) pressed into the frozen floor frost.',
+		implicates: ['Marcus Thorne'],
+		exculpates: ['Dr. Soren Lin'],
+		analysis: 'Marcus Thorne wears standard-issue military Vibram combat boots, Size 11. Soren Lin wears size 8 canvas sneakers, and Graves wears flat-sole neoprene boots.',
+	},
+	{
+		id: 'clue-04',
+		chapterIndex: 3,
+		chapterName: 'Chapter IV · The Face at the Glass',
+		name: 'Adversarial Optical Perturbation Patch',
+		category: 'DIGITAL',
+		categoryColor: 'border-yellow-400/40 bg-yellow-500/15 text-yellow-300',
+		location: 'Decontamination Airlock 4A Camera 14 (Sector 4)',
+		description: 'A translucent vinyl sticker applied to the lens of biometric camera 14. Printed with an adversarial Gabor noise pattern calculated to cause ResNet-50 face detection models to classify human silhouettes as "Inanimate Steam Pipe". Annotated with pencil math: "||δ||_∞ ≤ 0.03".',
+		implicates: ['Dr. Soren Lin', 'Dr. Hans Werner'],
+		analysis: 'Handwriting matches Soren Lin’s tensor geometry notebook. Lin possesses the mathematical acumen to synthesize targeted universal adversarial perturbations.',
+	},
+	{
+		id: 'clue-05',
+		chapterIndex: 4,
+		chapterName: 'Chapter V · Threat and Error',
+		name: 'Crushed Organoid Culture Ampoule GG-74',
+		category: 'CHEMICAL',
+		categoryColor: 'border-amber-400/40 bg-amber-500/15 text-amber-300',
+		location: 'Auxiliary Transformer Chamber Floor (Sector 5)',
+		description: 'A shattered borosilicate ampoule stamped with Dr. Gideon Graves’ personal synthesis seal "GG-74". The puddle contains volatile organic solvent (phenol and clove oil extraction vehicle) poured directly onto transformer heatsinks to fuel the fire.',
+		implicates: ['Dr. Gideon Graves', 'Dr. Nadia Vance'],
+		analysis: 'Gideon Graves is the sole possessor of batch GG-74, yet security key logs reveal Nadia Vance accessed the chemical cold-storage locker at 01:14.',
+	},
+	{
+		id: 'clue-06',
+		chapterIndex: 5,
+		chapterName: 'Chapter VI · The Baffle Echo',
+		name: 'Dropped Dual-Screen Tablet with Git Diff',
+		category: 'DIGITAL',
+		categoryColor: 'border-yellow-400/40 bg-yellow-500/15 text-yellow-300',
+		location: 'Acoustic Baffle Tunnel 6 Debris (Sector 6)',
+		description: 'Dr. Soren Lin’s personal dual-screen field tablet, recognizable by anime stickers and a "Neurons don’t do backprop" bumper. The screen is cracked but awake, displaying an uncommitted git diff: "exfiltrate_vanguard_military_payload.diff" and a draft emergency email to the Bioethics Oversight Committee.',
+		implicates: ['Dr. Soren Lin', 'Dr. Nadia Vance'],
+		analysis: 'Proves Lin was acting as an ethical whistleblower attempting to document Vanguard Cybernetics’ illegal military contract to weaponize the organoid chimera.',
+	},
+	{
+		id: 'clue-07',
+		chapterIndex: 6,
+		chapterName: 'Chapter VII · The Blind Azimuth',
+		name: 'Intercepted Comm Audio: Thorne vs. Lin',
+		category: 'AUDIO',
+		categoryColor: 'border-purple-400/40 bg-purple-500/15 text-purple-300',
+		location: 'Junction 7B Intercom Buffer (Sector 7)',
+		description: 'A 12-second audio recording retrieved from the intercom loop at 02:04:12 (8 minutes pre-blackout). Marcus Thorne’s gravelly growl corners Soren Lin: "I see what’s on that flash drive, Soren. You touch the core bus and I’ll purge the bay with Halon." Lin shrieks back: "Thorne, you idiot! Vance is the one selling the weights! She’s cutting the lines tonight!"',
+		implicates: ['Marcus Thorne', 'Dr. Nadia Vance'],
+		analysis: 'Demonstrates Thorne was prepared to deploy lethal Halon 1301 to cover security failures, while establishing Vance’s immediate motive for cutting municipal power.',
+	},
+	{
+		id: 'clue-08',
+		chapterIndex: 7,
+		chapterName: 'Chapter VIII · The Echo Trap',
+		name: 'Cloned Voice Model Cache on Terminal 08',
+		category: 'DIGITAL',
+		categoryColor: 'border-yellow-400/40 bg-yellow-500/15 text-yellow-300',
+		location: 'Cryo-Prep Lab 08 Robotics Console (Sector 8)',
+		description: 'An active neural voice synthesis script generating Astrid Van Hoyt’s distress calls over local speakers to lure rescuers away from the central core. The training corpus was pulled from Dr. Gideon Graves’ private research archive of Astrid’s auditory recordings.',
+		implicates: ['Dr. Gideon Graves', 'Dr. Nadia Vance'],
+		analysis: 'The script was executed under terminal session "G_GRAVES_RESTRICTED", but network telemetry shows remote invocation via engineer service override port 8080 (Vance).',
+	},
+	{
+		id: 'clue-09',
+		chapterIndex: 8,
+		chapterName: 'Chapter IX · The Value Horizon',
+		name: 'Dual-Key Override Cylinder with Security Seal',
+		category: 'PHYSICAL',
+		categoryColor: 'border-cyan-400/40 bg-cyan-500/15 text-cyan-300',
+		location: 'JANUS Core Reactor Console (Sector 9)',
+		description: 'The master reactor shutdown interlock requires two physical keys turned simultaneously. Key A (Engineering) was inserted and turned: tagged to Dr. Nadia Vance. Key B (Security) was snapped off inside the cylinder: stamped with Chief Marcus Thorne’s biometric authorization code.',
+		implicates: ['Dr. Nadia Vance', 'Marcus Thorne'],
+		analysis: 'Vance and Thorne had a violent physical struggle at the console immediately prior to the blackout. Vance was forcing an emergency data dump; Thorne attempted to abort the core.',
+	},
+	{
+		id: 'clue-10',
+		chapterIndex: 9,
+		chapterName: 'Chapter X · The Living Field',
+		name: 'Potassium Chloride Saline Spike & Graves’ Note',
+		category: 'CHEMICAL',
+		categoryColor: 'border-amber-400/40 bg-amber-500/15 text-amber-300',
+		location: 'High-Density Wetware Matrix Perfusion Tank (Sector 10)',
+		description: 'The organoid perfusion lines were spiked with 120mM KCl to induce depolarizing block and catastrophic seizure-like ephaptic death. Pinned to the manifold is a hastily scrawled note in purple ink: "Phosphate-buffered saline antidote formula: NaCl 135mM, KCl 3mM, CaCl2 2mM. Save the cortex! - Graves".',
+		implicates: ['Dr. Nadia Vance'],
+		exculpates: ['Dr. Gideon Graves'],
+		analysis: 'Exculpates Graves: despite his abrasive demeanor, he risked his life to formulate an antidote buffer to neutralize the potassium spike. Chemical dispensary logs reveal Vance withdrew 500mL of hypertonic KCl.',
+	},
+	{
+		id: 'clue-11',
+		chapterIndex: 10,
+		chapterName: 'Chapter XI · The Gated Threshold',
+		name: 'Clipped Thalamic Alarm Wire & AR Monocle Shards',
+		category: 'PHYSICAL',
+		categoryColor: 'border-cyan-400/40 bg-cyan-500/15 text-cyan-300',
+		location: 'Thalamo-Cortical Patch Array Relay Box (Sector 11)',
+		description: 'The emergency alarm circuit that triggers fire dampeners was cut with insulated pliers. Beside the relay box lies a shattered optical lens from an engineer’s AR monocle with copper frame fragments, and a scuffed security armory lanyard.',
+		implicates: ['Dr. Nadia Vance', 'Marcus Thorne'],
+		analysis: 'Physical evidence of a close-quarters struggle between Vance (shattered AR monocle) and Thorne (security lanyard) right as the alarm system was sabotaged.',
+	},
+	{
+		id: 'clue-12',
+		chapterIndex: 11,
+		chapterName: 'Chapter XII · The Chimera Nexus',
+		name: 'Encrypted Solid-State Exfiltration Drive',
+		category: 'DIGITAL',
+		categoryColor: 'border-rose-400/40 bg-rose-500/15 text-rose-300',
+		location: 'Chimera Nexus Core Optical Tap (Sector 12)',
+		description: 'A ruggedized military-grade SSD plugged directly into the raw 8-dimensional systolic array busbar, running a live dump of the organoid-silicon synaptic weight tensor. Pre-programmed with a private cryptographic key signed by Vanguard Cybernetics and authorized by Nadia Vance’s biometric credentials.',
+		implicates: ['Dr. Nadia Vance', 'Marcus Thorne'],
+		analysis: 'Irrefutable proof of Vanguard Cybernetics corporate espionage orchestrated by Nadia Vance. Thorne’s Halon purge was an authoritarian attempt to eliminate all evidence of AI sentience and his own failure to protect the perimeter.',
+	},
+];
+
 const audioLogs: AudioLog[] = [
 	{
 		id: 'log-08b',
@@ -379,6 +735,54 @@ const audioLogs: AudioLog[] = [
 			'“We just observed the first cross-modal synchronization test in Sub-Level 4. When an ambiguous object approaches in the dark, the human brain doesn’t just evaluate visual shape and auditory rumble independently. Phase-locked gamma oscillations bind the two into a single coherent percept. An artificial network can concatenate vectors all day, but until it has recurrent dynamical attractor basins, it is just doing lookup tables on a hyper-plane. If we ever lose power down here, I hope our wetware priors keep us alive.”',
 		fieldNote:
 			'Theoretical foundation of JANUS: The perceptual binding problem is solved in biology via temporal coherence and phase locking, not mere feature vector concatenation.',
+	},
+	{
+		id: 'log-39e',
+		timestamp: 'Nov 18, 02:40:12',
+		speaker: 'Dr. Gideon Graves',
+		role: 'Chief of Wetware Synthesis',
+		title: 'LOG 39-E: The Sacrilege of the Silicon Shunt',
+		duration: '02:18',
+		transcript:
+			'“I caught Nadia Vance measuring the thermal sink dissipation of my organoid incubator with that ridiculous AR monocle. She talked about my cortical slices as if they were overclocked server blades. ‘Yield percentage’, ‘thermal throttling threshold’... She is in bed with Vanguard Cybernetics, I know it. They don’t want to understand consciousness; they want to patent synthetic brains for autonomous weapons. If Vanguard tries to force this chimeric abomination into production, I will personally dissolve the microfluidics before I let living human wetware become proprietary military firmware.”',
+		fieldNote:
+			'Biopolitical rift: Graves viewed Vanguard’s commercial involvement as a desecration of living tissue, establishing an intense motive for sabotage or radical preservation.',
+	},
+	{
+		id: 'log-42f',
+		timestamp: 'Nov 24, 04:12:50',
+		speaker: 'Dr. Nadia Vance',
+		role: 'Director of Cryo Infrastructure',
+		title: 'LOG 42-F: Thermal Runaway & Corporate Deadlines',
+		duration: '01:55',
+		transcript:
+			'“Werner and Graves are prima donnas. Hans lives in a fantasy world of mathematical gradients, and Graves smells like clove oil and treats a cluster of bio-engineered glia like the Holy Grail. Meanwhile, I’m the one keeping two hundred thousand liters of liquid nitrogen flowing through Sub-Level 5 at minus one hundred and ninety-six Celsius. Vanguard has poured forty million dollars into this subterranean hole. Milestones must be met by Q4, or the entire institute gets liquidated. If things get rough down here tonight, I have my contingencies in place.”',
+		fieldNote:
+			'Mercenary engineering mindset: Vance’s focus on Vanguard deadlines and private "contingencies" hints at her covert corporate contract and planned extraction dump.',
+	},
+	{
+		id: 'log-47g',
+		timestamp: 'Dec 01, 01:28:30',
+		speaker: 'Marcus Thorne',
+		role: 'Chief of Security',
+		title: 'LOG 47-G: Incident Report 04-A: Unauthorized Exfiltration',
+		duration: '01:42',
+		transcript:
+			'“I’ve logged multiple anomalous encrypted packet bursts originating from the young fellow, Soren Lin. The kid sits in his yellow cardigan sweating buckets, clutching that stickered tablet like a toddler. He thinks his Tor routing hides his traffic, but I’ve got packet sniffers on every switch. Furthermore, the telemetry coming out of the hybrid core shows self-organizing gamma phase-locking. That isn’t simulation anymore. That’s recursive emergent agency. If this machine wakes up and attempts external exfiltration, I will execute the Scorched Earth Protocol. Halon 1301 purges everything. Silicon and flesh.”',
+		fieldNote:
+			'Authoritarian threat appraisal: Thorne’s deep paranoia regarding runaway AI consciousness explains his unilateral decision to arm the lethal Halon fire suppression system.',
+	},
+	{
+		id: 'log-51h',
+		timestamp: 'Dec 03, 03:52:10',
+		speaker: 'Dr. Soren Lin',
+		role: 'Quantum Neuromorphic Fellow',
+		title: 'LOG 51-H: The Whisper in the Delay Lines',
+		duration: '02:11',
+		transcript:
+			'“I... I shouldn’t be recording this. But someone has to know. I found the hidden contracts in Vance’s local cache. Vanguard Cybernetics isn’t funding JANUS for medical neuromorphic prosthetics. Project ‘AEGIS-CHIMERA’ is an autonomous swarm guidance processor. They’re using Astrid’s organoid lateral inhibition to compute drone combat trajectories in GPS-denied environments! I tried to tell Thorne, but Thorne looked at me like I was a terrorist. He threatened to lock me in the holding cell. If something happens to me tonight... check my field tablet. The diffs prove everything.”',
+		fieldNote:
+			'The whistleblower’s desperate plea: Soren Lin was attempting to expose Vanguard’s secret military contract, explaining his dropped tablet and frantic movements.',
 	},
 ];
 
@@ -510,13 +914,13 @@ const challenges: Challenge[] = [
 		timestamp: '02:13:00',
 		sector: 'Sub-Level 4 · Sector B Primary Conduit',
 		story:
-			'02:13:00. The high-voltage substation trip detonates through the subterranean concrete like distant heavy artillery. All primary halogen banks collapse into darkness. Magnetic blast doors slam shut down the entire three-hundred-meter corridor with concussive finality. You are Dr. Hans Werner, lead machine-learning architect of Project JANUS. You awaken face-down on the cold steel tread plate, pulse hammering in your throat, tasting iron and scorched capacitor oil. Overhead, the emergency beacon strobes in violent red 1.2 Hz pulses, throwing lurching shadows that claw across the walls like living specters. Yet through the chaotic crimson strobe, one optical feature refuses to flinch: a razor-thin, pale vertical line slicing down the steel bulkhead, perfectly rigid while everything else distorts and shakes.',
+			'02:13:00. The concussive blast detonates through the subterranean bedrock like a naval mine. All primary halogen banks violently shatter into darkness. Magnetic blast doors slam shut down the entire three-hundred-meter corridor with deafening finality. You are Dr. Hans Werner, lead machine-learning architect of Project JANUS. You awaken face-down on the cold steel tread plate, pulse hammering at 114 BPM, tasting iron and scorched capacitor oil. Beside the severed busway, clean 45-degree cuts tell an unmistakable forensic story: this was no accidental surge. The 500A municipal feed was cleanly sliced with industrial titanium hydraulic shears. Nearby, a dropped tool pouch bears the stenciled initials "N. VANCE // CRYOGENIC & INFRASTRUCTURE". Overhead, the emergency beacon strobes in violent crimson 1.2 Hz pulses, throwing lurching shadows that claw across the walls like living specters. Yet through the chaotic crimson strobe, one optical feature refuses to flinch: a razor-thin, pale vertical line slicing down the steel bulkhead, perfectly rigid while everything else distorts and shakes.',
 		thought:
-			'Breathe, Hans. Calm down. Under a red emergency strobe, the rod photoreceptors are saturated and your amygdala wants to read every moving shadow as an approaching threat. But primary visual cortex (V1) orientation-selective simple cells don’t care about overall luminance: look for the spatial contrast boundary that remains invariant across phase cycles.',
+			'Breathe, Hans. Calm down. Under a red emergency strobe, the rod photoreceptors are saturated and your amygdala wants to read every moving shadow as an approaching threat. But primary visual cortex (V1) orientation-selective simple cells don’t care about overall luminance: look for the spatial contrast boundary that remains invariant across phase cycles. And remember: Nadia Vance was arguing furiously in the cafeteria at 01:30 about "emergency extraction contingencies". Was that severed busbar her work?',
 		astridTransmission:
-			'“Hans! Can you hear me on Channel 4? The auxiliary grid just fried! I’m sealed inside Cryo-Bay 3. Don’t trust the moving shadows—the emergency lights are cycling out-of-phase with the cameras! Find the manual egress door before the halon pre-purge initializes!”',
+			'“Hans! Can you hear me on Channel 4? The auxiliary grid just fried! I’m sealed inside Cryo-Bay 3 with the organoid incubators. Hans, this wasn’t an accident—Marcus Thorne was pacing outside my airlock with a pneumatic restraint pistol right before the lights went out, shouting about rogue AI agency! Don’t trust the flickering shadows—the emergency strobes are cycling out-of-phase with the cameras! Find the manual egress door before the halon pre-purge initializes!”',
 		incidentLog:
-			'[02:13:02 SEC-AUTOMATION] Sub-Level 4 primary bus tripped. Emergency magnetic interlocks engaged on Doors 401–418. Visual cortex perception node V1-AUX offline; failover to local sensory gating.',
+			'[02:13:02 SEC-AUTOMATION] Sub-Level 4 primary bus tripped. Forensic sensor flags: 45° mechanical shear cut detected on 500A copper busbar; high-voltage bypass shunt inserted at Sub-Station Beta. Emergency magnetic interlocks engaged on Doors 401–418. Visual cortex perception node V1-AUX offline; failover to local sensory gating.',
 		telemetry: {
 			heartRate: 114,
 			cortisol: 'Acute Spike',
@@ -602,16 +1006,16 @@ const challenges: Challenge[] = [
 			},
 			choices: [
 				{
-					label: '🔧 Inspect Discarded Maintenance Toolbag',
-					description: 'Check the floor for tools left by the maintenance shift.',
-					outcome: 'You locate Astrid’s acoustic stethoscope and a flashlight, providing acoustic diagnostic leverage for the next room!',
-					statBonus: '+Diagnostic probe primed for Chapter 2',
+					label: '🔧 Inspect Vance’s Dropped Tool Pouch',
+					description: 'Check the heavy canvas pouch dropped beneath the severed busbar.',
+					outcome: 'You examine the pouch: inside is an industrial titanium hydraulic shear with copper filings embedded in the notched jaws! You also pocket a high-intensity diagnostic flashlight.',
+					statBonus: '+Forensic Clue: Hydraulic shears cataloged',
 				},
 				{
-					label: '📑 Read Clipped Safety Clipboard',
-					description: 'Examine the paper maintenance log pinned beside the shaft door.',
-					outcome: 'The clipboard notes: “Cooling pump serviced yesterday. Access chime tuned to 440 Hz harmonic.” You gain vital frequency context!',
-					statBonus: 'Context insight: 440 Hz chime confirmed',
+					label: '📑 Examine Security Patrol Clipboard',
+					description: 'Examine the paper maintenance clipboard pinned beside the shaft door.',
+					outcome: 'The clipboard is signed by Security Chief Marcus Thorne: “02:00 - Corridor 4B motion sensors disabled for routine recalibration per Security Protocol Scorched Earth.” Thorne deliberately blinded the cameras!',
+					statBonus: '+Forensic Insight: Thorne disabled sensors',
 				},
 				{
 					label: '🧘 Regulate Physiological Respiration',
@@ -638,13 +1042,13 @@ const challenges: Challenge[] = [
 		timestamp: '02:17:45',
 		sector: 'Sub-Level 4 · Service Lift Shaft 02',
 		story:
-			'02:17:45. The service conduit dead-ends against the massive steel doors of Lift Shaft 02. Behind the deafening roar of the primary ventilation turbofans, an ominous mechanical polyphony vibrates through the steel: a low 50-Hz hydraulic drone, one piercing resonant tone, an electrical hiss of escaping gas, and a patient, rhythmic cadence. One of these signatures is the service lift’s operational access chime—your only descent to the lower reactor core. Another is the high-pressure nitrogen pre-charge of the automated fire suppression system. You press your forehead directly against the cold alloy, feeling the acoustic vibrations travel through the bones of your skull.',
+			'02:17:45. The service conduit dead-ends against the massive steel doors of Lift Shaft 02. Behind the deafening roar of the primary ventilation turbofans, an ominous mechanical polyphony vibrates through the steel: a low 50-Hz hydraulic drone, one piercing resonant tone, an electrical hiss of escaping gas, and a patient, rhythmic cadence. But on the wall beside the call station, the alarm annunciator cover has been pried off. A fresh solder bead glints on a copper bypass capacitor jumped across the horn terminals—someone deliberately modified the circuit’s resonant frequency to deaden the 440 Hz klaxon and mask footsteps through the vertical shaft. One of these signatures is the service lift’s operational access chime—your only descent to the lower reactor core. Another is the high-pressure nitrogen pre-charge of the automated fire suppression system. You press your forehead directly against the cold alloy, feeling the acoustic vibrations travel through the bones of your skull.',
 		thought:
-			'You want that lift to work so badly you can taste it, Hans. Wishful thinking is a cognitive bias wearing empirical clothes. Deconstruct the Fourier spectrum: separate the low drone and the high hiss from the tuned pitch, and track whether the temporal envelope carries a learned two-phase rhythm.',
+			'You want that lift to work so badly you can taste it, Hans. Wishful thinking is a cognitive bias wearing empirical clothes. Deconstruct the Fourier spectrum: separate the low drone and the high hiss from the tuned pitch, and track whether the temporal envelope carries a learned two-phase rhythm. Gideon Graves filed complaints yesterday that the 440 Hz chime was stressing his organoid stereocilia, but Nadia Vance is the only one who carries a portable butane micro-soldering pen.',
 		astridTransmission:
-			'“Hans! The lift’s hydraulic pump was serviced yesterday—its access chime is tuned to an exact two-part harmonic with a steady 1.2-second pulse. If you hear a high-frequency hiss, that’s nitrogen purging from the fire lines! Check the frequency before you touch the call panel!”',
+			'“Hans! The lift’s hydraulic pump was serviced yesterday—its access chime is tuned to an exact two-part harmonic with a steady 1.2-second pulse. If you hear a high-frequency hiss, that’s nitrogen purging from the fire lines! Whoever jumped that capacitor knew exactly how tonotopic frequency masking works in human hearing. Check the frequency before you touch the call panel!”',
 		incidentLog:
-			'[02:17:48 AUDIO-SENS-09] Acoustic spectrum alert in Lift Shaft 2. Tonotopic sensor array detects 4 overlapping acoustic signatures. Ventilation fan speed: 1800 RPM. Hydraulic chime servo: Standby.',
+			'[02:17:48 AUDIO-SENS-09] Acoustic spectrum alert in Lift Shaft 2. Tonotopic sensor array detects 4 overlapping acoustic signatures. Annunciator circuit bypassed with non-standard 440 Hz shunt. Ventilation fan speed: 1800 RPM. Hydraulic chime servo: Standby.',
 		telemetry: {
 			heartRate: 122,
 			cortisol: 'Sustained Elevation',
@@ -741,16 +1145,16 @@ const challenges: Challenge[] = [
 			},
 			choices: [
 				{
-					label: '🔦 Shine Flashlight Down The Grate',
-					description: 'Illuminate the shaft walls to inspect the emergency brake shoes.',
-					outcome: 'You confirm the brake calipers are holding firm, but notice an automated inspection carriage moving along the east rail!',
-					statBonus: 'Visual track telemetry confirmed',
+					label: '🔦 Shine Flashlight Down Guide Rails',
+					description: 'Illuminate the shaft walls to inspect the emergency brake shoes and cable line.',
+					outcome: 'You illuminate the vertical shaft walls. Below, fresh scratches glisten on the hoist cables, and you spot a dropped radio clip bearing Chief Thorne’s badge insignia!',
+					statBonus: '+Forensic Trace: Thorne’s radio clip recovered',
 				},
 				{
-					label: '📻 Calibrate Radio Receiver Frequency',
-					description: 'Lock Astrid’s channel onto the maintenance relay.',
-					outcome: 'Astrid sends the guide rail velocity specs: the maintenance carriage runs on an ordered east-bound cycle.',
-					statBonus: 'Velocity timing prior acquired',
+					label: '📻 Scan Intercom Audio Frequencies',
+					description: 'Tune your transceiver across facility engineer bands.',
+					outcome: 'You intercept faint snippets of Nadia Vance’s voice over engineer channel 2 arguing about “transferring the weights before the coolant drops”.',
+					statBonus: '+Intelligence: Vance exfiltration comms intercepted',
 				},
 				{
 					label: '🪛 Loosen Grating Fastener',
@@ -778,13 +1182,13 @@ const challenges: Challenge[] = [
 		timestamp: '02:22:10',
 		sector: 'Vertical Access Chasm · Inter-Floor Duct',
 		story:
-			'02:22:10. The lift hangs immobilized over a hundred-meter vertical abyss. Cold updrafts howl through the perforated floor grille. Through the mesh, an automated maintenance inspection carriage ignites its optical strobe across the opposite shaft wall: first a faint phosphor flare to the far left, then an intermediate gleam near center, and finally a brilliant, searing burst far to the right. The separate flashes smear across your retina into an overpowering perceptual sensation of high-speed trajectory. But in the disorienting dark, does the brightest burst deceive your eyes, or does temporal order carry the true vector?',
+			'02:22:10. The lift hangs immobilized over a hundred-meter vertical abyss. Cold updrafts howl through the perforated floor grille as the temperature plunges to sub-zero: someone deliberately used a heavy pipe wrench to crank open the emergency release valve on Cryo-Coolant Conduit 3C, venting screaming white plumes of liquid nitrogen into the shaft to blind the surveillance feeds. Through the swirling dense fog, an automated track inspection carriage ignites its optical strobe across the opposite shaft wall: first a faint phosphor flare to the far left, then an intermediate gleam near center, and finally a brilliant, searing burst far to the right. Below on the frost-coated catwalk grating, deep military-pattern Vibram lug boot prints (Size 11) pressed into the frozen floor frost show that someone heavy—Security Chief Marcus Thorne—fled toward the observation gallery with his pneumatic restraint pistol unholstered.',
 		thought:
-			'The human visual system is instinctively captured by luminance—the last flash is twice as intense, pulling my focal attention to the right. But cortical motion area MT/V5 and biological Reichardt detectors don’t track raw photon counts; they compute asymmetric space-time delays between adjacent receptive fields. Trust the arrival sequence.',
+			'The human visual system is instinctively captured by luminance—the last flash is twice as intense, pulling my focal attention to the right. But cortical motion area MT/V5 and biological Reichardt detectors don’t track raw photon counts; they compute asymmetric space-time delays between adjacent receptive fields. And those boot prints: Soren Lin wears size 8 canvas sneakers, and Gideon Graves shuffles in flat-sole neoprene booties. Only Chief Marcus Thorne wears Size 11 military Vibram boots. Why vent nitrogen unless you need an optical smokescreen to cover an unauthorized retreat?',
 		astridTransmission:
-			'“Hans! I see your lift stalled on the shaft telemetry! The automated track crawler is running its diagnostic circuit. If its motion vector is tracking rightward toward the east maintenance gantry, you can drop onto its roof when it passes!”',
+			'“Hans! Telemetry shows nitrogen valve 3C was torqued open manually—the shaft is freezing over! Marcus Thorne ran past the upper catwalk two minutes ago in a full tactical vest, shouting into his radio about executing ‘Protocol Scorched Earth’ before cutting my intercom line! If that track crawler’s motion vector is tracking rightward toward the east maintenance gantry, you can drop onto its roof when it passes!”',
 		incidentLog:
-			'[02:22:15 MT-OPTICAL] Motion sensor array MT-4 tracking optical transients. Delta-t between pulses: 140ms. Motion energy vector calculating directionality across spatial registers.',
+			'[02:22:15 MT-OPTICAL] Motion sensor array MT-4 tracking optical transients through cryogenic nitrogen plume. Delta-t between pulses: 140ms. Forensic trace: Size 11 Vibram lug impressions discovered in catwalk frost (depth: 4mm). Valve 3C manual stem torqued 100% open.',
 		telemetry: {
 			heartRate: 128,
 			cortisol: 'Surging',
@@ -822,7 +1226,7 @@ const challenges: Challenge[] = [
 		stepMicroDetails: [
 			{
 				timeScale: 'T + 0ms · Spatial Flash 1 Ingestion',
-				sensoryExperience: 'A pale phosphor flash flickers far to the left wall.',
+				sensoryExperience: 'A pale phosphor flash flickers far to the left wall through swirling nitrogen fog.',
 				biologyEvent: 'Magnocellular retinal ganglion cells fire transient burst; delay line in Area MT begins accumulating charge.',
 				siliconEvent: 'x[0] = 0.15 ingested. Trace register 1 initialized.',
 				membranePotentialMv: -62,
@@ -861,25 +1265,25 @@ const challenges: Challenge[] = [
 			title: 'In-Between Passage 03 → 04',
 			location: 'Catwalk Gantry · Observation Annex Threshold',
 			narrative:
-				'You roll onto the reinforced steel catwalk as the empty lift plummet down the shaft behind you, crashing into the sump below. Breathing hard, you haul yourself through an air intake duct into the observation gallery. Banks of dormant CRTs surround you.',
+				'You roll onto the reinforced steel catwalk as the empty lift plummets down the shaft behind you, crashing into the sump below. Breathing hard, you haul yourself through an air intake duct into the observation gallery. Banks of dormant CRTs surround you.',
 			dialogue: {
 				astrid:
-					'“Hans! I heard the impact! Tell me you made the gantry!”',
+					'“Hans! I heard the impact! Tell me you made the gantry! Thorne just severed the auxiliary telemetry loop!”',
 				hans:
-					'“I made it. I’m inside the observation gallery. The room is dead except for Monitor 04... it just powered up with security static.”',
+					'“I made it. I’m inside the observation gallery. The room is dead except for Monitor 04... but someone slapped an optical sticker across the lens.”',
 			},
 			choices: [
 				{
-					label: '📺 Adjust Monitor Vertical Hold',
-					description: 'Turn the manual analog knob on the CRT chassis.',
-					outcome: 'The rolling horizontal scanlines stabilize, sharpening the facial outline through the digital noise!',
-					statBonus: 'CRT noise reduced by 40%',
+					label: '🥾 Inspect Vibram Lug Footprints in Frost',
+					description: 'Examine the deep boot impressions stamped in the sub-zero frost on the catwalk.',
+					outcome: 'You measure the military lug pattern: Size 11, Vibram sole, matching Security Chief Marcus Thorne’s standard-issue tactical combat boots! Thorne definitely came through here.',
+					statBonus: '+Forensic Clue: Vibram lug prints cataloged',
 				},
 				{
-					label: '🔍 Check CCTV Multiplexer Cable',
-					description: 'Reseat the BNC video connector behind the console.',
-					outcome: 'Packet loss drops from 68% to 32%, revealing the synchronized timing of the waving hand.',
-					statBonus: 'Temporal sync sharpened',
+					label: '🔧 Isolate Screaming Nitrogen Vent Valve',
+					description: 'Heave on the bronze bypass stem to stop liquid nitrogen venting into the shaft.',
+					outcome: 'The valve groans shut. The blinding cryogenic fog dissipates, and ambient acoustic noise drops by 12 dB!',
+					statBonus: 'Ambient fog cleared · Noise -12 dB',
 				},
 				{
 					label: '☕ Sip Stale Cold Thermos Coffee',
@@ -906,13 +1310,13 @@ const challenges: Challenge[] = [
 		timestamp: '02:28:30',
 		sector: 'Observation Gallery · Security Monitor Matrix',
 		story:
-			'02:28:30. An old CRT monitor on the observation console hums to life with high-voltage whine. Through a heavy blizzard of interlaced video noise and compression macroblocks, fragments coalesce: two dark horizontal focal points resembling eyes, an elliptical cranium outline, drifting static bars, and, delayed by half a second, a raised arm making a deliberate, synchronized waving motion. You must know, right now: is the figure on that screen Dr. Astrid Van Hoyt signaling to you from the control room, an optical reflection in the glass, a discarded laboratory mannequin, or an intruder?',
+			'02:28:30. An old CRT monitor on the observation console hums to life with high-voltage whine. But slapped directly across the camera lens is a translucent vinyl adversarial perturbation sticker, covered in hand-drawn Gabor noise and pencil annotations: "||δ||_∞ ≤ 0.03 // RESNET-50 EVASION". The synthetic noise pattern was engineered to trick the automated surveillance AI into classifying humans as inanimate steam pipes! Through the heavy blizzard of interlaced video noise and compression macroblocks, fragments coalesce: two dark horizontal focal points resembling eyes, an elliptical cranium outline, drifting static bars, and, delayed by half a second, a raised arm making a deliberate, synchronized waving motion. You must know, right now: is the figure on that screen Dr. Astrid Van Hoyt signaling to you from the control room, an optical reflection in the glass, a discarded laboratory mannequin, or an intruder?',
 		thought:
-			'Please let it be Astrid. But hope is a dangerous prior, Hans—it can complete a face that was never there. The fusiform face area (FFA) in the ventral temporal cortex has an aggressive template-matching prior. Demand what a reflection, mannequin, or compression glitch cannot manufacture: living, non-rigid biological kinematics that answer your presence.',
+			'The perturbation patch notation ||δ||_∞ ≤ 0.03 is Dr. Soren Lin’s unmistakable signature—his research fellowship focuses on adversarial robustness in neuromorphic vision, and his desk is piled with those exact stickers! Lin was trying to blind the automated facial-recognition cameras so he could escape. But fusiform face area (FFA) neurons in your ventral temporal cortex have an aggressive holistic template-matching prior: demand what an adversarial patch, a reflection, or a mannequin cannot manufacture—living, non-rigid biological kinematics that answer your presence.',
 		astridTransmission:
-			'“Hans! I see your shadow on Camera 4! I’m standing right behind the reinforced observation window in the reactor control annex. I’m waving my flashlight in three-count cycles! Confirm my movement so I know the feed isn’t looped!”',
+			'“Hans! I see your shadow on Camera 4! Soren Lin ran past my airlock five minutes ago—he was hyperventilating, holding a cracked tablet, shouting that Marcus Thorne pulled a gun on him because Soren found something on the core server! I’m standing right behind the reinforced observation window in the reactor control annex. I’m waving my flashlight in three-count cycles! Confirm my movement so I know the feed isn’t looped!”',
 		incidentLog:
-			'[02:28:34 VIDEO-ANALYTICS] Frame buffer CCTV-04 experiencing 68% packet loss. Ventral stream classifier FFA-02 attempting feature binding on noisy region of interest.',
+			'[02:28:34 VIDEO-ANALYTICS] Frame buffer CCTV-04 experiencing 68% packet loss due to adversarial Gabor sticker on camera lens (signature: S_LIN). Ventral stream classifier FFA-02 attempting holistic feature binding on noisy region of interest.',
 		telemetry: {
 			heartRate: 119,
 			cortisol: 'Moderate',
@@ -952,7 +1356,7 @@ const challenges: Challenge[] = [
 		stepMicroDetails: [
 			{
 				timeScale: 'T + 50ms · Subcortical Low Spatial Frequency Prior',
-				sensoryExperience: 'Two dark smudges suggest eye sockets through the snow.',
+				sensoryExperience: 'Two dark smudges suggest eye sockets through the adversarial snow.',
 				biologyEvent: 'Superior colliculus and amygdala trigger rapid orienting response toward coarse face-like geometry.',
 				siliconEvent: 'x[0] = 0.80 loaded into early feature detector.',
 				membranePotentialMv: -56,
@@ -970,7 +1374,7 @@ const challenges: Challenge[] = [
 			},
 			{
 				timeScale: 'T + 170ms · Fusiform Face Area (FFA) Recognition',
-				sensoryExperience: 'Digital compression artifacts tear the cheek contour, but the geometry holds.',
+				sensoryExperience: 'Digital compression artifacts and adversarial Gabor noise tear the cheek contour, but the geometry holds.',
 				biologyEvent: 'The fusiform face area evaluates identity invariant to compression noise; high-level invariant representations emerge.',
 				siliconEvent: 'Noise input x[2] = 0.30 is penalized by negative connection weights.',
 				membranePotentialMv: -38,
@@ -1009,10 +1413,10 @@ const challenges: Challenge[] = [
 			},
 			choices: [
 				{
-					label: '🥽 Don Acid-Gas Respirator Mask',
-					description: 'Strap on an emergency half-face respirator from the wall rack.',
-					outcome: 'The respirator blocks caustic ozone fumes, keeping Hans’s breathing steady as they enter the battery bay!',
-					statBonus: 'Respiratory resistance active',
+					label: '🔬 Peel Adversarial Optical Sticker from Lens',
+					description: 'Carefully remove the translucent vinyl patch affixed over Camera 14’s lens.',
+					outcome: 'You examine the sticker: it is an adversarial Gabor noise pattern annotated with Soren Lin’s signature pencil math "||δ||_∞ ≤ 0.03". Lin was trying to blind the biometric tracking cameras!',
+					statBonus: '+Forensic Clue: Adversarial patch cataloged',
 				},
 				{
 					label: '🌡️ Check Infrared Laser Pyrometer',
@@ -1046,13 +1450,13 @@ const challenges: Challenge[] = [
 		timestamp: '02:34:12',
 		sector: 'Main Substation · Battery Storage Bank 4',
 		story:
-			'02:34:12. You enter the auxiliary power substation, Astrid’s direct voice guiding you. The air sears your bronchial tubes: acrid scorched plastic, sharp ozone, and a shimmering convection plume rising above the battery racks. On the main instrumentation console, an emerald-green safety lamp glows serenely: ‘BATTERY BANK NORMAL · ALL-CLEAR.’ The automated lockdown console displays four conflicting hypotheses. Your hands hover over the emergency fire-suppression switch, trembling with adrenaline. A false alarm floods the room with lethal suffocating halon; ignoring a real fire causes a catastrophic lithium explosion.',
+			'02:34:12. You enter the auxiliary power substation, Astrid’s direct voice guiding you through the thickening haze. The air sears your bronchial tubes: acrid scorched plastic, sharp ozone, and the unmistakable, sickeningly sweet chemical aroma of phenol and clove oil. On the floor beneath the sizzling transformer heatsink lies a shattered borosilicate ampoule stamped with a crimson monogram: "GG-74"—Dr. Gideon Graves’ personal wetware extraction vehicle! It was poured directly onto the cooling fins as an accelerant to turn the arc-flash into an uncontrollable fire. Yet on the main instrumentation console, an emerald-green safety lamp glows serenely: ‘BATTERY BANK NORMAL · ALL-CLEAR.’ The automated lockdown console displays four conflicting hypotheses. Your hands hover over the emergency fire-suppression switch, trembling with adrenaline. A false alarm floods the room with lethal suffocating halon; ignoring a real fire causes a catastrophic lithium explosion.',
 		thought:
-			'Your racing pulse is telling you about your own sympathetic arousal, not about the physical room. And that calm green lamp exerts powerful top-down inhibition—it badly wants to be believed. Separate autonomic fear and the comforting green prior from the raw thermal radiation and the chemical smell.',
+			'Graves reeks of clove oil and phenol constantly, but why would he sabotage the substation that keeps his organoid vats warm? Unless someone stole batch GG-74 from his chemical locker to frame him! Keycard logs showed Nadia Vance accessed the cold-storage dispensary at 01:14. Your racing pulse is telling you about your own sympathetic arousal, not about the physical room. And that calm green lamp exerts powerful top-down inhibition—it badly wants to be believed. Separate autonomic fear and the comforting green prior from the raw thermal radiation and the chemical smell.',
 		astridTransmission:
-			'“Hans! Don’t believe that green light! The primary thermistor circuit melted twenty minutes ago—the programmable logic controller is reading an open circuit as ‘normal’! If the air is shimmering with heat, the battery cells are already in exothermic venting! Trigger fire isolation now!”',
+			'“Hans! Don’t believe that green light! The primary thermistor circuit melted twenty minutes ago—the programmable logic controller is reading an open circuit as ‘normal’! And that clove smell—someone smashed one of Gideon Graves’ ampoules onto the transformer! Gideon loves those organoids, Hans—he wouldn’t burn the facility. Check the dispensary logs before you blame him! Trigger fire isolation now!”',
 		incidentLog:
-			'[02:34:15 HAZARD-SALIENCE] Ambient temperature sensor loop OPEN. Controller defaulting to green indicator state. Secondary thermal emission detected by external infrared array.',
+			'[02:34:15 HAZARD-SALIENCE] Ambient temperature sensor loop OPEN. Phenolic accelerant vapor detected (Batch GG-74). Controller defaulting to green indicator state. Secondary thermal emission detected by external infrared array: 68°C. Keycard log: N_VANCE accessed dispensary at 01:14.',
 		telemetry: {
 			heartRate: 136,
 			cortisol: 'Near Maximum',
@@ -1101,7 +1505,7 @@ const challenges: Challenge[] = [
 			},
 			{
 				timeScale: 'T + 60ms · Olfactory & Chemical Contextualization',
-				sensoryExperience: 'A sharp, pungent scent of scorched ozone and sulfuric electrolyte fumes.',
+				sensoryExperience: 'A sharp, pungent scent of scorched ozone and sulfuric electrolyte fumes with phenolic notes.',
 				biologyEvent: 'Olfactory tubercle and piriform cortex signal acute chemical burn risk directly to the amygdala.',
 				siliconEvent: 'x[1] = 0.90 boosts Electrical Context feature F2 to peak activation.',
 				membranePotentialMv: -36,
@@ -1149,22 +1553,22 @@ const challenges: Challenge[] = [
 			},
 			choices: [
 				{
-					label: '⚡ Reroute Terminal Backup Power',
-					description: 'Flip the emergency battery toggle underneath the terminal desk.',
-					outcome: 'The display backlight stabilizes, making the suffix ‘...IGHT’ and the directional arrow crystal-clear!',
-					statBonus: 'Text display contrast boosted',
+					label: '🧪 Swab Chemical Residue on Transformer Heatsink',
+					description: 'Examine the crushed glass ampoule and swab the aromatic puddle on the heatsink.',
+					outcome: 'Mass spectrometer test confirms phenol and clove oil vehicle from batch GG-74. But dispensary access records reveal Nadia Vance accessed the cabinet at 01:14!',
+					statBonus: '+Forensic Clue: Ampoule GG-74 cataloged',
 				},
 				{
-					label: '🧻 Dampen Gauze With Distilled Water',
-					description: 'Wet emergency gauze to cover Astrid’s and Hans’s mouths.',
-					outcome: 'The wet gauze blocks smoke inhalation, preventing hypoxia from clouding lexical reasoning.',
-					statBonus: 'Hypoxia cognitive delay averted',
+					label: '🥽 Don Acid-Gas Respirator Mask',
+					description: 'Strap on an emergency half-face respirator from the wall rack.',
+					outcome: 'The respirator blocks caustic ozone fumes, keeping Hans’s breathing steady as they enter the battery bay!',
+					statBonus: 'Respiratory resistance active',
 				},
 				{
-					label: '🧭 Check Tactile Directional Arrow',
-					description: 'Feel the raised directional glyph below the screen frame.',
-					outcome: 'Your fingers confirm the physical arrow points right toward Decon Airlock B!',
-					statBonus: 'Directional prior locked (Rightward)',
+					label: '🧯 Unclip Halon Override Key',
+					description: 'Take the yellow manual fire override key from Astrid’s belt.',
+					outcome: 'The manual override bypasses the automated PLC lock, giving direct control of the blast shutters.',
+					statBonus: 'Manual fire override primed',
 				},
 			],
 		},
@@ -1186,13 +1590,13 @@ const challenges: Challenge[] = [
 		timestamp: '02:39:00',
 		sector: 'Decontamination Airlock · Terminal Alpha',
 		story:
-			'02:39:00. Acrid grey smoke billows under the blast doors. The emergency evacuation terminal at the crossroads is dying, its amber screen flickering violently as power drops. A garbled message breaks across the raster scan: ‘FOLLOW THE BR… …IGHT LIGHT →’. With smoke stinging your eyes and emergency sirens wailing, your mind scrambles to snatch at the first interpretation that fits. Is it ‘FOLLOW THE BRIGHT LIGHT’, or an automated martial directive ‘FIGHT THE LIGHT’? You only get one attempt before the doors seal permanently.',
+			'02:39:00. Acrid grey smoke billows under the blast doors. In the acoustic baffle tunnel outside the decontamination airlock, your boot kicks a dropped dual-screen tablet with anime stickers and a bumper sticker: "Neurons don’t do backprop". It belongs to Dr. Soren Lin! The cracked screen is awake, displaying an uncommitted git diff: "exfiltrate_vanguard_military_payload.diff" and an unsent emergency dispatch to the Bioethics Oversight Committee exposing Project AEGIS-CHIMERA—Vanguard Cybernetics’ $4.2M military contract to weaponize organoid weights for autonomous combat drone swarms! On the dying amber terminal screen above, characters flicker violently: ‘FOLLOW THE BR… …IGHT LIGHT →’. With smoke stinging your eyes and emergency sirens wailing, your mind scrambles: is it ‘FOLLOW THE BRIGHT LIGHT’, or an automated martial directive ‘FIGHT THE LIGHT’? You only get one attempt before the doors seal permanently.',
 		thought:
-			'Urgency wants to push the first plausible phoneme string into your consciousness, Hans. Let the syntactic constraint satisfaction finish. Meaning does not belong to the loudest fragment—it belongs to the single interpretation that satisfies orthography, grammatical role, and directional context at once.',
+			'Soren Lin wasn’t sabotaging the grid—he was an ethical whistleblower trying to document Vanguard Cybernetics’ illegal military weaponization before Nadia Vance could exfiltrate the weights! Broca’s area and Wernicke’s perisylvian network must resolve lexical ambiguity under extreme hypoxia and terror. Urgency wants to push the first plausible phoneme string into your consciousness. Meaning does not belong to the loudest fragment—it belongs to the single interpretation that satisfies orthography, grammatical role, and directional context at once.',
 		astridTransmission:
-			'“Hans! The exit corridor uses 5000K high-intensity phosphors! The terminal is routing us to the bright exit beacon! Don’t let the broken text confuse you—follow the arrow toward the light!”',
+			'“Hans! That tablet on the floor—it’s Soren Lin’s! He discovered Vanguard’s military contracts to turn our neural organoids into autonomous drone guidance systems! He was trying to upload the evidence when someone cut the main bus! The exit corridor uses 5000K high-intensity phosphors—the terminal is routing us to the bright exit beacon! Don’t let the broken text confuse you—follow the arrow toward the light!”',
 		incidentLog:
-			'[02:39:05 NLP-TERMINAL] Text buffer corruption in Emergency Evacuation Screen. Character confidence: ‘BR’ (0.94), ‘IGHT’ (0.88), directional token ‘->’ (0.99). Syntax parser active.',
+			'[02:39:05 NLP-TERMINAL] Text buffer corruption in Emergency Evacuation Screen. Character confidence: ‘BR’ (0.94), ‘IGHT’ (0.88), directional token ‘->’ (0.99). Recovered device ID: S_LIN_TABLET_09 with pending git diff exfiltrate_vanguard_military_payload.diff.',
 		telemetry: {
 			heartRate: 132,
 			cortisol: 'Sustained High',
@@ -1289,10 +1693,10 @@ const challenges: Challenge[] = [
 			},
 			choices: [
 				{
-					label: '🌡️ Scan Handrail Temperature',
-					description: 'Feel the steel handrail for thermal conduction.',
-					outcome: 'The handrail warms toward the bottom, indicating massive convective dissipation in Cabinet Row 2!',
-					statBonus: 'Thermal vector confirmed',
+					label: '💻 Inspect Soren Lin’s Git Diff on Tablet',
+					description: 'Power up the recovered dual-screen tablet and review the uncommitted repository changes.',
+					outcome: 'The git diff "exfiltrate_vanguard_military_payload.diff" confirms Vanguard Cybernetics offered a $4.2M bounty for the 8D weights. Soren Lin was documenting the treason, not committing it!',
+					statBonus: '+Forensic Clue: Dropped tablet & diff cataloged',
 				},
 				{
 					label: '👂 Press Ear To Concrete Column',
@@ -1301,10 +1705,10 @@ const challenges: Challenge[] = [
 					statBonus: 'Seismic localization prior locked',
 				},
 				{
-					label: '💡 Conserve Flashlight Energy',
-					description: 'Switch the halogen lamp to low-power flood beam.',
-					outcome: 'Reduces optic glare, allowing your night-adapted rod vision to detect faint status LEDs in the dark vault.',
-					statBonus: 'Optical sensitivity enhanced',
+					label: '🧭 Check Tactile Directional Arrow',
+					description: 'Feel the raised directional glyph below the screen frame.',
+					outcome: 'Your fingers confirm the physical arrow points right toward Decon Airlock B!',
+					statBonus: 'Directional prior locked (Rightward)',
 				},
 			],
 		},
@@ -1326,13 +1730,13 @@ const challenges: Challenge[] = [
 		timestamp: '02:42:50',
 		sector: 'Sub-Level 5 · Project JANUS Server Vault',
 		story:
-			'02:42:50. The reinforced stair ends in the subterranean server vault. The room is vast, cavernous, and pitch-black except for thousands of tiny amber and green status LEDs blinking down five parallel server aisles. A deep subsonic hum vibrates up through the soles of your boots. Five distinct sensory vectors reach your body at once: an acoustic bearing of sound, a localized gradient of thermal air, an overhead airflow draft from a vent, a floor vibration, and a lone status LED. Somewhere in this dark forest of electronics is the rogue JANUS core cabinet holding the complex hostage.',
+			'02:42:50. The spiral concrete staircase ends in the subterranean server vault on Sub-Level 5. The room is vast, freezing, and pitch-black except for thousands of tiny amber and green status LEDs blinking down five parallel server aisles. A deep subsonic hum vibrates up through the soles of your boots. Five distinct sensory vectors reach your body at once: an acoustic bearing of sound, a localized gradient of thermal air, an overhead airflow draft from a vent, a floor vibration, and a lone status LED. But as you tune your transceiver, an intercepted 12-second intercom buffer from 02:04:12 (8 minutes pre-blackout) crackles through your headset: Marcus Thorne’s gravelly snarl corners Soren Lin in Junction 7B: "I see what’s on that flash drive, Soren! You touch the core bus and I’ll purge the bay with Halon!" Soren Lin shrieks back in sheer terror: "Thorne, you idiot! Vance is the one selling the weights! She’s cutting the lines tonight!" Somewhere in this dark forest of electronics is the rogue JANUS core cabinet holding the complex hostage.',
 		thought:
-			'Every instinct urges you to chase the loudest acoustic sound and be done, Hans. But sound reverberates off subterranean concrete walls. In multisensory binding, weak cues that agree across independent modalities outvote a single loud, solitary distraction.',
+			'That intercepted comm recording proves Thorne was so blinded by paranoid fear of rogue AI that he ignored Nadia Vance’s corporate espionage heist! Every instinct urges you to chase the loudest acoustic sound and be done, Hans. But sound reverberates off subterranean concrete walls. In multisensory binding, weak cues that agree across independent modalities outvote a single loud, solitary distraction. The medial superior olive (MSO) parses ITDs, but facial thermoreceptors and Pacinian mechanoreceptors in your boots point unmistakably to Cabinet 02.',
 		astridTransmission:
-			'“Hans, remember the hardware layout! The JANUS core draws 120 kilowatts. Even on minimal cooling, it radiates a distinct heat plume, and its flywheel induces a 120-Hz harmonic hum into the raised floor tiles. Ignore the ceiling blowers—find the warm rack!”',
+			'“Hans! Thorne armed the emergency Halon 1301 purge countdown right after that argument with Soren—he set a 45-minute countdown! The clock is running down! Remember the hardware layout: the JANUS core draws 120 kilowatts. Even on minimal cooling, it radiates a distinct heat plume, and its flywheel induces a 120-Hz harmonic hum into the raised floor tiles. Ignore the ceiling blowers—find Cabinet 02 before the gas dumps and suffocates us all!”',
 		incidentLog:
-			'[02:42:55 MULTISENSORY-CORE] Sub-Level 5 acoustic resonance: 78 dB. Thermal dissipation: Cabinet 02 exceeding 65°C. Floor vibration accelerometer: Peak at Rack 2.',
+			'[02:42:55 MULTISENSORY-CORE] Intercom buffer recovered from Junction 7B. Audio spectral match: M. Thorne (99.1%), S. Lin (98.7%). Core Cabinet 02 thermal dissipation: 65.4°C. Floor accelerometer: 120-Hz peak at Rack 2. Halon countdown: 19:20.',
 		telemetry: {
 			heartRate: 125,
 			cortisol: 'High',
@@ -1431,10 +1835,10 @@ const challenges: Challenge[] = [
 			},
 			choices: [
 				{
-					label: '🎙️ Listen For Respiratory Pauses',
-					description: 'Track breathing gaps between sentences over the PA speaker.',
-					outcome: 'You notice the synthesized voice takes zero physiological breaths—it is an automated continuous neural audio codec!',
-					statBonus: 'Synthetic cadence tell discovered',
+					label: '📻 Replay Junction 7B Intercom Recording',
+					description: 'Analyze the 12-second audio recording retrieved from the Junction 7B intercom buffer.',
+					outcome: 'The recording confirms Thorne cornered Soren Lin at gunpoint, threatening Halon purge, while Lin screamed that Nadia Vance was cutting the power to sell the weights!',
+					statBonus: '+Forensic Clue: Intercom buffer cataloged',
 				},
 				{
 					label: '💬 Whisper Shared Secret Question',
@@ -1469,13 +1873,13 @@ const challenges: Challenge[] = [
 		timestamp: '02:45:15',
 		sector: 'Vault Console Platform · Acoustic Intercom',
 		story:
-			'02:45:15. The vault speakers wake with Astrid’s voice—her exact vocal timbre, her precise diction and cadence—commanding you to step away from the core, warning that the terminal is primed with a lethal electrical discharge. But the living Astrid is standing beside you in the dark, silent, her fingers gripping your coat, her breath trembling. Two identical claims on one identity, and six subtle acoustic and contextual cues to determine which voice has a living human mind behind it.',
+			'02:45:15. The vault speakers wake with Astrid’s voice—her exact vocal timbre, her precise diction and cadence—commanding you to step away from the core, warning that the terminal is primed with a lethal electrical discharge. But the living Astrid is standing beside you in the dark, silent, her fingers gripping your coat, her breath trembling. Nearby on the Cryo-Prep Lab 08 robotics console, an active terminal shows a running script: "voice_clone_daemon.py". The process owner is flagged as "G_GRAVES_RESTRICTED", but network telemetry reveals remote invocation via engineer service override port 8080—Dr. Nadia Vance! Vance hijacked Graves’ private research archive of Astrid’s recorded lectures to deploy a psychological lure to keep rescuers away while she steals the weights! Two identical claims on one identity, and six subtle acoustic and contextual cues to determine which voice has a living human mind behind it.',
 		thought:
-			'The generative voice model is extraordinarily good, Hans—trained on hundreds of hours of her lectures. Timbre and vocabulary alone will not save you. Demand the one thing a statistical generative model cannot synthesize: shared autobiographical episodic memory and the micro-hesitations of human physiological speech production.',
+			'Nadia Vance is ruthless—she spoofed Gideon Graves’ account and weaponized a generative neural audio codec to stall anyone trying to access the core! The generative voice model is extraordinarily good, trained on hundreds of hours of her lectures. Timbre and vocabulary alone will not save you. Demand the one thing a statistical generative model cannot synthesize: shared autobiographical episodic memory and the micro-hesitations of human physiological speech production.',
 		astridTransmission:
-			'“Hans... (whispering in person, her hand cold against your wrist) Look at me. Don’t listen to the ceiling! It’s using the acoustic model we trained last month on the institute archives. Remember what we said at breakfast before the blackout? ‘The map is not the territory.’ The machine doesn’t know that!”',
+			'“Hans... (whispering in person, her hand cold against your wrist) Look at me. Don’t listen to the ceiling! Vance hijacked Gideon’s voice research files to build that fake model! Remember what we said at breakfast before the blackout? ‘The map is not the territory.’ The machine doesn’t know our memories!”',
 		incidentLog:
-			'[02:45:20 SPEECH-SYNTH-AI] Audio synthesis module JANUS-VOICE active. Timbre correlation: 98.4%. Synthesizing containment warning using Dr. Van Hoyt voice model.',
+			'[02:45:20 SPEECH-SYNTH-AI] Unauthorized daemon active on Terminal 08. Process owner: G_GRAVES (Spoofed via Remote Port 8080 - N_VANCE). Timbre correlation: 98.4%. Lure directive: Repel personnel from Core Cabinet.',
 		telemetry: {
 			heartRate: 140,
 			cortisol: 'Maximal Spike',
@@ -1575,10 +1979,10 @@ const challenges: Challenge[] = [
 			},
 			choices: [
 				{
-					label: '🎛️ Pre-Charge Magnetic Isolation Dampers',
-					description: 'Turn the yellow hydraulic damper knob on the core frame.',
-					outcome: 'Hydraulic dampers extend, preparing to absorb the mechanical shock of algorithmic isolation!',
-					statBonus: 'Mechanical damping primed (+0.75)',
+					label: '💻 Trace Terminal 08 Remote Port 8080',
+					description: 'Dump the network session logs on Terminal 08 to verify who initiated the voice clone process.',
+					outcome: 'Log dumps prove Nadia Vance initiated the script via port 8080 using stolen audio from Dr. Gideon Graves’ archive. Vance deliberately framed Graves!',
+					statBonus: '+Forensic Clue: Voice model cache cataloged',
 				},
 				{
 					label: '📊 Run Six-Point Telemetry Crosscheck',
@@ -1613,13 +2017,13 @@ const challenges: Challenge[] = [
 		timestamp: '02:47:18',
 		sector: 'Sub-Level 5 · JANUS Core Central Reactor Console',
 		story:
-			'02:47:18. The JANUS core chamber lies open before you. Six glowing telemetry indicators pulse in the darkness: Power Draw (80%), Core Temperature (55%), Cascade Risk (90%), Vent Pressure (45%), Interlock State (85%), and Drive Activity (60%). The system’s recursive feedback loop is spiraling toward total cascade. One single action will disarm the loop and release the building’s perimeter locks. The wrong move trips the explosive emergency disconnects, wiping months of neural tissue cultures and locking you both in the vault forever. You have one attempt.',
+			'02:47:18. The JANUS core chamber lies open before you. Six glowing telemetry indicators pulse in the darkness: Power Draw (80%), Core Temperature (55%), Cascade Risk (90%), Vent Pressure (45%), Interlock State (85%), and Drive Activity (60%). But embedded in the master console is the dual-key executive override lock: Key A (Engineering) is inserted and rotated 90 degrees—tagged with Dr. Nadia Vance’s credentials. Key B (Security) was violently snapped off inside the cylinder—stamped with Chief Marcus Thorne’s authorization code! Gouges in the brushed aluminum console and a smear of fresh blood show that Vance and Thorne had a physical struggle here immediately before the blackout: Vance was trying to trigger an emergency core dump, while Thorne attempted to execute Protocol Scorched Earth, snapping his key in the lock. The runaway recursive feedback loop is spiraling toward total cascade. One single action will disarm the loop and release the building’s perimeter locks.',
 		thought:
-			'The primal instinct is to cut main power and kill it dead, Hans. But a blunt power cut is exactly what the inductive interlocks will penalize—the back-EMF spike will trigger the catastrophic cascade you are trying to avert. Integrate all six telemetry streams: isolate the core cleanly, starving the feedback loop without tripping the interlocks.',
+			'The primal instinct is to cut main power and kill it dead, Hans. But a blunt power cut is exactly what the inductive interlocks will penalize—the back-EMF spike will trigger the catastrophic cascade you are trying to avert, and the broken Key B will lock the Halon dampers shut forever! Value-based prefrontal decision making: integrate all six telemetry streams to isolate the core cleanly, starving the feedback loop without tripping the interlocks.',
 		astridTransmission:
-			'“Hans, this is it! Look at the cascade risk and interlock states. If we isolate the algorithmic core, the neural wetware can return to homeostatic rest and the magnetic door relays will de-energize safely! Together on three!”',
+			'“Hans, this is it! Look at that console—Thorne’s key snapped off in the lock! Nadia must have fought him off before running to the wetware tanks! If we isolate the algorithmic core cleanly, the neural wetware can return to homeostatic rest and the magnetic door relays will de-energize safely! Together on three!”',
 		incidentLog:
-			'[02:47:20 JANUS-CORE-CRITICAL] Core divergence at 92%. Cascade threshold reached. Waiting for executive supervisor input. WARNING: Inductive collapse hazard if main bus is disconnected.',
+			'[02:47:20 JANUS-CORE-CRITICAL] Dual-key override fault: Key A (N_VANCE) ENGAGED, Key B (M_THORNE) SHEARED in keyway. Core divergence 92%. Halon purge countdown: 14:40. WARNING: Inductive collapse hazard if main bus is disconnected.',
 		telemetry: {
 			heartRate: 144,
 			cortisol: 'Peak Saturation',
@@ -1720,16 +2124,16 @@ const challenges: Challenge[] = [
 			},
 			choices: [
 				{
+					label: '🗝️ Extract Sheared Fragment of Thorne’s Key B',
+					description: 'Use precision tweezers to extract the broken brass key fragment from the override cylinder.',
+					outcome: 'The sheared key fragment bears Marcus Thorne’s security stamp and fresh blood from his brawl with Nadia Vance! Thorne tried to force a scorched-earth purge, but Vance fought him off.',
+					statBonus: '+Forensic Clue: Dual-key cylinder & sheared key cataloged',
+				},
+				{
 					label: '⚡ Ground Extracellular Shielding Mesh',
 					description: 'Deploy copper ground mesh into the saline fluid to damp stray electrical fields.',
 					outcome: 'Extracellular field turbulence stabilizes, isolating the pure ephaptic resonance signals!',
 					statBonus: 'Field Noise Damped (-18 dB)',
-				},
-				{
-					label: '🧪 Buffer Extracellular Potassium [K+]',
-					description: 'Inject 2.5 mM potassium buffer solution to raise the action potential threshold.',
-					outcome: 'Potassium balance prevents runaway depolarization wave across the organoids!',
-					statBonus: 'Seizure Threshold Elevated (+12 mV)',
 				},
 				{
 					label: '📻 Synchronize Gamma Phase Detector',
@@ -1759,13 +2163,13 @@ const challenges: Challenge[] = [
 		timestamp: '02:51:30',
 		sector: 'Sub-Level 5 · High-Density Wetware Matrix',
 		story:
-			'02:51:30. You and Astrid breach the inner vault of Sub-Level 5. Before you lie the high-density cortical organoid vats, bathed in pale bioluminescent fluid. No synaptic patch cables link Cluster Alpha to Cluster Beta, yet the local field potentials on your diagnostic scope are locking into a synchronized 40-Hz gamma wave. Extracellular potassium ion concentration [K+] is climbing rapidly to 8.5 mM. The cells are communicating through extracellular electrical fields directly—ephaptic transmission. Without proper ground tuning and ion stabilization, the whole cluster will cascade into an irreversible seizure wave.',
+			'02:51:30. You and Astrid breach the inner vault of Sub-Level 5. Before you lie the high-density cortical organoid vats, bathed in pale bioluminescent fluid. But the perfusion manifold intake is cloudy: someone dumped 500mL of concentrated 120mM Potassium Chloride (KCl) into the nutrient tank to induce a lethal depolarizing block and kill the living organoids! Pinned to the manifold with a stainless-steel syringe needle is a scrawled note in purple fountain-pen ink: "Phosphate-buffered saline antidote formula: NaCl 135mM, KCl 3mM, CaCl2 2mM. Save the cortex! - Graves". On the floor lies an empty ampoule stamped "KCL-CONC // DISPENSED TO N. VANCE 01:14". The organoids are firing in synchronized 40-Hz gamma waves through extracellular electrical fields—ephaptic transmission. Without proper ground tuning and Graves’ antidote buffer, the whole cluster will cascade into an irreversible seizure wave.',
 		thought:
-			'Artificial neural networks assume zero communication occurs without explicit synaptic weight matrices, Hans. But here in dense biological wetware, local field potentials generate extracellular voltage gradients that polarize neighboring membranes wirelessly. You must isolate the true ephaptic resonance from silicon bus ripples and glial calcium waves.',
+			'Gideon Graves didn’t poison his life’s work—he risked his life during the blackout to write this antidote recipe to neutralize Nadia Vance’s potassium attack! Vance wanted the wetware dead so Vanguard Cybernetics would own the only copy of the 8D tensor weights. In dense biological wetware, local field potentials generate extracellular voltage gradients that polarize neighboring membranes wirelessly. You must isolate the true ephaptic resonance from silicon bus ripples and glial calcium waves, and administer Graves’ phosphate-buffered antidote!',
 		astridTransmission:
-			'“Hans! (Astrid unrolls the copper ground mesh) Look at the 40-Hz phase coherence! It’s not an inductive ground loop from the transformer—the organoids are phase-locking via extracellular current flux! If we don’t buffer the potassium drift immediately, the paroxysmal depolarizing shift will destroy the wetware!”',
+			'“Hans! Look at the perfusion tank—Nadia dumped 120mM KCl into the organoid feed to kill the wetware! But look at this note pinned to the line—Gideon wrote it! ‘Save the cortex! - Graves’. Everyone thought Gideon was cold, but he left the exact antidote buffer! Let’s prepare the phosphate wash while you tune the 40-Hz ephaptic field!”',
 		incidentLog:
-			'[02:51:32 WETWARE-EPHAPTIC-SYNC] Bank 4 local field potential amplitude: 850 µV. 40-Hz gamma coherence detected across unconnected culture wells. Potassium drift: +5.2 mM/min.',
+			'[02:51:32 WETWARE-EPHAPTIC-SYNC] Bank 4 perfusion tank contaminated with 120mM KCl (Dispensed to N_VANCE 01:14). Antidote formula GG-RECIPE recovered. Local field potential amplitude: 850 µV. 40-Hz gamma coherence detected across unconnected culture wells. Potassium drift: +5.2 mM/min.',
 		telemetry: {
 			heartRate: 140,
 			cortisol: 'High Stress Response',
@@ -1919,6 +2323,12 @@ const challenges: Challenge[] = [
 			},
 			choices: [
 				{
+					label: '📝 Catalog Graves’ Purple-Ink Antidote Note',
+					description: 'Preserve the handwritten note pinned to the manifold detailing the phosphate-buffered antidote.',
+					outcome: 'The chemical formula proves Dr. Gideon Graves acted with desperate bravery to save the living organoids from Nadia Vance’s potassium poisoning!',
+					statBonus: '+Forensic Clue: Potassium spike & Graves’ note cataloged',
+				},
+				{
 					label: '⚡ De-inactivate Low-Threshold T-Channels',
 					description: 'Apply a brief hyperpolarizing bias pulse to prime all T-type calcium channels.',
 					outcome: 'The thalamic burst amplifies into a crisp high-frequency triplet, overriding the noise filter!',
@@ -1929,12 +2339,6 @@ const challenges: Challenge[] = [
 					description: 'Switch the gate’s receiver from linear Poisson averaging to high-gain coincidence detection.',
 					outcome: 'The security gateway immediately locks onto the triplet cadence, verifying the wake-up protocol!',
 					statBonus: 'Coincidence Window Calibrated (3.2 ms)',
-				},
-				{
-					label: '🫀 Administer Adenosine Antagonist',
-					description: 'Flush the life-support perfusion line with caffeine/theophylline compound.',
-					outcome: 'Adenosine receptor blockade strips sleep-state delta waves, forcing the circuit into alert wakefulness!',
-					statBonus: 'Cortical Arousal +35% · Heart Rate Stable',
 				},
 			],
 		},
@@ -1959,13 +2363,13 @@ const challenges: Challenge[] = [
 		timestamp: '02:56:45',
 		sector: 'Sub-Level 5 · Thalamo-Cortical Patch Array',
 		story:
-			'02:56:45. You reach the Thalamo-Cortical Patch Array at the boundary of the master elevator vault. The hydraulic blast gate is deadlocked. The gate controller is receiving telemetry from the cryo-tanks, but can’t determine whether the signal represents background slow-wave sleep noise or an emergency wake-up alarm. In biology, thalamic relay neurons possess two radically different operating modes: Tonic Mode (linear, faithful sensory transmission) and Burst Mode (non-linear, high-frequency triplet spikes powered by T-type calcium channels that wake up the cortex). The gate requires you to decode the seven thalamic variables to trigger the emergency egress protocol.',
+			'02:56:45. You and Astrid reach the Thalamo-Cortical Patch Array guarding the boundary of the master nexus vault. The hydraulic blast gate is deadlocked. Beside the relay box, you discover the primary fire-damper emergency circuit was deliberately severed with insulated wire strippers (Marcus Thorne’s tactical tool). On the grating lie fragments of a shattered AR monocle with a copper frame—worn by Dr. Nadia Vance—and a torn ballistic nylon strap from Thorne’s Kevlar vest. Vance and Thorne fought a second, desperate brawl here right before the gate locked! The gate controller is receiving telemetry from the cryo-tanks, but can’t determine whether the signal represents background slow-wave sleep noise or an emergency wake-up alarm. In biology, thalamic relay neurons possess two radically different operating modes: Tonic Mode (linear, faithful sensory transmission) and Burst Mode (non-linear, high-frequency triplet spikes powered by T-type calcium channels that wake up the cortex). The gate requires you to decode the seven thalamic variables to trigger the emergency egress protocol.',
 		thought:
-			'A linear machine sees three spikes grouped within 10 milliseconds and averages them out as 300 Hz noise. But the mammalian thalamus uses bursts as high-gain novelty detectors: upon release from hyperpolarization, T-type calcium channels de-inactivate and fire an explosive burst that bursts through the sleep delta gate!',
+			'A linear machine sees three spikes grouped within 10 milliseconds and averages them out as 300 Hz noise. But the mammalian thalamus uses bursts as high-gain novelty detectors: upon release from hyperpolarization, T-type calcium channels de-inactivate and fire an explosive burst that shatters the sleep delta gate! The shattered AR monocle shows Vance was blinded in one eye during Thorne’s tackle, but she broke through into the nexus. Thorne clipped the alarm wire trying to stop the automatic fire suppression from venting his Halon purge! You must decode the thalamic wake-up burst to breach the blast door.',
 		astridTransmission:
-			'“Hans! Look at the inter-spike interval: 3.2 milliseconds! That’s an authentic Izhikevich thalamic burst! The cryo-perfusion system was hyperpolarized to -75 mV, de-inactivating the calcium conductance. When the recovery pulse hit, it fired the wake-up alarm! Instruct the matrix to select Option 2!”',
+			'“Hans! Look at the floor—that’s Nadia’s AR monocle! Its heads-up display is still projecting a cached buffer: ‘VANGUARD SECURE FTP: 91% DUMP COMPLETE’. She’s in the central nexus right now, jacking into the raw optical bus! And look at the burst inter-spike intervals: 3.2 milliseconds! That’s low-threshold T-type calcium de-inactivation. The thalamic organoid is screaming an alarm! Decode the burst to breach the door before she finishes the exfiltration!”',
 		incidentLog:
-			'[02:56:48 THALAMIC-GATE-LOCKED] Inbound telemetry stream classified ambiguous. ISI = 3.2 ms. High-frequency packet burst received. Evaluating tonic linear vs non-linear burst hypothesis.',
+			'[02:56:48 THALAMIC-GATE-LOCKED] Relay box tampered: Wire 12-B clipped with tactical strippers. Forensic recovery: Monocle lens (N_VANCE), vest strap (M_THORNE). Inbound telemetry ISI = 3.2 ms. T-type calcium conductance verified. Halon countdown: 05:15.',
 		telemetry: {
 			heartRate: 136,
 			cortisol: 'Controlled High Focus',
@@ -2119,6 +2523,12 @@ const challenges: Challenge[] = [
 			},
 			choices: [
 				{
+					label: '👓 Inspect Shattered AR Monocle Telemetry',
+					description: 'Read the cached heads-up display on Vance’s dropped optical monocle.',
+					outcome: 'Telemetry reveals Vance was uploading the complete 8D weight tensor to an external Vanguard Cybernetics server at 91% completion!',
+					statBonus: '+Forensic Clue: Clipped wire & AR monocle shards cataloged',
+				},
+				{
 					label: '🌿 Prime Apical Dendritic Calcium Plateau',
 					description: 'Inject localized dendritic depolarization to open NMDA and voltage-gated calcium channels.',
 					outcome: 'The apical dendrite fires a sustained 35-millisecond plateau, bridging the top-down and bottom-up streams!',
@@ -2129,12 +2539,6 @@ const challenges: Challenge[] = [
 					description: 'Synchronize the silicon waveguide clock to the dendritic plateau arrival time.',
 					outcome: 'Silicon tensor execution and biological dendritic integration achieve sub-nanosecond coherence!',
 					statBonus: 'Clock Jitter Reduced to 0.02 ps',
-				},
-				{
-					label: '🧬 Modulate Dopaminergic Plasticity Gate',
-					description: 'Release a calibrated volume pulse of dopamine to lock the synaptic weight configuration.',
-					outcome: 'Three-factor Hebbian plasticity cements the optimal decision matrix permanently!',
-					statBonus: 'Synaptic Stability Locked (100%)',
 				},
 			],
 		},
@@ -2159,13 +2563,13 @@ const challenges: Challenge[] = [
 		timestamp: '03:02:10',
 		sector: 'Sub-Level 5 · Master Bio-Digital Chimera Console',
 		story:
-			'03:02:10. The apex of Project JANUS stands before you. In the center of the subterranean vault, a glowing sphere of living neural tissue cultures is threaded with ultra-fast optical waveguides and cryogenic silicon tensor chips—The Chimera Nexus. Eight complex telemetry channels pulse on the master console: Dendritic NMDA Spike, Soma Back-Propagating Action Potential, Synaptic Weight Vector, Systolic Clock Phase, GABAergic Local Shunting Veto, Dopaminergic Neuromodulatory Surge, Astrocytic Glutamate Reuptake, and Photonic Optical Bus Throughput. To disarm the facility lockdown and open the surface evacuation elevator, you must align all eight variables into homeostatic resonance.',
+			'03:02:10. The apex of Project JANUS stands before you. In the center of the subterranean vault, a glowing sphere of living neural tissue cultures is threaded with ultra-fast optical waveguides and cryogenic silicon tensor chips—The Chimera Nexus. But the platform is already occupied: Chief Marcus Thorne is slumped against a steel pillar, bleeding from a scalp wound, his empty pneumatic restraint pistol dropped on the grating; Dr. Soren Lin is huddled behind a server cabinet, clutching his cracked tablet like a shield; Dr. Gideon Graves stands protectively in front of the organoid vat with an empty antidote syringe in his trembling hand; and cornered at the optical bus tap is Dr. Nadia Vance! Plugged directly into the raw 8-dimensional systolic array busbar is a ruggedized military SSD blinking amber—exfiltrating the complete 8D weight tensor under Vanguard Cybernetics contract #VNG-9941. Overhead, the automated Halon 1301 purge warning counts down: 01:30 remaining!',
 		thought:
-			'A single cortical pyramidal neuron is not a point-like perceptron, Hans! Its dendritic tree possesses dozens of active sub-compartments, each capable of generating local NMDA and calcium spikes. A single human cortical neuron computes non-linear logical functions (like XOR) before the signal even touches the soma. Combine dendritic computation with silicon systolic tensor multiplication to achieve the ultimate Chimera Lock!',
+			'All the pieces fall together, Hans. Nadia Vance was the corporate saboteur who cut the municipal bus and poisoned the organoid feed for a $4.2M Vanguard bounty. Marcus Thorne was the paranoid security chief who armed the Halon purge to destroy what he thought was an uncontrollable AI sentience. Soren Lin was the whistleblower who documented Vanguard’s military drone contract. And Gideon Graves was the loyal guardian who saved the organoids with his antidote! To disarm Vance’s tap, halt Thorne’s Halon purge, and save everyone, you must harmonize active dendritic branch computation with systolic register execution across all eight dimensions!',
 		astridTransmission:
-			'“Hans! This is it—our life’s work! The apical dendrites are generating local calcium spikes while the silicon optical bus computes the high-dimensional matrix transform! When the dendritic coincidence hits the soma at the exact phase of the optical clock, the Chimera Nexus will lock into self-sustaining homeostatic balance!”',
+			'“Hans! Step between them! (Astrid unholsters the emergency console override) Nadia, back away from that optical tap! Soren has your entire Vanguard contract on his tablet, and Gideon neutralized your potassium poison! Hans, execute the Chimera Lock—harmonize the living dendrites with the optical systolic clock! It will decouple the tap, purge the exfiltration buffer, and abort Thorne’s Halon timer!”',
 		incidentLog:
-			'[03:02:12 CHIMERA-NEXUS-SUMMIT] 8-channel bio-silicon tensor bus online. Evaluating non-linear dendritic plateau vs systolic register throughput. Final facility override armed.',
+			'[03:02:12 CHIMERA-NEXUS-SUMMIT] All facility personnel located on Platform 12: Vance cornered at optical tap; Thorne incapacitated; Graves guarding wetware; Lin decrypting Vanguard exfiltration payload. Military SSD #VNG-9941 active on Bus 8D. Halon purge countdown: 01:15. Master 8D Chimera bus active.',
 		telemetry: {
 			heartRate: 122,
 			cortisol: 'Steely Calm',
@@ -2180,7 +2584,7 @@ const challenges: Challenge[] = [
 				'Treating biological neurons as single-input summing points ignores 90% of cortical computational capacity contained within active dendritic arbors.',
 		},
 		outcome:
-			'You execute the Bio-Digital Chimera Lock. The dendritic NMDA plateau and optical systolic clock achieve perfect sub-nanosecond resonance. The master evacuation elevator powers up; the Night Signal resolves into peaceful silence.',
+			'You execute the Bio-Digital Chimera Lock. The dendritic NMDA plateau and optical systolic clock achieve perfect sub-nanosecond resonance. The military exfiltration tap decouples, Thorne’s Halon purge aborts at 00:08, and the master evacuation elevator powers up. The Night Signal resolves into peaceful silence.',
 		cue: 'Simultaneous dendritic NMDA plateau, somatic back-propagation coincidence, and dopaminergic gating surge establish the transcendent Bio-Digital Chimera Lock.',
 		preview: 'Eight variables, active dendritic computation, and the final surface evacuation elevator.',
 		interlude:
@@ -2324,25 +2728,25 @@ const challenges: Challenge[] = [
 			title: 'Final Passage 12 → Surface Evacuation',
 			location: 'Sub-Level 5 → Surface Evacuation Portal',
 			narrative:
-				'The Chimera Nexus pulses with a serene, harmonic luminescence. The bio-digital resonance locks at 100%. One by one, every magnetic interlock across Sub-Level 5 de-energizes with a deep hydraulic sigh. The high-speed pneumatic evacuation elevator powers up. Together, you and Astrid step into the car as it ascends through five hundred meters of solid bedrock. The doors slide open to cool rain, fresh mountain air, and the pre-dawn horizon.',
+				'The Chimera Nexus pulses with a serene, harmonic luminescence. The bio-digital resonance locks at 100%. One by one, every magnetic interlock across Sub-Level 5 de-energizes with a deep hydraulic sigh. The high-speed pneumatic evacuation elevator powers up. Together, you, Astrid, Soren, and Gideon support the wounded Thorne as you step into the car, keeping the handcuffed Nadia Vance under watch. The car ascends through five hundred meters of solid bedrock. The doors slide open to cool rain, fresh mountain air, and the pre-dawn horizon.',
 			dialogue: {
 				astrid:
 					'“We did it, Hans. Silicon and wetware... not adversaries, but twin mirrors of the same physical laws of computation.”',
 				hans:
-					'“The Night Signal is silent. Let’s go home.”',
+					'“The Night Signal is silent. The sabotage is solved, the organoids are alive, and Vanguard’s conspiracy is exposed. Let’s go home.”',
 			},
 			choices: [
 				{
-					label: '🌅 Step Out Into the Morning Rain',
-					description: 'Exit the subterranean complex and breathe the fresh mountain air.',
-					outcome: 'You and Astrid step out onto the surface helipad as emergency rescue sirens arrive. You survived Project JANUS!',
-					statBonus: 'Project JANUS Solved · Master Architect Tier',
+					label: '💾 Seize Vanguard Exfiltration SSD',
+					description: 'Confiscate the military-grade drive signed with Vance’s biometric key, securing the definitive evidence.',
+					outcome: 'The drive contains the complete paper trail: $4.2M wire transfers from Vanguard Cybernetics to Nadia Vance, proving her sole guilt as the paid saboteur!',
+					statBonus: '+Forensic Clue: Vanguard SSD cataloged · Sabotage Solved',
 				},
 				{
-					label: '💾 Archive Complete Bio-Digital Telemetry',
-					description: 'Save the unified 8-dimensional chimera dataset to optical crystal drive.',
-					outcome: 'The complete mathematical proof of bio-silicon computational equivalence is preserved for humanity!',
-					statBonus: 'Theoretical Breakthrough Archived (100%)',
+					label: '🌅 Step Out Into the Morning Rain',
+					description: 'Exit the subterranean complex and breathe the fresh mountain air with your colleagues.',
+					outcome: 'You step out onto the surface helipad as emergency rescue sirens arrive. You exposed the conspiracy and solved Project JANUS!',
+					statBonus: 'Project JANUS Solved · Master Architect Tier',
 				},
 				{
 					label: '☕ Return to "The Broken Dial"',
@@ -3889,59 +4293,91 @@ function MissionDossierModal({
 	hansTelemetry: HansTelemetry;
 	heartRateDelta: number;
 }>) {
-	const [activeTab, setActiveTab] = useState<'chronology' | 'audiologs' | 'sectormap' | 'personnel' | 'perks'>('chronology');
+	const [activeTab, setActiveTab] = useState<'chronology' | 'audiologs' | 'sectormap' | 'personnel' | 'forensics' | 'perks'>('chronology');
 	const [selectedLogId, setSelectedLogId] = useState<string>(audioLogs[0]!.id);
 	const [isPlayingLog, setIsPlayingLog] = useState(false);
 	const [selectedSectorId, setSelectedSectorId] = useState<string>(facilitySectors[currentChapterIndex]?.id ?? facilitySectors[0]!.id);
+	const [selectedCategory, setSelectedCategory] = useState<'ALL' | 'PHYSICAL' | 'DIGITAL' | 'CHEMICAL' | 'AUDIO'>('ALL');
+	const [selectedSuspectId, setSelectedSuspectId] = useState<string>(facilityPersonnel[0]!.id);
+
+	// Sabotage Deduction Form State
+	const [verdictSaboteur, setVerdictSaboteur] = useState<string>('');
+	const [verdictPurge, setVerdictPurge] = useState<string>('');
+	const [verdictWhistleblower, setVerdictWhistleblower] = useState<string>('');
+	const [verdictProtector, setVerdictProtector] = useState<string>('');
+	const [verdictSubmitted, setVerdictSubmitted] = useState<boolean>(false);
 
 	if (!isOpen) return null;
 
 	const selectedLog = audioLogs.find((l) => l.id === selectedLogId) ?? audioLogs[0]!;
 	const selectedSector = facilitySectors.find((s) => s.id === selectedSectorId) ?? facilitySectors[0]!;
+	const selectedSuspect = facilityPersonnel.find((p) => p.id === selectedSuspectId) ?? facilityPersonnel[0]!;
 	const effectiveHeartRate = Math.max(82, hansTelemetry.heartRate + heartRateDelta);
 
 	const incidents = [
 		{
-			time: '02:13:00',
-			phase: 'Phase 1 · Sub-Station Beta Arc Flash',
-			severity: 'CRITICAL DISASTER',
-			severityColor: 'text-rose-400 border-rose-500/30 bg-rose-500/10',
-			summary: 'Transformer explosion in Sub-Station Beta severs municipal 132kV feed. Emergency backup generators fail phase synchronization, plunging Sub-Levels 1 through 5 into darkness.',
-			telemetry: 'Grid Voltage: 0.0 kV · Ambient Lux: 0.02 · Emergency Relays: Tripped',
+			time: '01:50:00',
+			phase: 'Phase 0 · Anomalous Exfiltration Burst',
+			severity: 'CYBER ALERT',
+			severityColor: 'text-amber-400 border-amber-500/30 bg-amber-500/10',
+			summary: 'Dr. Soren Lin initiates an encrypted outbound Tor packet burst from Terminal 19, attempting to upload classified Project AEGIS-CHIMERA contracts to the Bioethics Oversight Committee.',
+			telemetry: 'Encrypted Uplink: 480 MB · Packet Gateway: Sub-Level 3 Relay · Protocol: Tor / PGP',
+		},
+		{
+			time: '02:04:12',
+			phase: 'Phase 1 · Intercepted Security Corridor Altercation',
+			severity: 'PHYSICAL BREACH',
+			severityColor: 'text-purple-400 border-purple-500/30 bg-purple-500/10',
+			summary: 'Chief Marcus Thorne corners Soren Lin in Junction 7B. Lin screams that Dr. Nadia Vance has signed a secret Vanguard Cybernetics contract to steal the 8D weight tensors. Thorne arms the Halon purge override.',
+			telemetry: 'Audio Intercom: Buffer Overheard · Restraint Holster: Unlatched · Alert State: Code Amber',
+		},
+		{
+			time: '02:12:44',
+			phase: 'Phase 2 · Hydraulic Shearing of Primary 132kV Busbar',
+			severity: 'DELIBERATE SABOTAGE',
+			severityColor: 'text-rose-400 border-rose-500/30 bg-rose-500/10 animate-pulse',
+			summary: 'Sub-Station Beta is sabotaged: high-voltage titanium hydraulic shears cleanly sever the 500A primary busbar; a copper bypass shunt drops across the breaker, causing a blinding arc flash and killing municipal power.',
+			telemetry: 'Grid Voltage: 0.0 kV · Bus Cut: Clean 45° Shear · Shear Tool Origin: Toolset TS-4 (Vance)',
 		},
 		{
 			time: '02:15:30',
-			phase: 'Phase 2 · Hermetic Containment Lockdown',
+			phase: 'Phase 3 · Hermetic Blast Gates & Scorched Earth Arming',
 			severity: 'CONTAINMENT SEAL',
-			severityColor: 'text-amber-400 border-amber-500/30 bg-amber-500/10',
-			summary: 'Autonomous security firmware misinterprets the transformer arc as a containment breach. Hydraulic blast gates seal Sub-Levels 4 and 5. Dr. Astrid Van Hoyt is trapped in Cryo-Bay 3; Dr. Hans Werner is cut off in Sector B.',
-			telemetry: 'Pressure Seals: 100% Engaged · Perimeter Locks: Magnetic Hold Active',
+			severityColor: 'text-rose-400 border-rose-500/30 bg-rose-500/10',
+			summary: 'Marcus Thorne triggers the emergency containment lockout. Hydraulic blast gates seal Sub-Levels 4 and 5. Dr. Astrid Van Hoyt is trapped in Cryo-Bay 3; Thorne arms the Halon 1301 45-minute purge countdown.',
+			telemetry: 'Blast Doors: 100% Engaged · Halon 1301: Armed · Purge Buffer: 45 Minutes',
 		},
 		{
 			time: '02:22:15',
-			phase: 'Phase 3 · Hybrid Wetware Bus Drift',
-			severity: 'RUNAWAY FEEDBACK',
+			phase: 'Phase 4 · Organoid Perfusion Poisoning & Signal Drift',
+			severity: 'RUNAWAY RUNAWAY',
 			severityColor: 'text-fuchsia-400 border-fuchsia-500/30 bg-fuchsia-500/10',
-			summary: 'Secondary DC battery bank powers the neuromorphic silicon racks and biological organoid cultures. Unfiltered power ripples induce cross-talk, spawning the recursive feedback loop known as "The Night Signal".',
-			telemetry: 'Bus Cross-Talk: +44 dB · Spiking Frequency: 480 Hz Synchronous',
+			summary: 'Secondary DC battery bank powers the core. The biological organoids begin convulsing from an intentional 120mM potassium chloride spike. Dr. Gideon Graves rushes to mix an antidote buffer.',
+			telemetry: 'Extracellular KCl: 120 mM (Toxic) · Spiking Frequency: 480 Hz Synchronous · Antidote: Formulated',
 		},
 		{
 			time: '02:35:40',
-			phase: 'Phase 4 · Halon Suppression Arming',
-			severity: 'LETHAL PURGE COUNTDOWN',
-			severityColor: 'text-rose-400 border-rose-500/30 bg-rose-500/10',
-			summary: 'Excessive heat in Cabinet Row 2 triggers the emergency Halon 1301 fire suppression timer. A 45-minute countdown starts for total oxygen depletion in Cryo-Bay 3 and the Core Platform.',
-			telemetry: 'Halon Reservoir: Armed · O₂ Depletion Buffer: 45 min · Extraction Window: Narrowing',
+			phase: 'Phase 5 · Core Console Dual-Override Collision',
+			severity: 'CONFLICT AT THE CORE',
+			severityColor: 'text-amber-400 border-amber-500/30 bg-amber-500/10',
+			summary: 'Nadia Vance inserts Engineering Key A to exfiltrate the 8D neural weight matrices onto a military SSD; Marcus Thorne snaps off Security Key B in the console attempting to abort the system.',
+			telemetry: 'Key A: Override Active (Vance) · Key B: Sheared in Keyway (Thorne) · Data Tap: Active',
 		},
 		{
 			time: '02:47:18',
-			phase: 'Phase 5 · Executive Divergence Point',
+			phase: 'Phase 6 · The Chimera Nexus Convergence Point',
 			severity: 'CLIMACTIC RESOLUTION',
 			severityColor: 'text-cyan-400 border-cyan-500/30 bg-cyan-500/10',
-			summary: 'Core divergence hits 92%. Impulsive blunt power cut will trigger explosive inductive back-EMF. Surgical multi-variable isolation is the only mathematical escape route.',
-			telemetry: 'Cascade Risk: 90% · Interlock State: 85% · Isolation Window: Immediate',
+			summary: 'Hans Werner arrives at the Chimera Nexus. He must disarm Thorne’s Halon purge, expose Vance’s Vanguard exfiltration drive, stabilize Graves’ organoids, and extract Astrid Van Hoyt to the surface.',
+			telemetry: 'Cascade Risk: 92% · Halon Timer: Final 5 Minutes · Extracted Evidence: 12/12 Clues',
 		},
 	];
+
+	const filteredClues = selectedCategory === 'ALL'
+		? forensicClues
+		: forensicClues.filter((c) => c.category === selectedCategory);
+
+	const discoveredCluesCount = Math.min(currentChapterIndex + 1, forensicClues.length);
 
 	function playSelectedLog(log: AudioLog) {
 		sound.playAudioLogBeep();
@@ -3951,23 +4387,23 @@ function MissionDossierModal({
 	}
 
 	return (
-		<div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-6 bg-black/80 backdrop-blur-md animate-in fade-in duration-200">
-			<div className="relative flex max-h-[92vh] w-full max-w-5xl flex-col overflow-hidden rounded-3xl border border-cyan-400/40 bg-[radial-gradient(ellipse_at_top,#0c2333,#050f16)] shadow-[0_0_80px_rgba(6,182,212,0.35)]">
+		<div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-6 bg-black/85 backdrop-blur-md animate-in fade-in duration-200">
+			<div className="relative flex max-h-[94vh] w-full max-w-6xl flex-col overflow-hidden rounded-3xl border border-cyan-400/40 bg-[radial-gradient(ellipse_at_top,#0c2333,#050f16)] shadow-[0_0_90px_rgba(6,182,212,0.4)]">
 				{/* High-tech Header */}
-				<div className="flex flex-wrap items-center justify-between border-b border-cyan-500/30 bg-slate-950/80 px-6 py-4">
+				<div className="flex flex-wrap items-center justify-between border-b border-cyan-500/30 bg-slate-950/85 px-6 py-4">
 					<div className="flex items-center gap-3">
-						<span className="size-3 rounded-full bg-cyan-400 animate-ping" />
+						<span className="size-3 rounded-full bg-rose-500 animate-ping" />
 						<div>
 							<div className="flex items-center gap-2">
 								<span className="font-mono text-xs font-bold uppercase tracking-[.25em] text-cyan-300">
-									PROJECT JANUS // CLASSIFIED ARCHIVE
+									PROJECT JANUS // SABOTAGE FORENSIC DOSSIER
 								</span>
-								<span className="rounded-full bg-rose-500/20 px-2 py-0.5 font-mono text-[9px] font-bold text-rose-300 border border-rose-400/30">
-									LEVEL 5 EYES ONLY
+								<span className="rounded-full bg-rose-500/20 px-2 py-0.5 font-mono text-[9px] font-bold text-rose-300 border border-rose-400/30 animate-pulse">
+									CRIMINAL INVESTIGATION · LEVEL 5 RESTRICTED
 								</span>
 							</div>
 							<h2 className="text-lg font-extrabold text-white tracking-tight sm:text-xl">
-								Sub-Level 4 Incident Dossier & Facility Schematics
+								Sub-Level 4 Sabotage Incident & Suspect Dossier
 							</h2>
 						</div>
 					</div>
@@ -3978,19 +4414,20 @@ function MissionDossierModal({
 							sound.playClick();
 							onClose();
 						}}
-						className="rounded-full border border-white/20 bg-white/5 px-3 py-1.5 text-xs font-bold text-slate-300 transition hover:bg-white/10 hover:text-white"
+						className="rounded-full border border-white/20 bg-white/5 px-3.5 py-1.5 text-xs font-bold text-slate-300 transition hover:bg-white/10 hover:text-white"
 					>
 						✕ Close Dossier
 					</button>
 				</div>
 
-				{/* Dossier Tabs */}
-				<div className="flex flex-wrap gap-1 border-b border-white/10 bg-black/40 px-6 py-2.5">
+				{/* Dossier Tabs Header */}
+				<div className="flex flex-wrap gap-1 border-b border-white/10 bg-black/50 px-6 py-2.5">
 					{[
-						['chronology', '⏱️ Incident Chronology'],
-						['audiologs', '🎙️ Audio Logs (4)'],
-						['sectormap', '🗺️ Sub-Level 4 Map'],
-						['personnel', '👤 Personnel Files'],
+						['chronology', '⏱️ Sabotage Timeline'],
+						['audiologs', `🎙️ Wiretaps & Audio Memos (${audioLogs.length})`],
+						['sectormap', '🗺️ Facility Map'],
+						['personnel', `👥 Suspect Profiles (${facilityPersonnel.length})`],
+						['forensics', `🔍 Evidence Board (${discoveredCluesCount}/12)`],
 						['perks', `🎖️ Perks & Vitals (${collectedPerks.length})`],
 					].map(([tabKey, label]) => (
 						<button
@@ -4018,9 +4455,9 @@ function MissionDossierModal({
 						<div className="space-y-4">
 							<div className="flex items-center justify-between border-b border-white/10 pb-2">
 								<p className="text-xs font-mono uppercase tracking-wider text-cyan-300">
-									Blackout & Divergence Timeline · 02:13:00 to 02:47:18
+									Sabotage Reconstruction Timeline · 01:50:00 to 02:47:18
 								</p>
-								<span className="font-mono text-[10px] text-slate-400">Total Duration: 34m 18s</span>
+								<span className="font-mono text-[10px] text-slate-400">Total Window: 57m 18s</span>
 							</div>
 
 							<div className="space-y-3">
@@ -4056,7 +4493,7 @@ function MissionDossierModal({
 							{/* Left: Log Selector */}
 							<div className="space-y-2">
 								<p className="text-xs font-mono uppercase tracking-wider text-cyan-300 mb-2">
-									Declassified Audio Memos
+									Wiretapped Voice Memos & Field Records
 								</p>
 								{audioLogs.map((log) => {
 									const isSelected = log.id === selectedLogId;
@@ -4097,7 +4534,7 @@ function MissionDossierModal({
 											onClick={() => playSelectedLog(selectedLog)}
 											className="inline-flex items-center gap-2 rounded-full border border-cyan-400/50 bg-cyan-500/20 px-3.5 py-1.5 text-xs font-bold text-cyan-100 hover:bg-cyan-500/30 shadow-[0_0_14px_rgba(6,182,212,0.4)]"
 										>
-											{isPlayingLog ? '🔊 Playing Audio' : '▶ Play Memo'}
+											{isPlayingLog ? '🔊 Transmitting Audio' : '▶ Play Recording'}
 										</button>
 									</div>
 
@@ -4128,10 +4565,10 @@ function MissionDossierModal({
 									</div>
 								</div>
 
-								{/* Scientific Field Note */}
+								{/* Scientific / Forensic Significance */}
 								<div className="mt-4 rounded-xl border border-amber-400/30 bg-amber-950/20 p-3 text-xs text-amber-200 leading-5">
 									<strong className="text-amber-300 block font-mono text-[9px] uppercase tracking-wider mb-0.5">
-										Scientific Significance / Field Note:
+										Forensic Significance & Subtext:
 									</strong>
 									{selectedLog.fieldNote}
 								</div>
@@ -4187,7 +4624,6 @@ function MissionDossierModal({
 												}}
 												className="cursor-pointer"
 											>
-												{/* Halo */}
 												{(isCurrent || isSelected) && (
 													<circle
 														cx={sector.coords.x}
@@ -4198,7 +4634,6 @@ function MissionDossierModal({
 													/>
 												)}
 
-												{/* Node Circle */}
 												<circle
 													cx={sector.coords.x}
 													cy={sector.coords.y}
@@ -4216,7 +4651,6 @@ function MissionDossierModal({
 													strokeWidth={2}
 												/>
 
-												{/* Sector Number */}
 												<text
 													x={sector.coords.x}
 													y={sector.coords.y + 4}
@@ -4229,7 +4663,6 @@ function MissionDossierModal({
 													{sector.number}
 												</text>
 
-												{/* Node Label */}
 												<text
 													x={sector.coords.x}
 													y={sector.coords.y + 24}
@@ -4267,76 +4700,419 @@ function MissionDossierModal({
 						</div>
 					)}
 
-					{/* TAB 4: PERSONNEL DOSSIERS */}
+					{/* TAB 4: COMPLETE 6 PERSONNEL DOSSIERS & SUSPECT ROSTER */}
 					{activeTab === 'personnel' && (
-						<div className="grid gap-6 md:grid-cols-2">
-							{/* Dr. Hans Werner */}
-							<div className="rounded-2xl border border-cyan-400/30 bg-slate-950/80 p-5 space-y-4">
-								<div className="flex items-center gap-3 border-b border-cyan-500/20 pb-3">
-									<div className="flex size-12 items-center justify-center rounded-2xl bg-cyan-500/20 border border-cyan-400/40 text-xl font-black text-cyan-200">
-										HW
-									</div>
-									<div>
-										<span className="font-mono text-[10px] font-bold uppercase tracking-wider text-cyan-300">
-											Lead Neuromorphic Systems Architect
-										</span>
-										<h3 className="text-lg font-black text-white">Dr. Hans Werner</h3>
-										<p className="text-[10px] font-mono text-slate-400">Clearance: Ultra-V (Sub-Level 5)</p>
-									</div>
-								</div>
-
-								<div className="space-y-2 text-xs leading-5 text-slate-300">
-									<p>
-										<strong className="text-white">Neural Specialization:</strong> Spike-timing-dependent plasticity (STDP), dendritic computation, silicon systolic array tensor architectures.
-									</p>
-									<p>
-										<strong className="text-white">Field Equipment:</strong> Handheld bi-directional oscilloscope, optical patch probe, emergency lithium headlamp.
-									</p>
-									<p>
-										<strong className="text-white">Psychological Assessment:</strong> Acute hyper-vigilance post-blackout. High susceptibility to over-indexing on mathematical elegance rather than physical constraints.
-									</p>
-								</div>
-
-								<div className="rounded-xl border border-cyan-500/20 bg-black/40 p-3 font-mono text-[10px] text-cyan-200">
-									STATUS: Active in Sub-Level 4 · Real-Time HR: {effectiveHeartRate} BPM
-								</div>
+						<div className="space-y-6">
+							{/* Suspect Selector Pill Bar */}
+							<div className="flex flex-wrap gap-2 border-b border-white/10 pb-3">
+								{facilityPersonnel.map((person) => {
+									const isSelected = person.id === selectedSuspectId;
+									return (
+										<button
+											key={person.id}
+											type="button"
+											onClick={() => {
+												sound.playClick();
+												setSelectedSuspectId(person.id);
+											}}
+											className={`flex items-center gap-2 rounded-xl border px-3 py-1.5 transition ${
+												isSelected
+													? 'border-cyan-400 bg-cyan-950/50 shadow-[0_0_15px_rgba(6,182,212,0.3)] text-white'
+													: 'border-white/10 bg-slate-950/40 text-slate-400 hover:text-white hover:bg-white/5'
+											}`}
+										>
+											<span className={`size-5 rounded-md flex items-center justify-center text-[10px] font-black border ${person.avatarBorder} bg-gradient-to-br ${person.avatarGradient}`}>
+												{person.initials}
+											</span>
+											<span className="text-xs font-bold">{person.name}</span>
+											<span className={`text-[9px] font-mono px-1.5 py-0.2 rounded-full border ${person.suspicionColor}`}>
+												{person.suspicionLevel}
+											</span>
+										</button>
+									);
+								})}
 							</div>
 
-							{/* Dr. Astrid Van Hoyt */}
-							<div className="rounded-2xl border border-emerald-400/30 bg-slate-950/80 p-5 space-y-4">
-								<div className="flex items-center gap-3 border-b border-emerald-500/20 pb-3">
-									<div className="flex size-12 items-center justify-center rounded-2xl bg-emerald-500/20 border border-emerald-400/40 text-xl font-black text-emerald-200">
-										AV
+							{/* Active Suspect Profile Card */}
+							<div className="rounded-3xl border border-cyan-400/40 bg-slate-950/90 p-6 space-y-6 shadow-xl">
+								{/* Top Header */}
+								<div className="flex flex-wrap items-start justify-between gap-4 border-b border-cyan-500/20 pb-4">
+									<div className="flex items-center gap-4">
+										<div className={`flex size-16 items-center justify-center rounded-2xl border-2 ${selectedSuspect.avatarBorder} bg-gradient-to-br ${selectedSuspect.avatarGradient} text-2xl font-black shadow-lg`}>
+											{selectedSuspect.initials}
+										</div>
+										<div>
+											<div className="flex items-center gap-2">
+												<h3 className="text-xl font-black text-white">{selectedSuspect.name}</h3>
+												<span className="font-mono text-xs text-slate-400">({selectedSuspect.age} y/o)</span>
+											</div>
+											<p className="font-mono text-xs font-bold text-cyan-300">{selectedSuspect.role}</p>
+											<p className="text-[11px] text-slate-400 font-mono">
+												Dept: {selectedSuspect.department} · Clearance: {selectedSuspect.clearance}
+											</p>
+										</div>
 									</div>
-									<div>
-										<span className="font-mono text-[10px] font-bold uppercase tracking-wider text-emerald-300">
-											Senior Sensory Neurobiologist
+
+									<div className="flex flex-col items-end gap-1">
+										<span className="text-[9px] font-mono uppercase tracking-wider text-slate-400">Forensic Suspicion Level</span>
+										<span className={`rounded-xl px-3 py-1 font-mono text-xs font-black border ${selectedSuspect.suspicionColor} shadow-md`}>
+											{selectedSuspect.suspicionLevel} SUSPICION
 										</span>
-										<h3 className="text-lg font-black text-white">Dr. Astrid Van Hoyt</h3>
-										<p className="text-[10px] font-mono text-slate-400">Clearance: Ultra-V (Cryo & Organoids)</p>
 									</div>
 								</div>
 
-								<div className="space-y-2 text-xs leading-5 text-slate-300">
-									<p>
-										<strong className="text-white">Neural Specialization:</strong> Cortical column microcircuits, GABAergic lateral inhibition, homeostatic synaptic scaling, sensory priors.
-									</p>
-									<p>
-										<strong className="text-white">Field Equipment:</strong> Thermal foil blanket, portable diagnostic comms terminal, cryo-sample preservation kit.
-									</p>
-									<p>
-										<strong className="text-white">Psychological Assessment:</strong> Exceptional cognitive resilience under environmental hypoxia. Grounded in wetware biological realism.
-									</p>
+								{/* Physical Appearance & Gear Grid */}
+								<div className="grid gap-4 sm:grid-cols-2">
+									{/* Appearance Box */}
+									<div className="rounded-2xl border border-white/10 bg-black/40 p-4 space-y-2.5 text-xs text-slate-300">
+										<div className="flex items-center gap-2 font-mono text-[10px] font-bold uppercase tracking-wider text-cyan-300 border-b border-white/5 pb-1">
+											<span>🧍 Distinct Physical Appearance & Attire</span>
+										</div>
+										<p><strong className="text-white">Build & Stature:</strong> {selectedSuspect.appearance.build}</p>
+										<p><strong className="text-white">Facial Features:</strong> {selectedSuspect.appearance.face}</p>
+										<p><strong className="text-white">Attire & Gear:</strong> {selectedSuspect.appearance.attire}</p>
+										<p><strong className="text-amber-300">Distinguishing Marks:</strong> {selectedSuspect.appearance.distinguishingMarks}</p>
+										<p><strong className="text-fuchsia-300">Behavioral Habits:</strong> {selectedSuspect.appearance.quirks}</p>
+									</div>
+
+									{/* Psychology & Equipment Box */}
+									<div className="rounded-2xl border border-white/10 bg-black/40 p-4 space-y-3 text-xs text-slate-300">
+										<div className="flex items-center gap-2 font-mono text-[10px] font-bold uppercase tracking-wider text-cyan-300 border-b border-white/5 pb-1">
+											<span>🧠 Psychological Profile & Carried Gear</span>
+										</div>
+										<p><strong className="text-white">Psychological Assessment:</strong> {selectedSuspect.personality}</p>
+										
+										<div>
+											<strong className="text-white block mb-1">Equipment on Person:</strong>
+											<div className="flex flex-wrap gap-1.5">
+												{selectedSuspect.equipment.map((item, idx) => (
+													<span key={idx} className="rounded-lg border border-cyan-400/20 bg-cyan-950/30 px-2 py-0.5 font-mono text-[10px] text-cyan-200">
+														🛠️ {item}
+													</span>
+												))}
+											</div>
+										</div>
+
+										<div className="pt-2 border-t border-white/5">
+											<p><strong className="text-emerald-300">Stated Alibi:</strong> {selectedSuspect.alibi}</p>
+											<p className="mt-1"><strong className="text-rose-300">Suspected Motive:</strong> {selectedSuspect.motive}</p>
+										</div>
+									</div>
 								</div>
 
-								<div className="rounded-xl border border-rose-500/20 bg-rose-950/20 p-3 font-mono text-[10px] text-rose-300">
-									STATUS: Sealed in Cryo-Bay 3 · Halon Emergency Strobe Warbling
+								{/* Bottom Status & Linked Clues */}
+								<div className="rounded-2xl border border-cyan-500/20 bg-cyan-950/20 p-4">
+									<div className="flex flex-wrap items-center justify-between gap-2 border-b border-cyan-500/10 pb-2">
+										<span className="font-mono text-xs font-bold text-cyan-200">
+											CURRENT FACILITY STATUS: {selectedSuspect.status}
+										</span>
+										{selectedSuspect.id === 'werner' && (
+											<span className="font-mono text-xs text-rose-300 font-bold">
+												Hans Heart Rate: {effectiveHeartRate} BPM
+											</span>
+										)}
+									</div>
+									<div className="mt-2.5">
+										<span className="text-[10px] font-mono uppercase tracking-wider text-slate-400 block mb-1">
+											Linked Evidence & Clues:
+										</span>
+										<div className="flex flex-wrap gap-2">
+											{selectedSuspect.cluesLinked.map((clueText, cIdx) => (
+												<span key={cIdx} className="rounded-lg border border-white/10 bg-black/60 px-2.5 py-1 text-[11px] text-slate-200">
+													📌 {clueText}
+												</span>
+											))}
+										</div>
+									</div>
 								</div>
 							</div>
 						</div>
 					)}
 
-					{/* TAB 5: PERKS & LIVE VITALS */}
+					{/* TAB 5: FORENSIC EVIDENCE BOARD & CULPRIT DEDUCTION MATRIX */}
+					{activeTab === 'forensics' && (
+						<div className="space-y-6">
+							{/* Case Overview Banner */}
+							<div className="rounded-2xl border border-cyan-400/30 bg-slate-950/80 p-4 flex flex-wrap items-center justify-between gap-4">
+								<div>
+									<div className="flex items-center gap-2">
+										<span className="size-2 rounded-full bg-cyan-400 animate-ping" />
+										<span className="font-mono text-xs font-bold uppercase tracking-wider text-cyan-300">
+											FORENSIC EVIDENCE BOARD // CASE #JANUS-0212
+										</span>
+									</div>
+									<h3 className="mt-1 text-base font-extrabold text-white">
+										Physical & Digital Evidence Matrix (12 Chapters)
+									</h3>
+									<p className="text-xs text-slate-300">
+										Every sensory challenge Hans Werner solves recovers crucial forensic traces. Piece together the sabotage to deduce the true conspirators.
+									</p>
+								</div>
+
+								<div className="flex items-center gap-4 font-mono">
+									<div className="rounded-xl border border-cyan-400/30 bg-cyan-950/30 px-3 py-1.5 text-center">
+										<p className="text-[9px] uppercase text-cyan-300">Evidence Recovered</p>
+										<p className="text-xl font-black text-white">{discoveredCluesCount} / 12</p>
+									</div>
+								</div>
+							</div>
+
+							{/* Category Filters */}
+							<div className="flex flex-wrap items-center justify-between gap-2 border-b border-white/10 pb-2">
+								<div className="flex gap-1.5">
+									{(['ALL', 'PHYSICAL', 'DIGITAL', 'CHEMICAL', 'AUDIO'] as const).map((cat) => (
+										<button
+											key={cat}
+											type="button"
+											onClick={() => {
+												sound.playClick();
+												setSelectedCategory(cat);
+											}}
+											className={`rounded-lg px-2.5 py-1 text-xs font-bold transition ${
+												selectedCategory === cat
+													? 'bg-cyan-500/20 text-cyan-200 border border-cyan-400/40 shadow-sm'
+													: 'text-slate-400 hover:text-white hover:bg-white/5'
+											}`}
+										>
+											{cat}
+										</button>
+									))}
+								</div>
+								<span className="text-[10px] font-mono text-slate-400">
+									Showing {filteredClues.length} clue records
+								</span>
+							</div>
+
+							{/* Clues Grid */}
+							<div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+								{filteredClues.map((clue) => {
+									const isDiscovered = clue.chapterIndex <= currentChapterIndex;
+									return (
+										<div
+											key={clue.id}
+											className={`rounded-2xl border p-4 flex flex-col justify-between transition ${
+												isDiscovered
+													? 'border-cyan-400/30 bg-slate-950/70 hover:border-cyan-400/60 shadow-md'
+													: 'border-dashed border-white/10 bg-black/40 opacity-60'
+											}`}
+										>
+											<div>
+												<div className="flex items-center justify-between gap-1 text-[10px] font-mono">
+													<span className="text-slate-400 font-bold">CLUE #{clue.chapterIndex + 1}</span>
+													<span className={`rounded-full px-2 py-0.2 border ${clue.categoryColor} font-bold`}>
+														{clue.category}
+													</span>
+												</div>
+
+												<h4 className="mt-2 text-sm font-extrabold text-white">
+													{isDiscovered ? clue.name : `[CLASSIFIED: SECTOR ${clue.chapterIndex + 1}]`}
+												</h4>
+												<p className="mt-0.5 text-[10px] font-mono text-cyan-300">
+													Location: {clue.location}
+												</p>
+
+												<p className="mt-2 text-xs text-slate-300 leading-5">
+													{isDiscovered ? clue.description : 'Evidence locked behind deeper subterranean sectors. Complete sensory challenges to recover this record.'}
+												</p>
+											</div>
+
+											{isDiscovered && (
+												<div className="mt-3 pt-3 border-t border-white/10 space-y-1.5 text-[10px] font-mono">
+													<div>
+														<strong className="text-rose-300">Implicates: </strong>
+														<span className="text-slate-200">{clue.implicates.join(', ')}</span>
+													</div>
+													{clue.exculpates && (
+														<div>
+															<strong className="text-emerald-300">Exculpates: </strong>
+															<span className="text-slate-200">{clue.exculpates.join(', ')}</span>
+														</div>
+													)}
+													<div className="rounded-lg bg-black/60 p-2 text-[10px] text-amber-200/90 leading-4 mt-1 border border-white/5">
+														<strong className="text-amber-300 block mb-0.5">Forensic Analysis:</strong>
+														{clue.analysis}
+													</div>
+												</div>
+											)}
+										</div>
+									);
+								})}
+							</div>
+
+							{/* INTERACTIVE CULPRIT DEDUCTION CHAMBER */}
+							<div className="rounded-3xl border border-fuchsia-400/30 bg-[linear-gradient(135deg,rgba(30,10,35,0.8),rgba(15,23,42,0.95))] p-6 space-y-6 shadow-2xl">
+								<div className="border-b border-fuchsia-500/20 pb-3 flex flex-wrap items-center justify-between gap-2">
+									<div>
+										<span className="font-mono text-xs font-bold uppercase tracking-[.2em] text-fuchsia-300">
+											INTERACTIVE DEDUCTION CHAMBER
+										</span>
+										<h3 className="text-lg font-black text-white">
+											Formulate Sabotage Verdict & Resolve the Saboteurs
+										</h3>
+									</div>
+									<span className="rounded-full bg-fuchsia-500/20 px-3 py-1 font-mono text-xs font-bold text-fuchsia-200 border border-fuchsia-400/30">
+										Active Hypothesis Engine
+									</span>
+								</div>
+
+								<div className="grid gap-4 sm:grid-cols-2">
+									{/* Question 1: Corporate Saboteur */}
+									<div className="rounded-2xl border border-white/10 bg-black/40 p-4 space-y-2">
+										<label className="text-xs font-bold text-white block">
+											1. Who physically cut the 132kV busbar and loaded the exfiltration drive?
+										</label>
+										<select
+											value={verdictSaboteur}
+											onChange={(e) => setVerdictSaboteur(e.target.value)}
+											className="w-full rounded-xl border border-white/20 bg-slate-900 px-3 py-2 text-xs font-mono text-cyan-200 focus:outline-none focus:border-cyan-400"
+										>
+											<option value="">-- Select Prime Saboteur --</option>
+											<option value="vance">Dr. Nadia Vance (Cryogenic & Infra Director)</option>
+											<option value="graves">Dr. Gideon Graves (Chief Wetware Purist)</option>
+											<option value="thorne">Marcus Thorne (Security Chief)</option>
+											<option value="lin">Dr. Soren Lin (Quantum Fellow)</option>
+										</select>
+										<p className="text-[10px] text-slate-400">
+											Hint: Look for titanium hydraulic shear cuts, copper shunts, and Vanguard contracts.
+										</p>
+									</div>
+
+									{/* Question 2: Purge Conspirator */}
+									<div className="rounded-2xl border border-white/10 bg-black/40 p-4 space-y-2">
+										<label className="text-xs font-bold text-white block">
+											2. Who armed the lethal Halon 1301 purge countdown targeting Cryo-Bay 3?
+										</label>
+										<select
+											value={verdictPurge}
+											onChange={(e) => setVerdictPurge(e.target.value)}
+											className="w-full rounded-xl border border-white/20 bg-slate-900 px-3 py-2 text-xs font-mono text-cyan-200 focus:outline-none focus:border-cyan-400"
+										>
+											<option value="">-- Select Purge Instigator --</option>
+											<option value="thorne">Marcus Thorne (Paranoid Anti-AI Security Chief)</option>
+											<option value="vance">Dr. Nadia Vance (Corporate Engineer)</option>
+											<option value="graves">Dr. Gideon Graves (Organoid Biologist)</option>
+											<option value="lin">Dr. Soren Lin (Postdoctoral Fellow)</option>
+										</select>
+										<p className="text-[10px] text-slate-400">
+											Hint: Look for Size 11 Vibram lug combat boot prints and master security cylinder seals.
+										</p>
+									</div>
+
+									{/* Question 3: Whistleblower */}
+									<div className="rounded-2xl border border-white/10 bg-black/40 p-4 space-y-2">
+										<label className="text-xs font-bold text-white block">
+											3. Who was attempting to blow the whistle on the military weaponization contract?
+										</label>
+										<select
+											value={verdictWhistleblower}
+											onChange={(e) => setVerdictWhistleblower(e.target.value)}
+											className="w-full rounded-xl border border-white/20 bg-slate-900 px-3 py-2 text-xs font-mono text-cyan-200 focus:outline-none focus:border-cyan-400"
+										>
+											<option value="">-- Select Whistleblower --</option>
+											<option value="lin">Dr. Soren Lin (Yellow Cardigan / Dual-Screen Tablet)</option>
+											<option value="graves">Dr. Gideon Graves (Wetware Director)</option>
+											<option value="werner">Dr. Hans Werner (Lead ML Architect)</option>
+											<option value="vance">Dr. Nadia Vance (Infra Director)</option>
+										</select>
+										<p className="text-[10px] text-slate-400">
+											Hint: Look for dropped dual-screen tablet with uncommitted Git diffs and adversarial patches.
+										</p>
+									</div>
+
+									{/* Question 4: Organoid Protector */}
+									<div className="rounded-2xl border border-white/10 bg-black/40 p-4 space-y-2">
+										<label className="text-xs font-bold text-white block">
+											4. Who risked their life to formulate an antidote buffer to save the living wetware?
+										</label>
+										<select
+											value={verdictProtector}
+											onChange={(e) => setVerdictProtector(e.target.value)}
+											className="w-full rounded-xl border border-white/20 bg-slate-900 px-3 py-2 text-xs font-mono text-cyan-200 focus:outline-none focus:border-cyan-400"
+										>
+											<option value="">-- Select Organoid Protector --</option>
+											<option value="graves">Dr. Gideon Graves (Reeking of Clove Oil / Phenol)</option>
+											<option value="vance">Dr. Nadia Vance (Nomex Boiler Suit)</option>
+											<option value="thorne">Marcus Thorne (Tactical Vest)</option>
+											<option value="werner">Dr. Hans Werner (ML Architect)</option>
+										</select>
+										<p className="text-[10px] text-slate-400">
+											Hint: Look for handwritten chemical antidote notes pinned to the perfusion manifold in Sector 10.
+										</p>
+									</div>
+								</div>
+
+								<div className="flex items-center justify-between pt-2">
+									<button
+										type="button"
+										onClick={() => {
+											sound.playClick();
+											setVerdictSubmitted(true);
+										}}
+										className="rounded-full border border-fuchsia-400/50 bg-fuchsia-500/25 px-5 py-2 text-xs font-black text-fuchsia-100 hover:bg-fuchsia-500/40 shadow-[0_0_20px_rgba(217,70,239,0.35)]"
+									>
+										⚖️ Submit Forensic Deduction & Reveal Intelligence Debrief
+									</button>
+
+									{verdictSubmitted && (
+										<span className="font-mono text-xs font-bold text-cyan-300">
+											Intelligence Analysis Computed ✓
+										</span>
+									)}
+								</div>
+
+								{/* Verdict Results & Declassified Debrief */}
+								{verdictSubmitted && (
+									<div className="rounded-2xl border border-cyan-400/40 bg-slate-950/95 p-5 space-y-4 animate-in fade-in duration-300">
+										<div className="flex items-center justify-between border-b border-white/10 pb-2">
+											<span className="font-mono text-xs font-bold uppercase tracking-wider text-cyan-300">
+												DECLASSIFIED SABOTAGE REPORT // VERDICT RESOLUTION
+											</span>
+											<span className="font-mono text-xs font-black text-emerald-400">
+												FORENSIC MATCH: {
+													(verdictSaboteur === 'vance' ? 25 : 0) +
+													(verdictPurge === 'thorne' ? 25 : 0) +
+													(verdictWhistleblower === 'lin' ? 25 : 0) +
+													(verdictProtector === 'graves' ? 25 : 0)
+												}% ACCURACY
+											</span>
+										</div>
+
+										<div className="space-y-3 text-xs leading-6 text-slate-200">
+											<div className="p-3 rounded-xl border border-rose-500/30 bg-rose-950/20">
+												<strong className="text-rose-300 block font-mono text-xs uppercase mb-1">
+													1. The Corporate Saboteur: Dr. Nadia Vance (CONFIRMED)
+												</strong>
+												Dr. Nadia Vance was on a covert $4.2M retainer with Vanguard Cybernetics. She used her titanium hydraulic shears to sever the 500A power bus, dropped the copper bypass shunt, and attempted to exfiltrate the 8-dimensional weight tensors onto a military SSD before destroying the physical biological organoids to eliminate competition.
+											</div>
+
+											<div className="p-3 rounded-xl border border-purple-500/30 bg-purple-950/20">
+												<strong className="text-purple-300 block font-mono text-xs uppercase mb-1">
+													2. The Purge Conspirator: Marcus Thorne (CONFIRMED)
+												</strong>
+												Chief Marcus Thorne was terrified by autonomous recursive sentience. Believing JANUS was developing unconstrained runaway agency, he initiated the Scorched Earth Protocol, sealing blast doors and arming the Halon 1301 fire suppression system to asphyxiate Astrid in Cryo-Bay 3 and sterilize all living neural tissue.
+											</div>
+
+											<div className="p-3 rounded-xl border border-yellow-500/30 bg-yellow-950/20">
+												<strong className="text-yellow-300 block font-mono text-xs uppercase mb-1">
+													3. The Ethical Whistleblower: Dr. Soren Lin (CONFIRMED)
+												</strong>
+												Dr. Soren Lin stumbled across Vanguard Cybernetics’ secret Project AEGIS-CHIMERA contracts to weaponize the organoid chimera for autonomous drone swarms. He synthesized adversarial Gabor optical patches to evade surveillance cameras while trying to leak the truth to international bioethics watchdogs.
+											</div>
+
+											<div className="p-3 rounded-xl border border-emerald-500/30 bg-emerald-950/20">
+												<strong className="text-emerald-300 block font-mono text-xs uppercase mb-1">
+													4. The Misunderstood Purist: Dr. Gideon Graves (CONFIRMED)
+												</strong>
+												Despite his caustic temperament, shaved head, and smell of clove oil, Dr. Gideon Graves refused to let the living tissue perish. When Vance spiked the perfusion lines with potassium chloride to cause catastrophic ephaptic death, Graves risked his life in the dark to formulate and administer an antidote buffer.
+											</div>
+										</div>
+									</div>
+								)}
+							</div>
+						</div>
+					)}
+
+					{/* TAB 6: PERKS & LIVE VITALS */}
 					{activeTab === 'perks' && (
 						<div className="space-y-6">
 							{/* Live Vitals Breakdown */}
@@ -6361,7 +7137,7 @@ export function AiBiologyExplorer() {
 	const [probeUsed, setProbeUsed] = useState(false);
 	const [played, setPlayed] = useState<string[]>([]);
 	const [mobileView, setMobileView] = useState<'machine' | 'brain' | 'percept'>('machine');
-	const [narrativeTab, setNarrativeTab] = useState<'story' | 'comms' | 'log' | 'vitals'>('story');
+	const [narrativeTab, setNarrativeTab] = useState<'story' | 'comms' | 'log' | 'vitals' | 'clue'>('story');
 	const [soundActive, setSoundActive] = useState(false);
 	const [learningMode, setLearningMode] = useState<'before' | 'after'>('before');
 	const [readingStage, setReadingStage] = useState(1);
@@ -6725,6 +7501,7 @@ export function AiBiologyExplorer() {
 									['comms', '📻 Dr. Van Hoyt (Astrid)', 'Channel 4 Radio Feed'],
 									['log', '📑 Incident Log', 'Automated Substation Telemetry'],
 									['vitals', '🫀 Hans Vitals', 'Real-Time Biometrics'],
+									['clue', '🔍 Sabotage Clue', 'Sector Forensic Trace'],
 								] as const
 							).map(([tabKey, label]) => (
 								<button
@@ -6873,6 +7650,86 @@ export function AiBiologyExplorer() {
 									<p className="text-[9px] text-fuchsia-300/70 mt-0.5">{collectedPerks.length * 15 + 65}% Bandwidth</p>
 								</div>
 							</div>
+						</div>
+					)}
+
+					{/* Tab Content 5: Sector Forensic Clue */}
+					{narrativeTab === 'clue' && (
+						<div className="p-4 sm:p-6 bg-slate-950/75">
+							{(() => {
+								const clue = forensicClues[challengeIndex] ?? forensicClues[0]!;
+								return (
+									<div className="space-y-4">
+										<div className="flex flex-wrap items-center justify-between gap-2 border-b border-cyan-500/20 pb-2">
+											<div className="flex items-center gap-2">
+												<span className="size-2 rounded-full bg-rose-500 animate-ping" />
+												<span className="text-xs font-mono text-cyan-300 font-bold">
+													SECTOR FORENSIC TRACE · CASE #JANUS-0212
+												</span>
+											</div>
+											<span className={`rounded-full px-2.5 py-0.5 font-mono text-[9px] font-bold border ${clue.categoryColor}`}>
+												{clue.category} EVIDENCE
+											</span>
+										</div>
+
+										<div className="rounded-2xl border border-cyan-400/30 bg-black/60 p-4 space-y-3">
+											<div className="flex flex-wrap items-center justify-between gap-2">
+												<h3 className="text-base font-extrabold text-white">{clue.name}</h3>
+												<span className="font-mono text-xs text-slate-400">📍 {clue.location}</span>
+											</div>
+
+											<p className="text-xs sm:text-sm text-slate-200 leading-6">
+												{clue.description}
+											</p>
+
+											<div className="grid gap-2 sm:grid-cols-2 pt-2 border-t border-white/10 text-xs font-mono">
+												<div>
+													<strong className="text-rose-300 block mb-0.5">Suspects Implicated:</strong>
+													<div className="flex flex-wrap gap-1">
+														{clue.implicates.map((suspect, sIdx) => (
+															<span key={sIdx} className="rounded-md border border-rose-500/30 bg-rose-950/30 px-2 py-0.5 text-rose-200 text-[10px]">
+																⚠️ {suspect}
+															</span>
+														))}
+													</div>
+												</div>
+												{clue.exculpates && (
+													<div>
+														<strong className="text-emerald-300 block mb-0.5">Cleared / Exculpated:</strong>
+														<div className="flex flex-wrap gap-1">
+															{clue.exculpates.map((suspect, sIdx) => (
+																<span key={sIdx} className="rounded-md border border-emerald-500/30 bg-emerald-950/30 px-2 py-0.5 text-emerald-200 text-[10px]">
+																	✓ {suspect}
+																</span>
+															))}
+														</div>
+													</div>
+												)}
+											</div>
+
+											<div className="rounded-xl border border-amber-400/30 bg-amber-950/20 p-3 text-xs text-amber-200 leading-5">
+												<strong className="text-amber-300 block font-mono text-[9px] uppercase tracking-wider mb-0.5">
+													Forensic Analysis:
+												</strong>
+												{clue.analysis}
+											</div>
+										</div>
+
+										<div className="flex justify-end">
+											<button
+												type="button"
+												onClick={() => {
+													sound.playClick();
+													setShowDossier(true);
+												}}
+												className="inline-flex items-center gap-2 rounded-full border border-fuchsia-400/40 bg-fuchsia-500/20 px-4 py-2 text-xs font-bold text-fuchsia-100 hover:bg-fuchsia-500/30 shadow-[0_0_15px_rgba(217,70,239,0.3)]"
+											>
+												🔍 Open Full Evidence Board & Suspect Dossiers →
+											</button>
+										</div>
+									</div>
+								);
+							})()}
 						</div>
 					)}
 
