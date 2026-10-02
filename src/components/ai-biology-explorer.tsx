@@ -7884,7 +7884,11 @@ export function AiBiologyExplorer() {
 
 	// IN-BETWEEN CHAPTER TRANSITION STATE
 	const [activeTransition, setActiveTransition] = useState<InBetweenTransition | null>(null);
-	const [selectedChoiceIndex, setSelectedChoiceIndex] = useState<number | null>(null);
+	// One tactical choice per passage, keyed by transition title
+	const [transitionChoices, setTransitionChoices] = useState<Record<string, number>>({});
+	const [campaignComplete, setCampaignComplete] = useState(false);
+	const transitionRef = useRef<HTMLDivElement>(null);
+	const debriefRef = useRef<HTMLDivElement>(null);
 
 	// MISSION DOSSIER & PERSISTENT PERKS STATE
 	const [showDossier, setShowDossier] = useState(false);
@@ -7892,13 +7896,23 @@ export function AiBiologyExplorer() {
 	const [heartRateDelta, setHeartRateDelta] = useState(0);
 
 	const challenge = challenges[challengeIndex]!;
+	const isFinalChapter = challengeIndex === challenges.length - 1;
+	// Chapters unlock linearly: every played chapter plus the first unplayed one
+	const firstUnplayedIndex = challenges.findIndex((item) => !played.includes(item.id));
+	const furthestChapterIndex = firstUnplayedIndex === -1 ? challenges.length - 1 : firstUnplayedIndex;
+	const selectedChoiceIndex = activeTransition ? (transitionChoices[activeTransition.title] ?? null) : null;
 	const effectiveHeartRate = Math.max(82, challenge.telemetry.heartRate + heartRateDelta);
 	const features = useMemo(() => featuresFor(challenge), [challenge]);
 	const outputs = useMemo(() => outputsFor(challenge), [challenge]);
 	const winner = outputs.indexOf(Math.max(...outputs));
 	const finalPhase = challenge.input.length + 1;
 	const revealed = phase >= finalPhase;
-	const runComplete = revealed && played.length === challenges.length;
+	const runComplete = revealed && campaignComplete && isFinalChapter;
+	const advanceLabel = runComplete
+		? 'Replay Mission Series ↺'
+		: isFinalChapter
+			? 'Final Passage to the Surface ➜'
+			: 'Explore Between-Chapter Passage ➜';
 	const introSeen = readingStage >= 2 || guess !== null || phase > 0;
 	const answerNeeded = guess === null && phase === 0;
 	const nextChallenge = challenges[(challengeIndex + 1) % challenges.length]!;
@@ -7960,79 +7974,94 @@ export function AiBiologyExplorer() {
 		}
 	}
 
+	useEffect(() => {
+		if (activeTransition) transitionRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+	}, [activeTransition]);
+
+	useEffect(() => {
+		if (campaignComplete) debriefRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+	}, [campaignComplete]);
+
 	function openInBetweenTransition() {
 		if (challenge.inBetweenTransition) {
 			sound.playTransition();
 			setActiveTransition(challenge.inBetweenTransition);
-			setSelectedChoiceIndex(null);
+		} else {
+			leaveTransition();
+		}
+	}
+
+	function leaveTransition() {
+		if (isFinalChapter) {
+			sound.playChime();
+			setActiveTransition(null);
+			setCampaignComplete(true);
 		} else {
 			nextRound();
 		}
 	}
 
 	function handleSelectTacticalChoice(transition: InBetweenTransition, choice: InBetweenChoice, choiceIdx: number) {
+		if (transitionChoices[transition.title] !== undefined) return;
 		sound.playClick();
 		sound.playRadioStatic();
-		setSelectedChoiceIndex(choiceIdx);
+		setTransitionChoices((current) => ({ ...current, [transition.title]: choiceIdx }));
 
-		const perkId = `${transition.title}-${choiceIdx}`;
-		if (!collectedPerks.some((p) => p.id === perkId)) {
-			const newPerk: FacilityPerk = {
-				id: perkId,
-				title: choice.label,
-				description: choice.description,
-				bonus: choice.statBonus,
-				chapterUnlocked: transition.title,
-			};
-			setCollectedPerks((prev) => [...prev, newPerk]);
+		const newPerk: FacilityPerk = {
+			id: `${transition.title}-${choiceIdx}`,
+			title: choice.label,
+			description: choice.description,
+			bonus: choice.statBonus,
+			chapterUnlocked: transition.title,
+		};
+		setCollectedPerks((prev) => [...prev, newPerk]);
 
-			if (
-				choice.statBonus.toLowerCase().includes('breath') ||
-				choice.statBonus.toLowerCase().includes('oxygen') ||
-				choice.statBonus.toLowerCase().includes('calm') ||
-				choice.statBonus.toLowerCase().includes('pacing')
-			) {
-				setHeartRateDelta((d) => d - 6);
-				sound.playHeartbeat();
-			} else if (
-				choice.statBonus.toLowerCase().includes('resolution') ||
-				choice.statBonus.toLowerCase().includes('margin') ||
-				choice.statBonus.toLowerCase().includes('anchor')
-			) {
-				setHeartRateDelta((d) => d - 3);
-			}
+		if (
+			choice.statBonus.toLowerCase().includes('breath') ||
+			choice.statBonus.toLowerCase().includes('oxygen') ||
+			choice.statBonus.toLowerCase().includes('calm') ||
+			choice.statBonus.toLowerCase().includes('pacing')
+		) {
+			setHeartRateDelta((d) => d - 6);
+			sound.playHeartbeat();
+		} else if (
+			choice.statBonus.toLowerCase().includes('resolution') ||
+			choice.statBonus.toLowerCase().includes('margin') ||
+			choice.statBonus.toLowerCase().includes('anchor')
+		) {
+			setHeartRateDelta((d) => d - 3);
 		}
+	}
+
+	function enterChapter(index: number) {
+		setActiveTransition(null);
+		setChallengeIndex(index);
+		setGuess(null);
+		setPhase(0);
+		setProbeUsed(false);
+		setMobileView('machine');
+		setReadingStage(1);
+		setNarrativeTab('story');
 	}
 
 	function nextRound() {
 		sound.playClick();
-		setActiveTransition(null);
-		setSelectedChoiceIndex(null);
-		setChallengeIndex((current) => (current + 1) % challenges.length);
-		setGuess(null);
-		setPhase(0);
-		setProbeUsed(false);
-		setMobileView('machine');
-		setReadingStage(1);
-		setNarrativeTab('story');
+		enterChapter((challengeIndex + 1) % challenges.length);
+		document.getElementById('ai-biology-game')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
 	}
 
 	function resetRun() {
 		sound.playClick();
-		setActiveTransition(null);
-		setSelectedChoiceIndex(null);
-		setChallengeIndex(0);
-		setGuess(null);
-		setPhase(0);
+		enterChapter(0);
 		setCorrectRounds(0);
 		setStreak(0);
 		setBestStreak(0);
-		setProbeUsed(false);
 		setPlayed([]);
-		setMobileView('machine');
-		setReadingStage(1);
-		setNarrativeTab('story');
+		setTransitionChoices({});
+		setCampaignComplete(false);
+		setCollectedPerks([]);
 		setHeartRateDelta(0);
+		document.getElementById('ai-biology-game')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
 	}
 
 	return (
@@ -8103,7 +8132,7 @@ export function AiBiologyExplorer() {
 					>
 						<span>🎮 The Night Signal</span>
 						<span className="rounded-full bg-cyan-500/20 px-2 py-0.5 text-[10px] text-cyan-300 font-mono">
-							12 Chapters
+							{challenges.length} Chapters
 						</span>
 					</button>
 
@@ -8192,34 +8221,44 @@ export function AiBiologyExplorer() {
 					</div>
 				</div>
 
-				{/* 9 Chapters Progress Tracker */}
+				{/* Chapter Progress Tracker */}
 				<div className="mb-5 flex gap-1.5 px-1" aria-label={`${played.length} of ${challenges.length} missions complete`}>
 					{challenges.map((item, index) => {
 						const isPlayed = played.includes(item.id);
 						const isCurrent = index === challengeIndex;
+						const isLocked = index > furthestChapterIndex;
 						return (
 							<div key={item.id} className="group relative flex-1">
 								<button
 									type="button"
+									disabled={isLocked}
+									aria-label={`${item.chapter}${isLocked ? ' (locked)' : ''}`}
+									aria-current={isCurrent ? 'step' : undefined}
 									onClick={() => {
+										if (isLocked || isCurrent) return;
 										sound.playClick();
-										setChallengeIndex(index);
-										setGuess(null);
-										setPhase(0);
-										setProbeUsed(false);
+										enterChapter(index);
 									}}
 									className={`block h-2 w-full rounded-full transition-all duration-300 ${
-										isPlayed
-											? 'bg-emerald-400 shadow-[0_0_10px_rgba(52,211,153,0.5)]'
-											: isCurrent
-												? 'bg-cyan-300 shadow-[0_0_12px_rgba(34,211,238,0.7)] scale-y-125'
-												: 'bg-white/10 hover:bg-white/20'
+										isCurrent
+											? 'bg-cyan-300 shadow-[0_0_12px_rgba(34,211,238,0.7)] scale-y-125'
+											: isPlayed
+												? 'bg-emerald-400 shadow-[0_0_10px_rgba(52,211,153,0.5)]'
+												: isLocked
+													? 'cursor-not-allowed bg-white/5'
+													: 'bg-white/10 hover:bg-white/20'
 									}`}
 								/>
 								<span className="pointer-events-none absolute left-1/2 top-4 z-30 hidden w-52 -translate-x-1/2 rounded-xl border border-white/15 bg-slate-950/95 p-3 text-left shadow-[0_12px_36px_rgba(0,0,0,0.8)] backdrop-blur-md group-hover:block">
 									<span className="block text-[8px] font-bold uppercase tracking-[.18em] text-cyan-300">{item.chapter}</span>
-									<span className="mt-0.5 block text-[11px] font-bold text-white">{item.name}</span>
-									<span className="mt-1 block text-[9px] leading-4 text-slate-300">{item.preview}</span>
+									{isLocked ? (
+										<span className="mt-1 block text-[9px] leading-4 text-slate-400">🔒 Resolve the previous chapter to unlock.</span>
+									) : (
+										<>
+											<span className="mt-0.5 block text-[11px] font-bold text-white">{item.name}</span>
+											<span className="mt-1 block text-[9px] leading-4 text-slate-300">{item.preview}</span>
+										</>
+									)}
 								</span>
 							</div>
 						);
@@ -8649,7 +8688,7 @@ export function AiBiologyExplorer() {
 									onClick={runComplete ? resetRun : openInBetweenTransition}
 									className="glass-btn glass-btn--primary w-full sm:w-auto"
 								>
-									{runComplete ? 'Replay Mission Series ↺' : 'Explore Between-Chapter Passage ➜'}
+									{advanceLabel}
 								</button>
 							) : (
 								<button
@@ -8712,7 +8751,7 @@ export function AiBiologyExplorer() {
 								}}
 								onAdvance={revealed ? (runComplete ? resetRun : openInBetweenTransition) : undefined}
 								onStepChange={(newStep) => setPhase(newStep)}
-								advanceLabel={runComplete ? 'Replay Series ↺' : 'Between-Chapter Passage ➜'}
+								advanceLabel={advanceLabel}
 								idPrefix="m"
 							/>
 						)}
@@ -8736,7 +8775,7 @@ export function AiBiologyExplorer() {
 						onReplay={() => setPhase(1)}
 						onAdvance={revealed ? (runComplete ? resetRun : openInBetweenTransition) : undefined}
 						onStepChange={(newStep) => setPhase(newStep)}
-						advanceLabel={runComplete ? 'Replay Series ↺' : 'Between-Chapter Passage ➜'}
+						advanceLabel={advanceLabel}
 						idPrefix="d"
 					/>
 				</div>
@@ -8827,7 +8866,7 @@ export function AiBiologyExplorer() {
 
 				{/* IN-BETWEEN CHAPTER TRANSITION MODAL / STAGE */}
 				{activeTransition && (
-					<div className="mt-5 overflow-hidden rounded-3xl border border-cyan-400/40 bg-[radial-gradient(ellipse_at_top,#0c2333,#050f16)] p-6 sm:p-8 shadow-[0_0_60px_rgba(34,211,238,0.25)] animate-in fade-in duration-500">
+					<div ref={transitionRef} className="mt-5 scroll-mt-6 overflow-hidden rounded-3xl border border-cyan-400/40 bg-[radial-gradient(ellipse_at_top,#0c2333,#050f16)] p-6 sm:p-8 shadow-[0_0_60px_rgba(34,211,238,0.25)] animate-in fade-in duration-500">
 						<div className="flex items-center justify-between border-b border-cyan-500/30 pb-3">
 							<div className="flex items-center gap-2">
 								<span className="size-2 rounded-full bg-cyan-300 animate-ping" />
@@ -8864,13 +8903,17 @@ export function AiBiologyExplorer() {
 									<button
 										key={choice.label}
 										type="button"
+										disabled={selectedChoiceIndex !== null}
+										aria-pressed={selectedChoiceIndex === cIdx}
 										onClick={() => {
 											handleSelectTacticalChoice(activeTransition, choice, cIdx);
 										}}
 										className={`rounded-2xl border p-4 text-left transition-all duration-300 ${
 											selectedChoiceIndex === cIdx
 												? 'border-amber-300/90 bg-amber-500/20 ring-2 ring-amber-300 text-white shadow-[0_0_24px_rgba(251,191,36,0.3)] scale-102'
-												: 'border-white/10 bg-white/[0.03] text-slate-300 hover:border-white/25 hover:bg-white/[0.06]'
+												: selectedChoiceIndex !== null
+													? 'border-white/5 bg-white/[0.02] text-slate-500 opacity-50'
+													: 'border-white/10 bg-white/[0.03] text-slate-300 hover:border-white/25 hover:bg-white/[0.06]'
 										}`}
 									>
 										<p className="text-xs font-bold text-white">{choice.label}</p>
@@ -8890,13 +8933,17 @@ export function AiBiologyExplorer() {
 							)}
 						</div>
 
-						<div className="mt-6 flex justify-end border-t border-white/10 pt-4">
+						<div className="mt-6 flex flex-col gap-3 border-t border-white/10 pt-4 sm:flex-row sm:items-center sm:justify-end">
+							{selectedChoiceIndex === null && (
+								<p className="text-xs text-slate-400">Choose one action to continue.</p>
+							)}
 							<button
 								type="button"
-								onClick={nextRound}
+								onClick={leaveTransition}
+								disabled={selectedChoiceIndex === null}
 								className="glass-btn glass-btn--primary px-5 py-2 text-sm font-bold"
 							>
-								Proceed to {nextChallenge.chapter} ➔
+								{isFinalChapter ? 'Ascend to the Surface ➔' : `Proceed to ${nextChallenge.chapter} ➔`}
 							</button>
 						</div>
 					</div>
@@ -8904,7 +8951,7 @@ export function AiBiologyExplorer() {
 
 				{/* RUN DEBRIEF & CONCLUSION */}
 				{runComplete && (
-					<div className="mt-5 overflow-hidden rounded-3xl border border-emerald-400/40 bg-[radial-gradient(ellipse_at_top,#064e3b,#022c22)] p-6 sm:p-8 shadow-[0_0_60px_rgba(52,211,153,0.3)]">
+					<div ref={debriefRef} className="mt-5 scroll-mt-6 overflow-hidden rounded-3xl border border-emerald-400/40 bg-[radial-gradient(ellipse_at_top,#064e3b,#022c22)] p-6 sm:p-8 shadow-[0_0_60px_rgba(52,211,153,0.3)]">
 						<div className="flex items-center justify-between border-b border-emerald-400/30 pb-4">
 							<div>
 								<span className="rounded-full bg-emerald-400/20 px-3 py-1 font-mono text-[10px] font-black uppercase text-emerald-200 border border-emerald-300/40">
@@ -8927,7 +8974,7 @@ export function AiBiologyExplorer() {
 						</div>
 
 						<p className="mt-4 text-sm leading-7 text-emerald-100 max-w-3xl">
-							When the master magnetic locks release, cold night air rushes into Sub-Level 5. Hans and Astrid step out onto the rain-slicked surface as emergency sirens fade. Nine uncertain sensory paradoxes transformed into coherent perceptions: sensory vectors became features, features became hypotheses, and hypotheses became survivable decisions—proving that while machine learning and biological brains converge on shared mathematics, their physical implementations remain profoundly different.
+							When the master magnetic locks release, cold night air rushes into Sub-Level 5. Hans and Astrid step out onto the rain-slicked surface as emergency sirens fade. {challenges.length} uncertain sensory paradoxes transformed into coherent perceptions: sensory vectors became features, features became hypotheses, and hypotheses became survivable decisions—proving that while machine learning and biological brains converge on shared mathematics, their physical implementations remain profoundly different.
 						</p>
 
 						<div className="mt-6 grid gap-3 sm:grid-cols-3">
@@ -9180,7 +9227,7 @@ export function AiBiologyExplorer() {
 			<MissionDossierModal
 				isOpen={showDossier}
 				onClose={() => setShowDossier(false)}
-				currentChapterIndex={challengeIndex}
+				currentChapterIndex={furthestChapterIndex}
 				collectedPerks={collectedPerks}
 				hansTelemetry={challenge.telemetry}
 				heartRateDelta={heartRateDelta}
