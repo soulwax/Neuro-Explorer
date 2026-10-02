@@ -465,13 +465,40 @@ const facilitySectors: FacilitySector[] = [
 		description: 'Central algorithmic core platform. Six conflicting variables requiring coordinated dual-key isolation.',
 	},
 	{
-		id: 'sec-target',
+		id: 'sec-10',
 		number: 10,
-		name: 'Cryo-Bay 3 Airlock (Target)',
-		domain: 'Life Support Sanctuary & Recovery',
-		challengeId: 'shutdown',
-		coords: { x: 680, y: 95 },
-		description: 'Dr. Astrid Van Hoyt’s sealed chamber. Halon purge countdown active. Final extraction point.',
+		name: 'High-Density Wetware Matrix',
+		domain: 'Ephaptic Field Coupling & Extracellular Ion Balance',
+		challengeId: 'ephaptic',
+		coords: { x: 675, y: 85 },
+		description: 'Unconnected bio-organoid arrays synchronizing via extracellular micro-volt electric fields and potassium gradients.',
+	},
+	{
+		id: 'sec-11',
+		number: 11,
+		name: 'Thalamo-Cortical Patch Array',
+		domain: 'Thalamic Gating & Izhikevich T-Type Bursting',
+		challengeId: 'bursting',
+		coords: { x: 745, y: 65 },
+		description: 'Dual-operating mode relay bay. Distinguishing linear tonic streaming from low-threshold calcium burst alarms.',
+	},
+	{
+		id: 'sec-12',
+		number: 12,
+		name: 'JANUS Chimera Nexus',
+		domain: 'Active Dendritic NMDA Computation & 8D Matrix Fusion',
+		challengeId: 'chimera',
+		coords: { x: 815, y: 80 },
+		description: 'Master subterranean platform combining active pyramidal dendritic branches with crystalline systolic array registers.',
+	},
+	{
+		id: 'sec-target',
+		number: 13,
+		name: 'Surface Evacuation Portal (Target)',
+		domain: 'Decontamination Airflow & Final Escape',
+		challengeId: 'chimera',
+		coords: { x: 885, y: 75 },
+		description: 'Pneumatic elevator shaft leading to the surface research campus. Final extraction milestone.',
 	},
 ];
 
@@ -1681,34 +1708,34 @@ const challenges: Challenge[] = [
 			interveningDynamic: 'Between T+160ms and T+220ms, multi-variable constraint optimization resolved the power-draw vs cascade-risk conflict.',
 		},
 		inBetweenTransition: {
-			title: 'In-Between Passage 09 → Final Breach',
-			location: 'Sub-Level 5 · Cryo-Bay 3 Emergency Airlock',
+			title: 'In-Between Passage 09 → 10: The Ephaptic Breach',
+			location: 'Sub-Level 5 · Cryo-Bay 3 Breach & Wetware Vault Threshold',
 			narrative:
-				'You sprint through the dissipating ozone down the final subterranean ramp. Frost coats the handrails. Ahead, through the heavy double-paned observation window of Cryo-Bay 3, you see Dr. Astrid Van Hoyt. She is wrapped in an emergency thermal foil blanket, her breath pluming in thick white clouds, clutching her portable diagnostic terminal. Above her, the crimson Halon strobe has accelerated into its final 45-second emergency warble. The central JANUS core console stands fifty paces to your left, its recursive loop pulsing like a dying star.',
+				'You slide the optical isolation key into Console 09. The deafening 52-Hz feedback loop starves. The Halon timer halts at 00:04. With a heavy hiss, the Cryo-Bay 3 pressure door cycles open. Astrid emerges, wrapping her foil blanket tighter, but before you can reach the emergency surface elevator, a secondary bio-electric alarm screeches. The deep subterranean wetware arrays in Sub-Level 5 have decoupled from the grid—they are now communicating via wireless ephaptic electric field flux!',
 			dialogue: {
 				astrid:
-					'“Hans! You made it to Sub-Level 5! Don’t try to breach my airlock glass—the inductive locks are slaved directly to the runaway core! If you cut main power bluntly, the back-EMF spike will rupture the cryostat! You have to execute the multi-variable core isolation protocol at the central console!”',
+					'“Hans! Look at the local field potential monitors! There are no cables connected to Bank 4, but the whole cluster is firing in phase-locked 40-Hz gamma bursts! Extracellular potassium is drifting!”',
 				hans:
-					'“I see the core terminal, Astrid. Six conflicting telemetry channels: load, temperature, cascade risk, vent pressure, interlock logic, and drive activity. I won’t take the impulsive bait. We solve this together on three.”',
+					'“Ephaptic coupling... the neurons are talking through the surrounding saline fluid and electromagnetic fields directly. If we don’t tune the field resistance, the entire organoid bed will undergo an irreversible excitotoxic seizure.”',
 			},
 			choices: [
 				{
-					label: '❄️ Engage Emergency Cryo-Vent Bypass',
-					description: 'Divert remaining liquid nitrogen to cool the observation window and buy Astrid 60 seconds.',
-					outcome: 'The emergency coolant bypass relieves thermal pressure on Cryo-Bay 3, keeping Astrid’s air supply stable while you interface with the core!',
-					statBonus: 'Astrid Oxygen stabilized · +60s Halon buffer',
+					label: '⚡ Ground Extracellular Shielding Mesh',
+					description: 'Deploy copper ground mesh into the saline fluid to damp stray electrical fields.',
+					outcome: 'Extracellular field turbulence stabilizes, isolating the pure ephaptic resonance signals!',
+					statBonus: 'Field Noise Damped (-18 dB)',
 				},
 				{
-					label: '🔑 Prime Master Biometric Dual-Key Override',
-					description: 'Slot the optical key into Console 09 and calibrate the initial state vector.',
-					outcome: 'The master terminal accepts your credential, illuminating the six telemetry channels with maximum precision!',
-					statBonus: '+100% Core Telemetry Resolution',
+					label: '🧪 Buffer Extracellular Potassium [K+]',
+					description: 'Inject 2.5 mM potassium buffer solution to raise the action potential threshold.',
+					outcome: 'Potassium balance prevents runaway depolarization wave across the organoids!',
+					statBonus: 'Seizure Threshold Elevated (+12 mV)',
 				},
 				{
-					label: '🧠 Synchronize Dual-Substrate Hypothesis Buffer',
-					description: 'Link your handheld tensor calculator directly to Astrid’s bio-telemetry feed.',
-					outcome: 'Your prefrontal cortex and the silicon diagnostic matrix lock into cognitive resonance. The optimal decision boundary becomes crystal clear.',
-					statBonus: 'Prefrontal Decision Margin Amplified',
+					label: '📻 Synchronize Gamma Phase Detector',
+					description: 'Lock your handheld oscilloscope to the 40-Hz biological rhythm.',
+					outcome: 'You capture the exact microvolt phase arrival times across the wetware array!',
+					statBonus: 'Gamma Phase Lock Resolution 100%',
 				},
 			],
 		},
@@ -1723,6 +1750,621 @@ const challenges: Challenge[] = [
 			[0.15, 0.2, 0.25, 0.75, 0.1, 0.15],
 			[0.1, 0.1, 0.1, 0.1, 0.15, 0.1],
 			[0.3, 0.45, 0.5, 0.2, 0.35, 0.65],
+		],
+	},
+	{
+		id: 'ephaptic',
+		name: 'Tune the ephaptic field',
+		chapter: 'Chapter X · Ephaptic Coupling',
+		timestamp: '02:51:30',
+		sector: 'Sub-Level 5 · High-Density Wetware Matrix',
+		story:
+			'02:51:30. You and Astrid breach the inner vault of Sub-Level 5. Before you lie the high-density cortical organoid vats, bathed in pale bioluminescent fluid. No synaptic patch cables link Cluster Alpha to Cluster Beta, yet the local field potentials on your diagnostic scope are locking into a synchronized 40-Hz gamma wave. Extracellular potassium ion concentration [K+] is climbing rapidly to 8.5 mM. The cells are communicating through extracellular electrical fields directly—ephaptic transmission. Without proper ground tuning and ion stabilization, the whole cluster will cascade into an irreversible seizure wave.',
+		thought:
+			'Artificial neural networks assume zero communication occurs without explicit synaptic weight matrices, Hans. But here in dense biological wetware, local field potentials generate extracellular voltage gradients that polarize neighboring membranes wirelessly. You must isolate the true ephaptic resonance from silicon bus ripples and glial calcium waves.',
+		astridTransmission:
+			'“Hans! (Astrid unrolls the copper ground mesh) Look at the 40-Hz phase coherence! It’s not an inductive ground loop from the transformer—the organoids are phase-locking via extracellular current flux! If we don’t buffer the potassium drift immediately, the paroxysmal depolarizing shift will destroy the wetware!”',
+		incidentLog:
+			'[02:51:32 WETWARE-EPHAPTIC-SYNC] Bank 4 local field potential amplitude: 850 µV. 40-Hz gamma coherence detected across unconnected culture wells. Potassium drift: +5.2 mM/min.',
+		telemetry: {
+			heartRate: 140,
+			cortisol: 'High Stress Response',
+			ambientTemp: '19.4°C',
+			cognitiveLoad: 'Field Tensor Dynamics',
+			subsystemState: 'Wetware Ephaptic Resonance Active',
+		},
+		tacticalBriefing: {
+			biologicalDilemma:
+				'Extracellular ion gradients and ephaptic field effects synchronize dense neuronal populations without chemical synapses; failing to account for extracellular physics leads to misinterpreting field oscillations as noise.',
+			siliconTrap:
+				'Standard artificial architectures model synapses as isolated scalar weights, completely ignoring volumetric continuous electromagnetic field interactions.',
+		},
+		outcome:
+			'You correctly diagnose and tune the ephaptic field synchrony, deploying the potassium buffer and grounding grid. Depolarization stabilizes, and the organoid array hums in pure 40-Hz gamma coherence.',
+		cue: 'High electric field flux and gamma phase lock indicate wireless ephaptic coupling; vesicle pause rules out chemical transmission while potassium drift confirms field-induced depolarization.',
+		preview: 'Unconnected bio-organoids begin firing in unison: wireless electrical fields in the saline mist.',
+		interlude:
+			'The paroxysmal potassium wave recedes. Across the organoid vats, the glowing amber electrodes register clean, rhythmic 40-Hz gamma bursts. Astrid smiles through the frost on her face shield.',
+		domain: 'Ephaptic Transmission & Extracellular Field Dynamics',
+		inputLabels: [
+			'Electric field flux',
+			'Extracellular [K+]',
+			'Gamma phase lock',
+			'Vesicle pause',
+			'Silicon bus ripple',
+			'Temperature gradient',
+			'Astrocyte Ca2+ wave',
+		],
+		featureLabels: [
+			'Field gradient',
+			'Ion drift',
+			'Phase coherence',
+			'Synaptic gap',
+			'Digital ripple',
+			'Convection plume',
+			'Glial calcium',
+		],
+		outputLabels: [
+			'Ephaptic synchrony',
+			'Silicon bus ripple',
+			'Astrocyte cascade',
+			'Thermal runaway',
+			'Synaptic exhaustion',
+			'Thermal noise',
+			'Ground loop',
+		],
+		outputDescriptions: [
+			'Extracellular electric fields synchronize unmyelinated membranes wirelessly',
+			'Inductive crosstalk from the high-voltage DC battery bus',
+			'Astrocytic syncytium calcium wave driving metabolic glutamate release',
+			'Convective thermal plume from overheating resistor banks',
+			'Chemical neurotransmitter depletion at presynaptic active zones',
+			'Stochastic Johnson-Nyquist electronic thermal noise',
+			'Instrumentation ground differential across the saline bath',
+		],
+		perceptTitle: 'Seven field parameters converge on wireless coupling',
+		perceptSteps: [
+			'Electric field flux reaches microvolt threshold',
+			'Extracellular potassium drift confirms active charge displacement',
+			'Gamma phase locking binds distant tissue clusters',
+			'Vesicle release pause proves non-synaptic transmission',
+			'Digital silicon ripple remains at baseline amplitude',
+			'Thermal convection plume dissipates safely',
+			'Astrocytic calcium waves follow rather than drive the wave',
+		],
+		stepMicroDetails: [
+			{
+				timeScale: 'T + 12ms · Extracellular Electric Field Sensing',
+				sensoryExperience: 'The microvolt needle on Hans’s oscilloscope flutters at 40 Hz.',
+				biologyEvent: 'Extracellular current dipole creates local field potential; neighboring unmyelinated axons experience passive membrane polarization.',
+				siliconEvent: 'x[0] = 0.85 loaded into extracellular field register.',
+				membranePotentialMv: -62,
+				siliconEnergyMicroJoules: 48,
+				interveningDynamic: 'Between T+0ms and T+12ms, extracellular current flux traveled through low-resistance extracellular saline space at the speed of light.',
+			},
+			{
+				timeScale: 'T + 35ms · Potassium Ion Efflux Measurement',
+				sensoryExperience: 'An emerald ion-selective fluorophore flashes along the culture well floor.',
+				biologyEvent: 'Repetitive action potentials displace K+ into restricted extracellular clefts, raising local Nernst equilibrium potential.',
+				siliconEvent: 'x[1] = 0.70 activates ion drift feature F2.',
+				membranePotentialMv: -52,
+				siliconEnergyMicroJoules: 110,
+				interveningDynamic: 'Between T+12ms and T+35ms, potassium ion diffusion outpaced glial astrocytic uptake, depolarizing neighboring membrane patches.',
+			},
+			{
+				timeScale: 'T + 75ms · 40-Hz Gamma Phase Alignment',
+				sensoryExperience: 'Rhythmic amber strobe pulses across both culture vats in perfect synchrony.',
+				biologyEvent: 'Ephaptic coupling phase-locks firing thresholds across 2 millimeters of tissue without chemical synaptic transmission.',
+				siliconEvent: 'x[2] = 0.92 drives phase coherence feature to peak activation (0.82).',
+				membranePotentialMv: -44,
+				siliconEnergyMicroJoules: 185,
+				interveningDynamic: 'Between T+35ms and T+75ms, subthreshold oscillations entrained distant organoids into sub-millisecond phase synchrony.',
+			},
+			{
+				timeScale: 'T + 120ms · Vesicle Fusion Inactivation Check',
+				sensoryExperience: 'Fluorescent FM1-43 dye indicates zero neurotransmitter vesicle fusion.',
+				biologyEvent: 'Presynaptic boutons remain inactive; chemical synapse blockers confirm transmission is purely electromagnetic.',
+				siliconEvent: 'x[3] = 0.40 suppresses chemical transmission hypotheses.',
+				membranePotentialMv: -38,
+				siliconEnergyMicroJoules: 240,
+				interveningDynamic: 'Between T+75ms and T+120ms, lack of synaptic delay (0.5ms EPSP lag absent) confirmed non-synaptic physical field transmission.',
+			},
+			{
+				timeScale: 'T + 170ms · Silicon Bus Ripple Rejection',
+				sensoryExperience: 'The digital bus analyzer shows flat 50-ohm line termination.',
+				biologyEvent: 'Silicon telemetry confirms zero 52-Hz ripple bleed-through from the battery banks.',
+				siliconEvent: 'x[4] = 0.25 rejects digital ripple candidate.',
+				membranePotentialMv: -32,
+				siliconEnergyMicroJoules: 290,
+				interveningDynamic: 'Between T+120ms and T+170ms, common-mode rejection in the differential amplifier isolated pure biological dipole fields.',
+			},
+			{
+				timeScale: 'T + 220ms · Thermal Gradient Stabilization',
+				sensoryExperience: 'Thermal camera displays stable 19.4°C across both vats.',
+				biologyEvent: 'Absence of localized heat plume verifies biological field phenomenon rather than resistor short-circuit.',
+				siliconEvent: 'x[5] = 0.60 confirms safe thermodynamic envelope.',
+				membranePotentialMv: +18,
+				siliconEnergyMicroJoules: 340,
+				interveningDynamic: 'Between T+170ms and T+220ms, convective cooling maintained uniform bath conductivity.',
+			},
+			{
+				timeScale: 'T + 270ms · Astrocytic Syncytium Confirmation',
+				sensoryExperience: 'Slow green calcium fluorescence illuminates the glial borders.',
+				biologyEvent: 'Astrocytic syncytium provides homeostatic potassium spatial buffering, bounding the ephaptic wave.',
+				siliconEvent: 'x[6] = 0.78 cements ‘Ephaptic synchrony’ as winner with +1.09 decision margin.',
+				membranePotentialMv: +32,
+				siliconEnergyMicroJoules: 395,
+				interveningDynamic: 'Between T+220ms and T+270ms, gap-junction coupled astrocytes absorbed excess charge, preventing paroxysmal seizure spread.',
+			},
+		],
+		settledMicroDetail: {
+			timeScale: 'T + 320ms · Ephaptic Field Resonance Settled',
+			sensoryExperience: 'The extracellular field potential locks into steady 40-Hz gamma wave; paroxysmal seizure risk vanishes.',
+			biologyEvent: 'Ephaptic coupling establishes coherent collective computation; unmyelinated neurites synchronize without wiring cost.',
+			siliconEvent: 'Matrix output 0 (Ephaptic synchrony) achieves scalar 3.10; potassium buffer command dispatched.',
+			membranePotentialMv: -68,
+			siliconEnergyMicroJoules: 420,
+			interveningDynamic: 'Between T+270ms and T+320ms, field resistance tuning stabilized the global limit cycle attractor.',
+		},
+		inBetweenTransition: {
+			title: 'In-Between Passage 10 → 11: The Thalamic Awakening',
+			location: 'Sub-Level 5 · Sub-Corridor E · Life Support Routing Bay',
+			narrative:
+				'The potassium buffer stabilizes the organoids. You and Astrid advance through the dripping steam of Sub-Corridor E toward the thalamic patch array. An automated safety gate is stuck in an oscillating loop: it is receiving high-frequency triplet spike bursts from the cryo-tanks. The facility security AI is flagging them as random sensor jitter, but Astrid recognizes the signature: it is the thalamus shifting from tonic relay into burst wake-up alarm mode!',
+			dialogue: {
+				astrid:
+					'“Look at the burst inter-spike intervals: 3.2 milliseconds! That’s low-threshold T-type calcium de-inactivation. The thalamic organoid is screaming an alarm!”',
+				hans:
+					'“The artificial packet filter assumes Poisson noise and is dropping the packets. We need to switch the detector to burst-coincidence mode so the security gate recognizes the emergency wake-up code!”',
+			},
+			choices: [
+				{
+					label: '⚡ De-inactivate Low-Threshold T-Channels',
+					description: 'Apply a brief hyperpolarizing bias pulse to prime all T-type calcium channels.',
+					outcome: 'The thalamic burst amplifies into a crisp high-frequency triplet, overriding the noise filter!',
+					statBonus: 'Thalamic Burst Signal Amplified (+14 dB)',
+				},
+				{
+					label: '🎛️ Reconfigure Packet Filter to Burst Mode',
+					description: 'Switch the gate’s receiver from linear Poisson averaging to high-gain coincidence detection.',
+					outcome: 'The security gateway immediately locks onto the triplet cadence, verifying the wake-up protocol!',
+					statBonus: 'Coincidence Window Calibrated (3.2 ms)',
+				},
+				{
+					label: '🫀 Administer Adenosine Antagonist',
+					description: 'Flush the life-support perfusion line with caffeine/theophylline compound.',
+					outcome: 'Adenosine receptor blockade strips sleep-state delta waves, forcing the circuit into alert wakefulness!',
+					statBonus: 'Cortical Arousal +35% · Heart Rate Stable',
+				},
+			],
+		},
+		why: 'Ephaptic synchrony wins because microvolt field flux, gamma phase locking, and potassium accumulation coincide while chemical vesicle release is silent.',
+		bridge:
+			'Non-synaptic continuous electric fields and extracellular ion dynamics form a second layer of biological neural computation inaccessible to standard feedforward weights.',
+		input: [0.85, 0.7, 0.92, 0.4, 0.25, 0.6, 0.78],
+		weights: [
+			[0.9, 0.85, 0.95, 0.2, 0.1, 0.7, 0.8],
+			[0.3, 0.25, 0.35, 0.15, 0.92, 0.4, 0.2],
+			[0.45, 0.5, 0.3, 0.2, 0.15, 0.35, 0.9],
+			[0.2, 0.3, 0.25, 0.1, 0.45, 0.85, 0.3],
+			[0.15, 0.4, 0.2, 0.85, 0.1, 0.2, 0.25],
+			[0.1, 0.15, 0.1, 0.15, 0.2, 0.15, 0.1],
+			[0.25, 0.2, 0.15, 0.1, 0.8, 0.3, 0.15],
+		],
+	},
+	{
+		id: 'bursting',
+		name: 'Decode the thalamic burst',
+		chapter: 'Chapter XI · The Thalamic Gatekeeper',
+		timestamp: '02:56:45',
+		sector: 'Sub-Level 5 · Thalamo-Cortical Patch Array',
+		story:
+			'02:56:45. You reach the Thalamo-Cortical Patch Array at the boundary of the master elevator vault. The hydraulic blast gate is deadlocked. The gate controller is receiving telemetry from the cryo-tanks, but can’t determine whether the signal represents background slow-wave sleep noise or an emergency wake-up alarm. In biology, thalamic relay neurons possess two radically different operating modes: Tonic Mode (linear, faithful sensory transmission) and Burst Mode (non-linear, high-frequency triplet spikes powered by T-type calcium channels that wake up the cortex). The gate requires you to decode the seven thalamic variables to trigger the emergency egress protocol.',
+		thought:
+			'A linear machine sees three spikes grouped within 10 milliseconds and averages them out as 300 Hz noise. But the mammalian thalamus uses bursts as high-gain novelty detectors: upon release from hyperpolarization, T-type calcium channels de-inactivate and fire an explosive burst that bursts through the sleep delta gate!',
+		astridTransmission:
+			'“Hans! Look at the inter-spike interval: 3.2 milliseconds! That’s an authentic Izhikevich thalamic burst! The cryo-perfusion system was hyperpolarized to -75 mV, de-inactivating the calcium conductance. When the recovery pulse hit, it fired the wake-up alarm! Instruct the matrix to select Option 2!”',
+		incidentLog:
+			'[02:56:48 THALAMIC-GATE-LOCKED] Inbound telemetry stream classified ambiguous. ISI = 3.2 ms. High-frequency packet burst received. Evaluating tonic linear vs non-linear burst hypothesis.',
+		telemetry: {
+			heartRate: 136,
+			cortisol: 'Controlled High Focus',
+			ambientTemp: '20.1°C',
+			cognitiveLoad: 'Bifurcation Dynamics',
+			subsystemState: 'Thalamocortical Gating Protocol Active',
+		},
+		tacticalBriefing: {
+			biologicalDilemma:
+				'Thalamic neurons switch dynamically between linear tonic transmission and non-linear burst firing via voltage-dependent T-type calcium channels ($I_T$), creating state-dependent signal gating.',
+			siliconTrap:
+				'Static artificial feedforward networks have fixed input-output curves; they lack state-dependent bifurcations that can turn a whisper into an explosive wake-up alarm.',
+		},
+		outcome:
+			'You select the Thalamic Wake-Up Burst. The gating logic registers the high-frequency triplet, disengaging the hydraulic deadbolts. The master blast door retracts with an echoing thud.',
+		cue: 'Ultra-short inter-spike intervals coupled with T-type Ca2+ activation and membrane hyperpolarization confirm the high-gain thalamic wake-up burst rather than linear tonic streaming.',
+		preview: 'Tonic streaming versus calcium burst: the dual operating modes of the brain’s master gatekeeper.',
+		interlude:
+			'The blast gate grinds open. Warm, dry air sweeps out from the central circular nexus chamber ahead. The final platform of Project JANUS is visible through the threshold.',
+		domain: 'Thalamocortical Dynamics & Non-Linear Bursting',
+		inputLabels: [
+			'Burst ISI',
+			'T-type Ca2+ channel',
+			'Hyperpolarization',
+			'Sensory fidelity',
+			'Cortical feedback',
+			'Adenosine build-up',
+			'Delta rhythm',
+		],
+		featureLabels: [
+			'Spike density',
+			'Calcium drive',
+			'De-inactivation',
+			'Linear transfer',
+			'Top-down gain',
+			'Fatigue state',
+			'Slow wave',
+		],
+		outputLabels: [
+			'Tonic linear stream',
+			'Thalamic wake-up burst',
+			'Deep sleep slow wave',
+			'Silicon packet drop',
+			'Epileptic spike wave',
+			'Synaptic habituation',
+			'Cryo-sensor disconnect',
+		],
+		outputDescriptions: [
+			'Linear, faithful sensory transmission during awake alert states',
+			'High-gain explosive burst firing signaling emergency cortical arousal',
+			'Synchronized low-frequency delta oscillations during slow-wave sleep',
+			'Buffer overflow leading to dropped telemetry frames in silicon router',
+			'Pathological runaway hypersynchronous cortical discharge',
+			'Progressive depression of postsynaptic potentials under repetitive stimulation',
+			'Physical transducer lead detachment from cryo-tank sensor bed',
+		],
+		perceptTitle: 'Seven thalamic markers resolve the wake-up alarm',
+		perceptSteps: [
+			'Sub-millisecond inter-spike interval signals extreme temporal density',
+			'Low-threshold T-type Ca2+ conductance de-inactivates',
+			'Preceding hyperpolarization prepares the rebound spike wave',
+			'Sensory fidelity score drops as non-linear burst takes over',
+			'Corticothalamic top-down feedback amplifies the alarm',
+			'Adenosine build-up is overcome by hyperpolarizing rebound',
+			'Slow-wave delta rhythm is disrupted by the high-frequency triplet',
+		],
+		stepMicroDetails: [
+			{
+				timeScale: 'T + 8ms · Inter-Spike Interval Detection',
+				sensoryExperience: 'Three rapid electrical clicks crackle through Hans’s acoustic probe within 6 milliseconds.',
+				biologyEvent: 'Thalamocortical relay cell fires an ultra-dense triplet of action potentials at 320 Hz.',
+				siliconEvent: 'x[0] = 0.90 loaded into spike timing buffer.',
+				membranePotentialMv: -65,
+				siliconEnergyMicroJoules: 55,
+				interveningDynamic: 'Between T+0ms and T+8ms, the first action potential traveled down the thalamocortical axon before the cell could fully repolarize.',
+			},
+			{
+				timeScale: 'T + 28ms · T-Type Calcium Current Activation',
+				sensoryExperience: 'A bright gold trace rises on the patch-clamp monitor.',
+				biologyEvent: 'Low-threshold $I_T$ calcium channels open, generating a broad somatic low-threshold spike (LTS).',
+				siliconEvent: 'x[1] = 0.82 drives calcium feature F2 to 0.82.',
+				membranePotentialMv: -54,
+				siliconEnergyMicroJoules: 125,
+				interveningDynamic: 'Between T+8ms and T+28ms, calcium influx sustained membrane depolarization above the sodium spike threshold.',
+			},
+			{
+				timeScale: 'T + 60ms · Post-Hyperpolarization Rebound Priming',
+				sensoryExperience: 'The baseline voltage dips to -75 mV before surging upward.',
+				biologyEvent: 'Prolonged hyperpolarization removes inactivation from $T$-type calcium channels, enabling the massive rebound burst.',
+				siliconEvent: 'x[2] = 0.75 verifies hyperpolarizing priming state.',
+				membranePotentialMv: -72,
+				siliconEnergyMicroJoules: 195,
+				interveningDynamic: 'Between T+28ms and T+60ms, the hyperpolarization-activated cation current ($I_h$) initiated slow depolarizing pacemaker drift.',
+			},
+			{
+				timeScale: 'T + 105ms · Non-Linear Transmission Verification',
+				sensoryExperience: 'The linear 1:1 input-output ratio disappears on the scope.',
+				biologyEvent: 'Tonic linear mode is bypassed; the burst acts as an all-or-none non-linear wake-up beacon.',
+				siliconEvent: 'x[3] = 0.35 suppresses linear tonic streaming hypothesis.',
+				membranePotentialMv: -48,
+				siliconEnergyMicroJoules: 255,
+				interveningDynamic: 'Between T+60ms and T+105ms, high-frequency bursting saturated the downstream cortical synapse, driving immediate postsynaptic spiking.',
+			},
+			{
+				timeScale: 'T + 150ms · Corticothalamic Feedback Amplification',
+				sensoryExperience: 'A resonance loop rings between the patch array and cortical simulator.',
+				biologyEvent: 'Layer 6 corticothalamic axons send glutamate feedback to the thalamic reticular nucleus and relay cells.',
+				siliconEvent: 'x[4] = 0.88 confirms top-down amplification.',
+				membranePotentialMv: -34,
+				siliconEnergyMicroJoules: 315,
+				interveningDynamic: 'Between T+105ms and T+150ms, positive recurrent feedback locked the thalamocortical loop into synchronized arousal.',
+			},
+			{
+				timeScale: 'T + 195ms · Adenosine Fatigue Clearance',
+				sensoryExperience: 'Sleep-pressure telemetry clears as arousal cascades through the circuit.',
+				biologyEvent: 'Arousal neuromodulation overrides homeostatic adenosine sleep drive, preventing sleep slow-wave relapse.',
+				siliconEvent: 'x[5] = 0.45 confirms arousal breakthrough.',
+				membranePotentialMv: +24,
+				siliconEnergyMicroJoules: 370,
+				interveningDynamic: 'Between T+150ms and T+195ms, cholinergic and noradrenergic afferents depolarized the thalamic relay cells out of the delta rhythm.',
+			},
+			{
+				timeScale: 'T + 240ms · Slow-Wave Delta Disruption',
+				sensoryExperience: 'The sluggish 1.5 Hz floor hum shatters into high-frequency wakefulness.',
+				biologyEvent: 'Delta oscillation collapses; desynchronized high-gain cortical state initiates emergency gate release.',
+				siliconEvent: 'x[6] = 0.65 cements ‘Thalamic wake-up burst’ as winner with +1.37 margin.',
+				membranePotentialMv: +33,
+				siliconEnergyMicroJoules: 430,
+				interveningDynamic: 'Between T+195ms and T+240ms, the high-frequency burst triggered the automated hydraulic deadbolt release sequence.',
+			},
+		],
+		settledMicroDetail: {
+			timeScale: 'T + 290ms · Thalamic Relay Wake-Up Stabilized',
+			sensoryExperience: 'The hydraulic deadbolts disengage with a resounding clatter; the master gate opens smoothly.',
+			biologyEvent: 'Thalamocortical circuit transitions into alert tonic readiness; emergency sensory channels are 100% open.',
+			siliconEvent: 'Matrix output 1 (Thalamic wake-up burst) settles at peak scalar 3.53; gate release verified.',
+			membranePotentialMv: -65,
+			siliconEnergyMicroJoules: 460,
+			interveningDynamic: 'Between T+240ms and T+290ms, the relay cell resumed baseline resting potential, primed for alert sensory processing.',
+		},
+		inBetweenTransition: {
+			title: 'In-Between Passage 11 → 12: The Chimera Nexus',
+			location: 'Sub-Level 5 · Chimera Central Platform',
+			narrative:
+				'The security gate snaps open with a blast of compressed air. You and Astrid step onto the master platform of Project JANUS. Suspended in an electromagnetic field inside the circular chamber is the Chimera Nexus: human cortical organoids intertwined with crystalline optical waveguide buses. To unlock the final surface elevator and permanently stabilize the facility, you must solve the 8-dimensional Chimera matrix—harmonizing active dendritic branch computation with systolic register execution.',
+			dialogue: {
+				astrid:
+					'“Hans, this is the culmination of our research. A single pyramidal neuron computes with its dendritic branches like a multi-layer deep network. We must balance active dendritic spikes with the silicon optical bus!”',
+				hans:
+					'“Eight channels of bio-digital telemetry. If we align the non-linear dendritic saturations with the systolic clock phases, the chimera resonance will lock homeostatically!”',
+			},
+			choices: [
+				{
+					label: '🌿 Prime Apical Dendritic Calcium Plateau',
+					description: 'Inject localized dendritic depolarization to open NMDA and voltage-gated calcium channels.',
+					outcome: 'The apical dendrite fires a sustained 35-millisecond plateau, bridging the top-down and bottom-up streams!',
+					statBonus: 'Dendritic Computational Gain +250%',
+				},
+				{
+					label: '💡 Phase-Align Optical Photonic Bus',
+					description: 'Synchronize the silicon waveguide clock to the dendritic plateau arrival time.',
+					outcome: 'Silicon tensor execution and biological dendritic integration achieve sub-nanosecond coherence!',
+					statBonus: 'Clock Jitter Reduced to 0.02 ps',
+				},
+				{
+					label: '🧬 Modulate Dopaminergic Plasticity Gate',
+					description: 'Release a calibrated volume pulse of dopamine to lock the synaptic weight configuration.',
+					outcome: 'Three-factor Hebbian plasticity cements the optimal decision matrix permanently!',
+					statBonus: 'Synaptic Stability Locked (100%)',
+				},
+			],
+		},
+		why: 'Thalamic wake-up burst wins decisively because sub-4ms inter-spike intervals combined with T-type Ca2+ conductance and preceding hyperpolarization are the textbook biophysical hallmarks of burst mode.',
+		bridge:
+			'Dynamic switching between tonic transmission and burst alarms illustrates how biological neurons reconfigure their computational role based on membrane potential history.',
+		input: [0.9, 0.82, 0.75, 0.35, 0.88, 0.45, 0.65],
+		weights: [
+			[0.4, 0.35, 0.3, 0.85, 0.2, 0.45, 0.3],
+			[0.95, 0.9, 0.85, 0.3, 0.9, 0.4, 0.75],
+			[0.25, 0.3, 0.4, 0.2, 0.35, 0.8, 0.85],
+			[0.2, 0.25, 0.15, 0.75, 0.2, 0.3, 0.2],
+			[0.3, 0.35, 0.4, 0.2, 0.35, 0.85, 0.4],
+			[0.15, 0.2, 0.25, 0.35, 0.2, 0.85, 0.3],
+			[0.1, 0.15, 0.1, 0.8, 0.15, 0.2, 0.15],
+		],
+	},
+	{
+		id: 'chimera',
+		name: 'Calibrate the chimera nexus',
+		chapter: 'Chapter XII · The Chimera Nexus',
+		timestamp: '03:02:10',
+		sector: 'Sub-Level 5 · Master Bio-Digital Chimera Console',
+		story:
+			'03:02:10. The apex of Project JANUS stands before you. In the center of the subterranean vault, a glowing sphere of living neural tissue cultures is threaded with ultra-fast optical waveguides and cryogenic silicon tensor chips—The Chimera Nexus. Eight complex telemetry channels pulse on the master console: Dendritic NMDA Spike, Soma Back-Propagating Action Potential, Synaptic Weight Vector, Systolic Clock Phase, GABAergic Local Shunting Veto, Dopaminergic Neuromodulatory Surge, Astrocytic Glutamate Reuptake, and Photonic Optical Bus Throughput. To disarm the facility lockdown and open the surface evacuation elevator, you must align all eight variables into homeostatic resonance.',
+		thought:
+			'A single cortical pyramidal neuron is not a point-like perceptron, Hans! Its dendritic tree possesses dozens of active sub-compartments, each capable of generating local NMDA and calcium spikes. A single human cortical neuron computes non-linear logical functions (like XOR) before the signal even touches the soma. Combine dendritic computation with silicon systolic tensor multiplication to achieve the ultimate Chimera Lock!',
+		astridTransmission:
+			'“Hans! This is it—our life’s work! The apical dendrites are generating local calcium spikes while the silicon optical bus computes the high-dimensional matrix transform! When the dendritic coincidence hits the soma at the exact phase of the optical clock, the Chimera Nexus will lock into self-sustaining homeostatic balance!”',
+		incidentLog:
+			'[03:02:12 CHIMERA-NEXUS-SUMMIT] 8-channel bio-silicon tensor bus online. Evaluating non-linear dendritic plateau vs systolic register throughput. Final facility override armed.',
+		telemetry: {
+			heartRate: 122,
+			cortisol: 'Steely Calm',
+			ambientTemp: '21.0°C',
+			cognitiveLoad: 'Peak Synthesis (100%)',
+			subsystemState: 'Master Bio-Digital Chimera Resonance',
+		},
+		tacticalBriefing: {
+			biologicalDilemma:
+				'Active dendritic branches perform independent non-linear transforms (NMDA spikes, dCaAPs), enabling single pyramidal neurons to function as two-layer artificial neural networks.',
+			siliconTrap:
+				'Treating biological neurons as single-input summing points ignores 90% of cortical computational capacity contained within active dendritic arbors.',
+		},
+		outcome:
+			'You execute the Bio-Digital Chimera Lock. The dendritic NMDA plateau and optical systolic clock achieve perfect sub-nanosecond resonance. The master evacuation elevator powers up; the Night Signal resolves into peaceful silence.',
+		cue: 'Simultaneous dendritic NMDA plateau, somatic back-propagation coincidence, and dopaminergic gating surge establish the transcendent Bio-Digital Chimera Lock.',
+		preview: 'Eight variables, active dendritic computation, and the final surface evacuation elevator.',
+		interlude:
+			'A brilliant, warm cyan luminescence floods the nexus chamber. The harsh alarm sirens cut out, replaced by the deep, smooth hum of the high-speed surface elevator. Astrid takes Hans’s hand. The elevator doors open to the surface.',
+		domain: 'Active Dendritic Trees & Bio-Silicon Hybrid Architecture',
+		inputLabels: [
+			'Dendritic NMDA spike',
+			'Soma back-prop AP',
+			'Synaptic weight',
+			'Systolic clock phase',
+			'GABAergic local veto',
+			'Dopamine surge',
+			'Astrocyte reuptake',
+			'Optical bus flux',
+		],
+		featureLabels: [
+			'Branch non-linearity',
+			'Somatic coincidence',
+			'Synaptic efficacy',
+			'Clock synchronization',
+			'Inhibitory shunting',
+			'Neuromodulatory gain',
+			'Glutamate clearance',
+			'Photonic throughput',
+		],
+		outputLabels: [
+			'Bio-digital chimera lock',
+			'Dendritic local veto',
+			'Axon hillock burst',
+			'Systolic register overflow',
+			'Excitotoxic glutamate flood',
+			'Synaptic depression',
+			'Clock jitter failure',
+			'Homeostatic release',
+		],
+		outputDescriptions: [
+			'Harmonic resonance between active dendritic branches and optical systolic tensor registers',
+			'Branch-specific GABAergic interneuron shunting abolishing dendritic spike propagation',
+			'Uncoordinated runaway action potential discharge at the axon initial segment',
+			'Floating-point arithmetic accumulator overflow in the cryogenic tensor core',
+			'Excessive synaptic glutamate release triggering excitotoxic neuronal swelling',
+			'Long-term synaptic depression driven by low-frequency uncoordinated stimulation',
+			'Clock phase drift across the electro-optical interface corrupting register reads',
+			'Passive resting state release without establishing active hybrid resonance',
+		],
+		perceptTitle: 'Eight bio-digital streams achieve master transcendence',
+		perceptSteps: [
+			'Dendritic branch initiates localized non-linear NMDA plateau',
+			'Back-propagating action potential confirms somatic spike coincidence',
+			'Synaptic weight matrix aligns with learned associative patterns',
+			'Systolic optical clock locks phase with the biological plateau',
+			'GABAergic shunting veto is overcome by coordinated excitation',
+			'Dopaminergic volume surge initiates three-factor plasticity consolidation',
+			'Astrocytic glutamate reuptake maintains crisp temporal resolution',
+			'Photonic optical throughput achieves maximum transmission bandwidth',
+		],
+		stepMicroDetails: [
+			{
+				timeScale: 'T + 5ms · Dendritic NMDA Spike Initiation',
+				sensoryExperience: 'A localized flash of gold fires along the apical dendrite branch.',
+				biologyEvent: 'Magnesium block unplugs from NMDA receptors; local branch depolarizes to -20 mV for 40 milliseconds.',
+				siliconEvent: 'x[0] = 0.92 loaded into dendritic non-linearity register.',
+				membranePotentialMv: -58,
+				siliconEnergyMicroJoules: 60,
+				interveningDynamic: 'Between T+0ms and T+5ms, glutamate uncaging on spine heads drove local membrane potential past the -30 mV magnesium unblocking threshold.',
+			},
+			{
+				timeScale: 'T + 20ms · Back-Propagating Somatic AP Coincidence',
+				sensoryExperience: 'A dual pulse echoes through the intracellular patch electrode.',
+				biologyEvent: 'Action potential generated at the axon hillock back-propagates into the dendritic tree, detecting temporal coincidence.',
+				siliconEvent: 'x[1] = 0.85 activates coincidence detector F2.',
+				membranePotentialMv: -46,
+				siliconEnergyMicroJoules: 140,
+				interveningDynamic: 'Between T+5ms and T+20ms, somatic sodium spike invasion boosted dendritic calcium influx through R-type voltage-gated channels.',
+			},
+			{
+				timeScale: 'T + 50ms · Synaptic Weight Vector Alignment',
+				sensoryExperience: 'The 8×8 weight matrix on the console glows steady emerald.',
+				biologyEvent: 'AMPA receptor phosphorylation and membrane insertion increase post-synaptic quantal size.',
+				siliconEvent: 'x[2] = 0.78 verifies synaptic efficacy weights.',
+				membranePotentialMv: -36,
+				siliconEnergyMicroJoules: 220,
+				interveningDynamic: 'Between T+20ms and T+50ms, calcium/calmodulin-dependent protein kinase II (CaMKII) autophosphorylation stabilized synaptic potentiation.',
+			},
+			{
+				timeScale: 'T + 90ms · Systolic Optical Clock Synchronization',
+				sensoryExperience: 'A pure laser beam pulses through the crystalline waveguide at 1.85 GHz.',
+				biologyEvent: 'Silicon systolic clock cycles align with the crest of the biological dendritic plateau.',
+				siliconEvent: 'x[3] = 0.60 confirms sub-picosecond clock synchronization.',
+				membranePotentialMv: -28,
+				siliconEnergyMicroJoules: 290,
+				interveningDynamic: 'Between T+50ms and T+90ms, electro-optical phase-locked loops eliminated clock skew across the bio-silicon boundary.',
+			},
+			{
+				timeScale: 'T + 135ms · Local GABAergic Shunting Resolution',
+				sensoryExperience: 'Inhibitory warning lights flicker and stabilize.',
+				biologyEvent: 'Parvalbumin-positive basket cells apply targeted shunting inhibition, carving precise temporal computational boundaries.',
+				siliconEvent: 'x[4] = 0.88 evaluates inhibitory veto matrix.',
+				membranePotentialMv: -22,
+				siliconEnergyMicroJoules: 360,
+				interveningDynamic: 'Between T+90ms and T+135ms, feedforward GABAergic chloride influx pruned extraneous synaptic noise.',
+			},
+			{
+				timeScale: 'T + 180ms · Neuromodulatory Dopamine Surge',
+				sensoryExperience: 'A warm crimson glow suffuses the organoid core.',
+				biologyEvent: 'Dopaminergic reward prediction error signal triggers global volume transmission, locking synaptic weights.',
+				siliconEvent: 'x[5] = 0.95 drives neuromodulatory gain feature F6 to 0.91.',
+				membranePotentialMv: +15,
+				siliconEnergyMicroJoules: 430,
+				interveningDynamic: 'Between T+135ms and T+180ms, dopamine D1 receptor activation activated adenylate cyclase, sealing long-term synaptic consolidation.',
+			},
+			{
+				timeScale: 'T + 225ms · Astrocytic Glutamate Clearance',
+				sensoryExperience: 'Extracellular glutamate levels drop to baseline 20 nanomolar.',
+				biologyEvent: 'Astrocyte GLT-1 transporters pump glutamate out of the synaptic cleft, preventing excitotoxic receptor desensitization.',
+				siliconEvent: 'x[6] = 0.72 verifies homeostatic glial clearance.',
+				membranePotentialMv: +28,
+				siliconEnergyMicroJoules: 500,
+				interveningDynamic: 'Between T+180ms and T+225ms, sodium-dependent glutamate symport maintained high signal-to-noise ratio.',
+			},
+			{
+				timeScale: 'T + 270ms · Photonic Optical Bus Resonance Lock',
+				sensoryExperience: 'The entire console array hums in harmonic unison; the surface elevator chimes.',
+				biologyEvent: 'Biological active dendrites and silicon photonic tensor cores achieve unified minimum-energy attractor state.',
+				siliconEvent: 'x[7] = 0.65 cements ‘Bio-digital chimera lock’ as supreme winner with scalar 4.73.',
+				membranePotentialMv: +34,
+				siliconEnergyMicroJoules: 570,
+				interveningDynamic: 'Between T+225ms and T+270ms, cross-modal bio-digital resonance disengaged all facility magnetic locks.',
+			},
+		],
+		settledMicroDetail: {
+			timeScale: 'T + 320ms · Transcendent Chimera Equilibrium Locked',
+			sensoryExperience: 'The master elevator doors slide open. The facility’s recursive loop is permanently calmed. Sunlight awaits.',
+			biologyEvent: 'Pyramidal neurons settle into homeostatic equilibrium; dendritic computing branches maintain stable working memory.',
+			siliconEvent: 'Matrix output 0 (Bio-digital chimera lock) achieves peak scalar 4.73. Facility override complete.',
+			membranePotentialMv: -70,
+			siliconEnergyMicroJoules: 620,
+			interveningDynamic: 'Between T+270ms and T+320ms, the entire complex shifted into stable resting homeostatic equilibrium.',
+		},
+		inBetweenTransition: {
+			title: 'Final Passage 12 → Surface Evacuation',
+			location: 'Sub-Level 5 → Surface Evacuation Portal',
+			narrative:
+				'The Chimera Nexus pulses with a serene, harmonic luminescence. The bio-digital resonance locks at 100%. One by one, every magnetic interlock across Sub-Level 5 de-energizes with a deep hydraulic sigh. The high-speed pneumatic evacuation elevator powers up. Together, you and Astrid step into the car as it ascends through five hundred meters of solid bedrock. The doors slide open to cool rain, fresh mountain air, and the pre-dawn horizon.',
+			dialogue: {
+				astrid:
+					'“We did it, Hans. Silicon and wetware... not adversaries, but twin mirrors of the same physical laws of computation.”',
+				hans:
+					'“The Night Signal is silent. Let’s go home.”',
+			},
+			choices: [
+				{
+					label: '🌅 Step Out Into the Morning Rain',
+					description: 'Exit the subterranean complex and breathe the fresh mountain air.',
+					outcome: 'You and Astrid step out onto the surface helipad as emergency rescue sirens arrive. You survived Project JANUS!',
+					statBonus: 'Project JANUS Solved · Master Architect Tier',
+				},
+				{
+					label: '💾 Archive Complete Bio-Digital Telemetry',
+					description: 'Save the unified 8-dimensional chimera dataset to optical crystal drive.',
+					outcome: 'The complete mathematical proof of bio-silicon computational equivalence is preserved for humanity!',
+					statBonus: 'Theoretical Breakthrough Archived (100%)',
+				},
+				{
+					label: '☕ Return to "The Broken Dial"',
+					description: 'Head to the coffee shop on 4th Street to continue debating Hebbian learning over fresh espresso.',
+					outcome: 'Astrid smiles: “First round is on you, Hans.” An unbreakable human bond forged under pressure.',
+					statBonus: 'Episodic Memory Eternal (+1.00)',
+				},
+			],
+		},
+		why: 'Bio-digital chimera lock wins with overwhelming margin because active dendritic NMDA plateaus, somatic back-propagation, and optical clock synchronization align simultaneously.',
+		bridge:
+			'Human cortical pyramidal neurons achieve super-linear computational density through active dendritic trees, proving that biological intelligence computes through morphology, time, and chemistry simultaneously.',
+		input: [0.92, 0.85, 0.78, 0.6, 0.88, 0.95, 0.72, 0.65],
+		weights: [
+			[0.95, 0.9, 0.85, 0.6, 0.9, 0.95, 0.75, 0.7],
+			[0.4, 0.35, 0.3, 0.25, 0.85, 0.4, 0.3, 0.25],
+			[0.5, 0.6, 0.45, 0.3, 0.4, 0.55, 0.35, 0.3],
+			[0.2, 0.25, 0.3, 0.85, 0.2, 0.3, 0.25, 0.75],
+			[0.3, 0.35, 0.4, 0.2, 0.35, 0.85, 0.4, 0.25],
+			[0.25, 0.3, 0.85, 0.2, 0.25, 0.3, 0.35, 0.2],
+			[0.15, 0.2, 0.2, 0.8, 0.15, 0.25, 0.2, 0.7],
+			[0.35, 0.4, 0.35, 0.4, 0.45, 0.5, 0.4, 0.35],
 		],
 	},
 ];
@@ -1772,6 +2414,8 @@ function inputGridClass(n: number): string {
 	if (n <= 3) return 'grid-cols-3';
 	if (n === 4) return 'grid-cols-4';
 	if (n === 5) return 'grid-cols-3 sm:grid-cols-5';
+	if (n === 7) return 'grid-cols-3 sm:grid-cols-7';
+	if (n >= 8) return 'grid-cols-2 sm:grid-cols-4 lg:grid-cols-8';
 	return 'grid-cols-3 sm:grid-cols-6';
 }
 
@@ -1779,12 +2423,17 @@ function optionGridClass(n: number): string {
 	if (n === 3) return 'grid-cols-3';
 	if (n === 4) return 'grid-cols-2 sm:grid-cols-4';
 	if (n === 5) return 'grid-cols-2 sm:grid-cols-5';
+	if (n === 7) return 'grid-cols-2 sm:grid-cols-4 lg:grid-cols-7';
+	if (n >= 8) return 'grid-cols-2 sm:grid-cols-4 lg:grid-cols-8';
 	return 'grid-cols-2 sm:grid-cols-3';
 }
 
 function stepGridClass(steps: number): string {
 	if (steps === 3) return 'grid-cols-4';
 	if (steps === 4) return 'grid-cols-5';
+	if (steps === 5) return 'grid-cols-6';
+	if (steps === 7) return 'grid-cols-4 sm:grid-cols-8';
+	if (steps >= 8) return 'grid-cols-3 sm:grid-cols-5 lg:grid-cols-9';
 	return 'grid-cols-3';
 }
 
@@ -1800,6 +2449,12 @@ function MatrixPanel({ challenge, phase }: Readonly<{ challenge: Challenge; phas
 	const activeInputIndex = phase > 0 && phase < finalPhase ? phase - 1 : -1;
 	const activeFeatureIndex = activeInputIndex;
 	const winner = outputs.indexOf(Math.max(...outputs));
+	const cellSizeClass =
+		challenge.input.length >= 8
+			? 'size-6 sm:size-7 text-[8px] sm:text-[10px]'
+			: challenge.input.length === 7
+				? 'size-7 sm:size-8 text-[9px] sm:text-xs'
+				: 'size-8 sm:size-10 text-xs';
 
 	return (
 		<div className="relative overflow-hidden rounded-2xl border border-cyan-400/25 bg-[radial-gradient(ellipse_at_top,#0c2333,#050f16)] p-3 sm:rounded-[28px] sm:p-6 shadow-[0_12px_40px_rgba(6,182,212,0.12)]">
@@ -1841,7 +2496,7 @@ function MatrixPanel({ challenge, phase }: Readonly<{ challenge: Challenge; phas
 			)}
 
 			<div
-				className="mt-4 flex items-center justify-center gap-1.5 font-mono text-[10px] sm:mt-6 sm:gap-3 sm:text-sm"
+				className="mt-4 flex items-center justify-center gap-1.5 font-mono text-[10px] sm:mt-6 sm:gap-3 sm:text-sm overflow-x-auto pb-2"
 				aria-label="Weight matrix multiplied by input vector"
 			>
 				{/* W1 Matrix */}
@@ -1855,7 +2510,7 @@ function MatrixPanel({ challenge, phase }: Readonly<{ challenge: Challenge; phas
 							row.map((value, columnIndex) => (
 								<span
 									key={`${rowIndex}-${columnIndex}`}
-									className={`flex size-8 items-center justify-center rounded-md font-mono text-xs transition-all duration-500 sm:size-10 ${
+									className={`flex ${cellSizeClass} items-center justify-center rounded-md font-mono transition-all duration-500 ${
 										phase === columnIndex + 1
 											? 'bg-cyan-400/35 text-white ring-2 ring-cyan-300 shadow-[0_0_24px_rgba(34,211,238,0.6)] font-bold scale-105'
 											: 'bg-white/5 text-slate-400'
@@ -1877,7 +2532,7 @@ function MatrixPanel({ challenge, phase }: Readonly<{ challenge: Challenge; phas
 						{challenge.input.map((value, index) => (
 							<span
 								key={index}
-								className={`flex size-8 items-center justify-center rounded-md font-mono text-xs transition-all duration-500 sm:size-10 ${
+								className={`flex ${cellSizeClass} items-center justify-center rounded-md font-mono transition-all duration-500 ${
 									phase === index + 1
 										? 'bg-violet-400/35 text-white ring-2 ring-violet-300 shadow-[0_0_24px_rgba(167,139,250,0.6)] font-bold scale-105'
 										: 'bg-white/5 text-violet-200'
@@ -1899,7 +2554,7 @@ function MatrixPanel({ challenge, phase }: Readonly<{ challenge: Challenge; phas
 							<span
 								key={index}
 								title={challenge.featureLabels[index]}
-								className={`flex size-8 items-center justify-center rounded-md font-mono text-xs transition-all duration-500 sm:size-10 ${
+								className={`flex ${cellSizeClass} items-center justify-center rounded-md font-mono transition-all duration-500 ${
 									phase > 0 ? 'bg-emerald-400/25 text-emerald-100 font-bold' : 'bg-white/5 text-slate-600'
 								} ${index === activeFeatureIndex ? 'ring-2 ring-emerald-300 shadow-[0_0_24px_rgba(52,211,153,0.6)] scale-105' : ''}`}
 							>
@@ -1996,9 +2651,14 @@ function BrainPanel({ challenge, phase }: Readonly<{ challenge: Challenge; phase
 	const features = featuresFor(challenge, visibleColumns);
 	const max = Math.max(...outputs);
 	const activeInputIndex = phase > 0 && phase < finalPhase ? phase - 1 : -1;
-	const rowGap = challenge.input.length > 3 ? 48 : 58;
-	const rowY = (index: number) => 46 + index * rowGap;
-	const graphHeight = rowY(challenge.input.length - 1) + 46;
+	const isHighDim = challenge.input.length >= 7;
+	const rowGap = challenge.input.length >= 8 ? 36 : challenge.input.length === 7 ? 40 : challenge.input.length > 3 ? 48 : 58;
+	const startY = isHighDim ? 36 : 46;
+	const rowY = (index: number) => startY + index * rowGap;
+	const graphHeight = rowY(Math.max(challenge.input.length, challenge.outputLabels.length) - 1) + startY;
+	const sensoryRadius = isHighDim ? 10 : 14;
+	const featureRadius = isHighDim ? 12 : 16;
+	const outputRadius = isHighDim ? 15 : 20;
 
 	return (
 		<div className="relative overflow-hidden rounded-2xl border border-amber-400/25 bg-[radial-gradient(ellipse_at_top,#261807,#0d0803)] p-3 sm:rounded-[28px] sm:p-6 shadow-[0_12px_40px_rgba(245,158,11,0.12)]">
@@ -2105,9 +2765,9 @@ function BrainPanel({ challenge, phase }: Readonly<{ challenge: Challenge; phase
 				{challenge.input.map((value, index) => (
 					<g key={`input-${index}`}>
 						{index === activeInputIndex && (
-							<circle cx="58" cy={rowY(index)} r="26" fill="none" stroke="#22d3ee" strokeWidth="2.5" opacity="0.8" className="animate-ping" />
+							<circle cx="58" cy={rowY(index)} r={sensoryRadius + 12} fill="none" stroke="#22d3ee" strokeWidth="2.5" opacity="0.8" className="animate-ping" />
 						)}
-						<circle cx="58" cy={rowY(index)} r={14 + value * 5} fill="#082f49" stroke="#38bdf8" strokeWidth="2" />
+						<circle cx="58" cy={rowY(index)} r={sensoryRadius + value * (isHighDim ? 3 : 5)} fill="#082f49" stroke="#38bdf8" strokeWidth="2" />
 						<circle
 							cx="58"
 							cy={rowY(index)}
@@ -2115,7 +2775,7 @@ function BrainPanel({ challenge, phase }: Readonly<{ challenge: Challenge; phase
 							fill={phase === index + 1 ? '#ffffff' : '#22d3ee'}
 							className={phase === index + 1 ? 'animate-pulse' : ''}
 						/>
-						<text x="22" y={rowY(index) + 4} fill="#cbd5e1" fontSize="10" fontWeight="600" textAnchor="end">
+						<text x="22" y={rowY(index) + 4} fill="#cbd5e1" fontSize={isHighDim ? '9' : '10'} fontWeight="600" textAnchor="end">
 							{value.toFixed(1)}
 						</text>
 					</g>
@@ -2125,22 +2785,22 @@ function BrainPanel({ challenge, phase }: Readonly<{ challenge: Challenge; phase
 				{features.map((value, index) => (
 					<g key={`feature-${index}`}>
 						{index === activeInputIndex && (
-							<circle cx="255" cy={rowY(index)} r="28" fill="#fbbf2415" stroke="#fde68a" strokeWidth="2" className="animate-pulse" />
+							<circle cx="255" cy={rowY(index)} r={featureRadius + 12} fill="#fbbf2415" stroke="#fde68a" strokeWidth="2" className="animate-pulse" />
 						)}
 						<circle
 							cx="255"
 							cy={rowY(index)}
-							r={16 + Math.max(0, value) * 5}
+							r={featureRadius + Math.max(0, value) * (isHighDim ? 3 : 5)}
 							fill="#382405"
 							stroke="#f59e0b"
 							strokeWidth={phase > 0 ? 3 : 1.5}
 							className="transition-all duration-700"
 						/>
-						<text x="255" y={rowY(index) + 4} fill="white" fontSize="11" fontWeight="bold" textAnchor="middle">
+						<text x="255" y={rowY(index) + 4} fill="white" fontSize={isHighDim ? '9' : '11'} fontWeight="bold" textAnchor="middle">
 							F{index + 1}
 						</text>
 						{phase > 0 && (
-							<text x="290" y={rowY(index) + 4} fill="#fde68a" fontSize="10" fontWeight="600">
+							<text x="290" y={rowY(index) + 4} fill="#fde68a" fontSize={isHighDim ? '9' : '10'} fontWeight="600">
 								{format(value)}
 							</text>
 						)}
@@ -2156,23 +2816,23 @@ function BrainPanel({ challenge, phase }: Readonly<{ challenge: Challenge; phase
 							<circle
 								cx="447"
 								cy={rowY(index)}
-								r="20"
+								r={outputRadius}
 								fill={isWinner ? '#78350f' : '#271708'}
 								stroke={isWinner ? '#fde68a' : '#92400e'}
 								strokeWidth={isWinner ? 4 : 2}
 								className="transition-all duration-700"
 							/>
 							{isWinner && (
-								<circle cx="447" cy={rowY(index)} r="30" fill="none" stroke="#fbbf24" strokeWidth="2.5" opacity="0.8" className="animate-ping" />
+								<circle cx="447" cy={rowY(index)} r={outputRadius + 10} fill="none" stroke="#fbbf24" strokeWidth="2.5" opacity="0.8" className="animate-ping" />
 							)}
-							<text x="447" y={rowY(index) + 5} fill="white" fontSize="13" fontWeight="bold" textAnchor="middle">
+							<text x="447" y={rowY(index) + 5} fill="white" fontSize={isHighDim ? '11' : '13'} fontWeight="bold" textAnchor="middle">
 								{index + 1}
 							</text>
 							<text
 								x="478"
 								y={rowY(index) + 4}
 								fill={phase >= finalPhase ? (isWinner ? '#fde68a' : '#94a3b8') : '#64748b'}
-								fontSize="11"
+								fontSize={isHighDim ? '9' : '11'}
 								fontWeight="700"
 							>
 								{phase >= finalPhase ? `${hz} Hz` : '—'}
@@ -2637,7 +3297,7 @@ function PerceptScene({ challenge, phase, idPrefix }: Readonly<{ challenge: Chal
 				{caption('Authentic Living Voice Verified')}
 			</g>
 		);
-	} else {
+	} else if (challenge.id === 'shutdown') {
 		// Chapter IX: The Kill Signal (Reactor Console & Dials)
 		const gauges = [
 			{ x: 70, label: 'PWR', c: '#f43f5e', s: 1, val: 0.8 },
@@ -2695,6 +3355,331 @@ function PerceptScene({ challenge, phase, idPrefix }: Readonly<{ challenge: Chal
 					);
 				})}
 				{caption('Core Computation Safely Isolated')}
+			</g>
+		);
+	} else if (challenge.id === 'ephaptic') {
+		// Chapter X: The Ephaptic Breach (Organoid Tank, Extracellular Waves & Ephaptic Field)
+		art = (
+			<g>
+				{/* Cylindrical bio-incubation vat */}
+				<rect x="50" y="38" width="460" height="152" rx="16" fill="#04202c" stroke="#0e7490" strokeWidth="1.5" />
+				{/* Nutrient bath with glowing liquid gradient */}
+				<rect x="56" y="60" width="448" height="124" rx="10" fill="#062e3d" fillOpacity="0.75" />
+				<line x1="56" y1="60" x2="504" y2="60" stroke="#22d3ee" strokeWidth="2" strokeDasharray="6 4" opacity="0.8" />
+				
+				{/* 40-Hz Gamma Wavefield (sinusoidal electric field fringes across bath) */}
+				<path
+					d="M 60 100 Q 115 70 170 100 T 280 100 T 390 100 T 500 100"
+					fill="none"
+					stroke="#22d3ee"
+					strokeWidth={active(1) ? 4 : 2}
+					strokeOpacity={active(1) ? 0.9 : 0.4}
+					className={layerClass(1)}
+				/>
+				<path
+					d="M 60 125 Q 115 95 170 125 T 280 125 T 390 125 T 500 125"
+					fill="none"
+					stroke="#38bdf8"
+					strokeWidth={active(2) ? 4 : 2}
+					strokeOpacity={active(2) ? 0.9 : 0.35}
+					className={layerClass(2)}
+				/>
+				<path
+					d="M 60 150 Q 115 120 170 150 T 280 150 T 390 150 T 500 150"
+					fill="none"
+					stroke="#818cf8"
+					strokeWidth={active(3) ? 4 : 2}
+					strokeOpacity={active(3) ? 0.9 : 0.3}
+					className={layerClass(3)}
+				/>
+
+				{/* Extracellular Potassium [K+] clouds (floating golden ion clouds) */}
+				<g className={layerClass(4)}>
+					{[
+						{ x: 120, y: 80, r: 16 },
+						{ x: 230, y: 140, r: 20 },
+						{ x: 340, y: 75, r: 18 },
+						{ x: 440, y: 135, r: 22 },
+					].map((c, i) => (
+						<circle
+							key={i}
+							cx={c.x}
+							cy={c.y}
+							r={c.r}
+							fill="#f59e0b"
+							fillOpacity="0.22"
+							stroke="#fbbf24"
+							strokeWidth="1"
+							strokeDasharray="3 3"
+							filter={`url(#${P}-glow)`}
+						/>
+					))}
+				</g>
+
+				{/* Parallel Unmyelinated Axon Bundles & Micro-Organoids */}
+				<g className={layerClass(5)}>
+					{/* Organoid Spheres */}
+					{[
+						{ x: 140, y: 115, label: 'ORG-1' },
+						{ x: 280, y: 115, label: 'ORG-2' },
+						{ x: 420, y: 115, label: 'ORG-3' },
+					].map((org, i) => (
+						<g key={i}>
+							<circle cx={org.x} cy={org.y} r="26" fill="#0c4a6e" stroke="#38bdf8" strokeWidth="2" />
+							<circle cx={org.x} cy={org.y} r="18" fill="#0369a1" fillOpacity="0.6" filter={`url(#${P}-glow)`} />
+							{/* Dendritic micro-arbor lines */}
+							<line x1={org.x - 22} y1={org.y - 12} x2={org.x + 22} y2={org.y + 12} stroke="#7dd3fc" strokeWidth="1.2" opacity="0.6" />
+							<line x1={org.x - 22} y1={org.y + 12} x2={org.x + 22} y2={org.y - 12} stroke="#7dd3fc" strokeWidth="1.2" opacity="0.6" />
+							<text x={org.x} y={org.y + 3} textAnchor="middle" fill="#fff" fontSize="8" fontWeight="bold">
+								{org.label}
+							</text>
+						</g>
+					))}
+					{/* Ephaptic electric field dipole vectors between organoids */}
+					<line x1="168" y1="115" x2="252" y2="115" stroke="#fde68a" strokeWidth={active(6) ? 3 : 1.5} strokeDasharray="4 2" />
+					<line x1="308" y1="115" x2="392" y2="115" stroke="#fde68a" strokeWidth={active(6) ? 3 : 1.5} strokeDasharray="4 2" />
+				</g>
+
+				{/* LFP Recording Micro-Electrode Needle descending from ceiling */}
+				<g className={layerClass(7)}>
+					<path d="M 276 38 L 276 92 L 280 100 L 284 92 L 284 38 Z" fill="#475569" stroke="#94a3b8" strokeWidth="1" />
+					<circle cx="280" cy="100" r="3" fill="#22d3ee" className="animate-ping" />
+					<rect x="236" y="44" width="88" height="16" rx="4" fill="#020617" stroke="#38bdf8" strokeWidth="1" />
+					<text x="280" y="55" textAnchor="middle" fill="#38bdf8" fontSize="8" fontFamily="monospace" fontWeight="bold">
+						E: 2.8 V/m · 40Hz
+					</text>
+				</g>
+
+				{/* Final Phase: Synchrony Lock Ring */}
+				{done && (
+					<g filter={`url(#${P}-intense-glow)`}>
+						<ellipse cx="280" cy="115" rx="180" ry="48" fill="none" stroke="#fde68a" strokeWidth="3" strokeDasharray="8 6" className="animate-pulse" />
+						<rect x="180" y="152" width="200" height="22" rx="6" fill="#0f172a" stroke="#fde68a" strokeWidth="1.5" />
+						<text x="280" y="167" textAnchor="middle" fill="#fde68a" fontSize="10" fontWeight="bold" letterSpacing="0.1em">
+							EPHAPTIC COUPLING LOCKED · 40 Hz
+						</text>
+					</g>
+				)}
+				{caption('40-Hz Gamma Wavefield Synchronized')}
+			</g>
+		);
+	} else if (challenge.id === 'bursting') {
+		// Chapter XI: The Thalamic Threshold (Thalamic Relay Oscilloscope & Bursting Triplet)
+		art = (
+			<g>
+				{/* Dual Relay Console Frame */}
+				<rect x="44" y="38" width="472" height="152" rx="14" fill="#090d16" stroke="#334155" strokeWidth="1.5" />
+				
+				{/* Dual Oscilloscope Screens */}
+				{/* Top Screen: Linear Tonic Transmission */}
+				<rect x="56" y="48" width="220" height="66" rx="8" fill="#03131e" stroke="#0284c7" strokeWidth="1" className={layerClass(1)} />
+				<text x="64" y="60" fill="#38bdf8" fontSize="8" fontFamily="monospace" fontWeight="bold">CH-A: TONIC STREAMING (25 Hz)</text>
+				{/* Tonic Spikes */}
+				{[90, 125, 160, 195, 230].map((x, i) => (
+					<path key={i} d={`M ${x - 4} 98 L ${x} 68 L ${x + 4} 98`} fill="none" stroke="#38bdf8" strokeWidth="2" />
+				))}
+				<line x1="60" y1="98" x2="270" y2="98" stroke="#0369a1" strokeWidth="1" strokeDasharray="3 3" />
+
+				{/* Bottom Screen: Rhythmic Low-Threshold Calcium Burst (LTS) */}
+				<rect x="56" y="120" width="220" height="64" rx="8" fill="#1c0b02" stroke="#d97706" strokeWidth="1" className={layerClass(2)} />
+				<text x="64" y="132" fill="#fbbf24" fontSize="8" fontFamily="monospace" fontWeight="bold">CH-B: T-TYPE Ca²⁺ BURST (300 Hz)</text>
+				{/* Broad Ca2+ hump with 3 rapid action potentials */}
+				<path
+					d="M 64 168 Q 110 168 135 152 Q 155 138 180 152 Q 205 168 266 168"
+					fill="none"
+					stroke="#f59e0b"
+					strokeWidth="2.5"
+				/>
+				{/* 3 High-Frequency Action Potential Spikes riding the hump */}
+				<path d="M 148 148 L 151 126 L 154 148" fill="none" stroke="#fff" strokeWidth="2.5" filter={`url(#${P}-glow)`} />
+				<path d="M 158 144 L 161 124 L 164 144" fill="none" stroke="#fff" strokeWidth="2.5" filter={`url(#${P}-glow)`} />
+				<path d="M 168 146 L 171 128 L 174 146" fill="none" stroke="#fff" strokeWidth="2.5" filter={`url(#${P}-glow)`} />
+
+				{/* Thalamo-Cortical Relay Neuron Diagram (Right Half) */}
+				<g transform="translate(290, 44)">
+					<rect x="0" y="0" width="216" height="140" rx="10" fill="#0f172a" stroke="#1e293b" strokeWidth="1" />
+					
+					{/* Thalamic Relay Soma */}
+					<circle cx="108" cy="70" r="28" fill="#1e1b4b" stroke={done ? '#fbbf24' : '#6366f1'} strokeWidth="2.5" />
+					<text x="108" y="74" textAnchor="middle" fill="#fff" fontSize="10" fontWeight="bold">
+						TC SOMA
+					</text>
+
+					{/* TRN (Thalamic Reticular Nucleus) Inhibitory Loop */}
+					<path
+						d="M 40 40 Q 108 10 176 40"
+						fill="none"
+						stroke="#c084fc"
+						strokeWidth="2.5"
+						strokeDasharray="4 3"
+						className={layerClass(3)}
+					/>
+					<text x="108" y="24" textAnchor="middle" fill="#c084fc" fontSize="8" fontFamily="monospace">
+						GABA-A / GABA-B HYPERPOLARIZATION
+					</text>
+
+					{/* De-inactivation Rebound Vector */}
+					<g className={layerClass(4)}>
+						<line x1="108" y1="98" x2="108" y2="128" stroke="#34d399" strokeWidth="2" />
+						<text x="108" y="136" textAnchor="middle" fill="#34d399" fontSize="8" fontFamily="monospace">
+							I_h Pacemaker + T-Type Activation
+						</text>
+					</g>
+
+					{/* Cortical Egress Axon */}
+					<line x1="136" y1="70" x2="200" y2="70" stroke={done ? '#fde68a' : '#94a3b8'} strokeWidth={done ? 4 : 2} className={layerClass(5)} />
+					<circle cx="200" cy="70" r="4" fill={done ? '#fde68a' : '#64748b'} />
+				</g>
+
+				{/* Acoustic Siren Speaker Icon in Corner */}
+				<g transform="translate(480, 48)" className={layerClass(6)}>
+					<polygon points="0,6 6,6 12,0 12,18 6,12 0,12" fill="#ef4444" />
+					<path d="M 15 4 Q 18 9 15 14" fill="none" stroke="#ef4444" strokeWidth="1.5" />
+					<path d="M 18 1 Q 23 9 18 17" fill="none" stroke="#ef4444" strokeWidth="1.5" />
+				</g>
+
+				{done && (
+					<g filter={`url(#${P}-glow)`}>
+						<rect x="150" y="154" width="260" height="24" rx="6" fill="#020617" stroke="#fbbf24" strokeWidth="2" />
+						<text x="280" y="170" textAnchor="middle" fill="#fbbf24" fontSize="10" fontWeight="bold" letterSpacing="0.1em">
+							THALAMIC BURST CONFIRMED · WAKE ATTRACTOR
+						</text>
+					</g>
+				)}
+				{caption('Low-Threshold Calcium Burst Decoded')}
+			</g>
+		);
+	} else if (challenge.id === 'chimera') {
+		// Chapter XII: The JANUS Nexus (Bio-Digital Chimera & Surface Evacuation Hatch)
+		art = (
+			<g>
+				{/* Industrial Nexus Chamber Backdrop */}
+				<rect x="44" y="36" width="472" height="154" rx="14" fill="#040810" stroke="#1e293b" strokeWidth="1.5" />
+
+				{/* Left: Giant Human Cortical Pyramidal Dendritic Tree */}
+				<g transform="translate(60, 42)">
+					{/* Basal Dendrites */}
+					<path d="M 90 120 L 40 144 M 90 120 L 70 146 M 90 120 L 120 146 M 90 120 L 150 142" stroke="#d97706" strokeWidth="2" className={layerClass(1)} />
+					{/* Pyramidal Soma */}
+					<polygon points="90,92 72,122 108,122" fill="#78350f" stroke="#fbbf24" strokeWidth="2" filter={`url(#${P}-glow)`} />
+					<text x="90" y="114" textAnchor="middle" fill="#fff" fontSize="8" fontWeight="bold">SOMA</text>
+
+					{/* Thick Apical Dendritic Trunk */}
+					<line x1="90" y1="92" x2="90" y2="40" stroke="#f59e0b" strokeWidth="4" className={layerClass(2)} />
+					
+					{/* Apical Tuft Branch Compartments with NMDA Plateau Spikes (dCaAP) */}
+					<g className={layerClass(3)}>
+						<path d="M 90 40 L 45 10 M 90 40 L 75 8 M 90 40 L 115 8 M 90 40 L 140 12" stroke="#fde68a" strokeWidth="2.5" />
+						{/* Active NMDA Voltage Plateaus (Glow spots) */}
+						{[
+							{ x: 55, y: 16 },
+							{ x: 80, y: 14 },
+							{ x: 110, y: 14 },
+							{ x: 130, y: 18 },
+						].map((pt, i) => (
+							<circle key={i} cx={pt.x} cy={pt.y} r="5" fill="#fde68a" filter={`url(#${P}-intense-glow)`} className="animate-pulse" />
+						))}
+						<text x="90" y="4" textAnchor="middle" fill="#fde68a" fontSize="7" fontFamily="monospace">
+							dCaAP / NMDA PLATEAU (XOR BRANCH)
+						</text>
+					</g>
+				</g>
+
+				{/* Center: Interweaving Optical Fiber Photonic Bus & Tensor Core Systolic Array */}
+				<g transform="translate(240, 50)" className={layerClass(4)}>
+					<rect x="0" y="0" width="108" height="96" rx="8" fill="#082f49" stroke="#0ea5e9" strokeWidth="1.5" />
+					<text x="54" y="14" textAnchor="middle" fill="#38bdf8" fontSize="8" fontFamily="monospace" fontWeight="bold">
+						TENSOR CORE 8×8
+					</text>
+					{/* 4x4 mini-grid of systolic processing units */}
+					<g transform="translate(18, 22)">
+						{Array.from({ length: 16 }, (_, i) => {
+							const col = i % 4;
+							const row = Math.floor(i / 4);
+							return (
+								<rect
+									key={i}
+									x={col * 18}
+									y={row * 16}
+									width="14"
+									height="12"
+									rx="2"
+									fill={active(5) ? '#0284c7' : '#0369a1'}
+									stroke="#38bdf8"
+									strokeWidth="1"
+								/>
+							);
+						})}
+					</g>
+					{/* Photonic Waveguide lines connecting Dendrites to Systolic Array */}
+					<path
+						d="M -35 30 C -10 30, -10 40, 0 40"
+						fill="none"
+						stroke="#ec4899"
+						strokeWidth="2.5"
+						strokeDasharray="4 2"
+						filter={`url(#${P}-glow)`}
+					/>
+					<path
+						d="M -35 70 C -10 70, -10 60, 0 60"
+						fill="none"
+						stroke="#22d3ee"
+						strokeWidth="2.5"
+						strokeDasharray="4 2"
+						filter={`url(#${P}-glow)`}
+					/>
+				</g>
+
+				{/* Right: Pneumatic Evacuation Hatch & Shaft to Surface Campus */}
+				<g transform="translate(376, 44)" className={layerClass(6)}>
+					{/* Hatch Archway */}
+					<rect x="0" y="0" width="124" height="136" rx="10" fill="#020617" stroke="#e2e8f0" strokeWidth="2" />
+					{/* Yellow/Black Warning Hazard Stripes */}
+					<line x1="0" y1="8" x2="124" y2="8" stroke="#eab308" strokeWidth="6" strokeDasharray="10 8" />
+					<line x1="0" y1="128" x2="124" y2="128" stroke="#eab308" strokeWidth="6" strokeDasharray="10 8" />
+					
+					{/* Surface Shaft Interior (showing sunlight or green exit glow) */}
+					<rect
+						x="14"
+						y="20"
+						width="96"
+						height="96"
+						rx="6"
+						fill={done ? '#064e3b' : '#0f172a'}
+						stroke={done ? '#10b981' : '#334155'}
+						strokeWidth="1.5"
+					/>
+					{/* Ascending Ladder / Elevator Rails */}
+					<line x1="36" y1="20" x2="36" y2="116" stroke="#64748b" strokeWidth="2" />
+					<line x1="88" y1="20" x2="88" y2="116" stroke="#64748b" strokeWidth="2" />
+					{[35, 55, 75, 95].map((y) => (
+						<line key={y} x1="36" y1={y} x2="88" y2={y} stroke="#64748b" strokeWidth="1.5" />
+					))}
+
+					{/* Emergency Surface Exit Arrow */}
+					<g transform="translate(62, 54)">
+						<polygon
+							points="0,-16 -12,4 -4,4 -4,16 4,16 4,4 12,4"
+							fill={done ? '#34d399' : '#64748b'}
+							filter={done ? `url(#${P}-intense-glow)` : undefined}
+							className={done ? 'animate-bounce' : ''}
+						/>
+						<text x="0" y="28" textAnchor="middle" fill={done ? '#6ee7b7' : '#94a3b8'} fontSize="8" fontWeight="bold">
+							SURFACE EXIT
+						</text>
+					</g>
+				</g>
+
+				{/* Complete State: Fusion Synchronization Ring */}
+				{done && (
+					<g filter={`url(#${P}-intense-glow)`}>
+						<rect x="130" y="152" width="300" height="26" rx="8" fill="#020617" stroke="#10b981" strokeWidth="2" />
+						<text x="280" y="169" textAnchor="middle" fill="#6ee7b7" fontSize="11" fontWeight="bold" letterSpacing="0.1em">
+							BIO-DIGITAL HARMONY · EXTRACTION HATCH UNLOCKED
+						</text>
+					</g>
+				)}
+				{caption('JANUS Chimera Fusion & Surface Egress Open')}
 			</g>
 		);
 	}
@@ -3159,7 +4144,7 @@ function MissionDossierModal({
 						<div className="space-y-4">
 							<div className="flex flex-wrap items-center justify-between gap-2 border-b border-white/10 pb-2">
 								<p className="text-xs font-mono uppercase tracking-wider text-cyan-300">
-									Sub-Level 4 / Sub-Level 5 Schematic · 10 Sectors
+									Sub-Level 4 / Sub-Level 5 / Sub-Level 6 Schematic · 13 Sectors
 								</p>
 								<div className="flex items-center gap-3 font-mono text-[10px]">
 									<span className="flex items-center gap-1.5 text-cyan-300">
@@ -3176,7 +4161,7 @@ function MissionDossierModal({
 
 							{/* Interactive SVG Blueprint Grid */}
 							<div className="relative rounded-2xl border border-cyan-500/30 bg-black/70 p-3 sm:p-4 overflow-x-auto">
-								<svg viewBox="0 0 740 160" className="w-full min-w-[650px]">
+								<svg viewBox="0 0 940 160" className="w-full min-w-[840px]">
 									{/* Conduit Lines between sectors */}
 									<polyline
 										points={facilitySectors.map((s) => `${s.coords.x},${s.coords.y}`).join(' ')}
@@ -3190,7 +4175,7 @@ function MissionDossierModal({
 									{facilitySectors.map((sector, idx) => {
 										const isCurrent = idx === currentChapterIndex;
 										const isCleared = idx < currentChapterIndex;
-										const isTarget = sector.number === 10;
+										const isTarget = sector.number === 13;
 										const isSelected = sector.id === selectedSectorId;
 
 										return (
@@ -3845,6 +4830,1525 @@ function DeepNetDiagram() {
 }
 
 // ---------------------------------------------------------------------------
+// WACKY NEURON LAB & HYPER-MATRIX STUDIO
+// ---------------------------------------------------------------------------
+
+interface IzhikevichPreset {
+	id: string;
+	name: string;
+	subname: string;
+	a: number;
+	b: number;
+	c: number;
+	d: number;
+	I: number;
+	description: string;
+	biologicalAnalog: string;
+}
+
+const IZHIKEVICH_PRESETS: IzhikevichPreset[] = [
+	{
+		id: 'RS',
+		name: 'Regular Spiking (RS)',
+		subname: 'Cortical Pyramidal (Layer 2/3, 5)',
+		a: 0.02,
+		b: 0.2,
+		c: -65,
+		d: 8,
+		I: 10,
+		description: 'Fires with initial high frequency followed by spike-frequency adaptation under sustained DC injection.',
+		biologicalAnalog: 'Excitatory neocortical pyramidal neurons in human sensory and motor cortex.',
+	},
+	{
+		id: 'IB',
+		name: 'Intrinsically Bursting (IB)',
+		subname: 'Layer 5 Subcortical Projecting',
+		a: 0.02,
+		b: 0.2,
+		c: -55,
+		d: 4,
+		I: 10,
+		description: 'Fires an initial high-frequency burst of 3-5 action potentials, followed by repetitive tonic spiking.',
+		biologicalAnalog: 'Deep Layer 5 pyramidal neurons projecting to the basal ganglia, colliculus, and spinal cord.',
+	},
+	{
+		id: 'CH',
+		name: 'Chattering (CH)',
+		subname: 'Visual Cortex Fast Rhythmic',
+		a: 0.02,
+		b: 0.2,
+		c: -50,
+		d: 2,
+		I: 10,
+		description: 'Fires rhythmic high-frequency clusters of spikes (30-50 Hz inter-burst frequency) within the gamma band.',
+		biologicalAnalog: 'Gray & McCormick (1996) chattering cells in visual cortex contributing to gamma synchrony.',
+	},
+	{
+		id: 'FS',
+		name: 'Fast Spiking (FS)',
+		subname: 'Parvalbumin Basket Interneuron',
+		a: 0.1,
+		b: 0.2,
+		c: -65,
+		d: 2,
+		I: 10,
+		description: 'High-frequency non-adapting firing (up to 300+ Hz) with extraordinarily fast after-hyperpolarization.',
+		biologicalAnalog: 'GABAergic parvalbumin-positive interneurons enforcing feedforward cortical inhibition.',
+	},
+	{
+		id: 'TC',
+		name: 'Thalamo-Cortical (TC)',
+		subname: 'Thalamic Relay Burst Rebound',
+		a: 0.02,
+		b: 0.25,
+		c: -65,
+		d: 0.05,
+		I: -2,
+		description: 'At resting potential fires tonically, but upon release from inhibitory hyperpolarization produces a rebound burst.',
+		biologicalAnalog: 'Thalamo-cortical relay cells in dorsal thalamus gating sensory transmission to cortex.',
+	},
+	{
+		id: 'RZ',
+		name: 'Resonator (RZ)',
+		subname: 'Subthreshold Resonance & Oscillations',
+		a: 0.1,
+		b: 0.26,
+		c: -65,
+		d: 2,
+		I: 2,
+		description: 'Exhibits subthreshold damped oscillations and selective frequency tuning; only spikes when excited at resonance.',
+		biologicalAnalog: 'Mesencephalic V neurons and stellate cells in entorhinal cortex layer II.',
+	},
+];
+
+function IzhikevichLab() {
+	const [selectedPresetId, setSelectedPresetId] = useState<string>('RS');
+	const activePreset = IZHIKEVICH_PRESETS.find((p) => p.id === selectedPresetId) ?? IZHIKEVICH_PRESETS[0]!;
+	const [a, setA] = useState<number>(activePreset.a);
+	const [b, setB] = useState<number>(activePreset.b);
+	const [c, setC] = useState<number>(activePreset.c);
+	const [d, setD] = useState<number>(activePreset.d);
+	const [current, setCurrent] = useState<number>(activePreset.I);
+
+	function applyPreset(preset: IzhikevichPreset) {
+		sound.playClick();
+		setSelectedPresetId(preset.id);
+		setA(preset.a);
+		setB(preset.b);
+		setC(preset.c);
+		setD(preset.d);
+		setCurrent(preset.I);
+	}
+
+	// 200 ms simulation with Euler method (dt = 0.5 ms -> 400 steps)
+	const simulation = useMemo(() => {
+		const dt = 0.5;
+		const totalSteps = 400;
+		let v = c;
+		let u = b * v;
+		const points: Array<{ t: number; v: number; u: number }> = [];
+		const spikeTimes: number[] = [];
+
+		for (let step = 0; step < totalSteps; step++) {
+			const t = step * dt;
+			// Injection current pulse active between 20ms and 180ms
+			const inj = t >= 20 && t <= 180 ? current : 0;
+
+			// dv/dt = 0.04*v^2 + 5*v + 140 - u + I
+			const dv = (0.04 * v * v + 5 * v + 140 - u + inj) * dt;
+			// du/dt = a*(b*v - u)
+			const du = a * (b * v - u) * dt;
+
+			v += dv;
+			u += du;
+
+			if (v >= 30) {
+				spikeTimes.push(t);
+				points.push({ t, v: 30, u });
+				v = c;
+				u += d;
+			} else {
+				points.push({ t, v, u });
+			}
+		}
+
+		// Calculate metrics
+		const durationSec = (180 - 20) / 1000;
+		const spikesDuringPulse = spikeTimes.filter((st) => st >= 20 && st <= 180).length;
+		const firingRateHz = durationSec > 0 ? Math.round(spikesDuringPulse / durationSec) : 0;
+		
+		let meanIsi = 0;
+		if (spikeTimes.length >= 2) {
+			let totalIsi = 0;
+			for (let i = 1; i < spikeTimes.length; i++) {
+				totalIsi += spikeTimes[i]! - spikeTimes[i - 1]!;
+			}
+			meanIsi = Math.round(totalIsi / (spikeTimes.length - 1));
+		}
+
+		return { points, spikeCount: spikeTimes.length, firingRateHz, meanIsi };
+	}, [a, b, c, d, current]);
+
+	// Convert points to SVG polyline coordinates for v(t)
+	// SVG width = 420, height = 140. t: 0..200 -> x: 10..410; v: -85..35 -> y: 130..15
+	const vPolyline = useMemo(() => {
+		return simulation.points
+			.map((pt) => {
+				const x = 10 + (pt.t / 200) * 400;
+				const clampedV = Math.max(-85, Math.min(35, pt.v));
+				const y = 130 - ((clampedV - -85) / 120) * 115;
+				return `${x.toFixed(1)},${y.toFixed(1)}`;
+			})
+			.join(' ');
+	}, [simulation.points]);
+
+	// Convert points to SVG polyline coordinates for u(t)
+	const uPolyline = useMemo(() => {
+		const minU = -20;
+		const maxU = 40;
+		return simulation.points
+			.map((pt) => {
+				const x = 10 + (pt.t / 200) * 400;
+				const clampedU = Math.max(minU, Math.min(maxU, pt.u));
+				const y = 130 - ((clampedU - minU) / (maxU - minU)) * 115;
+				return `${x.toFixed(1)},${y.toFixed(1)}`;
+			})
+			.join(' ');
+	}, [simulation.points]);
+
+	// Phase-plane trajectory (v on X: -85..35 -> 10..190, u on Y: -20..40 -> 130..15)
+	const phasePlanePolyline = useMemo(() => {
+		return simulation.points
+			.slice(40) // Skip initial transient
+			.map((pt) => {
+				const clampedV = Math.max(-85, Math.min(35, pt.v));
+				const x = 10 + ((clampedV - -85) / 120) * 180;
+				const clampedU = Math.max(-20, Math.min(40, pt.u));
+				const y = 130 - ((clampedU - -20) / 60) * 115;
+				return `${x.toFixed(1)},${y.toFixed(1)}`;
+			})
+			.join(' ');
+	}, [simulation.points]);
+
+	return (
+		<div className="space-y-6">
+			{/* Preset Selector Badges */}
+			<div>
+				<p className="text-xs font-mono uppercase tracking-wider text-amber-300 mb-2.5">
+					Select Wacky Neuron Dynamical Mode (Izhikevich Model):
+				</p>
+				<div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2">
+					{IZHIKEVICH_PRESETS.map((preset) => {
+						const isSelected = preset.id === selectedPresetId;
+						return (
+							<button
+								key={preset.id}
+								type="button"
+								onClick={() => applyPreset(preset)}
+								className={`rounded-xl border p-2.5 text-left transition-all duration-300 ${
+									isSelected
+										? 'border-amber-400 bg-amber-400/20 text-white ring-2 ring-amber-400/50 shadow-[0_0_16px_rgba(251,191,36,0.3)] scale-[1.02]'
+										: 'border-white/10 bg-white/5 text-slate-300 hover:bg-white/10 hover:border-white/20'
+								}`}
+							>
+								<div className="flex items-center justify-between">
+									<span className="font-mono text-xs font-bold text-amber-300">{preset.id}</span>
+									{isSelected && <span className="size-1.5 rounded-full bg-amber-400 animate-ping" />}
+								</div>
+								<p className="mt-1 text-[11px] font-semibold truncate text-slate-100">{preset.name.split('(')[0]}</p>
+								<p className="text-[9px] text-slate-400 truncate">{preset.subname}</p>
+							</button>
+						);
+					})}
+				</div>
+			</div>
+
+			{/* Active Preset Lore Card */}
+			<div className="rounded-2xl border border-amber-500/25 bg-amber-950/20 p-4 text-xs leading-relaxed text-amber-100/90 shadow-lg">
+				<div className="flex items-center justify-between border-b border-amber-500/20 pb-2 mb-2 font-mono text-[11px]">
+					<span className="font-bold text-amber-300">BIOLOGICAL SUBSTRATE: {activePreset.subname}</span>
+					<span className="text-slate-400">a={a} · b={b} · c={c}mV · d={d}</span>
+				</div>
+				<p>{activePreset.description}</p>
+				<p className="mt-1 text-[11px] text-amber-200/70 italic">🔬 In-Vivo Correlate: {activePreset.biologicalAnalog}</p>
+			</div>
+
+			{/* Visual Simulation Display: Waveform (left) & Phase Plane (right) */}
+			<div className="grid gap-4 lg:grid-cols-[1.5fr_1fr]">
+				{/* Membrane Voltage v(t) & Recovery u(t) Oscilloscope */}
+				<div className="rounded-2xl border border-cyan-500/30 bg-black/80 p-4 shadow-xl">
+					<div className="flex items-center justify-between border-b border-white/10 pb-2 mb-3">
+						<div className="flex items-center gap-2">
+							<span className="size-2 rounded-full bg-cyan-400 animate-pulse" />
+							<span className="text-xs font-mono font-bold text-cyan-200 uppercase tracking-wider">
+								Membrane Voltage v(t) & Recovery Variable u(t)
+							</span>
+						</div>
+						<div className="flex items-center gap-3 font-mono text-[10px]">
+							<span className="text-emerald-400">● v(t) Voltage [mV]</span>
+							<span className="text-fuchsia-400">● u(t) Recovery</span>
+						</div>
+					</div>
+
+					<div className="relative h-44 w-full">
+						{/* Background grid lines */}
+						<div className="absolute inset-0 bg-[linear-gradient(to_right,rgba(34,211,238,0.06)_1px,transparent_1px),linear-gradient(to_bottom,rgba(34,211,238,0.06)_1px,transparent_1px)] bg-[size:28px_22px]" />
+						
+						{/* Reference voltage guides */}
+						<div className="absolute left-1 top-[14%] font-mono text-[8px] text-amber-400/80">+30 mV Spike Peak</div>
+						<div className="absolute left-1 top-[48%] font-mono text-[8px] text-slate-500">-50 mV Threshold</div>
+						<div className="absolute left-1 top-[78%] font-mono text-[8px] text-cyan-400/60">-65 mV Rest (c)</div>
+
+						<svg viewBox="0 0 420 140" className="relative h-full w-full" preserveAspectRatio="none">
+							{/* Current injection pulse shaded window */}
+							<rect x={10 + (20 / 200) * 400} y="10" width={(160 / 200) * 400} height="120" fill="rgba(245,158,11,0.08)" />
+							<line x1={10 + (20 / 200) * 400} y1="10" x2={10 + (20 / 200) * 400} y2="130" stroke="#f59e0b" strokeWidth="1" strokeDasharray="3 3" />
+							<line x1={10 + (180 / 200) * 400} y1="10" x2={10 + (180 / 200) * 400} y2="130" stroke="#f59e0b" strokeWidth="1" strokeDasharray="3 3" />
+
+							{/* Zero and Threshold Lines */}
+							<line x1="10" y1="40" x2="410" y2="40" stroke="#f59e0b" strokeWidth="0.8" strokeDasharray="4 4" opacity="0.4" />
+							<line x1="10" y1="105" x2="410" y2="105" stroke="#38bdf8" strokeWidth="0.8" strokeDasharray="4 4" opacity="0.3" />
+
+							{/* u(t) Recovery trace */}
+							<polyline points={uPolyline} fill="none" stroke="#d946ef" strokeWidth="1.5" opacity="0.75" />
+
+							{/* v(t) Voltage trace */}
+							<polyline points={vPolyline} fill="none" stroke="#10b981" strokeWidth="2.2" className="drop-shadow-[0_0_8px_rgba(16,185,129,0.8)]" />
+						</svg>
+					</div>
+
+					<div className="mt-2 flex items-center justify-between font-mono text-[10px] text-slate-400 border-t border-white/5 pt-2">
+						<span>0 ms</span>
+						<span className="text-amber-300 font-bold">DC Step Current: {current} pA (20ms → 180ms)</span>
+						<span>200 ms</span>
+					</div>
+				</div>
+
+				{/* 2D Phase Plane (v, u) with Nullclines */}
+				<div className="rounded-2xl border border-fuchsia-500/30 bg-black/80 p-4 shadow-xl">
+					<div className="flex items-center justify-between border-b border-white/10 pb-2 mb-3">
+						<div className="flex items-center gap-2">
+							<span className="size-2 rounded-full bg-fuchsia-400 animate-pulse" />
+							<span className="text-xs font-mono font-bold text-fuchsia-200 uppercase tracking-wider">
+								(v, u) Phase Plane Portrait
+							</span>
+						</div>
+						<span className="font-mono text-[9px] text-fuchsia-300/80">LIMIT CYCLE</span>
+					</div>
+
+					<div className="relative h-44 w-full">
+						<div className="absolute inset-0 bg-[linear-gradient(to_right,rgba(217,70,239,0.06)_1px,transparent_1px),linear-gradient(to_bottom,rgba(217,70,239,0.06)_1px,transparent_1px)] bg-[size:24px_24px]" />
+						
+						<svg viewBox="0 0 200 140" className="relative h-full w-full" preserveAspectRatio="none">
+							{/* Phase Plane Axes */}
+							<line x1="10" y1="130" x2="190" y2="130" stroke="#475569" strokeWidth="1" />
+							<line x1="10" y1="130" x2="10" y2="10" stroke="#475569" strokeWidth="1" />
+
+							{/* u-nullcline: u = b*v */}
+							<line
+								x1="10"
+								y1={130 - ((b * -85 - -20) / 60) * 115}
+								x2="190"
+								y2={130 - ((b * 35 - -20) / 60) * 115}
+								stroke="#38bdf8"
+								strokeWidth="1.5"
+								strokeDasharray="4 3"
+								opacity="0.8"
+							/>
+
+							{/* Orbit trajectory */}
+							<polyline points={phasePlanePolyline} fill="none" stroke="#f43f5e" strokeWidth="1.8" className="drop-shadow-[0_0_6px_rgba(244,63,94,0.7)]" />
+						</svg>
+					</div>
+
+					<div className="mt-2 flex items-center justify-between font-mono text-[10px] text-slate-400 border-t border-white/5 pt-2">
+						<span className="text-cyan-400">--- u-nullcline (u=bv)</span>
+						<span className="text-rose-400 font-bold">— Orbit Limit Cycle</span>
+					</div>
+				</div>
+			</div>
+
+			{/* Real-time Firing Telemetry Metrics */}
+			<div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+				<div className="rounded-xl border border-emerald-400/25 bg-emerald-950/20 p-3 text-center">
+					<p className="text-[10px] uppercase font-mono tracking-wider text-slate-400">Firing Frequency</p>
+					<p className="mt-1 font-mono text-2xl font-black text-emerald-300">{simulation.firingRateHz} Hz</p>
+					<p className="text-[9px] text-emerald-400/60 font-mono mt-0.5">{simulation.spikeCount} Spikes Fired</p>
+				</div>
+				<div className="rounded-xl border border-cyan-400/25 bg-cyan-950/20 p-3 text-center">
+					<p className="text-[10px] uppercase font-mono tracking-wider text-slate-400">Mean ISI</p>
+					<p className="mt-1 font-mono text-2xl font-black text-cyan-300">{simulation.meanIsi} ms</p>
+					<p className="text-[9px] text-cyan-400/60 font-mono mt-0.5">Inter-Spike Interval</p>
+				</div>
+				<div className="rounded-xl border border-amber-400/25 bg-amber-950/20 p-3 text-center">
+					<p className="text-[10px] uppercase font-mono tracking-wider text-slate-400">Reset Potential (c)</p>
+					<p className="mt-1 font-mono text-2xl font-black text-amber-300">{c} mV</p>
+					<p className="text-[9px] text-amber-400/60 font-mono mt-0.5">Fast Repolarization</p>
+				</div>
+				<div className="rounded-xl border border-fuchsia-400/25 bg-fuchsia-950/20 p-3 text-center">
+					<p className="text-[10px] uppercase font-mono tracking-wider text-slate-400">Recovery Jump (d)</p>
+					<p className="mt-1 font-mono text-2xl font-black text-fuchsia-300">{d}</p>
+					<p className="text-[9px] text-fuchsia-400/60 font-mono mt-0.5">Potassium Adaptation</p>
+				</div>
+			</div>
+
+			{/* Interactive Parameter Sliders */}
+			<div className="rounded-2xl border border-white/10 bg-slate-900/60 p-4">
+				<p className="text-xs font-mono font-bold uppercase tracking-wider text-slate-200 mb-3">
+					Direct Parameter Modulators (Euler Integrator: dv/dt & du/dt):
+				</p>
+				<div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
+					<div>
+						<div className="flex justify-between font-mono text-[11px] mb-1">
+							<span className="text-slate-300 font-bold">a (Recovery timescale):</span>
+							<span className="text-cyan-300 font-mono">{a.toFixed(3)}</span>
+						</div>
+						<input
+							type="range"
+							min="0.01"
+							max="0.15"
+							step="0.005"
+							value={a}
+							onChange={(e) => setA(Number(e.target.value))}
+							className="w-full accent-cyan-400"
+						/>
+					</div>
+
+					<div>
+						<div className="flex justify-between font-mono text-[11px] mb-1">
+							<span className="text-slate-300 font-bold">b (Subthreshold sensitivity):</span>
+							<span className="text-cyan-300 font-mono">{b.toFixed(2)}</span>
+						</div>
+						<input
+							type="range"
+							min="0.1"
+							max="0.3"
+							step="0.01"
+							value={b}
+							onChange={(e) => setB(Number(e.target.value))}
+							className="w-full accent-cyan-400"
+						/>
+					</div>
+
+					<div>
+						<div className="flex justify-between font-mono text-[11px] mb-1">
+							<span className="text-slate-300 font-bold">c (After-spike reset v):</span>
+							<span className="text-amber-300 font-mono">{c} mV</span>
+						</div>
+						<input
+							type="range"
+							min="-70"
+							max="-45"
+							step="1"
+							value={c}
+							onChange={(e) => setC(Number(e.target.value))}
+							className="w-full accent-amber-400"
+						/>
+					</div>
+
+					<div>
+						<div className="flex justify-between font-mono text-[11px] mb-1">
+							<span className="text-slate-300 font-bold">d (After-spike reset u):</span>
+							<span className="text-fuchsia-300 font-mono">{d.toFixed(1)}</span>
+						</div>
+						<input
+							type="range"
+							min="0"
+							max="10"
+							step="0.5"
+							value={d}
+							onChange={(e) => setD(Number(e.target.value))}
+							className="w-full accent-fuchsia-400"
+						/>
+					</div>
+
+					<div>
+						<div className="flex justify-between font-mono text-[11px] mb-1">
+							<span className="text-slate-300 font-bold">I (Injection Current):</span>
+							<span className="text-emerald-300 font-mono">{current} pA</span>
+						</div>
+						<input
+							type="range"
+							min="-5"
+							max="30"
+							step="1"
+							value={current}
+							onChange={(e) => setCurrent(Number(e.target.value))}
+							className="w-full accent-emerald-400"
+						/>
+					</div>
+				</div>
+			</div>
+		</div>
+	);
+}
+
+function DendriticXorLab() {
+	const [branchA, setBranchA] = useState<number>(1);
+	const [branchB, setBranchB] = useState<number>(1);
+	const [mode, setMode] = useState<'dCaAP' | 'linear'>('dCaAP');
+
+	const inputSum = branchA + branchB;
+
+	// In Gidon et al. 2020:
+	// Passive linear summation: V = -70 + 45 * s (crosses threshold at s >= 1)
+	// dCaAP active dendritic calcium: non-monotonic curve with maximum at s = 1 and inactivation at s = 2
+	const dendriticVoltageMv = useMemo(() => {
+		if (mode === 'linear') {
+			return Math.round(-70 + 45 * inputSum);
+		}
+		// dCaAP: V = -70 + 72 * s * exp(-0.95 * s^1.85)
+		if (inputSum <= 0.05) return -70;
+		const peakDepolarization = 72 * inputSum * Math.exp(-0.95 * Math.pow(inputSum, 1.85));
+		return Math.round(-70 + peakDepolarization);
+	}, [inputSum, mode]);
+
+	const somaticThreshold = mode === 'dCaAP' ? -48 : -35;
+	const somaticSpike = dendriticVoltageMv >= somaticThreshold;
+
+	// Truth table rows
+	const truthTable = [
+		{ a: 0, b: 0, sum: 0, expectedXor: 0 },
+		{ a: 1, b: 0, sum: 1, expectedXor: 1 },
+		{ a: 0, b: 1, sum: 1, expectedXor: 1 },
+		{ a: 1, b: 1, sum: 2, expectedXor: 0 },
+	];
+
+	return (
+		<div className="space-y-6">
+			{/* Mechanism Toggle */}
+			<div className="flex flex-wrap items-center justify-between gap-3 border-b border-white/10 pb-4">
+				<div>
+					<h3 className="text-base font-bold text-white tracking-tight sm:text-lg">
+						Single-Neuron 2-Layer Dendritic XOR Computer
+					</h3>
+					<p className="text-xs text-slate-400">
+						Discovered by Gidon et al. (Science 2020): Human cortical pyramidal apical dendrites compute XOR natively!
+					</p>
+				</div>
+				<div className="flex items-center gap-1 rounded-xl border border-white/10 bg-slate-900/80 p-1">
+					<button
+						type="button"
+						onClick={() => { sound.playClick(); setMode('dCaAP'); }}
+						className={`rounded-lg px-3 py-1.5 text-xs font-bold transition-all ${
+							mode === 'dCaAP'
+								? 'bg-emerald-500/25 border border-emerald-400/50 text-emerald-200 shadow-[0_0_12px_rgba(52,211,153,0.3)]'
+								: 'text-slate-400 hover:text-white'
+						}`}
+					>
+						⚡ Biological dCaAP (XOR)
+					</button>
+					<button
+						type="button"
+						onClick={() => { sound.playClick(); setMode('linear'); }}
+						className={`rounded-lg px-3 py-1.5 text-xs font-bold transition-all ${
+							mode === 'linear'
+								? 'bg-cyan-500/25 border border-cyan-400/50 text-cyan-200 shadow-[0_0_12px_rgba(34,211,238,0.3)]'
+								: 'text-slate-400 hover:text-white'
+						}`}
+					>
+						📐 Classical Linear (Perceptron)
+					</button>
+				</div>
+			</div>
+
+			{/* Interactive Pyramidal Neuron SVG Diagram (left) & Non-Monotonic Curve (right) */}
+			<div className="grid gap-6 lg:grid-cols-[1.2fr_1fr]">
+				{/* Human Pyramidal Neuron Compartments */}
+				<div className="rounded-2xl border border-emerald-500/30 bg-black/80 p-4 shadow-xl relative overflow-hidden">
+					<div className="flex items-center justify-between border-b border-white/10 pb-2 mb-2 font-mono text-[10px]">
+						<span className="font-bold text-emerald-300">HUMAN LAYER 2/3 PYRAMIDAL SOMA & TUFT</span>
+						<span className={somaticSpike ? 'text-amber-300 font-bold animate-pulse' : 'text-slate-400'}>
+							{somaticSpike ? '⚡ SOMATIC ACTION POTENTIAL' : '○ SUBTHRESHOLD QUIESCENT'}
+						</span>
+					</div>
+
+					<svg viewBox="0 0 380 240" className="w-full">
+						<defs>
+							<radialGradient id="ca-glow" cx="50%" cy="50%" r="50%">
+								<stop offset="0%" stopColor="#fde68a" stopOpacity="0.9" />
+								<stop offset="100%" stopColor="#f59e0b" stopOpacity="0" />
+							</radialGradient>
+						</defs>
+
+						{/* Apical Tuft Branch A (Left) */}
+						<path
+							d="M 190 80 Q 130 50 80 40"
+							fill="none"
+							stroke={branchA > 0.5 ? '#38bdf8' : '#334155'}
+							strokeWidth={branchA > 0.5 ? 4 : 2}
+							className="transition-all duration-300"
+						/>
+						{/* Branch A Terminal Electrode */}
+						<circle cx="80" cy="40" r="14" fill="#082f49" stroke={branchA > 0.5 ? '#38bdf8' : '#475569'} strokeWidth="2" />
+						<text x="80" y="44" textAnchor="middle" fill="#fff" fontSize="10" fontWeight="bold">A: {branchA}</text>
+
+						{/* Apical Tuft Branch B (Right) */}
+						<path
+							d="M 190 80 Q 250 50 300 40"
+							fill="none"
+							stroke={branchB > 0.5 ? '#38bdf8' : '#334155'}
+							strokeWidth={branchB > 0.5 ? 4 : 2}
+							className="transition-all duration-300"
+						/>
+						{/* Branch B Terminal Electrode */}
+						<circle cx="300" cy="40" r="14" fill="#082f49" stroke={branchB > 0.5 ? '#38bdf8' : '#475569'} strokeWidth="2" />
+						<text x="300" y="44" textAnchor="middle" fill="#fff" fontSize="10" fontWeight="bold">B: {branchB}</text>
+
+						{/* Branch Junction Hot-Spot (Site of dCaAP Calcium Channel Inactivation) */}
+						<circle
+							cx="190"
+							cy="80"
+							r={mode === 'dCaAP' && inputSum === 1 ? 20 : 12}
+							fill={mode === 'dCaAP' && inputSum === 1 ? '#f59e0b' : mode === 'linear' && inputSum >= 1 ? '#38bdf8' : '#1e293b'}
+							fillOpacity="0.4"
+							stroke={mode === 'dCaAP' && inputSum === 1 ? '#fbbf24' : '#64748b'}
+							strokeWidth="2"
+							className={mode === 'dCaAP' && inputSum === 1 ? 'animate-ping' : ''}
+						/>
+						<circle cx="190" cy="80" r="10" fill="#020617" stroke="#94a3b8" strokeWidth="1.5" />
+						<text x="190" y="70" textAnchor="middle" fill="#fde68a" fontSize="8" fontFamily="monospace">
+							dCaAP HOTSPOT
+						</text>
+
+						{/* Thick Apical Trunk */}
+						<line
+							x1="190"
+							y1="80"
+							x2="190"
+							y2="160"
+							stroke={dendriticVoltageMv > -55 ? '#fbbf24' : '#334155'}
+							strokeWidth={dendriticVoltageMv > -55 ? 5 : 3}
+							className="transition-all duration-300"
+						/>
+
+						{/* Pyramidal Soma */}
+						<polygon
+							points="190,160 160,205 220,205"
+							fill={somaticSpike ? '#78350f' : '#0f172a'}
+							stroke={somaticSpike ? '#fbbf24' : '#334155'}
+							strokeWidth={somaticSpike ? 3 : 1.5}
+							className="transition-all duration-300"
+						/>
+						<text x="190" y="195" textAnchor="middle" fill="#fff" fontSize="11" fontWeight="bold">
+							SOMA
+						</text>
+
+						{/* Basal Dendrites */}
+						<line x1="160" y1="205" x2="120" y2="230" stroke="#475569" strokeWidth="2" />
+						<line x1="175" y1="205" x2="150" y2="235" stroke="#475569" strokeWidth="2" />
+						<line x1="205" y1="205" x2="230" y2="235" stroke="#475569" strokeWidth="2" />
+						<line x1="220" y1="205" x2="260" y2="230" stroke="#475569" strokeWidth="2" />
+
+						{/* Axon Hillock with Action Potential Spike Output */}
+						<line x1="190" y1="205" x2="190" y2="238" stroke={somaticSpike ? '#f59e0b' : '#334155'} strokeWidth={somaticSpike ? 4 : 2} />
+						{somaticSpike && (
+							<g>
+								<circle cx="190" cy="236" r="6" fill="#fde68a" className="animate-ping" />
+								<text x="210" y="238" fill="#fbbf24" fontSize="10" fontWeight="bold" fontFamily="monospace">
+									1 (SPIKE)
+								</text>
+							</g>
+						)}
+						{!somaticSpike && (
+							<text x="210" y="238" fill="#64748b" fontSize="10" fontWeight="bold" fontFamily="monospace">
+								0 (SILENT)
+							</text>
+						)}
+					</svg>
+
+					{/* Voltage Readout Bar */}
+					<div className="mt-2 flex items-center justify-between font-mono text-[11px] bg-slate-950/80 rounded-xl p-2.5 border border-white/10">
+						<span className="text-slate-300">Dendritic Potential: <strong className={dendriticVoltageMv > -50 ? 'text-amber-300' : 'text-cyan-300'}>{dendriticVoltageMv} mV</strong></span>
+						<span className="text-slate-400">Soma Threshold: {somaticThreshold} mV</span>
+						<span className={somaticSpike ? 'text-amber-300 font-bold' : 'text-slate-500 font-bold'}>
+							OUTPUT = {somaticSpike ? '1 (TRUE)' : '0 (FALSE)'}
+						</span>
+					</div>
+				</div>
+
+				{/* Non-Monotonic Activation Curve Plot & Truth Table */}
+				<div className="space-y-4">
+					{/* Curve Plot */}
+					<div className="rounded-2xl border border-amber-500/30 bg-black/80 p-4 shadow-xl">
+						<div className="flex items-center justify-between border-b border-white/10 pb-2 mb-2 font-mono text-[10px]">
+							<span className="font-bold text-amber-300">
+								{mode === 'dCaAP' ? 'NON-MONOTONIC dCaAP INVERSE-U' : 'MONOTONIC LINEAR ACTIVATION'}
+							</span>
+							<span className="text-slate-400">V_dend vs (A + B)</span>
+						</div>
+
+						<div className="relative h-32 w-full">
+							<svg viewBox="0 0 240 100" className="w-full h-full" preserveAspectRatio="none">
+								{/* Axes */}
+								<line x1="20" y1="90" x2="230" y2="90" stroke="#334155" strokeWidth="1" />
+								<line x1="20" y1="90" x2="20" y2="10" stroke="#334155" strokeWidth="1" />
+
+								{/* Threshold Line (-48mV -> y=45) */}
+								<line x1="20" y1="45" x2="230" y2="45" stroke="#f59e0b" strokeWidth="1" strokeDasharray="3 3" opacity="0.6" />
+								<text x="25" y="40" fill="#f59e0b" fontSize="7" fontFamily="monospace">Spike Threshold (-48mV)</text>
+
+								{/* Activation Curve */}
+								{mode === 'dCaAP' ? (
+									// Peak at s=1 (x=120, y=30), falling back at s=2 (x=220, y=80)
+									<path
+										d="M 20 90 Q 70 85 100 45 Q 120 25 140 45 Q 180 85 220 86"
+										fill="none"
+										stroke="#10b981"
+										strokeWidth="2.5"
+									/>
+								) : (
+									// Linear line crossing threshold and staying high
+									<line x1="20" y1="90" x2="220" y2="20" stroke="#38bdf8" strokeWidth="2.5" />
+								)}
+
+								{/* Current Operating Point Marker */}
+								<circle
+									cx={20 + (inputSum / 2) * 200}
+									cy={
+										mode === 'dCaAP'
+											? inputSum <= 0.05
+												? 90
+												: inputSum <= 1
+												? 90 - inputSum * 62
+												: 28 + (inputSum - 1) * 58
+											: 90 - (inputSum / 2) * 70
+									}
+									r="6"
+									fill="#fbbf24"
+									className="animate-ping"
+								/>
+								<circle
+									cx={20 + (inputSum / 2) * 200}
+									cy={
+										mode === 'dCaAP'
+											? inputSum <= 0.05
+												? 90
+												: inputSum <= 1
+												? 90 - inputSum * 62
+												: 28 + (inputSum - 1) * 58
+											: 90 - (inputSum / 2) * 70
+									}
+									r="4"
+									fill="#ffffff"
+								/>
+							</svg>
+						</div>
+
+						<div className="flex justify-between font-mono text-[9px] text-slate-400 mt-1">
+							<span>Input Sum: 0 (A=0, B=0)</span>
+							<span className="text-amber-300 font-bold">Sum: 1 (A=1, B=0)</span>
+							<span>Sum: 2 (A=1, B=1)</span>
+						</div>
+					</div>
+
+					{/* XOR Truth Table Interactive Checker */}
+					<div className="rounded-2xl border border-white/10 bg-slate-900/60 p-3">
+						<p className="font-mono text-[10px] uppercase font-bold text-slate-300 mb-2">
+							XOR Truth Table Status ({mode === 'dCaAP' ? '100% Solved' : 'Perceptron Failure'}):
+						</p>
+						<div className="space-y-1.5 font-mono text-xs">
+							{truthTable.map((row) => {
+								const isCurrent = Math.round(branchA) === row.a && Math.round(branchB) === row.b;
+								const actualOutput = mode === 'dCaAP' ? row.expectedXor : (row.sum >= 1 ? 1 : 0);
+								const matchesXor = actualOutput === row.expectedXor;
+
+								return (
+									<div
+										key={`${row.a}-${row.b}`}
+										className={`flex items-center justify-between rounded-lg px-3 py-1.5 transition-all ${
+											isCurrent
+												? 'bg-amber-400/25 border border-amber-400 text-white font-bold shadow-[0_0_12px_rgba(251,191,36,0.25)]'
+												: 'bg-white/5 text-slate-300'
+										}`}
+									>
+										<span>Input [{row.a}, {row.b}]</span>
+										<span>Sum = {row.sum}</span>
+										<span className={actualOutput === 1 ? 'text-amber-300 font-bold' : 'text-slate-400'}>
+											Soma: {actualOutput}
+										</span>
+										<span className={matchesXor ? 'text-emerald-400 text-[10px]' : 'text-rose-400 text-[10px]'}>
+											{matchesXor ? '✓ XOR MATCH' : '✗ FAILS XOR'}
+										</span>
+									</div>
+								);
+							})}
+						</div>
+					</div>
+				</div>
+			</div>
+
+			{/* Interactive Input Sliders & Quick Toggles */}
+			<div className="grid gap-4 sm:grid-cols-2 rounded-2xl border border-white/10 bg-slate-900/60 p-4">
+				<div>
+					<div className="flex items-center justify-between mb-1.5">
+						<span className="font-mono text-xs font-bold text-cyan-300">Branch A Synaptic Input:</span>
+						<div className="flex items-center gap-1.5">
+							<button
+								type="button"
+								onClick={() => { sound.playClick(); setBranchA(0); }}
+								className={`px-2 py-0.5 rounded text-[10px] font-mono font-bold ${branchA === 0 ? 'bg-cyan-500 text-white' : 'bg-white/10 text-slate-400'}`}
+							>
+								0
+							</button>
+							<button
+								type="button"
+								onClick={() => { sound.playClick(); setBranchA(1); }}
+								className={`px-2 py-0.5 rounded text-[10px] font-mono font-bold ${branchA === 1 ? 'bg-cyan-500 text-white' : 'bg-white/10 text-slate-400'}`}
+							>
+								1
+							</button>
+							<span className="font-mono text-xs text-cyan-200">{branchA.toFixed(2)}</span>
+						</div>
+					</div>
+					<input
+						type="range"
+						min="0"
+						max="1"
+						step="0.05"
+						value={branchA}
+						onChange={(e) => setBranchA(Number(e.target.value))}
+						className="w-full accent-cyan-400"
+					/>
+				</div>
+
+				<div>
+					<div className="flex items-center justify-between mb-1.5">
+						<span className="font-mono text-xs font-bold text-violet-300">Branch B Synaptic Input:</span>
+						<div className="flex items-center gap-1.5">
+							<button
+								type="button"
+								onClick={() => { sound.playClick(); setBranchB(0); }}
+								className={`px-2 py-0.5 rounded text-[10px] font-mono font-bold ${branchB === 0 ? 'bg-violet-500 text-white' : 'bg-white/10 text-slate-400'}`}
+							>
+								0
+							</button>
+							<button
+								type="button"
+								onClick={() => { sound.playClick(); setBranchB(1); }}
+								className={`px-2 py-0.5 rounded text-[10px] font-mono font-bold ${branchB === 1 ? 'bg-violet-500 text-white' : 'bg-white/10 text-slate-400'}`}
+							>
+								1
+							</button>
+							<span className="font-mono text-xs text-violet-200">{branchB.toFixed(2)}</span>
+						</div>
+					</div>
+					<input
+						type="range"
+						min="0"
+						max="1"
+						step="0.05"
+						value={branchB}
+						onChange={(e) => setBranchB(Number(e.target.value))}
+						className="w-full accent-violet-400"
+					/>
+				</div>
+			</div>
+		</div>
+	);
+}
+
+function TripartiteSynapseLab() {
+	const [stimRateHz, setStimRateHz] = useState<number>(35);
+	const [astroFeedback, setAstroFeedback] = useState<boolean>(true);
+	const [extracellularK, setExtracellularK] = useState<number>(4.8);
+	const [ephapticFieldVm, setEphapticFieldVm] = useState<number>(2.4);
+
+	// Nernst shift: deltaE_K = 61.5 * log10([K+]_o / 3.0)
+	const nernstShiftMv = useMemo(() => {
+		return Number((61.5 * Math.log10(extracellularK / 3.0)).toFixed(1));
+	}, [extracellularK]);
+
+	// Ephaptic polarization
+	const ephapticBiasMv = useMemo(() => {
+		return Number((ephapticFieldVm * 1.6).toFixed(1));
+	}, [ephapticFieldVm]);
+
+	// Glutamate clearance time tau (ms)
+	const glutamateTauMs = useMemo(() => {
+		return astroFeedback ? 1.4 : 3.8;
+	}, [astroFeedback]);
+
+	// Net EPSP amplitude (mV)
+	const epspAmplitudeMv = useMemo(() => {
+		const base = 4.0;
+		const freqGain = (stimRateHz / 40) * 8.5;
+		const astroGain = astroFeedback ? 1.35 : 0.85;
+		const net = (base + freqGain) * astroGain + ephapticBiasMv + nernstShiftMv * 0.2;
+		return Number(Math.max(1.0, Math.min(42.0, net)).toFixed(1));
+	}, [stimRateHz, astroFeedback, ephapticBiasMv, nernstShiftMv]);
+
+	return (
+		<div className="space-y-6">
+			{/* Header */}
+			<div className="border-b border-white/10 pb-3">
+				<h3 className="text-base font-bold text-white tracking-tight sm:text-lg">
+					Tripartite Synapse & Extracellular Ephaptic Field Coupling
+				</h3>
+				<p className="text-xs text-slate-400">
+					Simulating synaptic transmission between axon and dendritic spine, modulated by astrocytic glia Ca²⁺ waves and extracellular field dipoles.
+				</p>
+			</div>
+
+			{/* SVG Diagram: Tripartite Synapse with Astrocyte Endfoot & Ephaptic Lines */}
+			<div className="rounded-2xl border border-teal-500/30 bg-black/80 p-4 shadow-xl">
+				<div className="flex items-center justify-between border-b border-white/10 pb-2 mb-3 font-mono text-[10px]">
+					<span className="font-bold text-teal-300">NANOSCALE ULTRASTRUCTURE (20 nm SYNAPTIC CLEFT)</span>
+					<span className="text-cyan-400">E-FIELD: {ephapticFieldVm} V/m · [K⁺]ₒ: {extracellularK} mM</span>
+				</div>
+
+				<svg viewBox="0 0 500 200" className="w-full">
+					{/* Extracellular Ephaptic Field Gradient Bands */}
+					{[-2, -1, 0, 1, 2].map((i) => (
+						<line
+							key={i}
+							x1="20"
+							y1={100 + i * 28}
+							x2="480"
+							y2={100 + i * 28}
+							stroke="#fde68a"
+							strokeWidth="1"
+							strokeDasharray="6 4"
+							opacity={Math.min(0.7, Math.abs(ephapticFieldVm) * 0.15)}
+						/>
+					))}
+
+					{/* 1. Presynaptic Axonal Bouton (Left) */}
+					<g transform="translate(40, 40)">
+						<path
+							d="M 0 30 Q 80 10 120 60 L 120 120 Q 80 170 0 150 Z"
+							fill="#0f2b38"
+							stroke="#0284c7"
+							strokeWidth="2"
+						/>
+						<text x="50" y="90" textAnchor="middle" fill="#7dd3fc" fontSize="9" fontWeight="bold">
+							AXON BOUTON
+						</text>
+						{/* Synaptic vesicles with glutamate */}
+						{[
+							{ x: 40, y: 60 },
+							{ x: 70, y: 75 },
+							{ x: 95, y: 70 },
+							{ x: 60, y: 110 },
+							{ x: 90, y: 115 },
+							{ x: 105, y: 95 },
+						].map((v, i) => (
+							<circle key={i} cx={v.x} cy={v.y} r="5" fill="#38bdf8" />
+						))}
+						{/* Docked and fusing vesicles releasing transmitter */}
+						<circle cx="118" cy="85" r="4" fill="#34d399" className="animate-ping" />
+						<circle cx="118" cy="105" r="4" fill="#34d399" className="animate-ping" />
+					</g>
+
+					{/* 2. Synaptic Cleft Neurotransmitter Diffusion Particles */}
+					<g transform="translate(160, 60)">
+						{Array.from({ length: 18 }, (_, i) => (
+							<circle
+								key={i}
+								cx={(i % 3) * 6}
+								cy={10 + i * 5}
+								r="2"
+								fill="#34d399"
+								opacity="0.8"
+							/>
+						))}
+					</g>
+
+					{/* 3. Postsynaptic Dendritic Spine (Center-Right) */}
+					<g transform="translate(180, 40)">
+						<path
+							d="M 0 60 Q 40 10 120 30 L 120 150 Q 40 170 0 120 Z"
+							fill="#2e1065"
+							stroke="#a855f7"
+							strokeWidth="2"
+						/>
+						{/* Postsynaptic density (PSD-95) receptors */}
+						<line x1="2" y1="65" x2="2" y2="115" stroke="#f43f5e" strokeWidth="4" />
+						<text x="65" y="90" textAnchor="middle" fill="#d8b4fe" fontSize="9" fontWeight="bold">
+							DENDRITIC SPINE
+						</text>
+						<text x="65" y="105" textAnchor="middle" fill="#f43f5e" fontSize="7" fontFamily="monospace">
+							AMPA / NMDA PSD
+						</text>
+					</g>
+
+					{/* 4. Astrocyte Glia Endfoot Wrapping the Synapse (Top & Bottom) */}
+					<g transform="translate(90, 10)">
+						<path
+							d="M 20 20 Q 120 -5 200 20 Q 230 40 210 60 Q 140 40 80 45 Z"
+							fill={astroFeedback ? '#064e3b' : '#1e293b'}
+							fillOpacity="0.8"
+							stroke="#10b981"
+							strokeWidth="1.5"
+						/>
+						<text x="130" y="24" textAnchor="middle" fill="#6ee7b7" fontSize="8" fontWeight="bold">
+							ASTROCYTE GLIA ENDFOOT
+						</text>
+						{astroFeedback && (
+							<circle cx="160" cy="30" r="8" fill="#34d399" fillOpacity="0.4" className="animate-pulse" />
+						)}
+					</g>
+
+					{/* Extracellular Ephaptic E-Vector Arrow */}
+					<g transform="translate(340, 50)">
+						<rect x="0" y="0" width="130" height="90" rx="8" fill="#020617" stroke="#f59e0b" strokeWidth="1" />
+						<text x="65" y="16" textAnchor="middle" fill="#fde68a" fontSize="8" fontFamily="monospace" fontWeight="bold">
+							EPHAPTIC E-FIELD VECTOR
+						</text>
+						<line x1="25" y1="50" x2="105" y2="50" stroke="#fde68a" strokeWidth="2.5" />
+						<polygon points="105,45 115,50 105,55" fill="#fde68a" />
+						<text x="65" y="70" textAnchor="middle" fill="#38bdf8" fontSize="8" fontFamily="monospace">
+							Ex = {ephapticFieldVm} V/m
+						</text>
+					</g>
+				</svg>
+			</div>
+
+			{/* Telemetry Display Cards */}
+			<div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+				<div className="rounded-xl border border-emerald-400/25 bg-emerald-950/20 p-3 text-center">
+					<p className="text-[10px] uppercase font-mono tracking-wider text-slate-400">Peak EPSP Amplitude</p>
+					<p className="mt-1 font-mono text-2xl font-black text-emerald-300">+{epspAmplitudeMv} mV</p>
+					<p className="text-[9px] text-emerald-400/60 font-mono mt-0.5">Excitatory Depolarization</p>
+				</div>
+
+				<div className="rounded-xl border border-teal-400/25 bg-teal-950/20 p-3 text-center">
+					<p className="text-[10px] uppercase font-mono tracking-wider text-slate-400">Glutamate Clearance (τ)</p>
+					<p className="mt-1 font-mono text-2xl font-black text-teal-300">{glutamateTauMs} ms</p>
+					<p className="text-[9px] text-teal-400/60 font-mono mt-0.5">Astrocyte EAAT2 Transporters</p>
+				</div>
+
+				<div className="rounded-xl border border-amber-400/25 bg-amber-950/20 p-3 text-center">
+					<p className="text-[10px] uppercase font-mono tracking-wider text-slate-400">Potassium Nernst Shift</p>
+					<p className="mt-1 font-mono text-2xl font-black text-amber-300">+{nernstShiftMv} mV</p>
+					<p className="text-[9px] text-amber-400/60 font-mono mt-0.5">ΔE_K ([K⁺]ₒ = {extracellularK}mM)</p>
+				</div>
+
+				<div className="rounded-xl border border-fuchsia-400/25 bg-fuchsia-950/20 p-3 text-center">
+					<p className="text-[10px] uppercase font-mono tracking-wider text-slate-400">Ephaptic Membrane Bias</p>
+					<p className="mt-1 font-mono text-2xl font-black text-fuchsia-300">+{ephapticBiasMv} mV</p>
+					<p className="text-[9px] text-fuchsia-400/60 font-mono mt-0.5">Direct Field Polarization</p>
+				</div>
+			</div>
+
+			{/* Interactive Modulator Controls */}
+			<div className="rounded-2xl border border-white/10 bg-slate-900/60 p-4">
+				<p className="text-xs font-mono font-bold uppercase tracking-wider text-slate-200 mb-3">
+					Tripartite Micro-Environment Modulators:
+				</p>
+				<div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+					<div>
+						<div className="flex justify-between font-mono text-[11px] mb-1">
+							<span className="text-slate-300 font-bold">Stimulation Frequency:</span>
+							<span className="text-cyan-300 font-mono">{stimRateHz} Hz</span>
+						</div>
+						<input
+							type="range"
+							min="5"
+							max="100"
+							step="5"
+							value={stimRateHz}
+							onChange={(e) => setStimRateHz(Number(e.target.value))}
+							className="w-full accent-cyan-400"
+						/>
+					</div>
+
+					<div>
+						<div className="flex justify-between font-mono text-[11px] mb-1">
+							<span className="text-slate-300 font-bold">Extracellular Potassium [K⁺]ₒ:</span>
+							<span className="text-amber-300 font-mono">{extracellularK} mM</span>
+						</div>
+						<input
+							type="range"
+							min="3.0"
+							max="10.0"
+							step="0.2"
+							value={extracellularK}
+							onChange={(e) => setExtracellularK(Number(e.target.value))}
+							className="w-full accent-amber-400"
+						/>
+					</div>
+
+					<div>
+						<div className="flex justify-between font-mono text-[11px] mb-1">
+							<span className="text-slate-300 font-bold">Ephaptic Field Strength (Ex):</span>
+							<span className="text-fuchsia-300 font-mono">{ephapticFieldVm} V/m</span>
+						</div>
+						<input
+							type="range"
+							min="-4.0"
+							max="4.0"
+							step="0.2"
+							value={ephapticFieldVm}
+							onChange={(e) => setEphapticFieldVm(Number(e.target.value))}
+							className="w-full accent-fuchsia-400"
+						/>
+					</div>
+
+					<div className="flex flex-col justify-end">
+						<button
+							type="button"
+							onClick={() => { sound.playClick(); setAstroFeedback(!astroFeedback); }}
+							className={`w-full py-2 px-3 rounded-xl border text-xs font-bold font-mono transition-all ${
+								astroFeedback
+									? 'border-emerald-400 bg-emerald-400/20 text-emerald-200 shadow-[0_0_12px_rgba(52,211,153,0.3)]'
+									: 'border-white/10 bg-white/5 text-slate-400 hover:bg-white/10'
+							}`}
+						>
+							{astroFeedback ? '✓ Astrocyte Ca²⁺ Active' : '✗ Glia Decoupled'}
+						</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	);
+}
+
+function MatrixDecisionStudio() {
+	const [inputVector, setInputVector] = useState<number[]>([0.9, 0.2, 0.85, 0.4, 0.95, 0.3, 0.7, 0.6]);
+	const [temperature, setTemperature] = useState<number>(0.8);
+	const [noiseLevel, setNoiseLevel] = useState<number>(0.05);
+
+	// Initial 8x8 weight matrix
+	const [w1, setW1] = useState<number[][]>([
+		[ 1.4, -0.4,  0.2, -0.1,  0.5, -0.2,  0.1,  0.0],
+		[-0.2,  1.2, -0.3,  0.4, -0.1,  0.3, -0.2,  0.1],
+		[ 0.1, -0.2,  1.5, -0.5,  0.3, -0.1,  0.4, -0.2],
+		[-0.3,  0.3, -0.2,  1.3, -0.4,  0.2, -0.1,  0.3],
+		[ 0.4, -0.1,  0.2, -0.3,  1.6, -0.5,  0.2, -0.1],
+		[-0.1,  0.4, -0.1,  0.2, -0.3,  1.4, -0.4,  0.2],
+		[ 0.2, -0.3,  0.4, -0.2,  0.1, -0.2,  1.5, -0.3],
+		[-0.1,  0.2, -0.3,  0.4, -0.2,  0.1, -0.3,  1.3],
+	]);
+
+	const outputLabels = [
+		'Surface Extraction Lock',
+		'Ephaptic Resonance Gate',
+		'Dendritic XOR Convergence',
+		'Thalamic Calcium Burst',
+		'Systolic Clock Alignment',
+		'GABAergic Suppression',
+		'Glutamate Transporter Reset',
+		'Chimera Equilibrium State',
+	];
+
+	// Preset matrices
+	function applyMatrixPreset(preset: 'synergy' | 'hebbian' | 'chaos' | 'sparse') {
+		sound.playClick();
+		if (preset === 'synergy') {
+			setW1([
+				[ 1.8, -0.5,  0.2, -0.2,  0.4, -0.3,  0.1, -0.1],
+				[-0.4,  1.6, -0.4,  0.3, -0.2,  0.4, -0.2,  0.1],
+				[ 0.2, -0.3,  1.7, -0.6,  0.3, -0.2,  0.5, -0.2],
+				[-0.3,  0.4, -0.4,  1.5, -0.5,  0.3, -0.1,  0.4],
+				[ 0.5, -0.2,  0.3, -0.4,  1.8, -0.6,  0.3, -0.2],
+				[-0.2,  0.5, -0.2,  0.3, -0.4,  1.6, -0.5,  0.3],
+				[ 0.3, -0.4,  0.5, -0.3,  0.2, -0.3,  1.7, -0.4],
+				[-0.2,  0.3, -0.3,  0.5, -0.3,  0.2, -0.4,  1.5],
+			]);
+		} else if (preset === 'hebbian') {
+			// Auto-associative symmetric matrix
+			setW1([
+				[ 1.5,  0.6, -0.3, -0.4,  0.5, -0.2, -0.1,  0.3],
+				[ 0.6,  1.4, -0.2, -0.3,  0.4, -0.1, -0.2,  0.2],
+				[-0.3, -0.2,  1.6,  0.5, -0.3,  0.4,  0.2, -0.2],
+				[-0.4, -0.3,  0.5,  1.5, -0.4,  0.3,  0.3, -0.1],
+				[ 0.5,  0.4, -0.3, -0.4,  1.6, -0.2, -0.1,  0.4],
+				[-0.2, -0.1,  0.4,  0.3, -0.2,  1.5,  0.5, -0.2],
+				[-0.1, -0.2,  0.2,  0.3, -0.1,  0.5,  1.4, -0.3],
+				[ 0.3,  0.2, -0.2, -0.1,  0.4, -0.2, -0.3,  1.5],
+			]);
+		} else if (preset === 'chaos') {
+			// Gaussian random weights
+			setW1([
+				[ 0.8, -1.2,  0.9, -0.4,  1.1, -0.7,  0.3, -0.9],
+				[-0.7,  0.9, -1.1,  0.6, -0.8,  1.2, -0.5,  0.4],
+				[ 1.1, -0.5,  0.7, -1.3,  0.6, -0.4,  1.0, -0.6],
+				[-0.6,  1.0, -0.8,  0.9, -1.2,  0.5, -0.7,  1.1],
+				[ 0.9, -0.7,  1.2, -0.5,  0.8, -1.0,  0.6, -0.4],
+				[-1.0,  0.8, -0.6,  1.1, -0.5,  0.7, -1.2,  0.9],
+				[ 0.5, -1.1,  0.8, -0.6,  1.0, -0.8,  0.9, -0.5],
+				[-0.8,  0.6, -0.9,  0.7, -0.6,  1.1, -0.4,  0.8],
+			]);
+		} else {
+			// Sparse orthogonal
+			setW1([
+				[ 2.0,  0.0,  0.0, -0.5,  0.0,  0.0,  0.0,  0.0],
+				[ 0.0,  2.0,  0.0,  0.0, -0.5,  0.0,  0.0,  0.0],
+				[ 0.0,  0.0,  2.0,  0.0,  0.0, -0.5,  0.0,  0.0],
+				[ 0.0,  0.0,  0.0,  2.0,  0.0,  0.0, -0.5,  0.0],
+				[-0.5,  0.0,  0.0,  0.0,  2.0,  0.0,  0.0,  0.0],
+				[ 0.0, -0.5,  0.0,  0.0,  0.0,  2.0,  0.0,  0.0],
+				[ 0.0,  0.0, -0.5,  0.0,  0.0,  0.0,  2.0,  0.0],
+				[ 0.0,  0.0,  0.0, -0.5,  0.0,  0.0,  0.0,  2.0],
+			]);
+		}
+	}
+
+	// Matrix multiply: f = ReLU(W1 * x + noise)
+	const features = useMemo(() => {
+		return w1.map((row) => {
+			let sum = 0;
+			for (let i = 0; i < 8; i++) {
+				sum += (row[i] ?? 0) * (inputVector[i] ?? 0);
+			}
+			return Math.max(0, sum + (Math.random() - 0.5) * noiseLevel);
+		});
+	}, [w1, inputVector, noiseLevel]);
+
+	// Softmax probabilities: p_i = exp(f_i / T) / sum exp(f_j / T)
+	const probabilities = useMemo(() => {
+		const expValues = features.map((f) => Math.exp(Math.min(30, f / Math.max(0.05, temperature))));
+		const sumExp = expValues.reduce((a, b) => a + b, 0);
+		return expValues.map((v) => (sumExp > 0 ? v / sumExp : 1 / 8));
+	}, [features, temperature]);
+
+	// Shannon Entropy: H(p) = -sum p_i * log2(p_i)
+	const entropyBits = useMemo(() => {
+		let h = 0;
+		probabilities.forEach((p) => {
+			if (p > 1e-9) h -= p * Math.log2(p);
+		});
+		return Number(h.toFixed(2));
+	}, [probabilities]);
+
+	// Matrix Trace: sum W_ii
+	const matrixTrace = useMemo(() => {
+		let tr = 0;
+		for (let i = 0; i < 8; i++) {
+			tr += w1[i]?.[i] ?? 0;
+		}
+		return Number(tr.toFixed(2));
+	}, [w1]);
+
+	const winnerIndex = probabilities.indexOf(Math.max(...probabilities));
+
+	function handleCellClick(row: number, col: number) {
+		sound.playClick();
+		setW1((prev) => {
+			const next = prev.map((r) => [...r]);
+			if (next[row] && next[row][col] !== undefined) {
+				const currentVal = next[row][col]!;
+				const newVal = currentVal >= 2.0 ? -1.0 : Number((currentVal + 0.3).toFixed(1));
+				next[row][col] = newVal;
+			}
+			return next;
+		});
+	}
+
+	return (
+		<div className="space-y-6">
+			{/* Header & Preset Buttons */}
+			<div className="flex flex-wrap items-center justify-between gap-3 border-b border-white/10 pb-4">
+				<div>
+					<h3 className="text-base font-bold text-white tracking-tight sm:text-lg">
+						8×8 Hyper-Matrix Decision Architect & Softmax Studio
+					</h3>
+					<p className="text-xs text-slate-400">
+						Full 8-dimensional multi-variable tensor core simulation with temperature-scaled Softmax attractors.
+					</p>
+				</div>
+				<div className="flex items-center gap-1.5 flex-wrap">
+					<button
+						type="button"
+						onClick={() => applyMatrixPreset('synergy')}
+						className="rounded-lg border border-cyan-400/40 bg-cyan-500/10 px-2.5 py-1 text-[11px] font-mono font-bold text-cyan-200 hover:bg-cyan-500/20"
+					>
+						Synergy
+					</button>
+					<button
+						type="button"
+						onClick={() => applyMatrixPreset('hebbian')}
+						className="rounded-lg border border-amber-400/40 bg-amber-500/10 px-2.5 py-1 text-[11px] font-mono font-bold text-amber-200 hover:bg-amber-500/20"
+					>
+						Hebbian
+					</button>
+					<button
+						type="button"
+						onClick={() => applyMatrixPreset('chaos')}
+						className="rounded-lg border border-rose-400/40 bg-rose-500/10 px-2.5 py-1 text-[11px] font-mono font-bold text-rose-200 hover:bg-rose-500/20"
+					>
+						Chaos
+					</button>
+					<button
+						type="button"
+						onClick={() => applyMatrixPreset('sparse')}
+						className="rounded-lg border border-emerald-400/40 bg-emerald-500/10 px-2.5 py-1 text-[11px] font-mono font-bold text-emerald-200 hover:bg-emerald-500/20"
+					>
+						Sparse
+					</button>
+				</div>
+			</div>
+
+			{/* 8-Dimensional Input Vector Sliders */}
+			<div className="rounded-2xl border border-white/10 bg-slate-900/60 p-4">
+				<div className="flex items-center justify-between mb-2">
+					<span className="text-xs font-mono font-bold uppercase tracking-wider text-slate-200">
+						8-Dimensional Input Vector x ∈ ℝ⁸:
+					</span>
+					<button
+						type="button"
+						onClick={() => {
+							sound.playClick();
+							setInputVector(Array.from({ length: 8 }, () => Number((Math.random() * 0.9 + 0.1).toFixed(2))));
+						}}
+						className="text-[10px] font-mono text-cyan-400 hover:underline"
+					>
+						Randomize x
+					</button>
+				</div>
+				<div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-8 gap-2">
+					{inputVector.map((val, idx) => (
+						<div key={idx} className="rounded-xl border border-white/10 bg-white/5 p-2 text-center">
+							<span className="font-mono text-[9px] text-cyan-300 block">x[{idx}]</span>
+							<span className="font-mono text-xs font-bold text-white block my-1">{val.toFixed(2)}</span>
+							<input
+								type="range"
+								min="0"
+								max="1"
+								step="0.05"
+								value={val}
+								onChange={(e) => {
+									const next = [...inputVector];
+									next[idx] = Number(e.target.value);
+									setInputVector(next);
+								}}
+								className="w-full accent-cyan-400 h-1.5"
+							/>
+						</div>
+					))}
+				</div>
+			</div>
+
+			{/* 8x8 Interactive Weight Matrix Heatmap (left) & Output Softmax Bars (right) */}
+			<div className="grid gap-6 lg:grid-cols-[1.2fr_1fr]">
+				{/* 8x8 Heatmap Grid */}
+				<div className="rounded-2xl border border-cyan-500/30 bg-black/80 p-4 shadow-xl">
+					<div className="flex items-center justify-between border-b border-white/10 pb-2 mb-3 font-mono text-[10px]">
+						<span className="font-bold text-cyan-300">W₁ WEIGHT MATRIX [8×8] (CLICK CELL TO TWEAK)</span>
+						<span className="text-slate-400">TRACE: {matrixTrace}</span>
+					</div>
+
+					<div className="overflow-x-auto pb-1">
+						<div className="grid grid-cols-8 gap-1 min-w-[280px]">
+							{w1.map((row, rIdx) =>
+								row.map((val, cIdx) => {
+									const isPositive = val > 0;
+									const intensity = Math.min(1, Math.abs(val) / 2.0);
+									const bgColor = isPositive
+										? `rgba(6, 182, 212, ${0.15 + intensity * 0.6})`
+										: `rgba(217, 70, 239, ${0.15 + intensity * 0.6})`;
+
+									return (
+										<button
+											key={`${rIdx}-${cIdx}`}
+											type="button"
+											onClick={() => handleCellClick(rIdx, cIdx)}
+											title={`W₁[${rIdx},${cIdx}] = ${val.toFixed(1)} (Click to increment)`}
+											style={{ backgroundColor: bgColor }}
+											className="size-8 sm:size-9 rounded border border-white/10 font-mono text-[9px] font-bold text-white flex items-center justify-center transition-all hover:scale-110 hover:ring-2 hover:ring-cyan-300"
+										>
+											{val.toFixed(1)}
+										</button>
+									);
+								}),
+							)}
+						</div>
+					</div>
+
+					<div className="mt-2 flex items-center justify-between font-mono text-[9px] text-slate-400">
+						<span className="text-cyan-400 font-bold">● Positive Excitatory Weight</span>
+						<span className="text-fuchsia-400 font-bold">● Negative Inhibitory Weight</span>
+					</div>
+				</div>
+
+				{/* Softmax Probability Distributions */}
+				<div className="rounded-2xl border border-amber-500/30 bg-black/80 p-4 shadow-xl">
+					<div className="flex items-center justify-between border-b border-white/10 pb-2 mb-3 font-mono text-[10px]">
+						<span className="font-bold text-amber-300">SOFTMAX DISTRIBUTION (TEMPERATURE = {temperature})</span>
+						<span className="text-emerald-400">H: {entropyBits} BITS</span>
+					</div>
+
+					<div className="space-y-2.5">
+						{probabilities.map((prob, idx) => {
+							const isWinner = idx === winnerIndex;
+							const label = outputLabels[idx] ?? `Output ${idx + 1}`;
+							const pct = Math.round(prob * 100);
+
+							return (
+								<div key={idx} className="space-y-1">
+									<div className="flex items-center justify-between font-mono text-[10px]">
+										<span className={`truncate max-w-[200px] ${isWinner ? 'text-amber-300 font-bold' : 'text-slate-300'}`}>
+											{label}
+										</span>
+										<span className={isWinner ? 'text-amber-300 font-bold' : 'text-slate-400'}>
+											{pct}%
+										</span>
+									</div>
+									<div className="h-2 w-full rounded-full bg-slate-900 overflow-hidden border border-white/5">
+										<div
+											className={`h-full rounded-full transition-all duration-300 ${
+												isWinner
+													? 'bg-gradient-to-r from-amber-400 to-yellow-300 shadow-[0_0_8px_rgba(251,191,36,0.8)]'
+													: 'bg-cyan-500/50'
+											}`}
+											style={{ width: `${Math.max(4, pct)}%` }}
+										/>
+									</div>
+								</div>
+							);
+						})}
+					</div>
+
+					<div className="mt-4 rounded-xl border border-amber-400/30 bg-amber-950/20 p-2.5 text-center font-mono">
+						<span className="text-[10px] uppercase text-slate-400 block">Predicted Attractor Winner:</span>
+						<span className="text-xs font-bold text-amber-300">{outputLabels[winnerIndex]}</span>
+					</div>
+				</div>
+			</div>
+
+			{/* Softmax Temperature & Noise Injection Sliders */}
+			<div className="grid gap-4 sm:grid-cols-2 rounded-2xl border border-white/10 bg-slate-900/60 p-4">
+				<div>
+					<div className="flex justify-between font-mono text-xs mb-1.5">
+						<span className="text-slate-300 font-bold">Softmax Temperature (T):</span>
+						<span className="text-amber-300 font-mono">{temperature.toFixed(2)} {temperature < 0.4 ? '(Argmax Mode)' : temperature > 1.8 ? '(High Entropy)' : ''}</span>
+					</div>
+					<input
+						type="range"
+						min="0.1"
+						max="2.5"
+						step="0.05"
+						value={temperature}
+						onChange={(e) => setTemperature(Number(e.target.value))}
+						className="w-full accent-amber-400"
+					/>
+				</div>
+
+				<div>
+					<div className="flex justify-between font-mono text-xs mb-1.5">
+						<span className="text-slate-300 font-bold">Thermal Noise Injection (σ):</span>
+						<span className="text-fuchsia-300 font-mono">{noiseLevel.toFixed(2)}</span>
+					</div>
+					<input
+						type="range"
+						min="0.0"
+						max="0.4"
+						step="0.02"
+						value={noiseLevel}
+						onChange={(e) => setNoiseLevel(Number(e.target.value))}
+						className="w-full accent-fuchsia-400"
+					/>
+				</div>
+			</div>
+		</div>
+	);
+}
+
+export function WackyNeuronLab({ onReturnToStory }: Readonly<{ onReturnToStory: () => void }>) {
+	const [activeTab, setActiveTab] = useState<'izhikevich' | 'xor' | 'tripartite' | 'matrix'>('izhikevich');
+
+	return (
+		<div className="space-y-6">
+			{/* Lab Navigation Header */}
+			<div className="rounded-2xl border border-amber-500/30 bg-gradient-to-r from-amber-950/40 via-slate-950/80 to-cyan-950/40 p-4 sm:p-6 shadow-[0_12px_40px_rgba(245,158,11,0.15)]">
+				<div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+					<div>
+						<div className="flex items-center gap-2">
+							<span className="size-2 rounded-full bg-amber-400 animate-ping" />
+							<span className="text-xs font-mono font-bold uppercase tracking-[0.25em] text-amber-300">
+								Experimental Workbench
+							</span>
+						</div>
+						<h2 className="mt-1 text-2xl font-black tracking-tight text-white sm:text-3xl">
+							Wacky Neuron Lab & Matrix Studio
+						</h2>
+						<p className="mt-1 text-xs text-slate-300 max-w-2xl">
+							Dive into non-linear biological dynamical systems: 6-mode bursting resonators, active dendritic XOR computation, tripartite astrocytic synapses, and 8×8 tensor architectures.
+						</p>
+					</div>
+
+					<button
+						type="button"
+						onClick={onReturnToStory}
+						className="inline-flex items-center gap-2 rounded-full border border-cyan-400/40 bg-cyan-500/15 px-4 py-2 text-xs font-bold text-cyan-200 transition-all hover:bg-cyan-500/25 shadow-[0_0_16px_rgba(34,211,238,0.2)] shrink-0 self-start sm:self-auto"
+					>
+						<span>← Return to Campaign (12 Chapters)</span>
+					</button>
+				</div>
+
+				{/* 4 Navigation Tabs */}
+				<div className="mt-5 grid grid-cols-2 lg:grid-cols-4 gap-2">
+					<button
+						type="button"
+						onClick={() => { sound.playClick(); setActiveTab('izhikevich'); }}
+						className={`rounded-xl border p-3 text-left transition-all ${
+							activeTab === 'izhikevich'
+								? 'border-amber-400 bg-amber-500/20 text-white ring-2 ring-amber-400/40 shadow-[0_0_18px_rgba(245,158,11,0.3)]'
+								: 'border-white/10 bg-white/5 text-slate-400 hover:bg-white/10'
+						}`}
+					>
+						<span className="font-mono text-[10px] text-amber-300 block font-bold">MODULE 01</span>
+						<span className="text-xs font-bold block text-slate-100">Izhikevich Bursting</span>
+						<span className="text-[10px] text-slate-400 block truncate">6 Dynamical Modes & Phase Plane</span>
+					</button>
+
+					<button
+						type="button"
+						onClick={() => { sound.playClick(); setActiveTab('xor'); }}
+						className={`rounded-xl border p-3 text-left transition-all ${
+							activeTab === 'xor'
+								? 'border-emerald-400 bg-emerald-500/20 text-white ring-2 ring-emerald-400/40 shadow-[0_0_18px_rgba(52,211,153,0.3)]'
+								: 'border-white/10 bg-white/5 text-slate-400 hover:bg-white/10'
+						}`}
+					>
+						<span className="font-mono text-[10px] text-emerald-300 block font-bold">MODULE 02</span>
+						<span className="text-xs font-bold block text-slate-100">Dendritic XOR Gate</span>
+						<span className="text-[10px] text-slate-400 block truncate">Single-Neuron dCaAP Computing</span>
+					</button>
+
+					<button
+						type="button"
+						onClick={() => { sound.playClick(); setActiveTab('tripartite'); }}
+						className={`rounded-xl border p-3 text-left transition-all ${
+							activeTab === 'tripartite'
+								? 'border-teal-400 bg-teal-500/20 text-white ring-2 ring-teal-400/40 shadow-[0_0_18px_rgba(45,212,191,0.3)]'
+								: 'border-white/10 bg-white/5 text-slate-400 hover:bg-white/10'
+						}`}
+					>
+						<span className="font-mono text-[10px] text-teal-300 block font-bold">MODULE 03</span>
+						<span className="text-xs font-bold block text-slate-100">Tripartite & Ephaptic</span>
+						<span className="text-[10px] text-slate-400 block truncate">Glia Ca²⁺ & Electric Field Dipoles</span>
+					</button>
+
+					<button
+						type="button"
+						onClick={() => { sound.playClick(); setActiveTab('matrix'); }}
+						className={`rounded-xl border p-3 text-left transition-all ${
+							activeTab === 'matrix'
+								? 'border-cyan-400 bg-cyan-500/20 text-white ring-2 ring-cyan-400/40 shadow-[0_0_18px_rgba(6,182,212,0.3)]'
+								: 'border-white/10 bg-white/5 text-slate-400 hover:bg-white/10'
+						}`}
+					>
+						<span className="font-mono text-[10px] text-cyan-300 block font-bold">MODULE 04</span>
+						<span className="text-xs font-bold block text-slate-100">8×8 Matrix Architect</span>
+						<span className="text-[10px] text-slate-400 block truncate">Softmax & Spectral Heatmap</span>
+					</button>
+				</div>
+			</div>
+
+			{/* Active Module Content */}
+			<div className="rounded-2xl border border-white/10 bg-slate-950/70 p-4 sm:p-6 shadow-2xl backdrop-blur-xl">
+				{activeTab === 'izhikevich' && <IzhikevichLab />}
+				{activeTab === 'xor' && <DendriticXorLab />}
+				{activeTab === 'tripartite' && <TripartiteSynapseLab />}
+				{activeTab === 'matrix' && <MatrixDecisionStudio />}
+			</div>
+		</div>
+	);
+}
+
+// ---------------------------------------------------------------------------
 // MAIN APPLICATION COMPONENT
 // ---------------------------------------------------------------------------
 export function AiBiologyExplorer() {
@@ -3861,6 +6365,7 @@ export function AiBiologyExplorer() {
 	const [soundActive, setSoundActive] = useState(false);
 	const [learningMode, setLearningMode] = useState<'before' | 'after'>('before');
 	const [readingStage, setReadingStage] = useState(1);
+	const [mainMode, setMainMode] = useState<'story' | 'lab'>('story');
 
 	// IN-BETWEEN CHAPTER TRANSITION STATE
 	const [activeTransition, setActiveTransition] = useState<InBetweenTransition | null>(null);
@@ -4040,7 +6545,7 @@ export function AiBiologyExplorer() {
 						<p className="mt-5 max-w-2xl text-base leading-7 text-slate-200">
 							At 02:13 the underground Helmholtz-Turing Institute plunged into total blackout, leaving lead architects
 							Dr. Hans Werner and Dr. Astrid Van Hoyt sealed in the subterranean complex. Escaping requires deciphering
-							nine sensory paradoxes—where artificial matrix mathematics and living cortical circuits compute the exact
+							twelve sensory paradoxes across thirteen facility sectors—where artificial matrix mathematics and living cortical circuits compute the exact
 							same recognitions through radically different physical substrates.
 						</p>
 					</div>
@@ -4065,6 +6570,59 @@ export function AiBiologyExplorer() {
 					</div>
 				</div>
 			</section>
+
+			{/* MASTER MODE SWITCHER: 12-CHAPTER CAMPAIGN VS WACKY NEURON LAB */}
+			<div className="flex items-center justify-between flex-wrap gap-3 p-2 rounded-2xl border border-white/10 bg-slate-950/80 backdrop-blur-xl shadow-xl">
+				<div className="flex items-center gap-2">
+					<button
+						type="button"
+						onClick={() => {
+							sound.playClick();
+							setMainMode('story');
+						}}
+						className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs sm:text-sm font-bold transition-all duration-300 ${
+							mainMode === 'story'
+								? 'bg-gradient-to-r from-cyan-500/25 to-blue-500/25 border border-cyan-400/50 text-cyan-100 shadow-[0_0_20px_rgba(34,211,238,0.3)]'
+								: 'text-slate-400 hover:text-white hover:bg-white/5'
+						}`}
+					>
+						<span>🎮 The Night Signal</span>
+						<span className="rounded-full bg-cyan-500/20 px-2 py-0.5 text-[10px] text-cyan-300 font-mono">
+							12 Chapters
+						</span>
+					</button>
+
+					<button
+						type="button"
+						onClick={() => {
+							sound.playClick();
+							setMainMode('lab');
+						}}
+						className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs sm:text-sm font-bold transition-all duration-300 ${
+							mainMode === 'lab'
+								? 'bg-gradient-to-r from-amber-500/25 to-fuchsia-500/25 border border-amber-400/50 text-amber-100 shadow-[0_0_20px_rgba(245,158,11,0.3)]'
+								: 'text-slate-400 hover:text-white hover:bg-white/5'
+						}`}
+					>
+						<span className="size-2 rounded-full bg-amber-400 animate-ping" />
+						<span>⚡ Wacky Neuron Lab & Matrix Studio</span>
+						<span className="rounded-full bg-amber-500/20 px-2 py-0.5 text-[10px] text-amber-300 font-mono">
+							4 Wacky Configs
+						</span>
+					</button>
+				</div>
+
+				<div className="hidden sm:flex items-center gap-3 font-mono text-[10px] text-slate-400 pr-2">
+					<span className="text-cyan-300 font-semibold">TENSOR CORE FP32</span>
+					<span>vs</span>
+					<span className="text-amber-300 font-semibold">IONIC MEMBRANE DYNAMICS</span>
+				</div>
+			</div>
+
+			{mainMode === 'lab' ? (
+				<WackyNeuronLab onReturnToStory={() => { sound.playClick(); setMainMode('story'); }} />
+			) : (
+				<>
 
 			{/* PLAYABLE GAME SECTION */}
 			<section id="ai-biology-game" className="app-surface p-3.5 sm:p-6">
@@ -5019,6 +7577,8 @@ export function AiBiologyExplorer() {
 					Artificial neural networks and biological nervous systems implement shared mathematical abstractions. Understanding either requires analyzing physical substrate, continuous temporal dynamics, and decentralized credit assignment—rather than superficial metaphors.
 				</p>
 			</section>
+				</>
+			)}
 
 			{/* MISSION DOSSIER MODAL */}
 			<MissionDossierModal
