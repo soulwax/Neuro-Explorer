@@ -5806,6 +5806,19 @@ function IzhikevichLab() {
 			.join(' ');
 	}, [simulation.points]);
 
+	// Cubic v-nullcline: u = 0.04*v^2 + 5*v + 140 + I
+	const vNullclinePolyline = useMemo(() => {
+		const pts: string[] = [];
+		for (let v = -85; v <= 35; v += 4) {
+			const u = 0.04 * v * v + 5 * v + 140 + current;
+			const x = 10 + ((v - -85) / 120) * 180;
+			const clampedU = Math.max(-20, Math.min(40, u));
+			const y = 130 - ((clampedU - -20) / 60) * 115;
+			pts.push(`${x.toFixed(1)},${y.toFixed(1)}`);
+		}
+		return pts.join(' ');
+	}, [current]);
+
 	return (
 		<div className="space-y-6">
 			{/* Preset Selector Badges */}
@@ -5932,13 +5945,24 @@ function IzhikevichLab() {
 								opacity="0.8"
 							/>
 
+							{/* v-nullcline: u = 0.04*v^2 + 5*v + 140 + I */}
+							<polyline
+								points={vNullclinePolyline}
+								fill="none"
+								stroke="#fbbf24"
+								strokeWidth="1.2"
+								strokeDasharray="3 3"
+								opacity="0.85"
+							/>
+
 							{/* Orbit trajectory */}
 							<polyline points={phasePlanePolyline} fill="none" stroke="#f43f5e" strokeWidth="1.8" className="drop-shadow-[0_0_6px_rgba(244,63,94,0.7)]" />
 						</svg>
 					</div>
 
 					<div className="mt-2 flex items-center justify-between font-mono text-[10px] text-slate-400 border-t border-white/5 pt-2">
-						<span className="text-cyan-400">--- u-nullcline (u=bv)</span>
+						<span className="text-cyan-400">--- u-nullcline</span>
+						<span className="text-amber-400">--- v-nullcline</span>
 						<span className="text-rose-400 font-bold">— Orbit Limit Cycle</span>
 					</div>
 				</div>
@@ -6799,32 +6823,244 @@ function MatrixDecisionStudio() {
 
 	const winnerIndex = probabilities.indexOf(Math.max(...probabilities));
 
-	function handleCellClick(row: number, col: number) {
+	const [studioTab, setStudioTab] = useState<'network' | 'matrix' | 'landscape' | 'all'>('network');
+	const [hoveredInput, setHoveredInput] = useState<number | null>(null);
+	const [hoveredOutput, setHoveredOutput] = useState<number | null>(null);
+	const [hoveredCell, setHoveredCell] = useState<{ r: number; c: number } | null>(null);
+	const [isRelaxing, setIsRelaxing] = useState<boolean>(false);
+	const [relaxStep, setRelaxStep] = useState<number>(0);
+	const [convergenceDelta, setConvergenceDelta] = useState<number>(0);
+
+	const inputMetadata = useMemo(() => [
+		{ label: 'Edge / V1', icon: '👁️', desc: 'Visual Primary Contour' },
+		{ label: 'Tonotopy / A1', icon: '👂', desc: '440Hz Resonant Filter' },
+		{ label: 'Motion / MT', icon: '🌀', desc: 'Optic Flow Vector' },
+		{ label: 'Face / FFA', icon: '👤', desc: 'Holistic Biometric Bind' },
+		{ label: 'Threat / BLA', icon: '⚠️', desc: 'Amygdala Hazard Gate' },
+		{ label: 'Syntax / Broca', icon: '💬', desc: 'Syntactic Parse Stream' },
+		{ label: 'Acoustic / MSO', icon: '📡', desc: 'Binaural Interconnect' },
+		{ label: 'Chimera / Nexus', icon: '🧬', desc: '8D Neuromorphic Tensor' },
+	], []);
+
+	// Matrix Analytics Telemetry
+	const frobeniusNorm = useMemo(() => {
+		const sumSq = w1.flat().reduce((acc, v) => acc + v * v, 0);
+		return Number(Math.sqrt(sumSq).toFixed(2));
+	}, [w1]);
+
+	const sparsityPct = useMemo(() => {
+		const nearZero = w1.flat().filter((v) => Math.abs(v) <= 0.1).length;
+		return Math.round((nearZero / 64) * 100);
+	}, [w1]);
+
+	const eiRatio = useMemo(() => {
+		const posSum = w1.flat().filter((v) => v > 0).reduce((a, b) => a + b, 0);
+		const negSum = Math.abs(w1.flat().filter((v) => v < 0).reduce((a, b) => a + b, 0));
+		return Number((posSum / Math.max(0.1, negSum)).toFixed(2));
+	}, [w1]);
+
+	// Cell increment / decrement
+	function handleCellClick(row: number, col: number, delta: number = 0.3) {
 		sound.playClick();
 		setW1((prev) => {
 			const next = prev.map((r) => [...r]);
 			if (next[row] && next[row][col] !== undefined) {
 				const currentVal = next[row][col]!;
-				const newVal = currentVal >= 2.0 ? -1.0 : Number((currentVal + 0.3).toFixed(1));
+				let newVal = Number((currentVal + delta).toFixed(1));
+				if (newVal > 2.5) newVal = -1.5;
+				if (newVal < -2.5) newVal = 2.0;
 				next[row][col] = newVal;
 			}
 			return next;
 		});
 	}
 
+	function resetCell(row: number, col: number) {
+		sound.playClick();
+		setW1((prev) => {
+			const next = prev.map((r) => [...r]);
+			if (next[row] && next[row][col] !== undefined) {
+				next[row][col] = 0.0;
+			}
+			return next;
+		});
+	}
+
+	// Matrix Algebraic Transformations
+	function transposeMatrix() {
+		sound.playChime();
+		setW1((prev) => {
+			const next: number[][] = Array.from({ length: 8 }, () => Array(8).fill(0));
+			for (let i = 0; i < 8; i++) {
+				for (let j = 0; j < 8; j++) {
+					next[i]![j] = prev[j]?.[i] ?? 0;
+				}
+			}
+			return next;
+		});
+	}
+
+	function symmetrizeMatrix() {
+		sound.playChime();
+		setW1((prev) => {
+			const next: number[][] = Array.from({ length: 8 }, () => Array(8).fill(0));
+			for (let i = 0; i < 8; i++) {
+				for (let j = 0; j < 8; j++) {
+					const val = ((prev[i]?.[j] ?? 0) + (prev[j]?.[i] ?? 0)) / 2;
+					next[i]![j] = Number(val.toFixed(2));
+				}
+			}
+			return next;
+		});
+	}
+
+	function invertSigns() {
+		sound.playPulse();
+		setW1((prev) => prev.map((row) => row.map((val) => Number((-val).toFixed(2)))));
+	}
+
+	function normalizeRows() {
+		sound.playClick();
+		setW1((prev) =>
+			prev.map((row) => {
+				const rowSum = row.reduce((a, b) => a + Math.abs(b), 0) || 1;
+				return row.map((val) => Number(((val / rowSum) * 2.0).toFixed(2)));
+			}),
+		);
+	}
+
+	function zeroAutapses() {
+		sound.playClick();
+		setW1((prev) => {
+			const next = prev.map((r) => [...r]);
+			for (let i = 0; i < 8; i++) {
+				if (next[i]) next[i]![i] = 0;
+			}
+			return next;
+		});
+	}
+
+	function applyWinnerTakeAll() {
+		sound.playChime();
+		setW1(() => {
+			const next: number[][] = Array.from({ length: 8 }, () => Array(8).fill(-0.75));
+			for (let i = 0; i < 8; i++) {
+				next[i]![i] = 2.4;
+			}
+			return next;
+		});
+	}
+
+	// Recurrent Relaxation Loop (Hopfield-Style Attractor Settling)
+	useEffect(() => {
+		if (!isRelaxing) return;
+		const timer = setInterval(() => {
+			setInputVector((prev) => {
+				let deltaTotal = 0;
+				const next = prev.map((oldVal, i) => {
+					const targetVal = probabilities[i] ?? 0.125;
+					const updated = Number((oldVal * 0.65 + targetVal * 0.35).toFixed(3));
+					deltaTotal += Math.abs(updated - oldVal);
+					return updated;
+				});
+				setConvergenceDelta(Number(deltaTotal.toFixed(3)));
+				return next;
+			});
+
+			setRelaxStep((s) => {
+				const nextStep = s + 1;
+				if (nextStep >= 20) {
+					setIsRelaxing(false);
+					sound.playChime();
+					return 0;
+				}
+				return nextStep;
+			});
+		}, 180);
+
+		return () => clearInterval(timer);
+	}, [isRelaxing, probabilities]);
+
+	// Potential Energy Calculation: U(y) = -T * ln(P(y) + 0.001)
+	const potentialBasins = useMemo(() => {
+		return probabilities.map((p) => {
+			const energy = -temperature * Math.log(Math.max(0.001, p));
+			return Number(energy.toFixed(2));
+		});
+	}, [probabilities, temperature]);
+
 	return (
 		<div className="space-y-6">
-			{/* Header & Preset Buttons */}
-			<div className="flex flex-wrap items-center justify-between gap-3 border-b border-white/10 pb-4">
+			{/* Studio Top Control Deck */}
+			<div className="flex flex-wrap items-center justify-between gap-4 border-b border-white/10 pb-4">
 				<div>
-					<h3 className="text-base font-bold text-white tracking-tight sm:text-lg">
-						8×8 Hyper-Matrix Decision Architect & Softmax Studio
+					<div className="flex items-center gap-2">
+						<span className="size-2 rounded-full bg-cyan-400 animate-ping" />
+						<span className="font-mono text-[10px] font-bold uppercase tracking-[0.22em] text-cyan-300">
+							8D Neuromorphic Tensor Core
+						</span>
+					</div>
+					<h3 className="mt-0.5 text-lg font-black tracking-tight text-white sm:text-2xl">
+						Hyper-Matrix Architecture & Attractor Studio
 					</h3>
-					<p className="text-xs text-slate-400">
-						Full 8-dimensional multi-variable tensor core simulation with temperature-scaled Softmax attractors.
+					<p className="mt-1 text-xs text-slate-400 max-w-2xl">
+						Directly manipulate the 8×8 synaptic crossbar matrix $W_1$, observe real-time signal propagation through biological sensory circuits, and visualize potential energy attractor basins.
 					</p>
 				</div>
-				<div className="flex items-center gap-1.5 flex-wrap">
+
+				{/* View Mode Pills */}
+				<div className="flex items-center gap-1 rounded-xl border border-white/10 bg-slate-900/80 p-1">
+					<button
+						type="button"
+						onClick={() => { sound.playClick(); setStudioTab('network'); }}
+						className={`rounded-lg px-3 py-1.5 text-xs font-bold transition-all ${
+							studioTab === 'network'
+								? 'bg-cyan-500/25 border border-cyan-400/50 text-cyan-200 shadow-[0_0_12px_rgba(34,211,238,0.3)]'
+								: 'text-slate-400 hover:text-white'
+						}`}
+					>
+						🌐 Synaptic Flow Graph
+					</button>
+					<button
+						type="button"
+						onClick={() => { sound.playClick(); setStudioTab('matrix'); }}
+						className={`rounded-lg px-3 py-1.5 text-xs font-bold transition-all ${
+							studioTab === 'matrix'
+								? 'bg-amber-500/25 border border-amber-400/50 text-amber-200 shadow-[0_0_12px_rgba(245,158,11,0.3)]'
+								: 'text-slate-400 hover:text-white'
+						}`}
+					>
+						🎛️ 8×8 Matrix Heatmap
+					</button>
+					<button
+						type="button"
+						onClick={() => { sound.playClick(); setStudioTab('landscape'); }}
+						className={`rounded-lg px-3 py-1.5 text-xs font-bold transition-all ${
+							studioTab === 'landscape'
+								? 'bg-fuchsia-500/25 border border-fuchsia-400/50 text-fuchsia-200 shadow-[0_0_12px_rgba(217,70,239,0.3)]'
+								: 'text-slate-400 hover:text-white'
+						}`}
+					>
+						⛰️ Potential Energy Basin
+					</button>
+					<button
+						type="button"
+						onClick={() => { sound.playClick(); setStudioTab('all'); }}
+						className={`rounded-lg px-3 py-1.5 text-xs font-bold transition-all ${
+							studioTab === 'all'
+								? 'bg-emerald-500/25 border border-emerald-400/50 text-emerald-200 shadow-[0_0_12px_rgba(52,211,153,0.3)]'
+								: 'text-slate-400 hover:text-white'
+						}`}
+					>
+						⚡ Quad Studio
+					</button>
+				</div>
+			</div>
+
+			{/* Secondary Control Bar: Presets & Recurrent Relaxation Runner */}
+			<div className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-white/10 bg-slate-950/60 p-3 backdrop-blur-md">
+				<div className="flex items-center gap-2 flex-wrap">
+					<span className="font-mono text-[10px] uppercase font-bold text-slate-400">Presets:</span>
 					<button
 						type="button"
 						onClick={() => applyMatrixPreset('synergy')}
@@ -6853,96 +7089,573 @@ function MatrixDecisionStudio() {
 					>
 						Sparse
 					</button>
+					<button
+						type="button"
+						onClick={applyWinnerTakeAll}
+						className="rounded-lg border border-fuchsia-400/40 bg-fuchsia-500/10 px-2.5 py-1 text-[11px] font-mono font-bold text-fuchsia-200 hover:bg-fuchsia-500/20"
+					>
+						Winner-Take-All
+					</button>
 				</div>
-			</div>
 
-			{/* 8-Dimensional Input Vector Sliders */}
-			<div className="rounded-2xl border border-white/10 bg-slate-900/60 p-4">
-				<div className="flex items-center justify-between mb-2">
-					<span className="text-xs font-mono font-bold uppercase tracking-wider text-slate-200">
-						8-Dimensional Input Vector x ∈ ℝ⁸:
-					</span>
+				{/* Recurrent Relaxation Dynamics Button */}
+				<div className="flex items-center gap-2">
 					<button
 						type="button"
 						onClick={() => {
-							sound.playClick();
-							setInputVector(Array.from({ length: 8 }, () => Number((Math.random() * 0.9 + 0.1).toFixed(2))));
+							sound.playPulse();
+							setIsRelaxing(!isRelaxing);
+							if (!isRelaxing) setRelaxStep(0);
 						}}
-						className="text-[10px] font-mono text-cyan-400 hover:underline"
+						className={`inline-flex items-center gap-2 rounded-xl border px-3 py-1.5 text-xs font-mono font-bold transition-all ${
+							isRelaxing
+								? 'border-rose-400 bg-rose-500/20 text-rose-200 shadow-[0_0_16px_rgba(244,63,94,0.4)]'
+								: 'border-emerald-400 bg-emerald-500/20 text-emerald-200 hover:bg-emerald-500/30 shadow-[0_0_12px_rgba(52,211,153,0.2)]'
+						}`}
 					>
-						Randomize x
+						<span>{isRelaxing ? '⏸ Halt Relaxation' : '▶ Run Recurrent Relaxation'}</span>
+						{isRelaxing && <span className="size-1.5 rounded-full bg-rose-400 animate-ping" />}
 					</button>
-				</div>
-				<div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-8 gap-2">
-					{inputVector.map((val, idx) => (
-						<div key={idx} className="rounded-xl border border-white/10 bg-white/5 p-2 text-center">
-							<span className="font-mono text-[9px] text-cyan-300 block">x[{idx}]</span>
-							<span className="font-mono text-xs font-bold text-white block my-1">{val.toFixed(2)}</span>
-							<input
-								type="range"
-								min="0"
-								max="1"
-								step="0.05"
-								value={val}
-								onChange={(e) => {
-									const next = [...inputVector];
-									next[idx] = Number(e.target.value);
-									setInputVector(next);
-								}}
-								className="w-full accent-cyan-400 h-1.5"
-							/>
-						</div>
-					))}
+					{isRelaxing && (
+						<span className="font-mono text-[10px] text-amber-300">
+							Step: {relaxStep}/20 · Δ: {convergenceDelta}
+						</span>
+					)}
 				</div>
 			</div>
 
-			{/* 8x8 Interactive Weight Matrix Heatmap (left) & Output Softmax Bars (right) */}
-			<div className="grid gap-6 lg:grid-cols-[1.2fr_1fr]">
-				{/* 8x8 Heatmap Grid */}
-				<div className="rounded-2xl border border-cyan-500/30 bg-black/80 p-4 shadow-xl">
+			{/* 8-Dimensional Input Vector Deck with Sensory Glyphs */}
+			<div className="rounded-2xl border border-white/10 bg-slate-900/60 p-4 shadow-xl">
+				<div className="flex items-center justify-between mb-3 border-b border-white/10 pb-2">
+					<div className="flex items-center gap-2">
+						<span className="size-2 rounded-full bg-cyan-400" />
+						<span className="text-xs font-mono font-bold uppercase tracking-wider text-slate-200">
+							8-Dimensional Sensory Input Vector x ∈ ℝ⁸
+						</span>
+					</div>
+					<div className="flex items-center gap-2">
+						<button
+							type="button"
+							onClick={() => {
+								sound.playClick();
+								setInputVector(Array.from({ length: 8 }, () => Number((Math.random() * 0.85 + 0.1).toFixed(2))));
+							}}
+							className="text-[10px] font-mono text-cyan-400 hover:underline"
+						>
+							🎲 Randomize Vector
+						</button>
+						<span className="text-slate-600">|</span>
+						<button
+							type="button"
+							onClick={() => {
+								sound.playClick();
+								setInputVector(Array(8).fill(0.5));
+							}}
+							className="text-[10px] font-mono text-slate-400 hover:text-white"
+						>
+							Uniform (0.50)
+						</button>
+					</div>
+				</div>
+
+				<div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-8 gap-2.5">
+					{inputVector.map((val, idx) => {
+						const meta = inputMetadata[idx] ?? { label: `x[${idx}]`, icon: '⚡', desc: '' };
+						const isHovered = hoveredInput === idx;
+
+						return (
+							<div
+								key={idx}
+								onMouseEnter={() => setHoveredInput(idx)}
+								onMouseLeave={() => setHoveredInput(null)}
+								className={`rounded-xl border p-2 text-center transition-all ${
+									isHovered
+										? 'border-cyan-400 bg-cyan-500/20 ring-2 ring-cyan-400/40 shadow-[0_0_16px_rgba(34,211,238,0.25)]'
+										: 'border-white/10 bg-white/5 hover:border-white/20'
+								}`}
+							>
+								<div className="flex items-center justify-between font-mono text-[9px] text-cyan-300">
+									<span>{meta.icon}</span>
+									<span className="font-bold">x[{idx}]</span>
+								</div>
+								<span className="block text-[10px] font-bold text-slate-200 truncate mt-0.5">{meta.label}</span>
+								<div className="my-1.5 flex items-center justify-center">
+									<span className="font-mono text-sm font-black text-white">{val.toFixed(2)}</span>
+								</div>
+								<input
+									type="range"
+									min="0"
+									max="1"
+									step="0.05"
+									value={val}
+									onChange={(e) => {
+										const next = [...inputVector];
+										next[idx] = Number(e.target.value);
+										setInputVector(next);
+									}}
+									className="w-full accent-cyan-400 h-1.5"
+								/>
+								<div className="mt-1 flex items-center justify-between">
+									<button
+										type="button"
+										onClick={() => {
+											const next = [...inputVector];
+											next[idx] = Math.max(0, Number((val - 0.1).toFixed(2)));
+											setInputVector(next);
+										}}
+										className="text-[9px] font-mono text-slate-400 hover:text-white px-1"
+									>
+										-
+									</button>
+									<button
+										type="button"
+										onClick={() => {
+											const next = [...inputVector];
+											next[idx] = Math.min(1, Number((val + 0.1).toFixed(2)));
+											setInputVector(next);
+										}}
+										className="text-[9px] font-mono text-slate-400 hover:text-white px-1"
+									>
+										+
+									</button>
+								</div>
+							</div>
+						);
+					})}
+				</div>
+			</div>
+
+			{/* VIEW 1: SYNAPTIC FLOW GRAPH (IMMULATE MULTI-LAYER NEURAL ARCHITECTURE) */}
+			{(studioTab === 'network' || studioTab === 'all') && (
+				<div className="rounded-2xl border border-cyan-500/30 bg-black/90 p-4 shadow-2xl relative overflow-hidden">
 					<div className="flex items-center justify-between border-b border-white/10 pb-2 mb-3 font-mono text-[10px]">
-						<span className="font-bold text-cyan-300">W₁ WEIGHT MATRIX [8×8] (CLICK CELL TO TWEAK)</span>
-						<span className="text-slate-400">TRACE: {matrixTrace}</span>
+						<div className="flex items-center gap-2">
+							<span className="size-2 rounded-full bg-cyan-400 animate-pulse" />
+							<span className="font-bold text-cyan-300">INTERACTIVE MULTI-LAYER SYNAPTIC FLOW GRAPH</span>
+						</div>
+						<span className="text-slate-400">
+							{hoveredInput !== null
+								? `PROJECTIONS FROM SENSOR x[${hoveredInput}]`
+								: hoveredOutput !== null
+								? `DENDRITIC INPUTS TO ATTRACTOR y[${hoveredOutput}]`
+								: 'HOVER NODES OR CELLS TO ISOLATE SYNAPTIC BEAMS'}
+						</span>
 					</div>
 
-					<div className="overflow-x-auto pb-1">
-						<div className="grid grid-cols-8 gap-1 min-w-[280px]">
+					<div className="relative w-full overflow-x-auto">
+						<svg viewBox="0 0 880 440" className="w-full min-w-[720px] h-[360px] sm:h-[420px]">
+							<defs>
+								<linearGradient id="beam-pos" x1="0%" y1="0%" x2="100%" y2="0%">
+									<stop offset="0%" stopColor="#22d3ee" stopOpacity="0.8" />
+									<stop offset="100%" stopColor="#34d399" stopOpacity="0.9" />
+								</linearGradient>
+								<linearGradient id="beam-neg" x1="0%" y1="0%" x2="100%" y2="0%">
+									<stop offset="0%" stopColor="#f43f5e" stopOpacity="0.8" />
+									<stop offset="100%" stopColor="#d946ef" stopOpacity="0.9" />
+								</linearGradient>
+								<filter id="neon-glow" x="-20%" y="-20%" width="140%" height="140%">
+									<feGaussianBlur stdDeviation="3" result="blur" />
+									<feComposite in="SourceGraphic" in2="blur" operator="over" />
+								</filter>
+							</defs>
+
+							{/* Synaptic Beams Interconnect */}
 							{w1.map((row, rIdx) =>
-								row.map((val, cIdx) => {
-									const isPositive = val > 0;
-									const intensity = Math.min(1, Math.abs(val) / 2.0);
-									const bgColor = isPositive
-										? `rgba(6, 182, 212, ${0.15 + intensity * 0.6})`
-										: `rgba(217, 70, 239, ${0.15 + intensity * 0.6})`;
+								row.map((weight, cIdx) => {
+									const isConnectedToHoveredInput = hoveredInput === cIdx;
+									const isConnectedToHoveredOutput = hoveredOutput === rIdx;
+									const isHoveredCellSynapse = hoveredCell?.r === rIdx && hoveredCell?.c === cIdx;
+									const isSelected = isHoveredCellSynapse || isConnectedToHoveredInput || isConnectedToHoveredOutput;
+									const isDimmed = (hoveredInput !== null || hoveredOutput !== null || hoveredCell !== null) && !isSelected;
+
+									if (Math.abs(weight) < 0.12 && !isSelected) return null;
+
+									const yInput = 32 + cIdx * 50;
+									const yOutput = 32 + rIdx * 50;
+									const isPos = weight > 0;
+									const strokeColor = isPos ? '#22d3ee' : '#f43f5e';
+									const strokeWidth = isSelected ? 3.5 : Math.max(0.8, Math.min(3.2, Math.abs(weight) * 1.5));
+									const opacity = isDimmed ? 0.05 : isSelected ? 1.0 : Math.min(0.65, Math.abs(weight) * 0.4 + 0.15);
 
 									return (
-										<button
-											key={`${rIdx}-${cIdx}`}
-											type="button"
-											onClick={() => handleCellClick(rIdx, cIdx)}
-											title={`W₁[${rIdx},${cIdx}] = ${val.toFixed(1)} (Click to increment)`}
-											style={{ backgroundColor: bgColor }}
-											className="size-8 sm:size-9 rounded border border-white/10 font-mono text-[9px] font-bold text-white flex items-center justify-center transition-all hover:scale-110 hover:ring-2 hover:ring-cyan-300"
-										>
-											{val.toFixed(1)}
-										</button>
+										<g key={`synapse-${rIdx}-${cIdx}`}>
+											<path
+												d={`M 140 ${yInput} C 360 ${yInput}, 480 ${yOutput}, 710 ${yOutput}`}
+												fill="none"
+												stroke={strokeColor}
+												strokeWidth={strokeWidth}
+												strokeOpacity={opacity}
+												strokeDasharray={!isPos ? '4 3' : undefined}
+												className="transition-all duration-300"
+												filter={isSelected ? 'url(#neon-glow)' : undefined}
+											/>
+											{isSelected && (
+												<circle
+													cx={420}
+													cy={(yInput + yOutput) / 2}
+													r="4"
+													fill={strokeColor}
+													className="animate-ping"
+												/>
+											)}
+										</g>
 									);
 								}),
 							)}
+
+							{/* Input Layer Somas (Left Column) */}
+							{inputVector.map((val, idx) => {
+								const y = 32 + idx * 50;
+								const meta = inputMetadata[idx] ?? { label: `x[${idx}]`, icon: '⚡' };
+								const isHovered = hoveredInput === idx;
+
+								return (
+									<g
+										key={`input-node-${idx}`}
+										transform={`translate(40, ${y - 20})`}
+										className="cursor-pointer"
+										onMouseEnter={() => setHoveredInput(idx)}
+										onMouseLeave={() => setHoveredInput(null)}
+									>
+										<rect
+											x="0"
+											y="0"
+											width="100"
+											height="40"
+											rx="10"
+											fill={isHovered ? '#083344' : '#030712'}
+											stroke={isHovered ? '#22d3ee' : '#1e293b'}
+											strokeWidth={isHovered ? 2 : 1}
+											className="transition-all"
+										/>
+										<circle
+											cx="20"
+											cy="20"
+											r={8 + val * 6}
+											fill="#06b6d4"
+											fillOpacity={0.25 + val * 0.5}
+											className={val > 0.6 ? 'animate-pulse' : ''}
+										/>
+										<text x="20" y="24" textAnchor="middle" fontSize="11">{meta.icon}</text>
+										<text x="40" y="18" fill="#e2e8f0" fontSize="9" fontWeight="bold" fontFamily="monospace">
+											x[{idx}]
+										</text>
+										<text x="40" y="30" fill="#38bdf8" fontSize="10" fontWeight="black" fontFamily="monospace">
+											{val.toFixed(2)}
+										</text>
+									</g>
+								);
+							})}
+
+							{/* Output Attractor Somas (Right Column) */}
+							{probabilities.map((prob, idx) => {
+								const y = 32 + idx * 50;
+								const isWinner = idx === winnerIndex;
+								const isHovered = hoveredOutput === idx;
+								const pct = Math.round(prob * 100);
+
+								return (
+									<g
+										key={`output-node-${idx}`}
+										transform={`translate(710, ${y - 20})`}
+										className="cursor-pointer"
+										onMouseEnter={() => setHoveredOutput(idx)}
+										onMouseLeave={() => setHoveredOutput(null)}
+									>
+										<rect
+											x="0"
+											y="0"
+											width="130"
+											height="40"
+											rx="10"
+											fill={isWinner ? '#451a03' : isHovered ? '#1e1b4b' : '#030712'}
+											stroke={isWinner ? '#fbbf24' : isHovered ? '#818cf8' : '#1e293b'}
+											strokeWidth={isWinner ? 2.5 : isHovered ? 2 : 1}
+											className="transition-all"
+										/>
+										<circle
+											cx="20"
+											cy="20"
+											r={8 + prob * 10}
+											fill={isWinner ? '#f59e0b' : '#6366f1'}
+											fillOpacity={0.3 + prob * 0.6}
+											className={isWinner ? 'animate-ping' : ''}
+										/>
+										<text x="40" y="16" fill={isWinner ? '#fef08a' : '#cbd5e1'} fontSize="8" fontWeight="bold">
+											{outputLabels[idx]?.split(' ')[0]} {outputLabels[idx]?.split(' ')[1]}
+										</text>
+										<text x="40" y="30" fill={isWinner ? '#fbbf24' : '#94a3b8'} fontSize="11" fontWeight="black" fontFamily="monospace">
+											{pct}%
+										</text>
+										{isWinner && (
+											<text x="115" y="24" textAnchor="middle" fontSize="12">🏆</text>
+										)}
+									</g>
+								);
+							})}
+						</svg>
+					</div>
+
+					<div className="flex items-center justify-between border-t border-white/10 pt-2 font-mono text-[9px] text-slate-400">
+						<span className="text-cyan-400 font-bold">● Electric Cyan = Excitatory Beam (w_ij &gt; 0)</span>
+						<span className="text-rose-400 font-bold">● Neon Rose = Inhibitory Suppression Beam (w_ij &lt; 0)</span>
+						<span className="text-amber-300 font-bold">🏆 Golden Aura = Settled Attractor Winner</span>
+					</div>
+				</div>
+			)}
+
+			{/* VIEW 2: 8×8 INTERACTIVE WEIGHT MATRIX HEATMAP (TACTILE SCI-FI CROSSBAR) */}
+			{(studioTab === 'matrix' || studioTab === 'all') && (
+				<div className="rounded-2xl border border-amber-500/30 bg-black/90 p-4 shadow-2xl">
+					<div className="flex flex-wrap items-center justify-between border-b border-white/10 pb-2 mb-3 font-mono text-[10px]">
+						<div className="flex items-center gap-2">
+							<span className="size-2 rounded-full bg-amber-400 animate-pulse" />
+							<span className="font-bold text-amber-300">8×8 SYNAPTIC WEIGHT TENSOR W₁ (CROSSBAR MATRIX)</span>
+						</div>
+						<div className="flex items-center gap-4 text-slate-300">
+							<span>Tr(W): <strong className="text-cyan-300">{matrixTrace}</strong></span>
+							<span>||W||_F: <strong className="text-emerald-300">{frobeniusNorm}</strong></span>
+							<span>Sparsity: <strong className="text-amber-300">{sparsityPct}%</strong></span>
+							<span>E/I: <strong className="text-fuchsia-300">{eiRatio}</strong></span>
+						</div>
+					</div>
+
+					{/* Matrix Algebraic Tools Toolbar */}
+					<div className="mb-3 flex items-center gap-1.5 flex-wrap font-mono text-[10px]">
+						<span className="text-slate-400 uppercase">Algebraic Transforms:</span>
+						<button
+							type="button"
+							onClick={transposeMatrix}
+							className="rounded bg-white/5 border border-white/10 px-2 py-0.5 text-cyan-300 hover:bg-white/10"
+							title="Transpose W1 (flip across diagonal)"
+						>
+							Wᵀ Transpose
+						</button>
+						<button
+							type="button"
+							onClick={symmetrizeMatrix}
+							className="rounded bg-white/5 border border-white/10 px-2 py-0.5 text-emerald-300 hover:bg-white/10"
+							title="Symmetrize (W + W^T)/2 (Hopfield auto-associator)"
+						>
+							½(W + Wᵀ) Symmetrize
+						</button>
+						<button
+							type="button"
+							onClick={invertSigns}
+							className="rounded bg-white/5 border border-white/10 px-2 py-0.5 text-rose-300 hover:bg-white/10"
+							title="Invert all weight signs"
+						>
+							-W Invert Signs
+						</button>
+						<button
+							type="button"
+							onClick={normalizeRows}
+							className="rounded bg-white/5 border border-white/10 px-2 py-0.5 text-amber-300 hover:bg-white/10"
+							title="Normalize rows to unit sum"
+						>
+							Row Normalize
+						</button>
+						<button
+							type="button"
+							onClick={zeroAutapses}
+							className="rounded bg-white/5 border border-white/10 px-2 py-0.5 text-purple-300 hover:bg-white/10"
+							title="Zero out self-feedback diagonal (autapses)"
+						>
+							W_ii = 0 Zero Autapses
+						</button>
+					</div>
+
+					{/* 8x8 Grid with Row and Column Labels */}
+					<div className="overflow-x-auto pb-2">
+						<div className="min-w-[420px]">
+							{/* Column Headers (Input x[0..7]) */}
+							<div className="grid grid-cols-[60px_repeat(8,1fr)] gap-1 mb-1 font-mono text-[9px] text-slate-400 text-center">
+								<span className="text-left pl-1">Out \ In</span>
+								{Array.from({ length: 8 }, (_, c) => (
+									<span key={`col-${c}`} className={hoveredCell?.c === c ? 'text-cyan-300 font-bold' : ''}>
+										x[{c}]
+									</span>
+								))}
+							</div>
+
+							{/* Matrix Rows */}
+							{w1.map((row, rIdx) => (
+								<div key={`row-${rIdx}`} className="grid grid-cols-[60px_repeat(8,1fr)] gap-1 mb-1 items-center">
+									{/* Row Header (Output y[rIdx]) */}
+									<span
+										className={`font-mono text-[9px] truncate pr-1 ${
+											hoveredCell?.r === rIdx ? 'text-amber-300 font-bold' : 'text-slate-400'
+										}`}
+										title={outputLabels[rIdx]}
+									>
+										y[{rIdx}]
+									</span>
+
+									{/* 8 Cells in Row */}
+									{row.map((val, cIdx) => {
+										const isPositive = val > 0;
+										const intensity = Math.min(1, Math.abs(val) / 2.2);
+										const isHovered = hoveredCell?.r === rIdx && hoveredCell?.c === cIdx;
+										const isRowColActive = hoveredCell?.r === rIdx || hoveredCell?.c === cIdx;
+
+										const bgColor = isPositive
+											? `rgba(6, 182, 212, ${0.12 + intensity * 0.65})`
+											: `rgba(244, 63, 94, ${0.12 + intensity * 0.65})`;
+
+										return (
+											<button
+												key={`${rIdx}-${cIdx}`}
+												type="button"
+												onClick={() => handleCellClick(rIdx, cIdx, 0.3)}
+												onContextMenu={(e) => {
+													e.preventDefault();
+													handleCellClick(rIdx, cIdx, -0.3);
+												}}
+												onDoubleClick={() => resetCell(rIdx, cIdx)}
+												onMouseEnter={() => setHoveredCell({ r: rIdx, c: cIdx })}
+												onMouseLeave={() => setHoveredCell(null)}
+												title={`W₁[${rIdx},${cIdx}] = ${val.toFixed(1)}\nLeft-click: +0.3\nRight-click: -0.3\nDouble-click: 0.0`}
+												style={{ backgroundColor: bgColor }}
+												className={`h-9 rounded-lg border font-mono text-[10px] font-bold text-white flex items-center justify-center transition-all ${
+													isHovered
+														? 'scale-110 z-10 border-white ring-2 ring-cyan-300 shadow-[0_0_12px_rgba(34,211,238,0.8)]'
+														: isRowColActive
+														? 'border-white/30'
+														: 'border-white/10 hover:border-white/20'
+												}`}
+											>
+												{val.toFixed(1)}
+											</button>
+										);
+									})}
+								</div>
+							))}
 						</div>
 					</div>
 
 					<div className="mt-2 flex items-center justify-between font-mono text-[9px] text-slate-400">
-						<span className="text-cyan-400 font-bold">● Positive Excitatory Weight</span>
-						<span className="text-fuchsia-400 font-bold">● Negative Inhibitory Weight</span>
+						<span>🖱️ Left-Click: +0.3 · Right-Click: -0.3 · Double-Click: 0.0</span>
+						<span className="text-cyan-300">● Excitatory Synapse</span>
+						<span className="text-rose-400">● Inhibitory Synapse</span>
 					</div>
 				</div>
+			)}
 
-				{/* Softmax Probability Distributions */}
-				<div className="rounded-2xl border border-amber-500/30 bg-black/80 p-4 shadow-xl">
+			{/* VIEW 3: ATTRACTOR POTENTIAL ENERGY BASIN & LANDSCAPE */}
+			{(studioTab === 'landscape' || studioTab === 'all') && (
+				<div className="rounded-2xl border border-fuchsia-500/30 bg-black/90 p-4 shadow-2xl">
 					<div className="flex items-center justify-between border-b border-white/10 pb-2 mb-3 font-mono text-[10px]">
-						<span className="font-bold text-amber-300">SOFTMAX DISTRIBUTION (TEMPERATURE = {temperature})</span>
-						<span className="text-emerald-400">H: {entropyBits} BITS</span>
+						<div className="flex items-center gap-2">
+							<span className="size-2 rounded-full bg-fuchsia-400 animate-pulse" />
+							<span className="font-bold text-fuchsia-300">
+								ATTRACTOR POTENTIAL ENERGY BASIN U(y) = -T · ln P(y)
+							</span>
+						</div>
+						<span className="text-emerald-400">
+							ENTROPY $H$: {entropyBits} BITS · TEMPERATURE $T$: {temperature.toFixed(2)}
+						</span>
+					</div>
+
+					{/* Potential Well Energy Curve SVG */}
+					<div className="relative w-full h-44 sm:h-52">
+						<svg viewBox="0 0 880 200" className="w-full h-full" preserveAspectRatio="none">
+							<defs>
+								<linearGradient id="basin-fill" x1="0%" y1="0%" x2="0%" y2="100%">
+									<stop offset="0%" stopColor="#d946ef" stopOpacity="0.3" />
+									<stop offset="100%" stopColor="#d946ef" stopOpacity="0.0" />
+								</linearGradient>
+							</defs>
+
+							{/* Axis guides */}
+							<line x1="40" y1="180" x2="840" y2="180" stroke="#334155" strokeWidth="1" />
+
+							{/* Potential Basins Curve */}
+							{(() => {
+								const coords = potentialBasins.map((energy, i) => {
+									const x = 70 + i * 105;
+									// Clamp energy between 0 and 6 for display
+									const y = 30 + Math.min(140, energy * 26);
+									return { x, y };
+								});
+
+								let pathD = `M 40 180 L ${coords[0]?.x ?? 70} ${coords[0]?.y ?? 100}`;
+								for (let i = 0; i < coords.length - 1; i++) {
+									const p0 = coords[i]!;
+									const p1 = coords[i + 1]!;
+									const midX = (p0.x + p1.x) / 2;
+									const barrierY = Math.max(20, Math.min(p0.y, p1.y) - 35);
+									pathD += ` Q ${midX} ${barrierY} ${p1.x} ${p1.y}`;
+								}
+								pathD += ` L 840 180`;
+
+								const winnerCoord = coords[winnerIndex] ?? { x: 70, y: 100 };
+
+								return (
+									<g>
+										<path d={pathD} fill="url(#basin-fill)" stroke="#f43f5e" strokeWidth="2.5" />
+
+										{/* Attractor Well Markers & Labels */}
+										{coords.map((pt, i) => {
+											const isWin = i === winnerIndex;
+											return (
+												<g key={`well-${i}`}>
+													<circle
+														cx={pt.x}
+														cy={pt.y}
+														r={isWin ? 7 : 4}
+														fill={isWin ? '#fbbf24' : '#a855f7'}
+													/>
+													<text
+														x={pt.x}
+														y={195}
+														textAnchor="middle"
+														fill={isWin ? '#fbbf24' : '#94a3b8'}
+														fontSize="9"
+														fontFamily="monospace"
+														fontWeight={isWin ? 'bold' : 'normal'}
+													>
+														y[{i}]
+													</text>
+												</g>
+											);
+										})}
+
+										{/* Settled Attractor Quantum Marble with Brownian Jitter */}
+										<circle
+											cx={winnerCoord.x + (Math.random() - 0.5) * noiseLevel * 18}
+											cy={winnerCoord.y - 8 + (Math.random() - 0.5) * noiseLevel * 12}
+											r="8"
+											fill="#fde68a"
+											className="animate-ping"
+										/>
+										<circle
+											cx={winnerCoord.x}
+											cy={winnerCoord.y - 8}
+											r="6"
+											fill="#f59e0b"
+											stroke="#ffffff"
+											strokeWidth="2"
+										/>
+									</g>
+								);
+							})()}
+						</svg>
+					</div>
+
+					<div className="mt-2 flex items-center justify-between font-mono text-[9px] text-slate-400">
+						<span>🟡 Settled State Quantum Marble resting at lowest energy basin U(y_winner)</span>
+						<span>Higher T flattens barrier heights (chaos); Lower T funnels state into argmax</span>
+					</div>
+				</div>
+			)}
+
+			{/* Softmax Probability Distributions & Temperature Modulators */}
+			<div className="grid gap-6 lg:grid-cols-[1.3fr_1fr]">
+				{/* Softmax Probability Spectrum Bars */}
+				<div className="rounded-2xl border border-emerald-500/30 bg-black/90 p-4 shadow-xl">
+					<div className="flex items-center justify-between border-b border-white/10 pb-2 mb-3 font-mono text-[10px]">
+						<span className="font-bold text-emerald-300">ATTRACTOR PROBABILITY SPECTRUM (SOFTMAX)</span>
+						<span className="text-amber-300 font-bold">WINNER: {outputLabels[winnerIndex]}</span>
 					</div>
 
 					<div className="space-y-2.5">
@@ -6954,67 +7667,93 @@ function MatrixDecisionStudio() {
 							return (
 								<div key={idx} className="space-y-1">
 									<div className="flex items-center justify-between font-mono text-[10px]">
-										<span className={`truncate max-w-[200px] ${isWinner ? 'text-amber-300 font-bold' : 'text-slate-300'}`}>
-											{label}
+										<span className={`truncate max-w-[220px] ${isWinner ? 'text-amber-300 font-bold' : 'text-slate-300'}`}>
+											y[{idx}] {label}
 										</span>
-										<span className={isWinner ? 'text-amber-300 font-bold' : 'text-slate-400'}>
-											{pct}%
-										</span>
+										<div className="flex items-center gap-2">
+											{isWinner && (
+												<span className="rounded bg-amber-400/20 px-1 py-0.2 text-[8px] font-bold text-amber-300 border border-amber-400/40">
+													#1 WINNER
+												</span>
+											)}
+											<span className={isWinner ? 'text-amber-300 font-bold' : 'text-slate-400'}>
+												{pct}% ({prob.toFixed(3)})
+											</span>
+										</div>
 									</div>
 									<div className="h-2 w-full rounded-full bg-slate-900 overflow-hidden border border-white/5">
 										<div
 											className={`h-full rounded-full transition-all duration-300 ${
 												isWinner
-													? 'bg-gradient-to-r from-amber-400 to-yellow-300 shadow-[0_0_8px_rgba(251,191,36,0.8)]'
+													? 'bg-gradient-to-r from-amber-400 to-yellow-300 shadow-[0_0_12px_rgba(251,191,36,0.9)]'
 													: 'bg-cyan-500/50'
 											}`}
-											style={{ width: `${Math.max(4, pct)}%` }}
+											style={{ width: `${Math.max(3, pct)}%` }}
 										/>
 									</div>
 								</div>
 							);
 						})}
 					</div>
-
-					<div className="mt-4 rounded-xl border border-amber-400/30 bg-amber-950/20 p-2.5 text-center font-mono">
-						<span className="text-[10px] uppercase text-slate-400 block">Predicted Attractor Winner:</span>
-						<span className="text-xs font-bold text-amber-300">{outputLabels[winnerIndex]}</span>
-					</div>
-				</div>
-			</div>
-
-			{/* Softmax Temperature & Noise Injection Sliders */}
-			<div className="grid gap-4 sm:grid-cols-2 rounded-2xl border border-white/10 bg-slate-900/60 p-4">
-				<div>
-					<div className="flex justify-between font-mono text-xs mb-1.5">
-						<span className="text-slate-300 font-bold">Softmax Temperature (T):</span>
-						<span className="text-amber-300 font-mono">{temperature.toFixed(2)} {temperature < 0.4 ? '(Argmax Mode)' : temperature > 1.8 ? '(High Entropy)' : ''}</span>
-					</div>
-					<input
-						type="range"
-						min="0.1"
-						max="2.5"
-						step="0.05"
-						value={temperature}
-						onChange={(e) => setTemperature(Number(e.target.value))}
-						className="w-full accent-amber-400"
-					/>
 				</div>
 
-				<div>
-					<div className="flex justify-between font-mono text-xs mb-1.5">
-						<span className="text-slate-300 font-bold">Thermal Noise Injection (σ):</span>
-						<span className="text-fuchsia-300 font-mono">{noiseLevel.toFixed(2)}</span>
+				{/* Physical Environment Sliders: Temperature & Noise */}
+				<div className="rounded-2xl border border-white/10 bg-slate-900/60 p-4 shadow-xl flex flex-col justify-between">
+					<div>
+						<div className="border-b border-white/10 pb-2 mb-3">
+							<span className="font-mono text-xs font-bold uppercase text-slate-200">
+								Thermodynamic Environment Modulators
+							</span>
+							<p className="text-[10px] text-slate-400 mt-0.5">
+								Controls simulated annealing convergence and stochastic membrane jitter.
+							</p>
+						</div>
+
+						<div className="space-y-4">
+							<div>
+								<div className="flex justify-between font-mono text-xs mb-1.5">
+									<span className="text-slate-300 font-bold">Softmax Temperature ($T$):</span>
+									<span className="text-amber-300 font-mono">
+										{temperature.toFixed(2)}{' '}
+										{temperature < 0.35 ? '(Argmax Mode)' : temperature > 1.8 ? '(Max Entropy)' : '(Gibbs)'}
+									</span>
+								</div>
+								<input
+									type="range"
+									min="0.1"
+									max="2.5"
+									step="0.05"
+									value={temperature}
+									onChange={(e) => setTemperature(Number(e.target.value))}
+									className="w-full accent-amber-400 h-2"
+								/>
+							</div>
+
+							<div>
+								<div className="flex justify-between font-mono text-xs mb-1.5">
+									<span className="text-slate-300 font-bold">Thermal Noise Injection ($\sigma$):</span>
+									<span className="text-fuchsia-300 font-mono">{noiseLevel.toFixed(2)}</span>
+								</div>
+								<input
+									type="range"
+									min="0.0"
+									max="0.4"
+									step="0.02"
+									value={noiseLevel}
+									onChange={(e) => setNoiseLevel(Number(e.target.value))}
+									className="w-full accent-fuchsia-400 h-2"
+								/>
+							</div>
+						</div>
 					</div>
-					<input
-						type="range"
-						min="0.0"
-						max="0.4"
-						step="0.02"
-						value={noiseLevel}
-						onChange={(e) => setNoiseLevel(Number(e.target.value))}
-						className="w-full accent-fuchsia-400"
-					/>
+
+					<div className="mt-4 rounded-xl border border-amber-400/30 bg-amber-950/20 p-3 text-center font-mono">
+						<span className="text-[10px] uppercase text-slate-400 block font-sans">Predicted Attractor Equilibrium:</span>
+						<span className="text-sm font-bold text-amber-300 block mt-0.5">{outputLabels[winnerIndex]}</span>
+						<span className="text-[9px] text-emerald-400 block mt-1">
+							Confidence: {Math.round((probabilities[winnerIndex] ?? 0) * 100)}% · Basin Energy: {potentialBasins[winnerIndex]} eV
+						</span>
+					</div>
 				</div>
 			</div>
 		</div>
